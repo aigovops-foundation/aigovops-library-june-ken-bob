@@ -17,6 +17,8 @@ A shareable hub page (GitHub Pages) presents the non-secret story; the source of
 | **Plan** — *operate* | [`docs/plan.html`](docs/plan.html) + [`plan/`](plan/) | Agents, skills, and twelve repeatable processes. |
 | **Control Plane** — *govern* | [`docs/control-plane.html`](docs/control-plane.html) + [`plan/control-and-deployment.md`](plan/control-and-deployment.md) | One artifact for lab/community/enclave, the single agent chokepoint, the secrets broker, and real-time oversight — no agents gone wild. |
 | **Build Tickets** — *do* | [`docs/build-tickets.html`](docs/build-tickets.html) + [`plan/build-tickets.md`](plan/build-tickets.md) | The backlog: Ticket 0 (SecretsProvider + FileProvider, fully specced) and the next ten big items, with sizes, deps, and milestones. |
+
+**Operations (private, no public page):** [`plan/account-registry.md`](plan/account-registry.md) — pointer-only inventory of every service/account (no plaintext); [`plan/credential-management.md`](plan/credential-management.md) — password-manager choice + the safe dev-system credential hand-off; [`plan/skills/op-github-deploy/SKILL.md`](plan/skills/op-github-deploy/SKILL.md) — the skill that wires 1Password→GitHub Actions (one-approval, never handles the token); [`.github/workflows/op-secrets-check.yml`](.github/workflows/op-secrets-check.yml) — proof-of-connection workflow.
 | **Core** — *run* | [`core/`](core/) | The running v1 governed core (Node, dependency-free). |
 
 ## Layout
