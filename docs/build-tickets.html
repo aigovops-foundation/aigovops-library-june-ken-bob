@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AiGovOps — Build Tickets</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --paper:#0c1430; --paper2:#0a1026; --ink:#dce6f5; --ink2:#8da3c8;
+    --line:rgba(120,160,210,.22); --grid:rgba(120,160,210,.07);
+    --teal:#3fd0c8; --green:#36e08a; --gold:#e8c25a; --pur:#9b8cff; --warn:#f08a8a;
+    --card:rgba(255,255,255,.035);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Spectral',Georgia,serif;color:var(--ink);background:var(--paper);min-height:100%;
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:30px 30px}
+  .wrap{max-width:1040px;margin:0 auto;padding:34px 20px 90px}
+  .home{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:var(--ink2);text-decoration:none;border:1px solid var(--line);border-radius:8px;padding:6px 11px;margin-bottom:18px}
+  .home:hover{color:#fff;border-color:var(--teal)}
+  header{text-align:center;border:1px solid var(--line);border-radius:16px;padding:30px 22px;background:linear-gradient(180deg,rgba(63,208,200,.05),transparent)}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;letter-spacing:.34em;font-size:11px;color:var(--teal)}
+  h1{font-family:'Cinzel',serif;font-weight:600;font-size:clamp(25px,4.4vw,42px);margin:10px 0 6px;color:#fff}
+  .thesis{font-family:'Spectral',serif;font-style:italic;font-size:clamp(16px,2.1vw,20px);color:var(--ink2);max-width:720px;margin:0 auto}
+  .rev{margin-top:14px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--ink2);letter-spacing:.08em}
+  nav{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:20px 0;position:sticky;top:0;z-index:30;
+    background:linear-gradient(var(--paper),rgba(12,20,48,.6));padding:9px 6px;backdrop-filter:blur(6px)}
+  nav a{text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;color:var(--ink2);
+    padding:6px 10px;border:1px solid var(--line);border-radius:8px;transition:.2s}
+  nav a:hover{color:#fff;border-color:var(--teal);background:rgba(63,208,200,.08)}
+  section{margin-top:40px;scroll-margin-top:60px}
+  h2{font-family:'Cinzel',serif;font-weight:600;font-size:clamp(19px,2.8vw,26px);color:#fff;display:flex;align-items:baseline;gap:12px}
+  h2 .n{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--teal);letter-spacing:.1em}
+  .lead{color:var(--ink2);font-style:italic;font-size:16px;margin:6px 0 16px}
+  p{line-height:1.66;margin-bottom:12px;color:#cdd9ec}
+  b{color:#fff}
+  .mono{font-family:'IBM Plex Mono',monospace}
+  .key{font-family:'IBM Plex Mono',monospace;color:var(--teal)}
+  .panel{border:1px solid var(--line);border-radius:14px;padding:22px 24px;background:var(--card);margin-bottom:14px}
+  .code{font-family:'IBM Plex Mono',monospace;background:var(--paper2);border:1px solid var(--line);border-radius:11px;
+    padding:14px 16px;font-size:12.5px;line-height:1.62;color:#bfe9d0;white-space:pre;overflow-x:auto;margin:10px 0}
+  h4{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--teal);letter-spacing:.04em;margin:16px 0 6px}
+  ul{list-style:none;margin:4px 0 12px}
+  li{padding-left:22px;position:relative;line-height:1.6;margin-bottom:7px;color:#cdd9ec}
+  li::before{content:"▸";position:absolute;left:2px;color:var(--green)}
+  li b{color:#fff}
+  .creed{border-left:2px solid var(--green);padding:6px 0 6px 16px;font-style:italic;color:#bfe9d0;margin:10px 0}
+  .tk{border:1px solid var(--line);border-radius:12px;padding:15px 18px;background:var(--card);margin-bottom:11px}
+  .tk .top{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:5px}
+  .tk .num{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--green);font-weight:600}
+  .tk .ti{font-family:'Cinzel',serif;font-size:16px;color:#fff}
+  .tk p{font-size:14px;margin:4px 0 0;color:#c2cfe4;line-height:1.55}
+  .tk .done{color:#bfe9d0;font-style:italic}
+  .badge{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.06em;padding:2px 7px;border-radius:6px;border:1px solid var(--line);color:var(--ink2)}
+  .badge.sz{color:var(--gold);border-color:rgba(232,194,90,.4)}
+  .badge.c{color:var(--teal);border-color:rgba(63,208,200,.4)}
+  .badge.dep{color:var(--pur);border-color:rgba(155,140,255,.4)}
+  .ms{border:1px solid var(--line);border-radius:11px;padding:13px 16px;background:var(--paper2);margin-bottom:9px}
+  .ms b{color:#fff}
+  footer{text-align:center;margin-top:46px;color:var(--ink2);font-style:italic;font-size:16px}
+  .fcreed{font-family:'IBM Plex Mono',monospace;letter-spacing:.2em;font-size:10.5px;color:var(--green);margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="home" href="./control-plane.html">← back to the Control Plane</a>
+  <header>
+    <div class="eyebrow">AIGOVOPS FOUNDATION · CONTROL &amp; DEPLOYMENT · BACKLOG</div>
+    <h1>Build Tickets</h1>
+    <div class="thesis">Turning the Rev 2026.06 decisions into running code. Ticket 0 is the first slice that proves the whole brokering pattern; the next ten are the big rocks after it.</div>
+    <div class="rev">SIZES · S ≤1 DAY · M A FEW DAYS · L 1–2 WEEKS · A DRAFT TO ARGUE WITH, NOT A CONTRACT</div>
+  </header>
+
+  <nav>
+    <a href="#t0">TICKET 0 · FIRST SLICE</a><a href="#ten">THE NEXT TEN</a><a href="#milestones">MILESTONES</a>
+  </nav>
+
+  <!-- TICKET 0 -->
+  <section id="t0">
+    <h2><span class="n">T0</span> SecretsProvider + FileProvider <span class="badge sz">M</span> <span class="badge dep">no deps</span></h2>
+    <div class="lead">The smallest slice that proves the whole brokering pattern end-to-end — mint → scope → expire → log → revoke — without standing up Vault. Everything else plugs into it.</div>
+    <div class="panel">
+      <h4>THE INTERFACE · env-neutral, lives in core like yesgate.shared.js</h4>
+      <div class="code">SecretsProvider {
+  issue(scope, ttlSeconds, requestedBy) -&gt; Grant
+  renew(grantId, ttlSeconds)            -&gt; Grant
+  revoke(grantId)                       -&gt; { revoked: true }
+  describe(ref)                         -&gt; Record   // registry view — NO secret material
+}
+
+Grant  = { grantId, scope, token, issuedAt, expiresAt, ref }
+Record = { ref, owner, scope, lastRotated, activeGrants }</div>
+      <p><span class="key">token</span> is an opaque, short-lived credential the gate hands to a sandboxed tool — <b>never</b> the underlying master secret. The <b>gate is the only caller</b>; tools present the token back to use a secret and never see master material.</p>
+
+      <h4>FILEPROVIDER · the lab adapter</h4>
+      <ul>
+        <li>Backing store: <span class="mono">secrets.local.json</span> or OS keychain — <b>gitignored, never committed</b>.</li>
+        <li><span class="mono">issue</span>: look up the static secret for <span class="mono">scope</span>, mint a derived ephemeral <span class="mono">token</span> with <span class="mono">expiresAt = now + ttl</span>, record the grant, return it.</li>
+        <li>TTL enforced — a token used past <span class="mono">expiresAt</span> <b>fails closed</b>. <span class="mono">revoke</span> invalidates immediately.</li>
+        <li>Every <span class="mono">issue/renew/revoke</span> emits <b>exactly one signed Beacon receipt</b>, metadata only: <span class="mono">{ op, scope, ttl, expiresAt, ref, requestedBy, decision }</span>. No secret.</li>
+      </ul>
+
+      <h4>ACCEPTANCE TESTS · all must pass</h4>
+      <ul>
+        <li><span class="mono">token !== masterSecret</span> for the scope.</li>
+        <li>a token used after <span class="mono">expiresAt</span> fails closed.</li>
+        <li><span class="mono">revoke(grantId)</span> makes the token fail closed immediately.</li>
+        <li>each op emits exactly one ledger receipt, and the serialized receipt contains <b>no</b> secret string.</li>
+        <li><span class="mono">describe()</span> returns owner/scope/rotation metadata and <b>no</b> secret material.</li>
+        <li>the backing secret file is in <span class="mono">.gitignore</span> and absent from <span class="mono">git ls-files</span>.</li>
+      </ul>
+      <div class="creed">Done when FileProvider passes the contract tests, the gate can issue/revoke through the interface, and every op appears in the live ledger with zero secret leakage.</div>
+    </div>
+  </section>
+
+  <!-- THE TEN -->
+  <section id="ten">
+    <h2><span class="n">1–10</span> The next ten big items</h2>
+    <div class="lead">Each carries its size, contract tag, and dependency. Tags: SEC secrets · BOX sandbox · GATE policy/caps · SEE oversight · ID identity · CORE evidence.</div>
+
+    <div class="tk"><div class="top"><span class="num">1</span><span class="ti">Gate ↔ SecretsProvider wiring</span><span class="badge sz">M</span><span class="badge c">SEC · GATE</span><span class="badge dep">dep T0</span></div>
+      <p>The gate requests a grant only on an <i>approved</i> proposal; the deny path issues nothing and fails closed; the secret receipt links to the proposal receipt. <span class="done">Done: an approved tool call gets a scoped token + paired receipts; a denied one gets neither.</span></p></div>
+
+    <div class="tk"><div class="top"><span class="num">2</span><span class="ti">VaultProvider adapter</span><span class="badge sz">L</span><span class="badge c">SEC</span><span class="badge dep">dep T0</span></div>
+      <p>The same interface against HashiCorp Vault (dynamic-secrets engine for true ephemeral creds; auto-unseal via cloud KMS). FileProvider↔VaultProvider is <b>config-only</b> (PROFILE). <span class="done">Done: identical contract tests pass against both; swapping providers needs no code change.</span></p></div>
+
+    <div class="tk"><div class="top"><span class="num">3</span><span class="ti">Sandbox boundary v1 (laptop fallback)</span><span class="badge sz">L</span><span class="badge c">BOX</span><span class="badge dep">parallel</span></div>
+      <p>Define the Sandbox contract (no ambient network/filesystem, declared egress only) and a tool-runner that executes tools inside a locked container: seccomp default profile + network namespace + read-only rootfs. <span class="done">Done: a tool cannot open an undeclared socket or read outside its scratch dir; attempts fail and emit a receipt.</span></p></div>
+
+    <div class="tk"><div class="top"><span class="num">4</span><span class="ti">gVisor backend + egress proxy</span><span class="badge sz">L</span><span class="badge c">BOX</span><span class="badge dep">dep T3</span></div>
+      <p>Wire <span class="mono">runsc</span> as the runtime class on Linux community/enclave hosts; route declared egress through a controlled proxy enforcing the allow-list. <span class="done">Done: the same Sandbox contract tests pass under gVisor; undeclared egress is blocked at the proxy.</span></p></div>
+
+    <div class="tk"><div class="top"><span class="num">5</span><span class="ti">Capability dial + hard caps</span><span class="badge sz">M</span><span class="badge c">GATE</span><span class="badge dep">dep T1</span></div>
+      <p>Explicit, reversible capability levels per member/agent; hard caps on spend, rate, and blast radius, evaluated at the gate. The agent <b>pauses at the cap</b>; a breach emits a receipt. <span class="done">Done: an agent at its cap halts; turning the dial down takes effect on the next request.</span></p></div>
+
+    <div class="tk"><div class="top"><span class="num">6</span><span class="ti">Oversight console v1 (one surface, role-scoped)</span><span class="badge sz">L</span><span class="badge c">SEE · ID</span><span class="badge dep">dep T1 · T5</span></div>
+      <p>Live SSE tail over the ledger. Stewards see all receipts + dials + the armed global kill switch; members see only their own effects and pause only their own work. The global kill switch is a steward-only action that emits its own signed receipt. <span class="done">Done: two roles, one codebase, correct scoping; the kill switch halts running workflows.</span></p></div>
+
+    <div class="tk"><div class="top"><span class="num">7</span><span class="ti">OPA policy engine</span><span class="badge sz">L</span><span class="badge c">GATE</span><span class="badge dep">dep T1</span></div>
+      <p>Move Yes-Gate rules to OPA (rego), evaluated at the gate; policies reviewable in PRs; policy bundles are Beacon-signed so a rule change is itself an auditable artifact. <span class="done">Done: existing gate decisions reproduce under OPA; a policy change ships as a signed bundle.</span></p></div>
+
+    <div class="tk"><div class="top"><span class="num">8</span><span class="ti">Identity + roles (OIDC)</span><span class="badge sz">M</span><span class="badge c">ID</span><span class="badge dep">enables T6</span></div>
+      <p>Library-Card membership, OIDC auth, roles mapping to the capability dial <i>and</i> to oversight visibility scope. <span class="done">Done: a member logs in, gets a role, and sees exactly their scoped view; a steward sees the full view.</span></p></div>
+
+    <div class="tk"><div class="top"><span class="num">9</span><span class="ti">Enclave profile hardening</span><span class="badge sz">L</span><span class="badge c">BOX · SEC · CORE</span><span class="badge dep">dep T2 · T4</span></div>
+      <p>Egress deny-all, internal-models-only, in-VPC Postgres, Vault in perimeter. Ship the "run-it-yourself, verify-offline" package: SBOM, signed releases, published verification keys, setup docs. <span class="done">Done: a fresh enclave install runs air-gapped and verifies our ledgers offline with openssl.</span></p></div>
+
+    <div class="tk"><div class="top"><span class="num">10</span><span class="ti">RFC 8785 JCS canonicalizer + signed evidence export</span><span class="badge sz">M</span><span class="badge c">CORE</span><span class="badge dep">no deps</span></div>
+      <p>Swap the simplified canonicalizer in Beacon for full RFC 8785 (JCS); add verifiable bundle export so an auditor can take the whole history and check it offline. <span class="done">Done: canonicalization matches the RFC test vectors; an exported bundle verifies with openssl and a published public key.</span></p></div>
+  </section>
+
+  <!-- MILESTONES -->
+  <section id="milestones">
+    <h2><span class="n">→</span> Milestones</h2>
+    <div class="lead">Where the work crosses into something real.</div>
+    <div class="ms"><b>First brokered action</b> — T0 + T1: an agent does one real, scoped, expiring, fully-receipted thing.</div>
+    <div class="ms"><b>First sandboxed useful agent</b> — + T3 + T5: a tool runs isolated, under caps, with a brokered credential, leaving a signed receipt. <i>This is where agents start saving real work.</i></div>
+    <div class="ms"><b>First watchable system</b> — + T6 + T8: you and Ken watch live and can halt.</div>
+    <div class="ms"><b>First enclave-ready release</b> — + T2 + T4 + T9 + T10: a regulated org runs it themselves and verifies us offline.</div>
+  </section>
+
+  <footer>
+    <div>One slice proves the pattern; ten rocks build the system; four milestones mark the road.</div>
+    <div class="fcreed">MINT · SCOPE · EXPIRE · LOG · REVOKE</div>
+  </footer>
+</div>
+</body>
+</html>

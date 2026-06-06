@@ -254,10 +254,11 @@
     <h2><span class="n">06</span> Build order — without boiling the ocean</h2>
     <div class="lead">You already have the v1 core and Beacon. This is the sequence from here.</div>
     <div class="phase"><div class="num">1</div><div class="body"><h4>HARDEN THE CHOKEPOINT</h4><p>In the core just shipped, confirm agents truly have no path to act except via the gateway, and that the Yes-Gate is side-effect-free. This is the keystone; everything else leans on it.</p></div></div>
-    <div class="phase"><div class="num">2</div><div class="body"><h4>STAND UP THE SECRETS BROKER</h4><p>Run Vault in the lab profile first; wire the gate to broker short-lived tokens. Prove one real credential never leaves the vault. Add the account registry alongside.</p></div></div>
+    <div class="phase"><div class="num">2</div><div class="body"><h4>STAND UP THE SECRETS BROKER</h4><p>Ship the <span class="key">SecretsProvider</span> interface with the FileProvider in <span class="mono">lab</span> first (per the tiered decision); wire the gate to broker short-lived tokens; prove no raw secret ever reaches an agent. Add the account registry alongside, and the VaultProvider for community/enclave.</p></div></div>
     <div class="phase"><div class="num">3</div><div class="body"><h4>BUILD THE OVERSIGHT CONSOLE</h4><p>A new room: a live ledger tail (SSE) with a break-glass kill switch. This is the "100% visibility" surface and the best demo of the whole philosophy.</p></div></div>
     <div class="phase"><div class="num">4</div><div class="body"><h4>ADOPT OPA FOR POLICY</h4><p>Move gates to written policy evaluated by Open Policy Agent, so every rule is reviewable in a PR and identical across all three homes.</p></div></div>
     <div class="phase"><div class="num">5</div><div class="body"><h4>SHIP THE ENCLAVE PROFILE</h4><p>Egress deny-all, internal models only. Now you can credibly tell a firewalled org: run it yourself, verify us offline. That is the anti-lock-in proof.</p></div></div>
+    <p style="margin-top:14px"><a href="./build-tickets.html" style="color:var(--teal);font-family:'IBM Plex Mono',monospace;font-size:13px;text-decoration:none;border-bottom:1px solid rgba(63,208,200,.4)">→ The full backlog: Ticket 0 (the first slice) + the next ten big items</a></p>
   </section>
 
   <!-- 07 BOUNDARIES -->
