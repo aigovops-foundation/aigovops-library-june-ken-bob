@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AiGovOps Library — The Plan</title>
+<meta name="description" content="How agents, skills, and humans run the AiGovOps Library: repeatable, evidence-producing processes across design, UX, docs, test, architecture, translation, accessibility, monitoring and reporting."/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --teal:#01696f; --teal2:#02898f; --green:#2ecc71; --green2:#6fe6a3;
+    --bg:#04181a; --bg2:#07232622; --ink:#e7f3f1; --ink2:#9fc0bd;
+    --gold:#e8c25a; --warm:#f0a64a; --line:rgba(120,200,190,.18); --card:rgba(255,255,255,.035);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);
+    background:radial-gradient(120% 90% at 80% -10%,#0a3034 0%,#04181a 55%,#03100f 100%);min-height:100vh}
+  ::selection{background:rgba(46,204,113,.3)}
+  .wrap{max-width:1080px;margin:0 auto;padding:30px 20px 80px}
+  .mono{font-family:'DM Mono',monospace}
+  .eyebrow{font-family:'DM Mono',monospace;letter-spacing:.28em;font-size:11px;color:var(--green2);text-transform:uppercase}
+  header{padding:36px 0 8px}
+  h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(30px,6vw,56px);line-height:1.04;letter-spacing:-.01em;margin:14px 0 10px;color:#fff}
+  h1 .y{color:var(--green)}
+  .thesis{font-size:clamp(17px,2.4vw,21px);color:var(--ink2);max-width:660px;line-height:1.5}
+  .creed{font-family:'Fraunces',serif;font-style:italic;color:var(--green2);border-left:2px solid var(--green);padding-left:16px;margin:22px 0 0;font-size:18px}
+  nav{display:flex;gap:7px;flex-wrap:wrap;margin:26px 0 0;position:sticky;top:0;z-index:30;background:linear-gradient(#04181a,rgba(4,24,26,.4));padding:10px 0;backdrop-filter:blur(6px)}
+  nav a{text-decoration:none;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.04em;color:var(--ink2);padding:7px 12px;border:1px solid var(--line);border-radius:99px;transition:.2s}
+  nav a:hover{color:#fff;border-color:var(--green);background:rgba(46,204,113,.08)}
+  section{margin-top:52px;scroll-margin-top:64px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(22px,3.4vw,32px);color:#fff;margin-bottom:6px}
+  .sub{color:var(--ink2);font-size:17px;margin-bottom:22px;max-width:640px;line-height:1.5}
+  .panel{border:1px solid var(--line);border-radius:18px;background:var(--card);padding:24px}
+  svg{display:block;width:100%;height:auto}
+  /* spine */
+  .spine{display:flex;gap:0;flex-wrap:wrap;border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:8px}
+  .spine .step{flex:1;min-width:130px;padding:16px 14px;border-right:1px solid var(--line);background:var(--card)}
+  .spine .step:last-child{border-right:none}
+  .spine .n{font-family:'DM Mono',monospace;font-size:10px;color:var(--green2);letter-spacing:.1em}
+  .spine h4{font-size:15px;margin:6px 0 3px;color:#fff}
+  .spine p{font-size:12.5px;color:var(--ink2);line-height:1.45}
+  /* cast */
+  .cast{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+  .agent{border:1px solid var(--line);border-radius:13px;padding:14px 15px;background:var(--card)}
+  .agent .nm{font-weight:600;color:#fff;display:flex;align-items:center;gap:8px;font-size:15px}
+  .agent .dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
+  .agent .role{font-family:'DM Mono',monospace;font-size:10.5px;color:var(--green2);margin:3px 0 6px;letter-spacing:.03em}
+  .agent p{font-size:13px;color:var(--ink2);line-height:1.48}
+  /* skills */
+  .skills{display:flex;flex-wrap:wrap;gap:8px}
+  .skill{font-family:'DM Mono',monospace;font-size:12px;color:var(--ink);background:rgba(1,105,111,.25);border:1px solid rgba(46,204,113,.3);padding:7px 12px;border-radius:8px}
+  .skill b{color:var(--green2);font-weight:500}
+  /* processes */
+  .procs{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
+  .proc{border:1px solid var(--line);border-radius:15px;padding:18px;background:var(--card);transition:.2s}
+  .proc:hover{border-color:rgba(46,204,113,.45);background:rgba(46,204,113,.04)}
+  .proc h3{font-size:16px;color:#fff;display:flex;align-items:center;gap:9px;margin-bottom:2px}
+  .proc .ag{font-family:'DM Mono',monospace;font-size:10.5px;color:var(--gold);letter-spacing:.02em;margin-bottom:9px}
+  .proc .loop{display:flex;flex-direction:column;gap:5px;margin:10px 0}
+  .proc .row{display:flex;gap:8px;font-size:12.5px;color:var(--ink2);line-height:1.4}
+  .proc .row b{color:var(--green2);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.06em;min-width:64px;text-transform:uppercase;padding-top:1px}
+  .proc .sk{font-family:'DM Mono',monospace;font-size:10.5px;color:var(--ink2);margin-top:10px;border-top:1px solid var(--line);padding-top:9px}
+  .proc .sk b{color:var(--green2);font-weight:500}
+  .ico{width:26px;height:26px;flex:0 0 26px;border-radius:7px;background:rgba(1,105,111,.4);display:flex;align-items:center;justify-content:center;font-size:14px}
+  .ship li{list-style:none;padding-left:24px;position:relative;margin-bottom:9px;color:var(--ink2);line-height:1.55}
+  .ship li::before{content:"▸";position:absolute;left:2px;color:var(--green)}
+  .ship li b{color:#fff}
+  .flag{border:1px solid rgba(240,166,74,.4);background:rgba(240,166,74,.07);border-radius:12px;padding:14px 16px;margin-top:14px;color:#f3dcb6;font-size:14px;line-height:1.55}
+  footer{margin-top:60px;text-align:center;color:var(--ink2)}
+  .fcreed{font-family:'DM Mono',monospace;letter-spacing:.2em;font-size:10.5px;color:var(--green2);margin-top:8px}
+  .tagline{font-family:'Fraunces',serif;font-style:italic;font-size:17px;color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">AiGovOps Foundation · The Library · The Plan</div>
+    <h1>How the library runs:<br/>agents, skills, and humans<br/>getting to <span class="y">Yes</span>, together.</h1>
+    <p class="thesis">An end-to-end plan where every discipline — design, UX, docs, test, architecture, translation, accessibility, monitoring, reporting — is a <b>repeatable process</b> run by a named agent, gated by a human, and sealed with a signed receipt.</p>
+    <div class="creed">"Agents do the bureaucracy; humans hold the meaning." Here is exactly how.</div>
+    <nav>
+      <a href="#flow">THE SPINE</a><a href="#cast">THE CAST</a><a href="#skills">THE SKILLS</a>
+      <a href="#processes">THE PROCESSES</a><a href="#delight">THE GARDEN</a><a href="#ship">HOW IT SHIPS</a>
+    </nav>
+  </header>
+
+  <!-- SPINE -->
+  <section id="flow">
+    <h2>The spine — every process serves one arc</h2>
+    <p class="sub">Whatever the discipline, the work bends toward the same three acts. Nothing is busywork; each step moves a gate.</p>
+    <div class="spine">
+      <div class="step"><div class="n">ACT I</div><h4>Get to Yes</h4><p>Discover the gates, do the work, sign the first receipt.</p></div>
+      <div class="step"><div class="n">ACT II</div><h4>Stay at Yes</h4><p>Monitor, re-attest, keep the evidence fresh.</p></div>
+      <div class="step"><div class="n">ACT III</div><h4>Recover to Yes</h4><p>On drift or incident: remediate, re-sign, learn.</p></div>
+      <div class="step"><div class="n">ALWAYS</div><h4>In your language</h4><p>Human and agent speak the member's tongue; the receipt stays canonical.</p></div>
+    </div>
+  </section>
+
+  <!-- CAST -->
+  <section id="cast">
+    <h2>The cast — the library staff</h2>
+    <p class="sub">Each agent is a role with a narrow, reversible capability and a clear human it answers to. They are the staff; members are the citizens.</p>
+    <div class="cast">
+      <div class="agent"><div class="nm"><span class="dot"></span>Concierge</div><div class="role">FRONT DESK · intake & routing</div><p>Greets in-language, understands intent, routes to the right room. Never acts irreversibly.</p></div>
+      <div class="agent"><div class="nm"><span class="dot"></span>Lantern</div><div class="role">READING ROOM · framework mapping</div><p>Maps a problem to the frameworks and compiles the gates you'll face.</p></div>
+      <div class="agent"><div class="nm"><span class="dot"></span>Beacon</div><div class="role">ARCHIVES · evidence & signing</div><p>Signs every receipt, keeps the append-only ledger, hands auditors a verifiable bundle.</p></div>
+      <div class="agent"><div class="nm"><span class="dot"></span>Maker</div><div class="role">MAKERSPACE · design & build</div><p>Assembles workflows and agents on the canvas; previews cost and safety before anything ships.</p></div>
+      <div class="agent"><div class="nm"><span class="dot"></span>Scribe</div><div class="role">writes docs & help</div><p>Turns shipped work into documentation and user assistance, in plain language.</p></div>
+      <div class="agent"><div class="nm"><span class="dot"></span>Cloud-Mary</div><div class="role">runs the tests</div><p>Unit, e2e, scale, chaos — green before anything merges.</p></div>
+      <div class="agent"><div class="nm"><span class="dot"></span>Polyglot</div><div class="role">translation & i18n</div><p>Gives instant machine-translation coverage; routes human review; signs the locale bundle.</p></div>
+      <div class="agent"><div class="nm"><span class="dot"></span>Aperture</div><div class="role">accessibility steward</div><p>Audits every surface to WCAG 2.2 AA; nothing ships that locks someone out.</p></div>
+      <div class="agent"><div class="nm"><span class="dot"></span>Sentinel</div><div class="role">monitoring & alerts</div><p>Watches health, gate failures, cap breaches; pauses and escalates to a human.</p></div>
+      <div class="agent"><div class="nm"><span class="dot"></span>Herald</div><div class="role">reporting</div><p>Composes status, leadership, and community updates from signed evidence.</p></div>
+      <div class="agent"><div class="nm"><span class="dot"></span>Guardian</div><div class="role">safety · security · privacy</div><p>Strips secrets, scans for PII, holds the threat model, blocks unsafe exposure.</p></div>
+      <div class="agent"><div class="nm"><span class="dot"></span>Host</div><div class="role">COFFEE SHOP · community</div><p>Makes introductions over the global tables. Agents convene; humans connect.</p></div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <h2>The skills — what the agents wield</h2>
+    <p class="sub">Skills are reusable, version-controlled procedures (SKILL.md). An agent is a role; a skill is a repeatable how. The same skills already run the live site.</p>
+    <div class="skills">
+      <span class="skill"><b>aigovops-deploy-workflow</b> · ship a change</span>
+      <span class="skill"><b>cloud-mary-testing</b> · run the suite</span>
+      <span class="skill"><b>github-pages-publish</b> · live webpage</span>
+      <span class="skill"><b>marblism-chatbot-integration</b> · wire backend</span>
+      <span class="skill"><b>links-for-events</b> · update resources</span>
+      <span class="skill"><b>framework-map</b> · problem → gates</span>
+      <span class="skill"><b>beacon-sign-evidence</b> · receipt</span>
+      <span class="skill"><b>design-system-apply</b> · brand & UI</span>
+      <span class="skill"><b>ux-flow-spec</b> · flows</span>
+      <span class="skill"><b>ua-help-authoring</b> · user assistance</span>
+      <span class="skill"><b>doc-generate</b> · documentation</span>
+      <span class="skill"><b>translate-and-sign</b> · i18n</span>
+      <span class="skill"><b>accessibility-audit</b> · WCAG 2.2 AA</span>
+      <span class="skill"><b>monitor-and-alert</b> · observability</span>
+      <span class="skill"><b>status-report</b> · reporting</span>
+      <span class="skill"><b>security-privacy-review</b> · the guard</span>
+    </div>
+  </section>
+
+  <!-- PROCESSES -->
+  <section id="processes">
+    <h2>The repeatable processes</h2>
+    <p class="sub">Every discipline follows the same shape — <b class="mono" style="color:var(--green2)">trigger → agent does the work → human gate → signed receipt</b> — so the work is repeatable, auditable, and warm. Twelve playbooks; the source lives in <span class="mono">/plan/processes</span>.</p>
+    <div class="procs" id="procgrid"></div>
+  </section>
+
+  <!-- DELIGHT -->
+  <section id="delight">
+    <h2>The garden of human delight</h2>
+    <p class="sub">The processes are rigorous so the experience can be warm. Agents carry the bureaucracy out of sight; what people feel is welcome, light, and belonging — in their own language, at human scale.</p>
+    <div class="panel">
+      <svg viewBox="0 0 900 240" role="img" aria-label="Agents and humans gathered at a warm table in a garden">
+        <defs><radialGradient id="warm" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#f0a64a" stop-opacity=".5"/><stop offset="100%" stop-color="#f0a64a" stop-opacity="0"/></radialGradient></defs>
+        <ellipse cx="450" cy="120" rx="430" ry="110" fill="url(#warm)"/>
+        <ellipse cx="450" cy="150" rx="180" ry="40" fill="rgba(1,105,111,.3)" stroke="rgba(120,200,190,.25)"/>
+        <!-- humans (warm) -->
+        <g fill="#f0a64a"><circle cx="300" cy="120" r="14"/><circle cx="600" cy="120" r="14"/><circle cx="380" cy="178" r="14"/><circle cx="520" cy="178" r="14"/></g>
+        <!-- agents (green) -->
+        <g fill="#2ecc71"><circle cx="450" cy="104" r="10"/><circle cx="362" cy="138" r="9"/><circle cx="540" cy="138" r="9"/></g>
+        <g stroke="rgba(46,204,113,.4)" stroke-width="1" fill="none"><path d="M450 104 L380 178"/><path d="M450 104 L520 178"/><path d="M450 104 L300 120"/><path d="M450 104 L600 120"/></g>
+        <!-- plants -->
+        <g fill="#1f8f57"><ellipse cx="70" cy="90" rx="34" ry="16"/><ellipse cx="50" cy="120" rx="26" ry="12"/><ellipse cx="830" cy="90" rx="34" ry="16"/><ellipse cx="850" cy="120" rx="26" ry="12"/></g>
+        <text x="450" y="226" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#9fc0bd">humans connect · agents convene · everyone in their own language</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- SHIP -->
+  <section id="ship">
+    <h2>How it ships — private repo, shareable webpage</h2>
+    <p class="sub">The plan lives in a private repository; this page is the public, secret-free face of it, served as a live GitHub Pages site in the Foundation's look.</p>
+    <ul class="ship">
+      <li><b>Private source of truth.</b> Agents, skills, and process playbooks live in <span class="mono">/plan</span> in a private repo. Secrets (keys, internal endpoints) never enter it.</li>
+      <li><b>Public face.</b> This <span class="mono">/docs/index.html</span> is the share-ready page — vision, cast, skills, and processes, no secrets — published via GitHub Pages.</li>
+      <li><b>Every change is governed.</b> A site or plan edit runs the deploy-workflow skill, passes Cloud-Mary, gets a human gate, and emits a signed release receipt.</li>
+      <li><b>Live and verifiable.</b> The same Beacon discipline that signs evidence signs releases; the page's freshness is itself auditable.</li>
+    </ul>
+    <div class="flag"><b>The irreversibility boundary holds.</b> Configs, values, and verification are prepared in advance — but the irreversible clicks (creating the repo, the first push, switching on Pages, DNS) are made by <b>Bob and Ken</b>, after the risk is flagged.</div>
+  </section>
+
+  <footer>
+    <div class="tagline">One governed library, run by agents, held by humans, warm in every language.</div>
+    <div class="fcreed">AGENTS DO THE BUREAUCRACY · HUMANS HOLD THE MEANING</div>
+  </footer>
+</div>
+
+<script>
+  // The twelve repeatable processes — rendered from one shape so they stay consistent.
+  const P = [
+    {ico:"🎨",name:"Design",ag:"Maker",sk:"design-system-apply",trigger:"new surface, room, or rebrand",steps:"apply tokens (Beacon teal+green, library warmth), compose layout, produce a still",gate:"human design approval",receipt:"signed design artifact"},
+    {ico:"🧭",name:"UX — flows",ag:"Maker",sk:"ux-flow-spec",trigger:"a new journey or room interaction",steps:"map states, write the flow spec, prototype the path to Yes",gate:"usability review",receipt:"signed flow spec"},
+    {ico:"🧩",name:"UA — user assistance",ag:"Scribe",sk:"ua-help-authoring",trigger:"a feature users will touch",steps:"author in-context help, tooltips, the gentle 'shall I?'",gate:"editorial review",receipt:"signed help bundle"},
+    {ico:"📄",name:"Documentation",ag:"Scribe",sk:"doc-generate",trigger:"shipped capability or API",steps:"generate docs from source + receipts, plain-language pass",gate:"maintainer review",receipt:"signed doc set"},
+    {ico:"🧪",name:"Test",ag:"Cloud-Mary",sk:"cloud-mary-testing",trigger:"any change before merge",steps:"unit → e2e → scale → chaos; green-or-block",gate:"green before merge",receipt:"signed test run"},
+    {ico:"🏛",name:"Architecture",ag:"Lantern + Maker",sk:"framework-map",trigger:"a hard, high-risk problem",steps:"map frameworks → gates, write the ADR, draft the blueprint",gate:"architecture review",receipt:"signed ADR + blueprint"},
+    {ico:"🌍",name:"Translation",ag:"Polyglot",sk:"translate-and-sign",trigger:"any new or changed string",steps:"MT for instant coverage, queue human review, sign reviewed locale",gate:"human translation review",receipt:"signed locale bundle"},
+    {ico:"♿",name:"Accessibility",ag:"Aperture",sk:"accessibility-audit",trigger:"any user-facing surface",steps:"audit to WCAG 2.2 AA, fix, re-test with AT",gate:"a11y sign-off",receipt:"signed a11y report"},
+    {ico:"📡",name:"Monitoring",ag:"Sentinel",sk:"monitor-and-alert",trigger:"continuous, in production",steps:"watch health, gate failures, cap breaches; pause on breach",gate:"human on any breach",receipt:"signed health / incident beacon"},
+    {ico:"📊",name:"Reporting",ag:"Herald",sk:"status-report",trigger:"weekly + on milestone",steps:"compose status from signed evidence only — no guesswork",gate:"leadership review",receipt:"signed status report"},
+    {ico:"🛡",name:"Security & privacy",ag:"Guardian",sk:"security-privacy-review",trigger:"before any exposure or share",steps:"strip secrets, scan PII, check threat model",gate:"human approves exposure",receipt:"signed review"},
+    {ico:"🚀",name:"Release",ag:"Deploy",sk:"aigovops-deploy-workflow + github-pages-publish",trigger:"approved change ready to go live",steps:"branch → test gate → PR → squash-merge → publish",gate:"BOB / KEN make the irreversible click",receipt:"signed release"}
+  ];
+  const grid = document.getElementById('procgrid');
+  grid.innerHTML = P.map(p => `
+    <div class="proc">
+      <h3><span class="ico">${p.ico}</span>${p.name}</h3>
+      <div class="ag">▸ ${p.ag}</div>
+      <div class="loop">
+        <div class="row"><b>Trigger</b><span>${p.trigger}</span></div>
+        <div class="row"><b>Steps</b><span>${p.steps}</span></div>
+        <div class="row"><b>Human</b><span>${p.gate}</span></div>
+        <div class="row"><b>Receipt</b><span>${p.receipt}</span></div>
+      </div>
+      <div class="sk">skill · <b>${p.sk}</b></div>
+    </div>`).join('');
+</script>
+<a href="./index.html" style="position:fixed;left:14px;bottom:14px;z-index:9999;font-family:DM Mono,ui-monospace,monospace;font-size:11px;letter-spacing:.08em;text-decoration:none;color:#bff3d6;background:rgba(4,24,26,.85);border:1px solid rgba(46,204,113,.45);padding:8px 13px;border-radius:99px">‹ the library set</a>
+</body>
+</html>

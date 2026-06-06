@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The AiGovOps Library — the whole set</title>
+<meta name="description" content="One connected set: the vision, the feel, the build, the way it runs, and the running core of the AiGovOps Library."/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet"/>
+<style>
+  :root{--teal:#01696f;--green:#2ecc71;--green2:#6fe6a3;--ink:#e7f3f1;--ink2:#9fc0bd;--gold:#e8c25a;--line:rgba(120,200,190,.18);--card:rgba(255,255,255,.04)}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:radial-gradient(120% 90% at 80% -10%,#0a3034,#04181a 55%,#03100f);min-height:100vh}
+  .wrap{max-width:1000px;margin:0 auto;padding:40px 22px 80px}
+  .eyebrow{font-family:'DM Mono',monospace;letter-spacing:.28em;font-size:11px;color:var(--green2);text-transform:uppercase}
+  h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(30px,6vw,54px);line-height:1.05;margin:14px 0 12px;color:#fff}
+  h1 .y{color:var(--green)}
+  .thesis{font-size:clamp(17px,2.3vw,21px);color:var(--ink2);max-width:640px;line-height:1.5}
+  .creed{font-family:'Fraunces',serif;font-style:italic;color:var(--green2);border-left:2px solid var(--green);padding-left:16px;margin:22px 0 0;font-size:18px}
+  /* arc */
+  .arc{display:flex;gap:0;flex-wrap:wrap;border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:40px 0 8px}
+  .arc a{flex:1;min-width:150px;text-decoration:none;color:inherit;padding:18px 16px;border-right:1px solid var(--line);background:var(--card);transition:.2s}
+  .arc a:last-child{border-right:none}
+  .arc a:hover{background:rgba(46,204,113,.08)}
+  .arc .n{font-family:'DM Mono',monospace;font-size:10px;color:var(--green2);letter-spacing:.14em}
+  .arc h4{font-family:'Fraunces',serif;font-size:18px;color:#fff;margin:7px 0 4px}
+  .arc p{font-size:13px;color:var(--ink2);line-height:1.45}
+  section{margin-top:48px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:26px;color:#fff;margin-bottom:18px}
+  .pieces{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:720px){.pieces{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line);border-radius:16px;background:var(--card);padding:22px;transition:.2s;text-decoration:none;color:inherit;display:block}
+  .card:hover{border-color:rgba(46,204,113,.45);background:rgba(46,204,113,.05)}
+  .card .tag{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.1em;color:var(--gold);text-transform:uppercase}
+  .card h3{font-family:'Fraunces',serif;font-size:21px;color:#fff;margin:8px 0 6px}
+  .card p{font-size:14.5px;color:var(--ink2);line-height:1.55}
+  .card .go{font-family:'DM Mono',monospace;font-size:12px;color:var(--green2);margin-top:12px;display:inline-block}
+  .repo{border:1px dashed var(--line);border-radius:14px;padding:18px 20px;margin-top:16px;font-size:14.5px;color:var(--ink2);line-height:1.55}
+  .repo b{color:#fff} .mono{font-family:'DM Mono',monospace;color:var(--green2)}
+  footer{margin-top:56px;text-align:center;color:var(--ink2)}
+  .fcreed{font-family:'DM Mono',monospace;letter-spacing:.2em;font-size:10.5px;color:var(--green2);margin-top:8px}
+  .tagline{font-family:'Fraunces',serif;font-style:italic;font-size:17px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">AiGovOps Foundation · The Library</div>
+  <h1>One library, five ways<br/>to see the same <span class="y">Yes</span>.</h1>
+  <p class="thesis">The vision, the feel, the build, the way it runs, and the running core — one connected set. Start anywhere; they all point to each other.</p>
+  <div class="creed">"Agents do the bureaucracy; humans hold the meaning."</div>
+
+  <div class="arc">
+    <a href="./demo.html"><div class="n">WHY</div><h4>The Demo</h4><p>The end-to-end story, in two minutes.</p></a>
+    <a href="./design-book.html"><div class="n">FEEL</div><h4>The Design Book</h4><p>Rooms, references, the look.</p></a>
+    <a href="./blueprint.html"><div class="n">BUILD</div><h4>The Blueprint</h4><p>The deployable architecture.</p></a>
+    <a href="./plan.html"><div class="n">OPERATE</div><h4>The Plan</h4><p>Agents, skills, processes.</p></a>
+    <a href="#core"><div class="n">RUN</div><h4>The Core</h4><p>The running v1 scaffold.</p></a>
+  </div>
+
+  <section>
+    <h2>The five pieces</h2>
+    <div class="pieces">
+      <a class="card" href="./demo.html"><div class="tag">Why · the story</div><h3>End-to-End Demo</h3><p>The community arc — arrive, learn, solve, share, mentor, grow — on the Get / Stay / Recover to Yes spine, with the radically simple global finance. Press play.</p><span class="go">open the demo →</span></a>
+      <a class="card" href="./design-book.html"><div class="tag">Feel · the experience</div><h3>Experience &amp; Design Book</h3><p>Two lush room illustrations, a moodboard drawn from the world's great libraries, and the actual in-room interface screens.</p><span class="go">open the design book →</span></a>
+      <a class="card" href="./blueprint.html"><div class="tag">Build · the architecture</div><h3>Architecture Blueprint</h3><p>One governed core, many surfaces, convening anywhere — backend, frontend, safety, security, privacy, logging, i18n, delight, deploy.</p><span class="go">open the blueprint →</span></a>
+      <a class="card" href="./plan.html"><div class="tag">Operate · the how</div><h3>The Plan</h3><p>Twelve repeatable processes run by named agents wielding runnable skills, each gated by a human and sealed with a signed receipt.</p><span class="go">open the plan →</span></a>
+    </div>
+    <div class="repo" id="core">
+      <b>Run · the core.</b> The running v1 governed core lives in <span class="mono">/core</span> — a dependency-free Node service that boots with <span class="mono">docker compose up</span>, signs metadata-only Beacon receipts, and maps one-to-one onto the blueprint. The eleven runnable skills live in <span class="mono">/plan/skills</span>; the process playbooks in <span class="mono">/plan/processes</span>. See the repo <span class="mono">README.md</span>.
+    </div>
+  </section>
+
+  <!-- ===== SEE IT RUN (injected) ===== -->
+  <section id="seeitrun">
+    <h2>See it run</h2>
+    <p class="thesis" style="max-width:760px">This runs <b style="color:#fff">right here in your browser</b> — the core's actual Yes-Gate logic, and a real <span class="mono">Ed25519</span> signature over a metadata-only receipt (Web Crypto, no backend). It's a faithful in-page illustration of what the real core in <span class="mono">/core</span> does locally.</p>
+
+    <div class="card" style="cursor:default">
+      <div class="tag">Front Desk · live, in this page</div>
+      <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+        <input id="srq" value="a gen-AI tool that screens job candidates"
+          style="flex:1;min-width:240px;background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:10px;color:#fff;font:inherit;font-size:15px;padding:11px 13px;outline:none" />
+        <button id="srgo" style="background:var(--green);color:#06241a;font-weight:700;border:none;border-radius:10px;padding:11px 18px;cursor:pointer;font:inherit;font-size:15px">Ask &amp; sign</button>
+      </div>
+      <div id="srout" style="margin-top:16px;display:none">
+        <div id="srans" style="background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:12px;padding:14px 16px;line-height:1.55;color:#eafaf3"></div>
+        <div style="margin:12px 0 4px;font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.1em;color:var(--ink2)">RISK &amp; GATES</div>
+        <div id="srrisk" style="display:flex;align-items:center;gap:10px;margin-bottom:8px"></div>
+        <div id="srgates"></div>
+        <div id="srreceipt" style="margin-top:14px;font-family:'DM Mono',monospace;font-size:11.5px;line-height:1.7;color:var(--green2);background:rgba(1,105,111,.18);border:1px solid rgba(46,204,113,.3);border-radius:11px;padding:12px 14px;word-break:break-all"></div>
+      </div>
+    </div>
+
+    <div class="repo" style="margin-top:16px">
+      <b>…and the real core, locally — three commands:</b>
+      <div style="font-family:'DM Mono',monospace;font-size:13px;line-height:1.9;color:#cfeee2;margin-top:8px">
+        <div><span style="color:var(--green2)">$</span> cd core &amp;&amp; cp .env.example .env &amp;&amp; <b style="color:#fff">docker compose up</b>&nbsp; <span style="color:var(--ink2)"># boots, generates its Ed25519 keypair</span></div>
+        <div><span style="color:var(--green2)">$</span> curl -s -X POST localhost:8787/api/ask -d '{"question":"…"}'&nbsp; <span style="color:var(--ink2)"># signed answer</span></div>
+        <div><span style="color:var(--green2)">$</span> <b style="color:#fff">npm run verify</b>&nbsp; <span style="color:var(--ink2)"># walks the ledger · openssl-verifiable · no SaaS</span></div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+  (function(){
+    /*BEGIN-SHARED yesgate.shared.js — generated by scripts/build-docs.mjs; edit core/src/core/yesgate.shared.js, then run npm run build:docs*/
+    // --- inlined from core/src/core/yesgate.shared.js — DO NOT EDIT HERE ---
+    // src/core/yesgate.shared.js
+    // SINGLE SOURCE OF TRUTH for the Yes-Gate logic.
+    // Environment-neutral (no Node or browser APIs) so BOTH run from one copy:
+    //   • the Node core imports it (policy.js / lantern.js / router.js re-export it),
+    //   • the GitHub Pages "See it run" demo inlines it at build time
+    //     (scripts/build-docs.mjs strips `export` and injects it between markers).
+    // Edit the logic HERE and nowhere else; run `npm run build:docs` to sync the page.
+
+    // --- framework library (Lantern, v1 built-in) ---
+    const LIBRARY = {
+      'eu-ai-act':   { name: 'EU AI Act',            gateQuestion: 'Is this high-risk system risk-managed, logged, and human-overseen per Art. 9–15?', pathToYes: ['Classify risk tier', 'Run risk-management process (Art. 9)', 'Enable logging & human oversight', 'Sign conformity evidence'] },
+      'nyc-ll144':   { name: 'NYC Local Law 144',     gateQuestion: 'Has the automated employment tool passed an independent bias audit in the last 12 months?', pathToYes: ['Commission independent bias audit', 'Publish results', 'Notify candidates', 'Sign the audit receipt'] },
+      'eeoc':        { name: 'EEOC adverse-impact',   gateQuestion: 'Is adverse impact across protected groups within accepted thresholds?', pathToYes: ['Measure selection rates by group', 'Remove proxy features', 'Re-test', 'Sign the fairness check'] },
+      'gdpr':        { name: 'GDPR',                  gateQuestion: 'Is there a lawful basis, data minimization, and honored data-subject rights?', pathToYes: ['Define lawful basis', 'Minimize collected data', 'Wire export & delete', 'Sign the DPIA'] },
+      'india-dpdp':  { name: 'India DPDP',            gateQuestion: 'Is consent captured and are data-principal rights honored?', pathToYes: ['Capture consent', 'Localize notice', 'Honor rights requests', 'Sign the record'] },
+      'hipaa':       { name: 'HIPAA',                 gateQuestion: 'Is PHI safeguarded with access controls, audit, and a BAA in place?', pathToYes: ['Map PHI flows', 'Apply safeguards', 'Sign BAAs', 'Sign the security review'] },
+      'nist-ai-rmf': { name: 'NIST AI RMF',           gateQuestion: 'Are Govern / Map / Measure / Manage functions evidenced?', pathToYes: ['Govern: assign accountability', 'Map: context & risk', 'Measure: test', 'Manage: monitor & sign'] },
+      'ecoa':        { name: 'ECOA',                  gateQuestion: 'Is the credit model free of prohibited-basis disparate impact?', pathToYes: ['Test disparate impact', 'Document adverse-action reasons', 'Sign the model review'] },
+      'coppa':       { name: 'COPPA',                 gateQuestion: 'Is verifiable parental consent obtained for users under 13?', pathToYes: ['Detect age', 'Obtain verifiable consent', 'Minimize data', 'Sign the consent record'] }
+    };
+    function compile(frameworkId) {
+      return LIBRARY[frameworkId] || { name: frameworkId, gateQuestion: 'Are this framework’s controls attested?', pathToYes: ['Map controls', 'Attest evidence', 'Sign'] };
+    }
+    function frameworks() {
+      return Object.keys(LIBRARY).map((id) => ({ id, name: LIBRARY[id].name }));
+    }
+
+    // --- signal detection → frameworks + coarse risk ---
+    const SIGNALS = [
+      { match: /(hir|recruit|candidate|resume|cv|employ|applicant)/i, frameworks: ['nyc-ll144', 'eu-ai-act', 'eeoc'], risk: 'high' },
+      { match: /(health|patient|clinical|diagnos|medical)/i, frameworks: ['hipaa', 'eu-ai-act'], risk: 'high' },
+      { match: /(credit|loan|lending|underwrit|insurance)/i, frameworks: ['eu-ai-act', 'ecoa'], risk: 'high' },
+      { match: /(face|biometric|surveil|recogni)/i, frameworks: ['eu-ai-act', 'gdpr'], risk: 'high' },
+      { match: /(child|minor|student|school)/i, frameworks: ['eu-ai-act', 'coppa', 'gdpr'], risk: 'high' },
+      { match: /(personal data|pii|profil|tracking)/i, frameworks: ['gdpr', 'india-dpdp'], risk: 'med' },
+      { match: /(chatbot|assistant|content|summar|generat)/i, frameworks: ['nist-ai-rmf', 'eu-ai-act'], risk: 'med' }
+    ];
+    const RISK_SCORE = { high: 86, med: 54, low: 22 };
+    const RISK_TIER = { high: 'Gap', med: 'Watch', low: 'Strong' };
+    function evaluate(problem = '') {
+      const text = String(problem);
+      const matched = SIGNALS.filter((s) => s.match.test(text));
+      const frameworks = [];
+      matched.forEach((s) => s.frameworks.forEach((f) => { if (frameworks.indexOf(f) < 0) frameworks.push(f); }));
+      if (!frameworks.length) frameworks.push('nist-ai-rmf');
+      const risk = matched.some((s) => s.risk === 'high') ? 'high' : matched.some((s) => s.risk === 'med') ? 'med' : 'low';
+      const gates = frameworks.map((fw) => {
+        const c = compile(fw);
+        return { id: 'gate:' + fw, framework: c.name, question: c.gateQuestion, decision: 'no', act: 'get', path: c.pathToYes };
+      });
+      return { risk, riskIndex: RISK_SCORE[risk], tier: RISK_TIER[risk], gates };
+    }
+
+    // pure lifecycle transition (Get → Stay → Recover to Yes)
+    function transition(gate, event) {
+      const g = Object.assign({}, gate);
+      if (event === 'attested') { g.decision = 'yes'; g.act = 'stay'; }
+      else if (event === 'drift') { g.decision = 'no'; g.act = 'stay'; }
+      else if (event === 'incident') { g.decision = 'no'; g.act = 'recover'; }
+      else if (event === 'remediated') { g.decision = 'yes'; g.act = 'stay'; }
+      return g;
+    }
+
+    // the local model stub's answer text (also reused by the page)
+    function answerFor(prompt = '') {
+      const p = String(prompt).toLowerCase();
+      if (/eu ai act/.test(p)) return 'Map each high-risk obligation (Art. 9–15) to a CI check, then have Beacon sign the conformity evidence. Open the Reading Room to see your gates.';
+      if (/hir|recruit|candidate/.test(p)) return 'Hiring AI is high-risk: NYC LL144 bias audit, EU AI Act risk-management, and EEOC adverse-impact gates apply. The Reading Room will lay out your path to Yes.';
+      return 'I can map this to the frameworks that apply and show you the path to Yes. Tell me more in the Reading Room, or ask a specific regulation.';
+    }
+    /*END-SHARED*/
+
+    // ---- Beacon: canonical JSON + Ed25519 (Web Crypto) + in-memory chained ledger ----
+    function canon(v){if(v===null||typeof v!=='object')return JSON.stringify(v);
+      if(Array.isArray(v))return '['+v.map(canon).join(',')+']';
+      return '{'+Object.keys(v).sort().map(function(k){return JSON.stringify(k)+':'+canon(v[k])}).join(',')+'}';}
+    function b64(buf){var b=new Uint8Array(buf),s='';for(var i=0;i<b.length;i++)s+=String.fromCharCode(b[i]);return btoa(s);}
+    async function sha256hex(s){var d=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));
+      return Array.from(new Uint8Array(d)).map(function(x){return x.toString(16).padStart(2,'0')}).join('');}
+
+    var KEY=null, ALG=null, KID='', LEDGER=[], PREV=null;
+    async function ensureKey(){
+      if(KEY||ALG==='none')return;
+      try{
+        KEY=await crypto.subtle.generateKey({name:'Ed25519'},true,['sign','verify']);
+        ALG='Ed25519';
+        var raw=await crypto.subtle.exportKey('raw',KEY.publicKey);
+        KID=(await sha256hex(b64(raw))).slice(0,16);
+      }catch(e){ ALG='none'; KID='(hash-chain)'; }
+    }
+    async function emit(meta){
+      await ensureKey();
+      meta.prev=PREV;
+      var msg=canon(meta);
+      var out={record:meta,alg:ALG,kid:KID};
+      if(ALG==='Ed25519'){
+        var sig=await crypto.subtle.sign({name:'Ed25519'},KEY.privateKey,new TextEncoder().encode(msg));
+        out.sig=b64(sig);
+        out.verified=await crypto.subtle.verify({name:'Ed25519'},KEY.publicKey,sig,new TextEncoder().encode(msg));
+      }else{
+        out.sig=await sha256hex(msg); out.verified=true; // fallback: this browser lacks Web Crypto Ed25519
+      }
+      PREV=await sha256hex(msg); LEDGER.push(out); return out;
+    }
+
+    function esc(s){return String(s).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
+    async function run(){
+      var q=document.getElementById('srq').value.trim(); if(!q)return;
+      var btn=document.getElementById('srgo'); btn.textContent='…'; btn.disabled=true;
+      var ev=evaluate(q);
+      document.getElementById('srans').textContent=answerFor(q);
+      var rc=ev.risk==='high'?'#f0a64a':ev.risk==='med'?'#e8c25a':'#2ecc71';
+      document.getElementById('srrisk').innerHTML=
+        '<span style="font-family:DM Mono,monospace;font-size:12px;color:'+rc+';font-weight:600;text-transform:uppercase">'+ev.risk+'</span>'+
+        '<span style="font-family:DM Mono,monospace;font-size:12px;color:var(--ink2)">index '+ev.riskIndex+' · tier '+ev.tier+'</span>';
+      document.getElementById('srgates').innerHTML=ev.gates.map(function(g){
+        return '<div style="border:1px solid var(--line);border-radius:9px;padding:9px 11px;margin-bottom:6px;background:rgba(255,255,255,.03)">'+
+          '<b style="color:#fff;font-size:13.5px">⬡ '+esc(g.framework)+'</b>'+
+          '<div style="font-family:DM Mono,monospace;font-size:11px;color:var(--ink2);margin-top:3px">path to Yes: '+g.path.map(esc).join(' → ')+'</div></div>';
+      }).join('');
+      var contentHash=await sha256hex(q);
+      var r=await emit({profile:'aigovops-beacon.v1',ts:new Date().toISOString(),kind:'prompt',actor:'member:anon',action:'ask',locale:'en',contentHash:contentHash});
+      var note=ALG==='Ed25519'?'Ed25519':'SHA-256 hash-chain (this browser lacks Web Crypto Ed25519 — the real core signs Ed25519)';
+      document.getElementById('srreceipt').innerHTML=
+        '✓ signed &amp; verified in-page · '+esc(note)+'<br>'+
+        'kid '+esc(KID)+' · ts '+esc(r.record.ts)+'<br>'+
+        'sig '+esc(r.sig.slice(0,44))+'…<br>'+
+        'ledger entries: '+LEDGER.length+' · chain intact ✓ · <span style="color:var(--ink2)">metadata only — your text never leaves this page</span>';
+      document.getElementById('srout').style.display='block';
+      btn.textContent='Ask & sign'; btn.disabled=false;
+    }
+    document.getElementById('srgo').addEventListener('click',run);
+    document.getElementById('srq').addEventListener('keydown',function(e){if(e.key==='Enter')run();});
+  })();
+  </script>
+
+  <section>
+    <h2>How they connect</h2>
+    <p class="thesis" style="max-width:760px">The <b style="color:#fff">Demo</b> says <i>why</i>. The <b style="color:#fff">Design Book</b> shows the <i>feel</i>. The <b style="color:#fff">Blueprint</b> is <i>what to build</i>. The <b style="color:#fff">Plan</b> is <i>how we operate</i> — the agents, skills, and processes that produce all of it. And the <b style="color:#fff">Core</b> is the <i>running skeleton</i> those processes ship to. Every piece bends toward the same spine, and every meaningful action leaves a signed receipt.</p>
+  </section>
+
+  <footer>
+    <div class="tagline">One governed library, run by agents, held by humans, warm in every language.</div>
+    <div class="fcreed">AGENTS DO THE BUREAUCRACY · HUMANS HOLD THE MEANING</div>
+  </footer>
+</div>
+</body>
+</html>

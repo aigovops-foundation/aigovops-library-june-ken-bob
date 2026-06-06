@@ -1,0 +1,11 @@
+{
+  "name": "aigovops-library",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "AiGovOps Library — the whole set (demo, design book, blueprint, plan, core).",
+  "scripts": {
+    "build:docs": "node scripts/build-docs.mjs",
+    "test": "cd core && node --test"
+  }
+}

@@ -1,0 +1,7 @@
+node_modules/
+.env
+core/.env
+core/keys/*.pem
+core/ledger/*.ndjson
+*.log
+.DS_Store
