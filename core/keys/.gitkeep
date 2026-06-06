@@ -1,0 +1,1 @@
+# Ed25519 keys live here in local dev (gitignored). Use a KMS/secret store in production.

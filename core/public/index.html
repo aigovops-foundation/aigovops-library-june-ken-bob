@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AiGovOps Library · Front Desk</title>
+<style>
+  :root{--bg:#16122c;--bg2:#1f1a3a;--green:#2ecc71;--teal:#4FB286;--pur:#7B61FF;--mut:#a59fc2}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Spectral',Georgia,serif;background:radial-gradient(120% 120% at 75% 0%,#251c44,#16122c 60%,#120f24);color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .room{width:100%;max-width:640px}
+  .eye{font-family:ui-monospace,monospace;color:var(--green);font-size:11px;letter-spacing:.14em;margin-bottom:8px}
+  h1{font-size:28px;margin-bottom:4px}
+  .sub{color:var(--mut);font-style:italic;margin-bottom:22px}
+  .inp{display:flex;gap:10px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px 12px}
+  .inp input{flex:1;background:none;border:none;color:#fff;font-size:15px;font-family:inherit;outline:none}
+  .inp button{background:var(--teal);color:#0f2c1b;font-weight:700;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:14px}
+  .ans{margin-top:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:13px;padding:16px;display:none}
+  .ans .txt{line-height:1.55;color:#ece9f6}
+  .chip{display:inline-flex;gap:6px;align-items:center;font-family:ui-monospace,monospace;font-size:11px;color:#6fd6a3;background:rgba(46,204,113,.14);padding:4px 10px;border-radius:99px;margin-top:12px}
+  .foot{margin-top:26px;font-family:ui-monospace,monospace;font-size:10.5px;color:var(--mut);letter-spacing:.06em}
+</style>
+</head>
+<body>
+  <div class="room">
+    <div class="eye">AIGOVOPS LIBRARY · FRONT DESK · SIGNED ANSWERS</div>
+    <h1 id="welcome">Ask the Foundation anything.</h1>
+    <div class="sub">Local-first. No keys in this page — the core holds everything.</div>
+    <div class="inp">
+      <input id="q" placeholder="e.g. How do I map the EU AI Act to my CI pipeline?" />
+      <button id="go">Ask</button>
+    </div>
+    <div class="ans" id="ans">
+      <div class="txt" id="txt"></div>
+      <div class="chip" id="sig">✓ signed</div>
+    </div>
+    <div class="foot">Every answer emits a metadata-only Beacon receipt. Verify the ledger: <b>GET /api/verify</b> · public key: <b>/beacon/pubkey</b></div>
+  </div>
+<script>
+  // Talks to the SAME-ORIGIN gateway. No API keys ever live here.
+  const $ = id => document.getElementById(id);
+  async function ask(){
+    const question = $('q').value.trim(); if(!question) return;
+    $('go').textContent='…';
+    try{
+      const r = await fetch('/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question})});
+      const d = await r.json();
+      $('txt').textContent = d.answer;
+      $('sig').textContent = '✓ ' + (d.signed?.label||'signed') + ' · kid ' + (d.signed?.kid||'') ;
+      $('ans').style.display='block';
+    }catch(e){ $('txt').textContent='Could not reach the core.'; $('ans').style.display='block'; }
+    $('go').textContent='Ask';
+  }
+  $('go').onclick=ask; $('q').addEventListener('keydown',e=>{if(e.key==='Enter')ask();});
+</script>
+</body>
+</html>

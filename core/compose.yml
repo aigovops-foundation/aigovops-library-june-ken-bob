@@ -1,0 +1,13 @@
+# Same image, three lives (local / VPS / canonical) — only the env differs.
+# Local lab:  docker compose up   →  http://localhost:8787
+services:
+  core:
+    build: .
+    ports:
+      - "8787:8787"
+    env_file:
+      - .env
+    volumes:
+      - ./ledger:/app/ledger   # append-only signed evidence ledger (persists)
+      - ./keys:/app/keys       # Ed25519 keys (gitignored; KMS/secret store in prod)
+    restart: unless-stopped
