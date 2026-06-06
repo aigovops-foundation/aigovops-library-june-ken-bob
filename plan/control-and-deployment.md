@@ -7,6 +7,33 @@ reasoning.
 
 > "Agents do the bureaucracy; humans hold the meaning — and humans hold the keys."
 
+## ★ Decisions · Rev 2026.06
+
+The principle: **define the safety contract once at the interface; enforce it with the
+strongest backend each environment allows; scope every view by identity.**
+
+- **Secrets: tiered, behind one interface.** A single `SecretsProvider` contract —
+  `getToken(scope, ttl)` · `rotate()` · `revoke()` — with two adapters: FileProvider
+  (lab: keychain/`.env`) and VaultProvider (community + enclave: Vault / cloud KMS).
+  One call site. Identical broker semantics everywhere — even the lab adapter mints a
+  short-lived, scoped, revocable, logged token; an agent never gets a raw secret.
+  Asymmetry (documented): Vault issues dynamic ephemeral creds in prod; lab simulates
+  short-lived via an enforced-TTL wrapper over a static secret (lab touches no real
+  targets).
+- **Chokepoint: sandbox contract from day one; gVisor where the kernel allows.** Tools
+  run sandboxed, no ambient network/filesystem, egress only via a declared proxy —
+  enforced everywhere. Backend is gVisor on Linux community/enclave; lighter fallback
+  on dev laptops (seccomp + netns + read-only rootfs). The guarantee holds in every
+  home; gVisor only strengthens it where it can run.
+- **Oversight: one surface, role-scoped.** Same code; stewards (founders) see all
+  receipts, dials, secret-issuance events, and the armed global kill switch; members
+  see only their own effects and pause only their own workflows. Receipts tagged
+  owner+scope; console is a live SSE view gated by viewer authz; the global kill
+  switch is a steward-only action that emits its own signed receipt.
+
+Three contracts — SecretsProvider, the sandbox boundary, the oversight view — same
+semantics everywhere; only backend and visibility vary, by environment and role.
+
 ## 00 · The promise (five commitments, enforced in code)
 
 1. **One artifact, three homes.** The same container runs on a lab laptop, the

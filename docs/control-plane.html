@@ -73,7 +73,7 @@
   </header>
 
   <nav>
-    <a href="#promise">00 · THE PROMISE</a><a href="#homes">01 · THREE HOMES</a><a href="#chokepoint">02 · CHOKEPOINT</a>
+    <a href="#decisions">★ · DECISIONS</a><a href="#promise">00 · THE PROMISE</a><a href="#homes">01 · THREE HOMES</a><a href="#chokepoint">02 · CHOKEPOINT</a>
     <a href="#agents">03 · AGENT SAFETY</a><a href="#secrets">04 · SECRETS</a><a href="#oversight">05 · OVERSIGHT</a>
     <a href="#build">06 · BUILD ORDER</a><a href="#boundaries">07 · BOUNDARIES</a>
   </nav>
@@ -91,6 +91,20 @@
         <li><b>We broker secrets; we never hoard them.</b> No password ever lives in this platform or in an agent. A vault holds them; the gate hands out short-lived, narrowly-scoped tokens that expire on their own.</li>
         <li><b>The receipt is the unit of truth.</b> Every meaningful effect emits an append-only, Ed25519-signed record. Tail the ledger and you have total real-time visibility of <i>effects</i> — plus a break-glass switch to halt instantly.</li>
       </ul>
+    </div>
+  </section>
+
+  <!-- DECISIONS -->
+  <section id="decisions">
+    <h2><span class="n">★</span> Decisions · Rev 2026.06</h2>
+    <div class="lead">Settled calls that the sections below assume. The principle: define the safety contract once at the interface; enforce it with the strongest backend each environment allows; scope every view by identity.</div>
+    <div class="panel">
+      <ul>
+        <li><b>Secrets: tiered, behind one interface.</b> A single <span class="key">SecretsProvider</span> contract — <span class="mono">getToken(scope, ttl)</span> · <span class="mono">rotate()</span> · <span class="mono">revoke()</span> — with two adapters: a FileProvider (lab: OS keychain / <span class="mono">.env</span>) and a VaultProvider (community + enclave: HashiCorp Vault or cloud KMS). The gateway only ever calls the interface, so there is <i>one</i> call site. The broker semantics are identical everywhere — even the lab adapter mints a short-lived, scoped, revocable, logged token and never hands an agent a raw secret. Documented asymmetry: Vault issues truly dynamic ephemeral creds in prod; the lab simulates short-lived with an enforced-TTL wrapper over a static secret (acceptable because the lab touches no real targets).</li>
+        <li><b>Chokepoint: sandbox contract from day one; gVisor where the kernel allows.</b> The contract is enforced everywhere from the start — tools run sandboxed, no ambient network or filesystem, egress only through a declared proxy. The backend is <span class="key">gVisor</span> (kernel-enforced isolation) on Linux community/enclave hosts, with a documented lighter fallback on dev laptops (seccomp default profile + network-namespace isolation + read-only rootfs). The guarantee — an agent can never open a socket or touch the host — holds in every home; gVisor only makes it stronger where it can run.</li>
+        <li><b>Oversight: one surface, role-scoped.</b> Same code for stewards and members. Stewards (the founders) see every receipt across all agents, the capability dials, secret-issuance events, and the armed global kill switch. A member sees only their own effects and can pause only their own workflows — never others' data, never the global switch. Mechanically: every receipt is tagged owner + scope; the console is a live (SSE) filtered view over the ledger gated by the viewer's authz; pulling the global kill switch is itself a steward-only privileged action that emits its own signed receipt.</li>
+      </ul>
+      <div class="creed">Three contracts — SecretsProvider, the sandbox boundary, and the oversight view — same semantics everywhere; only the backend and the visibility vary, by environment and by role. That is what keeps the guarantee from weakening just because you changed homes or who's looking.</div>
     </div>
   </section>
 
