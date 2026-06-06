@@ -15,13 +15,14 @@ A shareable hub page (GitHub Pages) presents the non-secret story; the source of
 | **Design Book** — *feel* | [`docs/design-book.html`](docs/design-book.html) | Room illustrations, the world-libraries moodboard, the in-room interfaces. |
 | **Blueprint** — *build* | [`docs/blueprint.html`](docs/blueprint.html) | The deployable architecture: backend, frontend, safety, security, privacy, logging, i18n, delight. |
 | **Plan** — *operate* | [`docs/plan.html`](docs/plan.html) + [`plan/`](plan/) | Agents, skills, and twelve repeatable processes. |
+| **Control Plane** — *govern* | [`docs/control-plane.html`](docs/control-plane.html) + [`plan/control-and-deployment.md`](plan/control-and-deployment.md) | One artifact for lab/community/enclave, the single agent chokepoint, the secrets broker, and real-time oversight — no agents gone wild. |
 | **Core** — *run* | [`core/`](core/) | The running v1 governed core (Node, dependency-free). |
 
 ## Layout
 ```
 aigovops-library/
 ├── docs/                     ← GitHub Pages root (the shareable, secret-free hub + the 4 pages)
-│   ├── index.html  demo.html  design-book.html  blueprint.html  plan.html
+│   ├── index.html  demo.html  design-book.html  blueprint.html  plan.html  control-plane.html
 ├── core/                     ← the running v1 governed core (docker compose up)
 │   └── src · Dockerfile · compose.yml · test · README.md
 ├── plan/                     ← the private source of truth (no secrets)
