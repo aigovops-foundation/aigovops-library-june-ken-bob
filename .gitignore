@@ -9,3 +9,7 @@ core/ledger/*.ndjson
 # secret broker backing store (FileProvider) — NEVER commit
 secrets.local.json
 core/secrets.local.json
+
+# exported evidence bundles (shared with auditors, not committed)
+evidence-bundle/
+core/evidence-bundle/

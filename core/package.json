@@ -11,8 +11,9 @@
     "keygen": "node scripts/keygen.mjs",
     "verify": "node scripts/verify-ledger.mjs",
     "test": "node --test",
-    "pulse": "node scripts/pulse.mjs"
+    "pulse": "node scripts/pulse.mjs",
+    "export:evidence": "node scripts/export-evidence.mjs"
   },
   "dependencies": {},
-  "comment": "v1 is intentionally dependency-free: it uses only Node's built-in http + crypto (Ed25519). No supply chain to audit, no keys in any client. Swap the simplified canonicalizer in src/core/beacon.js for a real RFC 8785 JCS library before production."
+  "comment": "v1 is intentionally dependency-free: it uses only Node's built-in http + crypto (Ed25519). No supply chain to audit, no keys in any client. The canonicalizer in src/core/beacon.js implements RFC 8785 (JCS); `npm run export:evidence` produces an openssl-verifiable evidence bundle."
 }

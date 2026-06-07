@@ -177,6 +177,13 @@ Contract tags: **[SEC]** secrets · **[BOX]** sandbox · **[GATE]** policy/caps 
     bundle export so an auditor can take the whole history and check it offline.
     *Done:* canonicalization matches the RFC test vectors; an exported bundle verifies with
     `openssl` and a published public key.
+    **Status — ✅ implemented (2026-06):** canonicalizer is RFC 8785 (`beacon.js` +
+    `core/test/canonicalize.test.mjs` vectors). `core/scripts/export-evidence.mjs`
+    (`npm run export:evidence`) writes a self-contained bundle: `public-key.pem`, per-entry
+    canonical bytes + raw Ed25519 sig + chain `prev`, `MANIFEST.json`, and **two offline
+    verifiers** — `verify.sh` (OpenSSL 3.x) and `verify.mjs` (Node, anywhere). Tests:
+    `core/test/export-evidence.test.mjs` (node-crypto + chain + tamper + openssl-if-present).
+    Note: macOS LibreSSL lacks Ed25519, so `verify.sh` detects that and points to `verify.mjs`.
 
 ---
 

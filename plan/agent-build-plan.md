@@ -132,8 +132,9 @@ Recommended sequence:
    changes the canonicalization every signature depends on, so it must be stable *before*
    we accrue a build ledger we intend to trust (building a signer-affecting change through
    the signing loop would be circular). Lowest-risk ticket: public test vectors,
-   `openssl`-verifiable. *(Canonicalizer + vectors done 2026-06; the signed-evidence bundle
-   export half of T10 remains.)*
+   `openssl`-verifiable. *(✅ Done 2026-06 — canonicalizer + RFC vectors, and the
+   signed-evidence bundle export (`export-evidence.mjs`) with two offline verifiers
+   (`verify.sh` openssl + `verify.mjs` node).)*
 3. **A1 (skill-runner) + a thin A2 (governed MCP/API)** — the unlock that lets an agent
    transact through the gate. *(A1 prototype done; A2 governed core `govapi.js` + a
    dependency-free MCP stdio server `mcp-server.mjs` landed, with tests — HTTP exposure and
