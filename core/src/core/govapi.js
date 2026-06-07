@@ -20,6 +20,7 @@ import { propose as agentPropose } from './agent.js';
 import { decide as gateDecide } from './gate.js';
 import { FileProvider } from './secrets.fileprovider.js';
 import { ProcessSandbox } from './sandbox.process.js';
+import { ledgerView, canKill } from './oversight.js';
 import { listSkills, runSkill } from '../../scripts/run-skill.mjs';
 
 /**
@@ -41,6 +42,7 @@ export function createGovernedCore(opts = {}) {
   let halted = false;
 
   const ensureLive = () => { if (halted) throw new Error('halted: the kill switch is armed'); };
+  const doHalt = () => { halted = true; return emit({ kind: 'gate', actor: 'steward', action: 'kill-switch', detail: { armed: true } }); };
 
   return {
     // 1) propose — the agent submits an intent. We classify it (reversible?) and
@@ -100,9 +102,18 @@ export function createGovernedCore(opts = {}) {
       run: (name, args) => runSkill(name, args),
     },
 
-    // T6 stub — the global kill switch. The full role-scoped oversight console is
-    // Ticket 6; this is the halt hook it will drive. Arming it fails new work closed.
-    halt() { halted = true; return emit({ kind: 'gate', actor: 'steward', action: 'kill-switch', detail: { armed: true } }); },
+    // Oversight (Ticket 6, core) — role-scoped view + a steward-only kill switch.
+    // The live SSE console UI is the remaining product half.
+    oversight(identity = { role: 'member', id: 'member:anon' }) {
+      return {
+        view: () => ledgerView(identity),
+        kill: () => { if (!canKill(identity.role)) throw new Error('kill switch is steward-only'); return doHalt(); },
+        status: () => ({ halted, role: identity.role, scope: identity.role === 'steward' ? 'all' : 'own' }),
+      };
+    },
+
+    // Low-level halt hook (the kill switch the oversight console drives).
+    halt: doHalt,
     resume() { halted = false; },
     isHalted() { return halted; },
   };

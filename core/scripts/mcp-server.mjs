@@ -31,6 +31,8 @@ const TOOLS = [
     inputSchema: { type: 'object', properties: {} } },
   { name: 'skills_run', description: 'Run a skill by name through the gate+ledger (Ticket A1).',
     inputSchema: { type: 'object', properties: { name: { type: 'string' }, input: { type: 'string' }, meta: { type: 'object' }, approve: { type: 'boolean' } }, required: ['name'] } },
+  { name: 'oversight_view', description: 'Role-scoped view of the ledger: a steward sees all receipts; anyone else sees only their own. (The kill switch is a steward-console action, not exposed here.)',
+    inputSchema: { type: 'object', properties: { role: { type: 'string' }, id: { type: 'string' } } } },
 ];
 
 async function callTool(name, a = {}) {
@@ -41,6 +43,7 @@ async function callTool(name, a = {}) {
     case 'gov_verify':   return core.verify();
     case 'skills_list':  return core.skills.list();
     case 'skills_run':   return core.skills.run(a.name, { input: a.input, meta: a.meta, approve: a.approve });
+    case 'oversight_view': return core.oversight({ role: a.role || 'member', id: a.id || 'member:anon' }).view();
     default: throw new Error('unknown tool: ' + name);
   }
 }

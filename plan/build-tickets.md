@@ -142,6 +142,11 @@ Contract tags: **[SEC]** secrets · **[BOX]** sandbox · **[GATE]** policy/caps 
    switch is a steward-only action that emits its own signed receipt.
    *Done:* two roles, one codebase, correct scoping; the kill switch halts running
    workflows.
+   **Status — core landed (2026-06):** `core/src/core/oversight.js` (`ledgerView` role-scoped:
+   steward→all, member→own; `canKill` steward-only) + `govapi.oversight(identity)`
+   (`view`/`kill`/`status`); kill emits a signed receipt and fails new work closed. Read-only
+   `oversight_view` MCP tool. Tests: `core/test/oversight.test.mjs`. **Remaining (dynamic):**
+   the live SSE web console UI.
 
 7. **OPA policy engine** · L · [GATE] · dep: T1.
    Move Yes-Gate rules to OPA (rego), evaluated at the gate; policies reviewable in PRs;
@@ -154,6 +159,11 @@ Contract tags: **[SEC]** secrets · **[BOX]** sandbox · **[GATE]** policy/caps 
    oversight visibility scope.
    *Done:* a member logs in, gets a role, and sees exactly their scoped view; a steward sees
    the full view.
+   **Status — static core landed (2026-06):** `identity.js` has `ROLES`
+   (steward→auto/see-all, member→propose/see-own), `identify()`, and a `resolveIdentity()`
+   OIDC seam; capability levels unified with the caps dial. Tests:
+   `core/test/identity.test.mjs`. **Remaining (dynamic):** the real OIDC provider/IdP +
+   login flow (human decision — choose the IdP).
 
 9. **Enclave profile hardening** · L · [BOX][SEC][CORE] · dep: T2, T4.
    Egress deny-all, internal-models-only, in-VPC Postgres, Vault in perimeter. Ship the

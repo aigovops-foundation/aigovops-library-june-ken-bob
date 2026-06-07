@@ -147,6 +147,9 @@ Recommended sequence:
    and monitor-and-alert (`reports.js`); **7 of 12 skills runnable**. The remaining 5 are
    generative authoring skills the agent performs through the loop, not tool-wirable.)*
 6. **T8 identity/OIDC → T6 oversight console** — the watchable system, before widening
-   agent autonomy. *(Next — see Phase 1.)*
+   agent autonomy. *(Static core landed — `identity.js` roles (steward/member) + a
+   `resolveIdentity()` OIDC seam; `oversight.js` role-scoped `ledgerView` + steward-only kill
+   switch via `govapi.oversight()` + an `oversight_view` MCP tool. Remaining dynamic halves:
+   a real OIDC provider/IdP and the live SSE web console — both human/product decisions.)*
 
 See `plan/build-tickets.md` (tickets **A1**, **A2**) for the specs.
