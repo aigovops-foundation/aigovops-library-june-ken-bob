@@ -29,6 +29,7 @@ if (!process.env.LEDGER_DIR) process.env.LEDGER_DIR = path.resolve(__dirname, '.
 
 const beacon = await import('../src/core/beacon.js');
 const { evaluate } = await import('../src/core/policy.js');
+const { review } = await import('../src/core/scanners.js');
 
 // Skills that are irreversible/credential-touching even if their SKILL.md uses a
 // different heading than "## Human gate" — always treated as human-gated.
@@ -87,6 +88,19 @@ const HANDLERS = {
       detail: { frameworks, gateCount: result.gates.length, riskIndex: result.riskIndex, tier: result.tier },
     });
     return { result: { tier: result.tier, riskIndex: result.riskIndex, frameworks, gates: result.gates }, receipt: receiptView(signed) };
+  },
+
+  // Guardian · secret + PII scan before exposure (core: scanners.review)
+  'security-privacy-review'({ input }) {
+    if (!input || !String(input).trim()) throw new Error('security-privacy-review needs --input "<artifact text>"');
+    const r = review(String(input));
+    const result = r.clean ? 'clean' : 'blocked';   // fails closed: any finding blocks
+    const signed = beacon.emit({
+      kind: 'artifact', actor: 'agent:guardian', action: 'sec-review',
+      contentHash: beacon.sha256(String(input)),     // hash only — the artifact text is never stored
+      detail: { scans: ['secrets', 'pii', 'entropy'], result, findings: r.findings.map(f => f.type) }, // types only, never values
+    });
+    return { result, clean: r.clean, findings: r.findings, receipt: receiptView(signed) };
   },
 
   // Beacon · sign any metadata-only evidence (core: beacon.emit)

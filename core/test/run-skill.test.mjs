@@ -66,3 +66,17 @@ test('op-github-deploy is refused at the human gate and causes no side effect', 
 test('unknown skill throws', () => {
   assert.throws(() => runSkill('does-not-exist', {}), /unknown skill/);
 });
+
+test('security-privacy-review blocks on a finding, receipt carries no secret value', () => {
+  const before = beacon.ledgerCount();
+  const res = runSkill('security-privacy-review', { input: 'deploy key AKIAIOSFODNN7EXAMPLE for the bot' });
+  assert.equal(res.result, 'blocked');
+  assert.ok(res.findings.length > 0);
+  assert.equal(beacon.ledgerCount(), before + 1, 'one sec-review receipt appended');
+  const ledger = fs.readFileSync(beacon.ledgerFile(), 'utf8');
+  assert.ok(!ledger.includes('AKIAIOSFODNN7EXAMPLE'), 'the matched secret must never reach the ledger');
+});
+
+test('security-privacy-review passes clean text', () => {
+  assert.equal(runSkill('security-privacy-review', { input: 'a friendly note about libraries' }).result, 'clean');
+});

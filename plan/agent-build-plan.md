@@ -138,8 +138,13 @@ Recommended sequence:
    transact through the gate. *(A1 prototype done; A2 governed core `govapi.js` + a
    dependency-free MCP stdio server `mcp-server.mjs` landed, with tests — HTTP exposure and
    real identity/roles (T8) remain.)*
-4. **Prove the loop** by having an agent build the *next* small slice **through A2**,
-   emitting receipts — the real "agents build the Library, under the Library's own Yes-Gate"
-   milestone. (Not T10 — see step 2.)
+4. **Prove the loop** by driving one full cycle **through A2**, emitting receipts — the real
+   "agents build the Library, under the Library's own Yes-Gate" milestone. *(Done —
+   `core/scripts/loop-demo.mjs` runs propose→decide→runTool→verify and prints the linked,
+   chain-verifiable receipt trail; test in `core/test/loop-demo.test.mjs`.)*
+5. **Wire the prose skills to real tools, through the loop.** *(Started — Guardian's
+   `security-privacy-review` is wired to a dependency-free secret/PII scanner
+   `core/src/core/scanners.js`; 4 of 12 skills now runnable. Next: accessibility-audit →
+   axe/pa11y; status-report / monitor-and-alert → existing core backends.)*
 
 See `plan/build-tickets.md` (tickets **A1**, **A2**) for the specs.

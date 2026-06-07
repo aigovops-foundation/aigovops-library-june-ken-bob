@@ -30,3 +30,10 @@ Review signed clean; artifact may be shared/published. Then it enters **Stay at 
 
 ## Notes
 Secrets never touch a client; keys live in the core / KMS only.
+
+Implemented by `core/src/core/scanners.js` (dependency-free secret + PII + high-entropy
+scan). Run it through the skill-runner:
+`node core/scripts/run-skill.mjs run security-privacy-review --input "<artifact text>"`.
+Any finding sets `result=blocked` (fails closed); the receipt records finding **types and
+counts only — never the matched value**. The threat-model recheck (step 2) and the human
+exposure gate remain human steps; this skill automates the mandatory secret/PII gate.
