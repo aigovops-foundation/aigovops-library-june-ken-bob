@@ -120,6 +120,13 @@ Contract tags: **[SEC]** secrets · **[BOX]** sandbox · **[GATE]** policy/caps 
    emits a receipt.
    *Done:* an agent at its cap halts instead of proceeding; turning the dial down takes
    effect on the next request.
+   **Status — ✅ implemented (2026-06-06):** `core/src/core/caps.js` (capability levels
+   `read→propose→act→auto`, hard caps on spend/rate/blast, in-memory usage tracking);
+   `gate.js` evaluates caps after human approval but before brokering — the agent pauses,
+   a breach receipt is emitted, and the dial is immediately effective. Tests:
+   `core/test/caps.test.mjs` (6 checks) pass under CI `core-tests`. Combined with T0 + T1,
+   this is one ticket from the **"first sandboxed useful agent"** milestone (needs T3:
+   sandbox boundary).
 
 6. **Oversight console v1 (one surface, role-scoped)** · L · [SEE][ID] · dep: T1, T5.
    Live SSE tail over the ledger. Stewards see all receipts + dials + the armed global kill
