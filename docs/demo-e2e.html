@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AiGovOps Library — End-to-End Demo</title>
+<meta name="description" content="A guided end-to-end walkthrough of the AiGovOps Library: six rooms drawn from the world's great libraries, nine agents doing the bureaucracy, the human-gated governed loop, and the spend/rate/blast-radius financial controls — all on the live signed ledger."/>
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="AiGovOps Library — End-to-End Demo"/>
+<meta property="og:description" content="Six rooms, nine agents, the governed loop, and the financial controls — end to end on the live signed ledger."/>
+<meta property="og:url" content="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/demo-e2e.html"/>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Cormorant+Garamond:ital@0;1&family=Spectral:ital,wght@0,400;0,500;0,600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+:root{
+  --bg1:#f7efe1;--bg2:#ece0cb;--ink:#2c2317;--ink2:#6b5c45;--card:#fffaf0;--line:rgba(80,60,30,.16);
+  --teal:#0f6f73;--green:#1f9d5b;--gold:#bd8a2c;--human:#c4632a;--shadow:0 14px 40px rgba(70,45,15,.14);
+  --d1:#16122c;--dg:#2ecc71;--dt:#4FB286;--dp:#7B61FF;--dgold:#e8c879;--dmut:#a59fc2;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Spectral',Georgia,serif;color:var(--ink);background:radial-gradient(140% 120% at 80% -10%,#fbf4e6,var(--bg1) 45%,var(--bg2));min-height:100vh}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.045;z-index:99;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.wrap{max-width:1180px;margin:0 auto;padding:26px 18px 70px}
+a.back{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.08em;color:var(--teal);text-decoration:none;border-bottom:1px solid var(--line)}
+header{text-align:center;margin:4px 0 12px}
+.eyebrow{font-family:'Cinzel',serif;letter-spacing:.32em;font-size:11px;color:var(--teal)}
+h1{font-family:'Cinzel',serif;font-weight:600;font-size:clamp(24px,4vw,38px);margin:8px 0 6px;color:#241c10}
+.thesis{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(16px,2.1vw,21px);color:var(--ink2);max-width:640px;margin:0 auto}
+.livestrip{text-align:center;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.04em;color:var(--ink2);margin:12px 0 6px}
+.livestrip .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#bbb;margin-right:6px;vertical-align:middle}
+.livestrip.ok{color:var(--teal)} .livestrip.ok .dot{background:var(--green);box-shadow:0 0 0 3px rgba(31,157,91,.18)}
+/* transport */
+.transport{display:flex;align-items:center;gap:10px;justify-content:center;flex-wrap:wrap;margin:14px 0 18px;position:sticky;top:0;z-index:30;background:linear-gradient(var(--bg1),rgba(247,239,225,.7));padding:10px;border-radius:14px;backdrop-filter:blur(5px)}
+.transport button{font:inherit;font-family:'Cinzel',serif;font-size:12px;letter-spacing:.06em;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:9px 16px;cursor:pointer;min-height:42px}
+.transport button.primary{background:#241c10;color:#f3e6c8;border-color:#241c10}
+.transport button:hover{border-color:#241c10}
+.dots{display:flex;gap:7px}
+.dots span{width:10px;height:10px;border-radius:50%;background:var(--line);cursor:pointer;transition:.2s}
+.dots span.on{background:var(--teal);transform:scale(1.25)}
+.dots span.done{background:var(--green)}
+/* layout */
+.grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:900px){.grid{grid-template-columns:215px 1fr 250px}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+.ptitle{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.12em;color:var(--ink2);padding:13px 15px 6px}
+/* cast */
+.cast{padding:0 9px 10px}
+.agent{display:flex;gap:9px;align-items:center;padding:7px 8px;border-radius:11px;opacity:.5;transition:.3s;border:1px solid transparent}
+.agent.active{opacity:1;background:rgba(15,111,115,.06);border-color:var(--line)}
+.agent .gl{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex:0 0 30px;color:#fff}
+.agent .nm{font-family:'Cinzel',serif;font-size:12.5px;color:#241c10}
+.agent .rl{font-size:11px;color:var(--ink2);line-height:1.25}
+.agent.active .gl{box-shadow:0 0 0 4px rgba(31,157,91,.14)}
+/* stage */
+.stage{min-height:430px;overflow:hidden;display:flex;flex-direction:column}
+.sceneart{width:100%;height:auto;display:block;background:#0f1320}
+.scenebody{padding:16px 20px 20px}
+.roomname{font-family:'Cinzel',serif;font-size:clamp(17px,2.4vw,23px);color:#241c10}
+.from{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);font-size:16px;margin-top:2px}
+.tag{display:inline-block;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.12em;color:var(--teal);border:1px solid var(--line);border-radius:99px;padding:3px 10px;margin-top:8px}
+.member{font-size:15px;color:#3a3020;margin:12px 0 4px;line-height:1.5}
+.member b{color:#241c10}
+/* governed loop screen */
+.screen{background:radial-gradient(120% 120% at 75% 0%,#251c44,#16122c 60%,#120f24);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:15px 16px;color:#fff;margin-top:14px}
+.sg-eye{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:var(--dg);margin-bottom:10px}
+.steps{display:flex;gap:7px;flex-wrap:wrap}
+.step{flex:1;min-width:90px;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:9px 10px;font-size:12px;color:var(--dmut);transition:.35s;background:rgba(255,255,255,.03)}
+.step .k{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.1em;opacity:.7;display:block;margin-bottom:3px}
+.step.lit{color:#fff;border-color:var(--dt);background:rgba(79,178,134,.12)}
+.step.gate.lit{border-color:var(--dp);background:rgba(123,97,255,.14)}
+.step.paused{border-color:var(--dgold);background:rgba(232,200,121,.14);color:var(--dgold)}
+.receipt{margin-top:11px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#bfead2;background:rgba(46,204,113,.08);border:1px solid rgba(46,204,113,.2);border-radius:9px;padding:8px 10px;opacity:0;transform:translateY(5px);transition:.4s}
+.receipt.show{opacity:1;transform:none}
+.pausebar{margin-top:11px;background:rgba(232,200,121,.12);border:1px solid rgba(232,200,121,.34);border-radius:10px;padding:11px 12px;display:none;align-items:center;gap:11px}
+.pausebar.show{display:flex}
+.pausebar .t{flex:1;font-size:12.5px;color:#f1e3b6}
+.btn{font:inherit;font-weight:600;font-size:12.5px;border:0;border-radius:9px;padding:9px 14px;cursor:pointer;min-height:40px}
+.b-gold{background:#e8c879;color:#3a2c08}.b-ghost{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.16)}
+/* finance */
+.fin{padding:6px 15px 16px;font-size:12.5px}
+.fin .nomoney{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.05em;color:var(--human);border:1px dashed rgba(196,99,42,.4);border-radius:7px;padding:5px 7px;margin-bottom:11px;text-align:center}
+.cap{margin-bottom:12px}
+.cap .lab{display:flex;justify-content:space-between;font-size:11px;color:var(--ink2);margin-bottom:4px}
+.cap .lab b{color:#241c10;font-family:'IBM Plex Mono',monospace}
+.meter{height:9px;background:rgba(80,60,30,.1);border-radius:6px;overflow:hidden}
+.meter>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--gold));transition:width .6s}
+.meter.warn>div{background:linear-gradient(90deg,var(--gold),var(--human))}
+.dial{margin-top:4px}
+.dial .seg{display:flex;gap:4px;margin-top:5px}
+.dial .seg span{flex:1;text-align:center;font-size:9.5px;font-family:'IBM Plex Mono',monospace;padding:5px 2px;border:1px solid var(--line);border-radius:6px;color:var(--ink2)}
+.dial .seg span.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+/* ledger */
+.ledger{margin-top:18px}
+.led-list{padding:4px 15px 16px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#3a3020}
+.led-row{display:flex;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line);opacity:0;transform:translateX(-6px);transition:.4s}
+.led-row.show{opacity:1;transform:none}
+.led-row .seal{color:var(--green)}
+.led-row .who{color:var(--teal)}
+.narr{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--ink2);margin:8px 0 0;line-height:1.4}
+footer{text-align:center;margin-top:30px;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--ink2);font-size:16px}
+.creed{font-family:'Cinzel',serif;letter-spacing:.2em;font-size:11px;color:var(--green);margin-top:6px}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div style="margin-bottom:6px"><a class="back" href="./index.html">← The Library</a></div>
+<header>
+  <div class="eyebrow">AIGOVOPS FOUNDATION · END-TO-END DEMO</div>
+  <h1>A day in the Library</h1>
+  <div class="thesis">One member's journey through six rooms — nine agents do the bureaucracy, a human holds every gate, and the money lives behind hard caps. Press play.</div>
+</header>
+<div class="livestrip" id="liveStrip"><span class="dot"></span> checking the live core…</div>
+
+<div class="transport">
+  <button id="play" class="primary">▶ Play the day</button>
+  <button id="prev">‹ back</button>
+  <button id="next">next ›</button>
+  <div class="dots" id="dots"></div>
+</div>
+
+<div class="grid">
+  <!-- CAST -->
+  <div class="panel">
+    <div class="ptitle">THE CAST · 9 AGENTS</div>
+    <div class="cast" id="cast"></div>
+  </div>
+
+  <!-- STAGE -->
+  <div class="panel stage" id="stage"></div>
+
+  <!-- FINANCE -->
+  <div class="panel">
+    <div class="ptitle">FINANCIAL CONTROLS</div>
+    <div class="fin">
+      <div class="nomoney">● NO REAL MONEY — finance is a stub</div>
+      <div class="cap">
+        <div class="lab"><span>Spend cap · today</span><b id="spendTxt">$0.00 / $5.00</b></div>
+        <div class="meter" id="spendMeter"><div></div></div>
+      </div>
+      <div class="cap">
+        <div class="lab"><span>Rate cap</span><b id="rateTxt">0 / 30 per min</b></div>
+        <div class="meter" id="rateMeter"><div></div></div>
+      </div>
+      <div class="cap">
+        <div class="lab"><span>Blast radius / action</span><b id="blastTxt">max 3 resources</b></div>
+        <div class="meter" id="blastMeter"><div></div></div>
+      </div>
+      <div class="cap dial">
+        <div class="lab"><span>Capability dial</span><b id="dialTxt">propose</b></div>
+        <div class="seg" id="dialSeg"><span data-l="read">read</span><span data-l="propose" class="on">propose</span><span data-l="auto">auto·caps</span></div>
+      </div>
+      <div style="font-size:11px;color:var(--ink2);line-height:1.5;margin-top:6px">Every effect passes the gate. At a cap, the agent <b>pauses</b> and waits for a human — it never spends past the line.</div>
+    </div>
+  </div>
+</div>
+
+<!-- LEDGER -->
+<div class="panel ledger">
+  <div class="ptitle">THE DAY'S SIGNED LEDGER · <span id="ledCount">0</span> receipts <span style="color:var(--ink2);font-weight:400">(every meaningful action, sealed by Beacon)</span></div>
+  <div class="led-list" id="ledger"></div>
+</div>
+
+<footer>
+  <div>Six rooms, nine agents, one human holding the keys — and not a cent past the cap.</div>
+  <div class="creed">AGENTS DO THE BUREAUCRACY · HUMANS HOLD THE MEANING</div>
+</footer>
+</div>
+
+<script>
+const CORE="https://aigovops-library-core.fly.dev";
+function esc(s){return (s+'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+/* ---- the cast (live agent→skill map) ---- */
+const AGENTS={
+  Polyglot:{gl:'🌐',c:'#0f6f73',role:'speaks the member\'s language · translate-and-sign'},
+  Beacon:{gl:'👁',c:'#1f9d5b',role:'the Eye — signs every receipt · beacon-sign-evidence'},
+  Lantern:{gl:'🔦',c:'#bd8a2c',role:'frameworks → controls · framework-map'},
+  Guardian:{gl:'🛡',c:'#7B61FF',role:'security & privacy review'},
+  Sentinel:{gl:'📡',c:'#0f6f73',role:'monitor & alert'},
+  Scribe:{gl:'✒',c:'#6b5c45',role:'docs & help authoring · doc-generate'},
+  Maker:{gl:'🛠',c:'#c4632a',role:'design system & UX flows'},
+  Herald:{gl:'📣',c:'#bd8a2c',role:'status reports & announcements'},
+  Aperture:{gl:'♿',c:'#1f9d5b',role:'accessibility audit'}
+};
+const cast=document.getElementById('cast');
+Object.entries(AGENTS).forEach(([n,a])=>{
+  const el=document.createElement('div');el.className='agent';el.id='ag-'+n;
+  el.innerHTML='<span class="gl" style="background:'+a.c+'">'+a.gl+'</span><div><div class="nm">'+n+'</div><div class="rl">'+a.role+'</div></div>';
+  cast.appendChild(el);
+});
+
+/* ---- scenes ---- */
+// art: tiny inline svg per room (evokes the great library)
+const ART={
+ reception:`<svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg"><rect width="900" height="220" fill="#171019"/><radialGradient id="g1" cx="50%" cy="0%" r="90%"><stop offset="0" stop-color="#fff3d0" stop-opacity=".8"/><stop offset="1" stop-color="#fff3d0" stop-opacity="0"/></radialGradient><ellipse cx="450" cy="0" rx="380" ry="150" fill="url(#g1)"/><g stroke="#caa05e" stroke-width="3" fill="none" opacity=".85"><rect x="110" y="55" width="680" height="28"/><rect x="150" y="98" width="600" height="28"/><rect x="190" y="141" width="520" height="28"/></g><g fill="#241a26"><circle cx="430" cy="190" r="9"/><rect x="421" y="199" width="18" height="21" rx="8"/><circle cx="470" cy="190" r="9"/><rect x="461" y="199" width="18" height="21" rx="8"/></g><circle cx="450" cy="188" r="5" fill="#2ecc71"/></svg>`,
+ reading:`<svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg"><rect width="900" height="220" fill="#e8cf9a"/><path d="M0 70 Q450 -20 900 70 L900 0 L0 0Z" fill="#2a3c5a"/><g font-family="Cinzel,serif" fill="#e8c879" font-size="13" letter-spacing="2" text-anchor="middle"><text x="210" y="44">GAP</text><text x="450" y="28">WATCH</text><text x="690" y="44">STRONG</text></g><path d="M405 175 L405 92 Q450 60 495 92 L495 175Z" fill="#fff6df"/><polygon points="416,92 484,92 545,220 355,220" fill="#fff0c8" opacity=".4"/><g fill="#cdb487"><rect x="150" y="150" width="28" height="50"/><circle cx="164" cy="140" r="14"/><rect x="722" y="150" width="28" height="50"/><circle cx="736" cy="140" r="14"/></g></svg>`,
+ makerspace:`<svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg"><rect width="900" height="220" fill="#1a1f26"/><path d="M0 95 Q225 30 450 88 T900 70 L900 0 L0 0Z" fill="#caa276"/><rect x="160" y="150" width="52" height="52" rx="6" fill="#2ecc71"/><rect x="270" y="158" width="44" height="44" rx="6" fill="#7B61FF"/><g stroke="#e8c879" stroke-width="3" fill="none"><path d="M470 188 l26 -34 l26 34"/><circle cx="640" cy="172" r="19"/></g></svg>`,
+ commons:`<svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg"><rect width="900" height="220" fill="#101826"/><g fill="none" stroke="#7a5230" stroke-width="12"><path d="M50 210 Q450 90 850 210"/><path d="M130 210 Q450 130 770 210"/><path d="M210 210 Q450 160 690 210"/></g><radialGradient id="eye" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#eafff4"/><stop offset=".34" stop-color="#5fe3a0"/><stop offset=".7" stop-color="#0f6f73"/><stop offset="1" stop-color="#0a3b3e" stop-opacity="0"/></radialGradient><circle cx="450" cy="108" r="74" fill="url(#eye)"/><circle cx="450" cy="108" r="27" fill="#0c2e2c" stroke="#6fe6a8" stroke-width="2"/><path d="M443 108 l5 6 l11 -13" stroke="#bff7da" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+ human:`<svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg"><rect width="900" height="220" fill="#201826"/><rect x="320" y="150" width="260" height="12" rx="4" fill="#6e4a28"/><g fill="#4FB286"><circle cx="380" cy="108" r="23"/><path d="M349 156 q0 -36 31 -36 q31 0 31 36Z"/></g><g fill="#7B61FF"><circle cx="520" cy="108" r="23"/><path d="M489 156 q0 -36 31 -36 q31 0 31 36Z"/></g><g fill="#e8c879"><circle cx="450" cy="86" r="4"/><circle cx="428" cy="99" r="2.5"/><circle cx="472" cy="99" r="2.5"/></g></svg>`,
+ coffee:`<svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg"><rect width="900" height="220" fill="#191309"/><g fill="#357a4c"><ellipse cx="140" cy="86" rx="52" ry="26"/><ellipse cx="760" cy="86" rx="52" ry="26"/></g><g fill="#5fc78f" opacity=".7"><ellipse cx="150" cy="82" rx="24" ry="12"/><ellipse cx="770" cy="82" rx="24" ry="12"/></g><rect x="380" y="150" width="140" height="9" rx="3" fill="#6e4a28"/><path d="M420 116 h44 v22 a12 12 0 0 1 -12 12 h-20 a12 12 0 0 1 -12 -12Z" fill="#d9a441"/><path d="M464 121 q16 0 16 12 q0 12 -16 12" fill="none" stroke="#d9a441" stroke-width="4"/></svg>`
+};
+const SCENES=[
+ {room:'Reception · Front Desk',from:'after the George Peabody Library — free to all',tag:'PEABODY · 1878',art:'reception',
+  agents:['Polyglot','Beacon'],
+  member:'A member walks in and asks, in Spanish, <b>“¿Cómo mapeo el EU AI Act a mi pipeline de CI?”</b>',
+  loop:['Polyglot answers in their language','Beacon signs the answer'],
+  receipt:'ask · Polyglot · signed',spend:0.01,blast:1,
+  narr:'No login, no keys. You arrive, you ask, you leave with a signed answer.'},
+ {room:'The Reading Room',from:'after Admont · Trinity\'s Long Room · Strahov',tag:'ADMONT · TRINITY · STRAHOV',art:'reading',
+  agents:['Lantern','Guardian'],
+  member:'They bring a hard one: <b>“I\'m shipping an AI tool that screens job candidates.”</b>',
+  loop:['Lantern maps frameworks → gates','Guardian flags privacy risk','Path to Yes drawn'],
+  receipt:'assess · Lantern · signed',spend:0,blast:1,
+  narr:'HIGH risk. Gates: NYC LL144 · EU AI Act · EEOC · GDPR. A human will hold each one.'},
+ {room:'The Makerspace · Studio',from:'after Oodi, Helsinki — the city\'s living room',tag:'OODI · 2018',art:'makerspace',
+  agents:['Maker','Aperture','Scribe','Beacon'],
+  member:'They build the bias-audit gate. Maker drafts it, Aperture checks access, Scribe writes the doc — then ask to <b>deploy it</b>.',
+  loop:['Maker + Aperture + Scribe build','PROPOSE the deploy','Human approves','RUN (sandboxed, brokered)','Beacon signs'],
+  cap:true, receipt:'run · op-deploy · signed',spend:0.40,blast:5,
+  narr:'The run would touch 5 resources — over the blast-radius cap of 3. The agent pauses.'},
+ {room:'The Commons · the Beacon Eye',from:'after Tianjin Binhai — tiers around the Eye',tag:'TIANJIN BINHAI · 2017',art:'commons',
+  agents:['Beacon','Herald'],
+  member:'They publish the signed bias-audit gate to the Commons, and pull a community <b>GDPR DPIA</b> workflow to remix.',
+  loop:['Publish → Beacon seals it','Herald announces it','Pull → signature verified'],
+  receipt:'publish · Beacon · signed',spend:0.02,blast:2,
+  narr:'Governance-as-code, shared. Anyone can verify the seal with nothing but openssl.'},
+ {room:'The Human Library',from:'after the Human Library, Copenhagen',tag:'COPENHAGEN · 2000',art:'human',
+  agents:['Polyglot'],
+  member:'Stuck on the human part, they <b>borrow a person</b> — a mentor who has shipped AI hiring, for 30 minutes.',
+  loop:['Polyglot matches across languages','Human gate: the member confirms','Checked out — human to human'],
+  receipt:'checkout · human-gate · signed',spend:0,blast:1,
+  narr:'No agent executes here. The bureaucracy is done; the meaning is human.'},
+ {room:'The Coffee Shop',from:'after Beitou, Taipei — the green third place',tag:'BEITOU · 2006',art:'coffee',
+  agents:['Sentinel','Herald'],
+  member:'Day\'s end. The community gathers; Sentinel watches the caps, Herald rolls up the receipts.',
+  loop:['Sentinel: all caps green','Herald: day summary','Ledger sealed & chained'],
+  receipt:'status-report · Herald · signed',spend:0.02,blast:1,
+  narr:'Six rooms, every effect gated, every receipt signed — and not a cent of real money moved.'}
+];
+
+/* ---- finance state ---- */
+const CAP={spend:5.00,rate:30,blast:3};
+let st={spend:0,rate:0,dial:'propose',receipts:0};
+function setMeter(id,frac,warn){const m=document.getElementById(id);m.classList.toggle('warn',!!warn);m.firstElementChild.style.width=Math.min(100,frac*100)+'%';}
+function paintFinance(){
+  document.getElementById('spendTxt').textContent='$'+st.spend.toFixed(2)+' / $'+CAP.spend.toFixed(2);
+  setMeter('spendMeter',st.spend/CAP.spend, st.spend/CAP.spend>0.7);
+  document.getElementById('rateTxt').textContent=st.rate+' / '+CAP.rate+' per min';
+  setMeter('rateMeter',st.rate/CAP.rate);
+  document.getElementById('dialTxt').textContent=st.dial==='auto'?'auto · within caps':st.dial;
+  [...document.querySelectorAll('#dialSeg span')].forEach(s=>s.classList.toggle('on',s.dataset.l===st.dial));
+}
+function setDial(l){st.dial=l;paintFinance();}
+
+/* ---- ledger ---- */
+function addReceipt(text){
+  st.receipts++; document.getElementById('ledCount').textContent=st.receipts;
+  const row=document.createElement('div');row.className='led-row';
+  const n=String(st.receipts).padStart(2,'0');
+  row.innerHTML='<span class="seal">✔</span><span>#'+n+'</span><span>'+esc(text)+'</span><span class="who" style="margin-left:auto">'+new Date().toISOString().slice(11,19)+'Z</span>';
+  document.getElementById('ledger').appendChild(row);
+  requestAnimationFrame(()=>row.classList.add('show'));
+}
+
+/* ---- scene rendering + the governed loop animation ---- */
+let cur=-1, playing=false, busy=false, timers=[];
+function clearTimers(){timers.forEach(clearTimeout);timers=[];}
+const dotsWrap=document.getElementById('dots');
+SCENES.forEach((s,i)=>{const d=document.createElement('span');d.onclick=()=>{stopPlay();go(i);};dotsWrap.appendChild(d);});
+function paintDots(){[...dotsWrap.children].forEach((d,i)=>{d.className=i===cur?'on':(i<cur?'done':'');});}
+
+function highlightAgents(list){
+  Object.keys(AGENTS).forEach(n=>document.getElementById('ag-'+n).classList.toggle('active',list.includes(n)));
+}
+
+function go(i){
+  clearTimers(); busy=true;
+  cur=(i+SCENES.length)%SCENES.length;
+  const s=SCENES[cur]; paintDots(); highlightAgents(s.agents);
+  document.getElementById('blastTxt').textContent='max '+CAP.blast+' resources';
+  setMeter('blastMeter', Math.min(s.blast,CAP.blast)/CAP.blast, s.blast>CAP.blast);
+
+  const stepsHtml=s.loop.map((t,idx)=>{
+    const isGate=/approv|gate|human/i.test(t);
+    return '<div class="step'+(isGate?' gate':'')+'" id="st'+idx+'"><span class="k">'+(idx+1)+'</span>'+esc(t)+'</div>';
+  }).join('');
+  document.getElementById('stage').innerHTML=
+    ART[s.art]+
+    '<div class="scenebody">'+
+      '<div class="roomname">'+esc(s.room)+'</div>'+
+      '<div class="from">'+esc(s.from)+'</div>'+
+      '<span class="tag">'+esc(s.tag)+'</span>'+
+      '<div class="member">'+s.member+'</div>'+
+      '<div class="screen"><div class="sg-eye">GOVERNED LOOP · PROPOSE → APPROVE → RUN → VERIFY</div>'+
+        '<div class="steps">'+stepsHtml+'</div>'+
+        '<div class="pausebar" id="pausebar"><div class="t" id="pausetxt"></div><button class="btn b-gold" id="raise">Raise the dial</button></div>'+
+        '<div class="receipt" id="receipt"></div>'+
+      '</div>'+
+      '<div class="narr">'+esc(s.narr)+'</div>'+
+    '</div>';
+
+  // animate the loop
+  const steps=[...document.querySelectorAll('#stage .step')];
+  let paused=false;
+  s.loop.forEach((t,idx)=>{
+    timers.push(setTimeout(()=>{
+      // cap check happens as we reach the RUN step in the makerspace scene
+      if(s.cap && /run/i.test(t) && s.blast>CAP.blast && st.dial!=='auto'){
+        steps[idx].classList.add('paused'); steps[idx].textContent='⏸ paused at cap';
+        const pb=document.getElementById('pausebar');
+        document.getElementById('pausetxt').innerHTML='Blast-radius cap hit: the deploy touches <b>'+s.blast+'</b> resources, cap is <b>'+CAP.blast+'</b>. The agent stopped and is waiting for you.';
+        pb.classList.add('show');
+        document.getElementById('raise').onclick=()=>{
+          setDial('auto'); pb.classList.remove('show');
+          steps[idx].classList.remove('paused'); steps[idx].classList.add('lit'); steps[idx].innerHTML='<span class="k">'+(idx+1)+'</span>RUN (split ≤3, brokered)';
+          // finish remaining steps
+          for(let j=idx+1;j<steps.length;j++){ (k=>timers.push(setTimeout(()=>steps[k].classList.add('lit'),(k-idx)*700)))(j); }
+          timers.push(setTimeout(()=>finishScene(s),(steps.length-idx)*700+300));
+        };
+        paused=true;
+        return;
+      }
+      steps[idx].classList.add('lit');
+    }, idx*750));
+  });
+  if(!(s.cap && s.blast>CAP.blast)){
+    timers.push(setTimeout(()=>finishScene(s), s.loop.length*750+350));
+  } else {
+    // if dial already auto, no pause
+    timers.push(setTimeout(()=>{ if(st.dial==='auto') finishScene(s); }, s.loop.length*750+350));
+  }
+}
+function finishScene(s){
+  // spend + rate update, receipt, ledger
+  if(s.spend){ st.spend=Math.min(CAP.spend, +(st.spend+s.spend).toFixed(2)); }
+  st.rate=Math.min(CAP.rate, st.rate+ (s.agents?s.agents.length:1));
+  paintFinance();
+  const r=document.getElementById('receipt');
+  if(r){ r.textContent='✔ receipt  ['+s.receipt+']  kid 38f7612563e9eda2'; r.classList.add('show'); }
+  addReceipt(s.receipt);
+  busy=false;
+  if(playing){ timers.push(setTimeout(()=>{ if(cur<SCENES.length-1) go(cur+1); else stopPlay(true); }, 1500)); }
+}
+
+/* ---- transport ---- */
+const playBtn=document.getElementById('play');
+function startPlay(){ playing=true; playBtn.textContent='❚❚ pause'; if(cur>=SCENES.length-1||cur<0){resetDay(); go(0);} else go(cur); }
+function stopPlay(done){ playing=false; playBtn.textContent= done?'▶ replay the day':'▶ Play the day'; clearTimers(); }
+function resetDay(){ st={spend:0,rate:0,dial:'propose',receipts:0}; document.getElementById('ledger').innerHTML=''; document.getElementById('ledCount').textContent='0'; paintFinance(); }
+playBtn.onclick=()=>{ if(playing) stopPlay(); else { if(cur>=SCENES.length-1) resetDay(); startPlay(); } };
+document.getElementById('next').onclick=()=>{ stopPlay(); go(cur<0?0:cur+1); };
+document.getElementById('prev').onclick=()=>{ stopPlay(); go(cur<0?0:cur-1); };
+
+/* ---- live status strip ---- */
+async function liveStatus(){
+  const el=document.getElementById('liveStrip');
+  try{
+    const [s,v]=await Promise.all([fetch(CORE+'/status').then(r=>r.json()),fetch(CORE+'/api/verify').then(r=>r.json())]);
+    el.classList.add('ok');
+    el.innerHTML='<span class="dot"></span> live core · v'+esc(s.version||'0.1.0')+' · ledger '+v.entries+' receipts · '+(v.valid?'valid ✓':'⚠')+' · '+(s.frameworks||9)+' frameworks · model: '+esc(s.cloud||'local-only');
+  }catch(e){
+    el.innerHTML='<span class="dot"></span> offline preview — this walkthrough is a faithful illustration; live ledger loads when served from the hub';
+  }
+}
+
+/* boot */
+paintFinance(); liveStatus(); go(0);
+</script>
+</body>
+</html>
