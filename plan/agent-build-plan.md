@@ -124,10 +124,20 @@ human still makes the merge click and the change carries its own evidence.
 
 ## The recommended first move
 
-Build the smallest self-hosting slice: **A1 (skill-runner) + a thin A2 (governed
-MCP/API)**, then have an agent build **T10 (JCS canonicalizer)** — the cleanest agent-ready
-ticket — *through that gate*, emitting a receipt. That single loop proves "agents build the
-Library, under the Library's own Yes-Gate" end to end. Call it Ticket 0 of the
-agent-build era.
+Recommended sequence:
+
+1. **Unify the capability vocabulary** (`identity.js` ↔ `caps.js`) — small, removes
+   ambiguity A2 and the oversight console would otherwise inherit. *(Done 2026-06.)*
+2. **T10 — RFC 8785 JCS canonicalizer** — built **directly, not through the loop**: it
+   changes the canonicalization every signature depends on, so it must be stable *before*
+   we accrue a build ledger we intend to trust (building a signer-affecting change through
+   the signing loop would be circular). Lowest-risk ticket: public test vectors,
+   `openssl`-verifiable. *(Canonicalizer + vectors done 2026-06; the signed-evidence bundle
+   export half of T10 remains.)*
+3. **A1 (skill-runner) + a thin A2 (governed MCP/API)** — the unlock that lets an agent
+   transact through the gate. *(A1 prototype done; A2 next.)*
+4. **Prove the loop** by having an agent build the *next* small slice **through A2**,
+   emitting receipts — the real "agents build the Library, under the Library's own Yes-Gate"
+   milestone. (Not T10 — see step 2.)
 
 See `plan/build-tickets.md` (tickets **A1**, **A2**) for the specs.

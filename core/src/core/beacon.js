@@ -14,16 +14,36 @@ import path from 'node:path';
 
 const PROFILE = 'aigovops-beacon.v1';
 
-// --- Canonicalization -------------------------------------------------------
-// Deterministic JSON so a signature is reproducible byte-for-byte.
-// NOTE: this is a SIMPLIFIED stand-in for RFC 8785 (JCS). It sorts object keys
-// recursively. Before production, replace with a vetted JCS implementation so
-// number formatting and unicode escaping match the spec exactly.
+// --- Canonicalization (RFC 8785 / JCS) --------------------------------------
+// Deterministic JSON so a signature is reproducible byte-for-byte. Implements
+// the JSON Canonicalization Scheme (RFC 8785):
+//   • object property names sorted by UTF-16 code units (JS default string sort)
+//     — RFC 8785 §3.2.3;
+//   • numbers via ECMAScript Number::toString (shortest round-trip) — §3.2.2.3;
+//   • strings via ECMAScript JSON quoting (minimal escapes, lowercase \uXXXX)
+//     — §3.2.2.2.
+// Rejects values JCS cannot represent (non-finite numbers, undefined, bigint,
+// function, symbol) rather than silently coercing them.
+//
+// Note: for any valid JSON value this produces the same bytes as the previous
+// implementation, so existing ledgers continue to verify — the change adds
+// spec-conformance (test vectors) and strict rejection of invalid inputs.
 export function canonicalize(value) {
-  if (value === null || typeof value !== 'object') return JSON.stringify(value);
-  if (Array.isArray(value)) return '[' + value.map(canonicalize).join(',') + ']';
-  const keys = Object.keys(value).sort();
-  return '{' + keys.map(k => JSON.stringify(k) + ':' + canonicalize(value[k])).join(',') + '}';
+  if (value === null) return 'null';
+  switch (typeof value) {
+    case 'boolean': return value ? 'true' : 'false';
+    case 'number':
+      if (!Number.isFinite(value)) throw new TypeError('JCS: non-finite number not allowed');
+      return String(value);                       // ES Number::toString === RFC 8785 §3.2.2.3
+    case 'string': return JSON.stringify(value);  // ES JSON string quoting === RFC 8785 §3.2.2.2
+    case 'object':
+      if (Array.isArray(value)) return '[' + value.map(canonicalize).join(',') + ']';
+      return '{' + Object.keys(value).sort()      // sort by UTF-16 code units — §3.2.3
+        .map(k => JSON.stringify(k) + ':' + canonicalize(value[k]))
+        .join(',') + '}';
+    default:
+      throw new TypeError('JCS: unsupported type ' + typeof value);
+  }
 }
 
 function sha256(s) {

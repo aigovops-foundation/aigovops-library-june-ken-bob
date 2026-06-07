@@ -4,7 +4,8 @@
 // trust and can be turned down instantly. v1 is an in-memory stub; production
 // uses OIDC. No PII beyond what a member chooses to provide.
 
-const LEVELS = ['read', 'propose', 'auto']; // auto = act within hard caps only
+// Single source of truth for capability levels: the caps dial (read→propose→act→auto).
+import { LEVELS } from './caps.js';
 
 export function member(req) {
   // v1: anonymous library card. Real impl resolves an OIDC subject.
@@ -12,5 +13,6 @@ export function member(req) {
 }
 
 export function can(m, level) {
-  return LEVELS.indexOf(m.level) >= LEVELS.indexOf(level);
+  // Compare by rank using the same ordered LEVELS the caps dial enforces.
+  return (LEVELS[m.level] ?? -1) >= (LEVELS[level] ?? Infinity);
 }
