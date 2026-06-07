@@ -55,6 +55,12 @@ export function createGovernedCore(opts = {}) {
       return { pendingId, proposal, requiresHumanGate: proposal.requiresHumanGate };
     },
 
+    // The approval queue — proposals awaiting a human decision (steward view).
+    pending() {
+      return [...pending.entries()].map(([pendingId, { proposal, actor }]) =>
+        ({ pendingId, actor, summary: proposal.summary, requiresHumanGate: proposal.requiresHumanGate }));
+    },
+
     // 2) decide — the HUMAN approves or denies. On approve (and within caps) the
     //    gate brokers a scoped, expiring token; deny brokers nothing (fails closed).
     decide(pendingId, decision, { scope, ttlSeconds = 60, cost = {}, decidedBy = 'human' } = {}) {

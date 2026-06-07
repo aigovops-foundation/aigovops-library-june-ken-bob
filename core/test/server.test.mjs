@@ -60,6 +60,16 @@ test('HTTP: auth gate + governed loop + console', async () => {
     const run = await J('POST', '/api/gov/run', { token: dec.body.grant.token, code: 'export default async () => "built";' }, TOKEN);
     assert.equal(run.body.ok, true);
 
+    // approval queue: a fresh proposal awaits a steward
+    const pend = await J('POST', '/api/gov/propose', { intent: 'deploy a thing' }, TOKEN);
+    const q = await J('GET', '/api/gov/pending', null, TOKEN);
+    assert.ok(q.body.pending.some((p) => p.pendingId === pend.body.pendingId), 'proposal is in the approval queue');
+
+    // SSE oversight stream emits an opening event
+    const ctrl = new AbortController(); const to = setTimeout(() => ctrl.abort(), 2000); let chunk = '';
+    try { const sr = await fetch(BASE + '/api/oversight/stream', { signal: ctrl.signal, headers: { authorization: `Bearer ${TOKEN}` } }); const { value } = await sr.body.getReader().read(); chunk = Buffer.from(value).toString(); } catch {} finally { clearTimeout(to); }
+    assert.match(chunk, /event: (hello|ledger)/);
+
     const ov = await J('GET', '/api/oversight', null, TOKEN);   // role comes from the authenticated identity
     assert.equal(ov.body.role, 'steward');
     assert.ok(ov.body.receipts.length >= 3);

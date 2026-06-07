@@ -181,8 +181,12 @@ const server = http.createServer(async (req, res) => {
   if (url.pathname === '/api/agent' && req.method === 'POST') {
     if (needAuth('member')) return;
     const { intent = '' } = await readBody(req);
-    try { return send(res, 200, await agentDispatch(intent)); }
-    catch (e) { return send(res, 400, { error: e.message }); }
+    try {
+      const out = await agentDispatch(intent);
+      // Propose-only: an effectful proposal is queued for a steward to approve.
+      if (out.proposal && out.proposal.requiresHumanGate) out.pendingId = gov.propose(intent, { actor: id.id }).pendingId;
+      return send(res, 200, out);
+    } catch (e) { return send(res, 400, { error: e.message }); }
   }
 
   // --- GOVERNED LOOP (Ticket A2 over HTTP) -------------------------------
@@ -190,6 +194,10 @@ const server = http.createServer(async (req, res) => {
     if (needAuth('member')) return;
     const { intent = '' } = await readBody(req);
     return send(res, 200, gov.propose(intent, { actor: id.id }));
+  }
+  if (url.pathname === '/api/gov/pending' && req.method === 'GET') {
+    if (needAuth('steward')) return;   // the approval queue is a steward view
+    return send(res, 200, { pending: gov.pending() });
   }
   if (url.pathname === '/api/gov/decide' && req.method === 'POST') {
     if (needAuth('steward')) return;   // the human gate is a steward's call
@@ -209,6 +217,25 @@ const server = http.createServer(async (req, res) => {
   if (url.pathname === '/api/oversight' && req.method === 'GET') {
     const who = id || { role: 'member', id: 'member:anon' };
     return send(res, 200, { role: who.role, scope: who.role === 'steward' ? 'all' : 'own', receipts: gov.oversight(who).view() });
+  }
+
+  // --- OVERSIGHT LIVE STREAM (Ticket 6 — SSE, role-scoped) ---------------
+  if (url.pathname === '/api/oversight/stream') {
+    const who = id || { role: 'member', id: 'member:anon' };
+    res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', Connection: 'keep-alive' });
+    res.write(`event: hello\ndata: ${JSON.stringify({ role: who.role })}\n\n`);
+    let last = -1;
+    const tick = () => {
+      const view = gov.oversight(who).view();
+      if (view.length !== last) {
+        last = view.length;
+        res.write(`event: ledger\ndata: ${JSON.stringify({ count: view.length, latest: view.slice(-6).map((r) => ({ kind: r.kind, action: r.action, actor: r.actor, ts: r.ts })) })}\n\n`);
+      }
+    };
+    tick();
+    const iv = setInterval(tick, 2000);
+    req.on('close', () => clearInterval(iv));
+    return; // keep the connection open
   }
 
   // --- CONSOLE (interactive local control room) --------------------------

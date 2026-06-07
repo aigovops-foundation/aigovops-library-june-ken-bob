@@ -45,6 +45,12 @@
       <pre id="fdOut" class="muted">An agent routes your question, runs its skill, and proposes next steps — a human approves any effect.</pre>
     </div>
 
+    <!-- APPROVAL QUEUE (steward) -->
+    <div class="card full">
+      <h2>✅ Approval queue <span class="muted" style="font-size:12px">— stewards hold the human gate</span> <button class="alt" style="float:right" onclick="loadQueue()">Refresh</button></h2>
+      <table id="queue"><thead><tr><th>pending</th><th>actor</th><th>summary</th><th>scope</th><th></th></tr></thead><tbody></tbody></table>
+    </div>
+
     <!-- SKILLS -->
     <div class="card">
       <h2>🛠 Skills</h2>
@@ -80,12 +86,7 @@
     <div class="card full">
       <h2>👁 Oversight</h2>
       <div class="row">
-        <label style="margin:0">View as</label>
-        <select id="role" style="width:auto" onchange="oversight()">
-          <option value="steward">steward (sees all + kill switch)</option>
-          <option value="member">member (sees only own)</option>
-        </select>
-        <input id="who" style="width:auto" value="member:anon" title="member id for 'own' view"/>
+        <span class="muted">Live · scope follows your sign-in (steward = all receipts, member = your own).</span>
         <button class="alt" onclick="oversight()">Refresh</button>
         <button class="danger" onclick="kill()">⛔ Kill switch (steward)</button>
         <span id="killState" class="muted"></span>
@@ -154,18 +155,42 @@ async function runTool() {
   oversight();
 }
 async function verify() { $('govOut').textContent = JSON.stringify(await J('GET', '/api/verify'), null, 2); }
+function renderLedger(rows) {
+  const html = (rows || []).map((x, i) => `<tr><td>${i}</td><td>${x.kind}</td><td>${x.action}</td><td>${x.actor}</td><td class="muted">${(x.ts || '').slice(11, 19)}</td></tr>`).join('');
+  $('ledger').querySelector('tbody').innerHTML = html || '<tr><td colspan="5" class="muted">no receipts in scope</td></tr>';
+}
 async function oversight() {
-  const role = $('role').value, who = $('who').value;
-  const r = await J('GET', `/api/oversight?role=${encodeURIComponent(role)}&id=${encodeURIComponent(who)}`);
-  const rows = (r.receipts || []).map((x, i) => `<tr><td>${i}</td><td>${x.kind}</td><td>${x.action}</td><td>${x.actor}</td><td class="muted">${(x.ts || '').slice(11, 19)}</td></tr>`).join('');
-  $('ledger').querySelector('tbody').innerHTML = rows || '<tr><td colspan="5" class="muted">no receipts in scope</td></tr>';
+  const r = await J('GET', '/api/oversight');   // scope comes from the signed-in identity
+  renderLedger(r.receipts);
+}
+function subscribeOversight() {
+  try {
+    const es = new EventSource('/api/oversight/stream');
+    es.addEventListener('ledger', (e) => { try { renderLedger(JSON.parse(e.data).latest); } catch {} });
+  } catch {}
+}
+async function loadQueue() {
+  const r = await J('GET', '/api/gov/pending');
+  const tb = $('queue').querySelector('tbody');
+  if (r.error) { tb.innerHTML = `<tr><td colspan="5" class="muted">${r.error} — stewards only (sign in)</td></tr>`; return; }
+  tb.innerHTML = (r.pending || []).map((p) =>
+    `<tr><td class="mono">${p.pendingId.slice(0, 12)}…</td><td>${p.actor}</td><td>${(p.summary || '').slice(0, 44)}</td>` +
+    `<td><input id="sc_${p.pendingId}" value="github-deploy" style="width:120px"/></td>` +
+    `<td><button onclick="decideQ('${p.pendingId}','approve')">approve</button> <button class="alt" onclick="decideQ('${p.pendingId}','deny')">deny</button></td></tr>`
+  ).join('') || '<tr><td colspan="5" class="muted">queue empty</td></tr>';
+}
+async function decideQ(pid, decision) {
+  const scope = ($('sc_' + pid) || {}).value || 'github-deploy';
+  const r = await J('POST', '/api/gov/decide', { pendingId: pid, decision, scope, requiredLevel: 'act' });
+  $('govOut').textContent = JSON.stringify(r, null, 2);
+  loadQueue(); oversight();
 }
 async function kill() {
   // The HTTP surface exposes oversight read-only; the kill switch is a steward
   // console action. We surface it honestly: it is enforced server-side by role.
   $('killState').innerHTML = '<span class="muted">kill switch is steward-gated in govapi; not exposed over HTTP in this build (run via MCP/console host).</span>';
 }
-health(); auth(); loadSkills(); oversight();
+health(); auth(); loadSkills(); oversight(); loadQueue(); subscribeOversight();
 setInterval(health, 8000);
 </script>
 </body>
