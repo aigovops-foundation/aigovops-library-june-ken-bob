@@ -142,9 +142,11 @@ Recommended sequence:
    "agents build the Library, under the Library's own Yes-Gate" milestone. *(Done —
    `core/scripts/loop-demo.mjs` runs propose→decide→runTool→verify and prints the linked,
    chain-verifiable receipt trail; test in `core/test/loop-demo.test.mjs`.)*
-5. **Wire the prose skills to real tools, through the loop.** *(Started — Guardian's
-   `security-privacy-review` is wired to a dependency-free secret/PII scanner
-   `core/src/core/scanners.js`; 4 of 12 skills now runnable. Next: accessibility-audit →
-   axe/pa11y; status-report / monitor-and-alert → existing core backends.)*
+5. **Wire the prose skills to real tools, through the loop.** *(Largely done — wired
+   security-privacy-review (`scanners.js`), accessibility-audit (`a11y.js`), status-report
+   and monitor-and-alert (`reports.js`); **7 of 12 skills runnable**. The remaining 5 are
+   generative authoring skills the agent performs through the loop, not tool-wirable.)*
+6. **T8 identity/OIDC → T6 oversight console** — the watchable system, before widening
+   agent autonomy. *(Next — see Phase 1.)*
 
 See `plan/build-tickets.md` (tickets **A1**, **A2**) for the specs.

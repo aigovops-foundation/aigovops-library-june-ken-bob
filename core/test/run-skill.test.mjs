@@ -80,3 +80,19 @@ test('security-privacy-review blocks on a finding, receipt carries no secret val
 test('security-privacy-review passes clean text', () => {
   assert.equal(runSkill('security-privacy-review', { input: 'a friendly note about libraries' }).result, 'clean');
 });
+
+test('accessibility-audit, status-report, monitor-and-alert are now runnable', () => {
+  const runnable = listSkills().filter((s) => s.runnable).map((s) => s.name);
+  for (const n of ['accessibility-audit', 'status-report', 'monitor-and-alert']) {
+    assert.ok(runnable.includes(n), `${n} should be runnable`);
+  }
+  assert.ok(runnable.length >= 7, `expected >=7 runnable skills, got ${runnable.length}`);
+});
+
+test('accessibility-audit fails a bad page and emits an a11y receipt', () => {
+  const before = beacon.ledgerCount();
+  const res = runSkill('accessibility-audit', { input: '<html><body><img src="x"></body></html>' });
+  assert.equal(res.result, 'fail');
+  assert.ok(res.findings.length > 0);
+  assert.equal(beacon.ledgerCount(), before + 1);
+});

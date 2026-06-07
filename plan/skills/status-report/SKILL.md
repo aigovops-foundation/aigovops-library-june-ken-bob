@@ -31,3 +31,8 @@ Report signed + distributed; the public page reflects non-secret status. Then it
 
 ## Notes
 Because it’s built from receipts, the report is itself verifiable.
+
+Implemented by `core/src/core/reports.js` (`statusReport`) — reads ONLY the signed ledger
+and summarises receipts by action/kind. Run:
+`node core/scripts/run-skill.mjs run status-report --input "<period label>"`. The
+leadership review (human gate) and prose narrative remain human steps.

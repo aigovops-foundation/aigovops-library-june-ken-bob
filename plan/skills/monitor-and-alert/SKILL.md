@@ -31,3 +31,8 @@ Signal resolved or escalated; an incident enters Recover-to-Yes. Then it enters 
 
 ## Notes
 Pairs with the public /status dashboard and privacy-preserving analytics.
+
+Implemented by `core/src/core/reports.js` (`monitorAlerts`) — scans the signed ledger for
+cap-breach, sandbox-violation, and gate-deny signals and ranks severity. Run:
+`node core/scripts/run-skill.mjs run monitor-and-alert`. Paging the on-call human and the
+cap-and-pause action remain human/gate steps (never auto-remediate an irreversible).

@@ -29,3 +29,9 @@ Surface passes AA; report signed; Sentinel watches for regressions. Then it ente
 
 ## Notes
 No surface ships that locks someone out — held to a higher bar.
+
+Automated subset implemented by `core/src/core/a11y.js` (dependency-free, no browser):
+missing alt text, `<html lang>`, `<title>`, viewport, single `<h1>`, empty links. Run:
+`node core/scripts/run-skill.mjs run accessibility-audit --input "<html>"`. This is the
+provable subset only — contrast, focus order, and screen-reader behaviour still need
+axe/pa11y plus the manual pass in step 2.

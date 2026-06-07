@@ -30,6 +30,8 @@ if (!process.env.LEDGER_DIR) process.env.LEDGER_DIR = path.resolve(__dirname, '.
 const beacon = await import('../src/core/beacon.js');
 const { evaluate } = await import('../src/core/policy.js');
 const { review } = await import('../src/core/scanners.js');
+const { audit } = await import('../src/core/a11y.js');
+const { statusReport, monitorAlerts } = await import('../src/core/reports.js');
 
 // Skills that are irreversible/credential-touching even if their SKILL.md uses a
 // different heading than "## Human gate" — always treated as human-gated.
@@ -101,6 +103,39 @@ const HANDLERS = {
       detail: { scans: ['secrets', 'pii', 'entropy'], result, findings: r.findings.map(f => f.type) }, // types only, never values
     });
     return { result, clean: r.clean, findings: r.findings, receipt: receiptView(signed) };
+  },
+
+  // Aperture · static accessibility audit (core: a11y.audit)
+  'accessibility-audit'({ input }) {
+    if (!input || !String(input).trim()) throw new Error('accessibility-audit needs --input "<html>"');
+    const a = audit(String(input));
+    const signed = beacon.emit({
+      kind: 'artifact', actor: 'agent:aperture', action: 'a11y',
+      contentHash: beacon.sha256(String(input)),
+      detail: { standard: a.standard, score: a.score, findings: a.findings.map(f => f.type) },
+    });
+    return { result: a.pass ? 'pass' : 'fail', score: a.score, findings: a.findings, receipt: receiptView(signed) };
+  },
+
+  // Herald · compose a status summary from signed receipts (core: reports.statusReport)
+  'status-report'({ input }) {
+    const period = input || 'all';
+    const rep = statusReport(period);
+    const signed = beacon.emit({
+      kind: 'artifact', actor: 'agent:herald', action: 'report',
+      detail: { period, sources: rep.sources, entries: rep.entries, byAction: rep.byAction },
+    });
+    return { report: rep, receipt: receiptView(signed) };
+  },
+
+  // Sentinel · scan the ledger for alert-worthy signals (core: reports.monitorAlerts)
+  'monitor-and-alert'() {
+    const mon = monitorAlerts();
+    const signed = beacon.emit({
+      kind: 'model', actor: 'agent:sentinel', action: 'monitor',
+      detail: { signals: mon.count, severity: mon.highest },
+    });
+    return { alerts: mon.alerts, count: mon.count, severity: mon.highest, receipt: receiptView(signed) };
   },
 
   // Beacon · sign any metadata-only evidence (core: beacon.emit)

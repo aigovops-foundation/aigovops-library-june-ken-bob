@@ -207,11 +207,13 @@ prose discipline.
 **Done when** the three runnable skills run through one harness with receipts, and a new
 skill becomes runnable by adding a `run:` line — no runner code change.
 *Status — landed: `core/scripts/run-skill.mjs` (+ `core/test/run-skill.test.mjs`) runs
-skills through the gate+ledger. **4 of 12 skills are now runnable** — framework-map,
-beacon-sign-evidence, op-github-deploy, and **security-privacy-review** (wired to a
-dependency-free secret/PII scanner, `core/src/core/scanners.js`). Remaining: generic
-`run:`/schema in every `SKILL.md` and wiring the other prose skills (accessibility-audit →
-axe/pa11y; status-report / monitor-and-alert → their existing core backends).*
+skills through the gate+ledger. **7 of 12 skills are now runnable** — framework-map,
+beacon-sign-evidence, op-github-deploy, security-privacy-review (`scanners.js`),
+accessibility-audit (`a11y.js`, static WCAG subset), status-report and monitor-and-alert
+(`reports.js`, ledger-derived). The remaining 5 (design-system-apply, ux-flow-spec,
+ua-help-authoring, doc-generate, translate-and-sign) are generative authoring skills the
+agent performs through the loop, not tool-wirable. Remaining infra: generic `run:`/schema in
+every `SKILL.md`; full WCAG (axe/pa11y) for a11y.*
 
 ### A2 — Governed agent API / MCP · L · dep: A1, T1, T3, T5
 
