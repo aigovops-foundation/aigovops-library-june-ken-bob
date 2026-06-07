@@ -170,6 +170,75 @@ Contract tags: **[SEC]** secrets · **[BOX]** sandbox · **[GATE]** policy/caps 
 
 ---
 
+## Agent-build era — enabler tickets
+
+These two tickets make the system **self-hosting**: they let agents build the rest of the
+backlog *through the core's own Yes-Gate*, leaving a signed receipt for every step. See
+`plan/agent-build-plan.md` for the full rationale and phasing.
+
+### A1 — Skill-runner + registry · M · dep: none (uses existing core)
+
+One harness that turns the uniform `SKILL.md` contract into something an agent (or a human)
+can actually *run*, with the human gate and the receipt enforced by the runtime — not by
+prose discipline.
+
+- **Registry:** scan `plan/skills/*/SKILL.md`, parse the frontmatter (`name`,
+  `description`) and the fixed body sections (`Owning agent`, `Inputs`, `Procedure`,
+  `Human gate`, `Evidence`). Expose `list()` and `get(name)`.
+- **Runner:** `run(name, input, { approve })` resolves the skill's declared core
+  function/command, executes it, and — per the skill's `Evidence` section — emits exactly
+  one metadata-only Beacon receipt (`action=<skill>`, `contentHash` only, never payload).
+- **Human gate is enforced, not described:** any skill whose `Human gate` is non-empty
+  refuses to run side-effecting steps without explicit `approve` (or an interactive
+  confirm). `op-github-deploy` and any irreversible skill **never auto-execute** — the
+  runner prints the procedure and stops at the boundary.
+- **Schema upgrade:** add an optional `inputs`/`outputs` JSON-schema and a `run:` entry
+  (core function or command) to each `SKILL.md` so dispatch is generic, not special-cased.
+
+**Acceptance tests**
+- `list()` returns all skills; `get('framework-map')` parses every section.
+- `run('framework-map', text)` returns the risk/gates and appends **one** receipt
+  (`action=framework-map`); `verifyLedger()` stays valid.
+- `run('beacon-sign-evidence', meta)` appends one receipt and chains `prev`.
+- `run('op-github-deploy', …)` **without** `approve` performs no git/network action and
+  exits at the human gate; the serialized receipt contains no secret.
+- a skill with a non-empty `Human gate` cannot side-effect without `approve`.
+
+**Done when** the three runnable skills run through one harness with receipts, and a new
+skill becomes runnable by adding a `run:` line — no runner code change.
+*Status — prototype landed: `core/scripts/run-skill.mjs` (+ `core/test/run-skill.test.mjs`)
+runs the three skills through the gate+ledger. Remaining: generic `run:`/schema in every
+`SKILL.md` and wiring the 8 prose skills to real tools.*
+
+### A2 — Governed agent API / MCP · L · dep: A1, T1, T3, T5
+
+Expose the **whole governed loop** — `propose → human-decide → broker scoped token → run
+sandboxed tool → verify` — over HTTP **and** as an MCP server, so any external agent
+(including Claude Code) can build *through* the gate. Today `server.js` exposes only
+demo-grade `ask`/`assess`/`propose`; the gate/broker/caps/sandbox are unreachable remotely.
+
+- **Endpoints / MCP tools:** `propose(proposal)`, `decide(proposalId, approve|deny)` (human),
+  `broker(grantReq)` (gate-only), `runTool(toolReq)` (sandboxed), `verify()`,
+  `skills.list/run` (wraps A1). Each maps onto existing `gate.js` / `caps.js` /
+  `sandbox.process.js` / `secrets.fileprovider.js` — no new safety logic, just exposure.
+- **Identity-scoped:** every call carries an identity; caps and oversight visibility apply
+  (depends on T8 for real roles; anon stub until then).
+- **Irreversibility boundary in the protocol:** any proposal flagged irreversible **pauses**
+  for a human `decide` and can never be auto-approved; the kill switch (T6) halts in-flight
+  work.
+
+**Acceptance tests**
+- an agent can drive an end-to-end loop over the API and the ledger shows the paired
+  proposal + brokered-secret + tool-run receipts, chain intact.
+- a denied proposal brokers nothing and runs no tool (fails closed).
+- an over-cap call pauses with a breach receipt.
+- the MCP server lists `skills.*` and a client can run `framework-map` and read the receipt.
+
+**Done when** Claude Code (or any MCP client) can build a backlog ticket through the gate,
+and the build leaves a verifiable receipt trail — the self-hosting loop.
+
+---
+
 ## Milestones
 
 - **First brokered action** — T0 + T1: an agent does one real, scoped, expiring,

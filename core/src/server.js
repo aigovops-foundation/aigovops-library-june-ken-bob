@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 
 import * as beacon from './core/beacon.js';
 import * as policy from './core/policy.js';
-import { compile, frameworks } from './core/lantern.js';
+import { frameworks } from './core/lantern.js';
 import { respond } from './core/router.js';
 import { member } from './core/identity.js';
 import { propose } from './core/agent.js';
