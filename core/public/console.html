@@ -37,6 +37,14 @@
   <div class="sub">Interface to the governed core: run skills, drive the Yes-Gate loop, and watch the signed ledger. Writes require sign-in (members propose; stewards approve). Every action leaves a receipt.</div>
 
   <div class="grid">
+    <!-- FRONT DESK (agents) -->
+    <div class="card full">
+      <h2>🛎 Front desk — ask an agent</h2>
+      <input id="fdInput" value="what regulations apply to my AI hiring tool?"/>
+      <button onclick="askAgent()">Ask</button>
+      <pre id="fdOut" class="muted">An agent routes your question, runs its skill, and proposes next steps — a human approves any effect.</pre>
+    </div>
+
     <!-- SKILLS -->
     <div class="card">
       <h2>🛠 Skills</h2>
@@ -105,6 +113,16 @@ async function auth() {
   } catch { $('auth').textContent = ''; }
 }
 async function logout() { await fetch('/auth/logout', { method: 'POST' }); auth(); }
+async function askAgent() {
+  $('fdOut').textContent = 'thinking…';
+  const r = await J('POST', '/api/agent', { intent: $('fdInput').value });
+  if (r.error) { $('fdOut').textContent = 'error: ' + r.error + (/auth/.test(r.error) ? ' — sign in above' : ''); return; }
+  let s = `${r.title}\n\n${r.reply}\n`;
+  if (r.skill) s += `\nskill: ${r.skill.name} → ${JSON.stringify(r.skill.result?.result ?? r.skill.result ?? r.skill.error)}\n`;
+  s += `\nproposal: ${r.proposal.summary}\nhuman gate: ${r.proposal.requiresHumanGate}  (${r.note})`;
+  $('fdOut').textContent = s;
+  oversight();
+}
 async function loadSkills() {
   const { skills } = await J('GET', '/api/skills');
   $('skill').innerHTML = skills.map(s => `<option value="${s.name}" ${s.runnable ? '' : 'disabled'}>${s.runnable ? '✓' : '·'} ${s.name}</option>`).join('');

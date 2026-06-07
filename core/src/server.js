@@ -16,6 +16,7 @@ import { respondAsync } from './core/router.js';
 import { member } from './core/identity.js';
 import { propose } from './core/agent.js';
 import { createGovernedCore } from './core/govapi.js';
+import { dispatch as agentDispatch, listAgents } from './core/agents.js';
 import * as auth from './core/auth.js';
 import { negotiate, t } from './core/i18n.js';
 
@@ -170,6 +171,17 @@ const server = http.createServer(async (req, res) => {
     if (needAuth('member')) return;
     const { name, input } = await readBody(req);
     try { return send(res, 200, gov.skills.run(name, { input })); }
+    catch (e) { return send(res, 400, { error: e.message }); }
+  }
+
+  // --- AGENTS (Phase 2 — front desk, propose-only) ----------------------
+  if (url.pathname === '/api/agents' && req.method === 'GET') {
+    return send(res, 200, { agents: listAgents() });
+  }
+  if (url.pathname === '/api/agent' && req.method === 'POST') {
+    if (needAuth('member')) return;
+    const { intent = '' } = await readBody(req);
+    try { return send(res, 200, await agentDispatch(intent)); }
     catch (e) { return send(res, 400, { error: e.message }); }
   }
 

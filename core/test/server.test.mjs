@@ -64,6 +64,11 @@ test('HTTP: auth gate + governed loop + console', async () => {
     assert.equal(ov.body.role, 'steward');
     assert.ok(ov.body.receipts.length >= 3);
 
+    // front desk: an agent routes + proposes (propose-only)
+    const ag = await J('POST', '/api/agent', { intent: 'what regulations apply to my hiring AI?' }, TOKEN);
+    assert.equal(ag.body.agent, 'lantern');
+    assert.ok(ag.body.proposal, 'agent returns a proposal');
+
     assert.match((await J('GET', '/console')).body, /Control Room/);
   } finally {
     child.kill();

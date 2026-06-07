@@ -14,6 +14,7 @@
 console.log = (...a) => console.error(...a);
 
 import { createGovernedCore } from '../src/core/govapi.js';
+import { dispatch as agentDispatch, listAgents } from '../src/core/agents.js';
 
 const core = createGovernedCore();
 const PROTOCOL_VERSION = '2024-11-05';
@@ -33,6 +34,10 @@ const TOOLS = [
     inputSchema: { type: 'object', properties: { name: { type: 'string' }, input: { type: 'string' }, meta: { type: 'object' }, approve: { type: 'boolean' } }, required: ['name'] } },
   { name: 'oversight_view', description: 'Role-scoped view of the ledger: a steward sees all receipts; anyone else sees only their own. (The kill switch is a steward-console action, not exposed here.)',
     inputSchema: { type: 'object', properties: { role: { type: 'string' }, id: { type: 'string' } } } },
+  { name: 'agent_dispatch', description: 'Front desk: route an intent to the right named agent (Lantern/Guardian/Aperture/Herald/Sentinel/Beacon/Concierge), run its skill, and return its reply + a proposal. Propose-only — never auto-acts.',
+    inputSchema: { type: 'object', properties: { intent: { type: 'string' } }, required: ['intent'] } },
+  { name: 'agent_list', description: 'List the named library agents and the skill each wields.',
+    inputSchema: { type: 'object', properties: {} } },
 ];
 
 async function callTool(name, a = {}) {
@@ -44,6 +49,8 @@ async function callTool(name, a = {}) {
     case 'skills_list':  return core.skills.list();
     case 'skills_run':   return core.skills.run(a.name, { input: a.input, meta: a.meta, approve: a.approve });
     case 'oversight_view': return core.oversight({ role: a.role || 'member', id: a.id || 'member:anon' }).view();
+    case 'agent_dispatch': return await agentDispatch(a.intent);
+    case 'agent_list':   return listAgents();
     default: throw new Error('unknown tool: ' + name);
   }
 }
