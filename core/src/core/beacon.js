@@ -133,6 +133,15 @@ export function verifySigned(signed, publicKey = _pub) {
   return crypto.verify(null, msg, publicKey, Buffer.from(signed.sig, 'base64'));
 }
 
+// Stable content id of a receipt: the hash of its canonical record (the same
+// value the chain uses for `prev`). Used to LINK one receipt to another — e.g.
+// a secret grant back to the proposal that approved it — without mutating the
+// chain. Accepts a signed envelope ({record}) or a bare record.
+export function receiptId(signedOrRecord) {
+  const record = signedOrRecord && signedOrRecord.record ? signedOrRecord.record : signedOrRecord;
+  return sha256(canonicalize(record));
+}
+
 // Walk the whole ledger: check every signature AND the prev-hash chain.
 export function verifyLedger() {
   loadOrCreateKeys();

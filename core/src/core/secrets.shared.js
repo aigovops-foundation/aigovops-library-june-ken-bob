@@ -53,9 +53,12 @@ export function denyReason(grant, nowMs) {
 
 // Build the METADATA-ONLY receipt detail for one broker op. By construction it
 // carries no secret material — only the shape of what happened. Backends pass
-// this straight to Beacon as the receipt's `detail`.
-export function receiptDetail({ op, scope, ttlSeconds, expiresAt, ref, requestedBy, decision }) {
-  return { op, scope, ttlSeconds, expiresAt, ref, requestedBy, decision };
+// this straight to Beacon as the receipt's `detail`. `parent` (optional) links
+// this op back to an approving proposal receipt by its receiptId.
+export function receiptDetail({ op, scope, ttlSeconds, expiresAt, ref, requestedBy, decision, parent = null }) {
+  const d = { op, scope, ttlSeconds, expiresAt, ref, requestedBy, decision };
+  if (parent) d.parent = parent;
+  return d;
 }
 
 // Typed errors so callers (and tests) can assert the fail-closed path precisely.
@@ -67,8 +70,8 @@ export class SecretsError extends Error {
 // Methods throw until a backend implements them — so an unfinished adapter fails
 // loudly rather than silently doing nothing.
 export class SecretsProvider {
-  /** @returns {Grant} */
-  issue(/* scope, ttlSeconds, requestedBy */) { throw new SecretsError('not-implemented', 'issue() not implemented'); }
+  /** @returns {Grant} — issue(scope, ttlSeconds, requestedBy, { parent } = {}) */
+  issue(/* scope, ttlSeconds, requestedBy, opts */) { throw new SecretsError('not-implemented', 'issue() not implemented'); }
   /** @returns {Grant} */
   renew(/* grantId, ttlSeconds */) { throw new SecretsError('not-implemented', 'renew() not implemented'); }
   /** @returns {{revoked: true}} */

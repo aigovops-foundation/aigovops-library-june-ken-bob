@@ -86,6 +86,13 @@ Contract tags: **[SEC]** secrets · **[BOX]** sandbox · **[GATE]** policy/caps 
    and fails closed; the secret receipt links to the proposal receipt.
    *Done:* an approved tool call gets a scoped token + paired receipts; a denied one gets
    neither.
+   **Status — ✅ implemented (2026-06-06):** `core/src/core/gate.js` (`decide` /
+   `proposeAndDecide`) records the human decision as a signed proposal receipt and, only on
+   approval, brokers a scoped grant whose secret receipt carries `parent =
+   receiptId(proposal)` (new `beacon.receiptId`). Deny issues nothing; an unknown scope
+   fails closed. Tests: `core/test/gate.test.mjs` (5 checks) pass under CI `core-tests`.
+   **This reaches the "first brokered action" milestone (T0 + T1).** Next: **Ticket 5**
+   (capability dial + caps) or **Ticket 2** (VaultProvider).
 
 2. **VaultProvider adapter** · L · [SEC] · dep: T0.
    The same interface against HashiCorp Vault (dynamic-secrets engine for true ephemeral

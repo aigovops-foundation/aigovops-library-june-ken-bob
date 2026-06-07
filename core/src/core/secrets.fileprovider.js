@@ -62,7 +62,7 @@ export class FileProvider extends SecretsProvider {
   }
 
   // --- contract -------------------------------------------------------------
-  issue(scope, ttlSeconds, requestedBy) {
+  issue(scope, ttlSeconds, requestedBy, opts = {}) {
     this._masterFor(scope); // fail closed if the scope has no secret
     if (!(ttlSeconds > 0)) throw new SecretsError('bad-ttl', 'ttlSeconds must be > 0');
     const issuedAt = this.now();
@@ -73,7 +73,7 @@ export class FileProvider extends SecretsProvider {
     this._byToken.set(g.token, g.grantId);
     this.emit({
       kind: 'secret', actor: requestedBy || 'gate', action: 'issue',
-      detail: receiptDetail({ op: 'issue', scope, ttlSeconds, expiresAt, ref, requestedBy, decision: 'allow' })
+      detail: receiptDetail({ op: 'issue', scope, ttlSeconds, expiresAt, ref, requestedBy, decision: 'allow', parent: opts.parent || null })
     });
     return this._publicGrant(g);
   }
