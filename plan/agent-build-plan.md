@@ -135,7 +135,9 @@ Recommended sequence:
    `openssl`-verifiable. *(Canonicalizer + vectors done 2026-06; the signed-evidence bundle
    export half of T10 remains.)*
 3. **A1 (skill-runner) + a thin A2 (governed MCP/API)** — the unlock that lets an agent
-   transact through the gate. *(A1 prototype done; A2 next.)*
+   transact through the gate. *(A1 prototype done; A2 governed core `govapi.js` + a
+   dependency-free MCP stdio server `mcp-server.mjs` landed, with tests — HTTP exposure and
+   real identity/roles (T8) remain.)*
 4. **Prove the loop** by having an agent build the *next* small slice **through A2**,
    emitting receipts — the real "agents build the Library, under the Library's own Yes-Gate"
    milestone. (Not T10 — see step 2.)

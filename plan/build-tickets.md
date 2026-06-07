@@ -237,6 +237,15 @@ demo-grade `ask`/`assess`/`propose`; the gate/broker/caps/sandbox are unreachabl
 **Done when** Claude Code (or any MCP client) can build a backlog ticket through the gate,
 and the build leaves a verifiable receipt trail — the self-hosting loop.
 
+*Status — thin slice landed (2026-06):* `core/src/core/govapi.js` exposes the loop
+(`propose → decide → runTool → verify` + `skills.list/run`); brokering stays inside
+`decide()` (no agent-callable broker, by design). A dependency-free MCP stdio server,
+`core/scripts/mcp-server.mjs`, advertises the tools `gov_propose / gov_decide /
+gov_run_tool / gov_verify / skills_list / skills_run`. Tests: `core/test/govapi.test.mjs`
+(5 — end-to-end, deny fails closed, over-cap breach, skills, kill switch) and
+`core/test/mcp-server.test.mjs` (handshake + tools/list + tools/call). **Remaining:** HTTP
+exposure of the same loop, and real identity/roles (T8) instead of the anon stub.
+
 ---
 
 ## Milestones
