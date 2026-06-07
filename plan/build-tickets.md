@@ -107,6 +107,14 @@ Contract tags: **[SEC]** secrets · **[BOX]** sandbox · **[GATE]** policy/caps 
    + network namespace + read-only rootfs.
    *Done:* a tool cannot open an undeclared socket or read outside its scratch dir;
    attempts fail and emit a receipt.
+   **Status — ✅ implemented (2026-06-06):** `core/src/core/sandbox.shared.js` (env-neutral
+   contract); `core/src/core/sandbox.process.js` (ProcessSandbox: per-run scratch dir,
+   fs path-guarding, net egress allow-list, child_process blocked, credential-stripped env,
+   hard timeout; application-level enforcement via module patching in a child process).
+   Tests: `core/test/sandbox.test.mjs` (4 checks) pass under CI. Known v1 limitation:
+   named ESM imports bypass the application-level patch; kernel-level enforcement (gVisor,
+   Ticket 4) has no such bypass. **Combined with T0 + T1 + T5, this reaches the "first
+   sandboxed useful agent" milestone.**
 
 4. **gVisor backend + egress proxy** · L · [BOX] · dep: T3.
    Wire `runsc` as the runtime class on Linux community/enclave hosts; route declared egress
