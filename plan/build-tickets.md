@@ -63,6 +63,17 @@ Record = { ref, owner, scope, lastRotated, activeGrants }
 FileProvider passes the contract tests, the gate can `issue`/`revoke` through the
 interface, and every op appears in the live ledger with zero secret leakage.
 
+### Status — ✅ implemented (2026-06-06)
+
+- Contract: `core/src/core/secrets.shared.js` (env-neutral, like `yesgate.shared.js`).
+- Lab adapter: `core/src/core/secrets.fileprovider.js` (mint → scope → expire → log →
+  revoke; backing store `secrets.local.json`, gitignored; example at
+  `core/secrets.local.example.json`).
+- Receipts: each op emits one metadata-only Beacon receipt via a new optional `detail`
+  block in `beacon.js` (no secret material; ledger path made test-isolatable).
+- Tests: `core/test/secrets.test.mjs` — all 6 acceptance checks pass under `node --test`
+  (CI `core-tests`). Next: **Ticket 1** wires the gate to this provider.
+
 ---
 
 ## The next 10 big items

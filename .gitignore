@@ -5,3 +5,7 @@ core/keys/*.pem
 core/ledger/*.ndjson
 *.log
 .DS_Store
+
+# secret broker backing store (FileProvider) — NEVER commit
+secrets.local.json
+core/secrets.local.json

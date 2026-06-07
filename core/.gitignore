@@ -4,3 +4,6 @@ keys/*.pem
 ledger/*.ndjson
 *.log
 .DS_Store
+
+# secret broker backing store (FileProvider) — NEVER commit
+secrets.local.json

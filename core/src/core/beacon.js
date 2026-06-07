@@ -72,10 +72,13 @@ export function publicKeyPem() {
 }
 
 // --- Ledger -----------------------------------------------------------------
-const LEDGER_DIR = process.env.LEDGER_DIR || path.resolve('ledger');
-const LEDGER_FILE = path.join(LEDGER_DIR, 'beacons.ndjson');
+// Resolved per-call (not frozen at module load) so a test can point LEDGER_DIR
+// at a temp dir, and so the runtime can set the ledger location via env.
+function ledgerDir() { return process.env.LEDGER_DIR || path.resolve('ledger'); }
+function ledgerFile() { return path.join(ledgerDir(), 'beacons.ndjson'); }
 
 function lastRecordHash() {
+  const LEDGER_FILE = ledgerFile();
   if (!fs.existsSync(LEDGER_FILE)) return null;
   const lines = fs.readFileSync(LEDGER_FILE, 'utf8').trim().split('\n').filter(Boolean);
   if (!lines.length) return null;
@@ -86,18 +89,22 @@ function lastRecordHash() {
 // Build a metadata-only receipt. Caller passes the SHAPE of the action, never
 // its content. `contentHash` (optional) is a hash the caller computed locally;
 // the raw content is never handed to Beacon.
-export function buildReceipt({ kind, actor, action, gate = null, model = null, locale = 'en', contentHash = null }) {
+export function buildReceipt({ kind, actor, action, gate = null, model = null, locale = 'en', contentHash = null, detail = null }) {
   loadOrCreateKeys();
   return {
     profile: PROFILE,
     ts: new Date().toISOString(),
-    kind,                 // 'prompt' | 'model' | 'artifact'
-    actor,                // e.g. 'member:anon' | 'agent:intake'
-    action,               // short verb, e.g. 'ask' | 'assess' | 'propose'
+    kind,                 // 'prompt' | 'model' | 'artifact' | 'secret'
+    actor,                // e.g. 'member:anon' | 'agent:intake' | 'gate'
+    action,               // short verb, e.g. 'ask' | 'assess' | 'propose' | 'issue'
     gate,                 // { id, framework, act, decision } or null
     model,                // { provider, name } or null  (no keys, no payload)
     locale,
     contentHash,          // hex sha256 of the *member's* content, computed client/core-side; payload itself not stored
+    // Optional domain metadata (e.g. a secret broker's { scope, ttl, expiresAt,
+    // ref, decision }). METADATA ONLY — callers must never put secret material
+    // here. Omitted entirely when null so non-secret receipts are unchanged.
+    ...(detail ? { detail } : {}),
     prev: lastRecordHash()
   };
 }
@@ -110,8 +117,8 @@ export function sign(record) {
 }
 
 export function append(signed) {
-  fs.mkdirSync(LEDGER_DIR, { recursive: true });
-  fs.appendFileSync(LEDGER_FILE, JSON.stringify(signed) + '\n');
+  fs.mkdirSync(ledgerDir(), { recursive: true });
+  fs.appendFileSync(ledgerFile(), JSON.stringify(signed) + '\n');
   return signed;
 }
 
@@ -129,6 +136,7 @@ export function verifySigned(signed, publicKey = _pub) {
 // Walk the whole ledger: check every signature AND the prev-hash chain.
 export function verifyLedger() {
   loadOrCreateKeys();
+  const LEDGER_FILE = ledgerFile();
   if (!fs.existsSync(LEDGER_FILE)) return { entries: 0, valid: true, broken: [] };
   const lines = fs.readFileSync(LEDGER_FILE, 'utf8').trim().split('\n').filter(Boolean);
   const broken = [];
@@ -143,8 +151,9 @@ export function verifyLedger() {
 }
 
 export function ledgerCount() {
+  const LEDGER_FILE = ledgerFile();
   if (!fs.existsSync(LEDGER_FILE)) return 0;
   return fs.readFileSync(LEDGER_FILE, 'utf8').trim().split('\n').filter(Boolean).length;
 }
 
-export { sha256, LEDGER_FILE };
+export { sha256, ledgerFile };
