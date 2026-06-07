@@ -19,6 +19,7 @@ import { createGovernedCore } from './core/govapi.js';
 import { dispatch as agentDispatch, listAgents } from './core/agents.js';
 import * as auth from './core/auth.js';
 import { negotiate, t } from './core/i18n.js';
+import { routeDesk } from './api/desks.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.PORT || 8787);
@@ -261,6 +262,25 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
     return res.end(html);
   }
+
+  // --- DESKS: registry, cost, members, curate, audit ---------------------
+  // The five operations desks, all behind one router (desks.js). ctx is built
+  // once from helpers already defined above; secrets never pass through here.
+  const deskCtx = {
+    json:           (code, obj) => send(res, code, obj),
+    identity:       id ? { login: id.id, role: id.role } : null,
+    isSteward:      auth.hasRole(id, 'steward'),
+    requireSteward: () => !needAuth('steward'),
+    ledgerAppend:   (e) => beacon.emit({
+                      kind: e.kind || 'desk',
+                      actor: e.actor || (id && id.id) || 'system',
+                      action: e.op || e.action || 'write',
+                      contentHash: e.hash || beacon.sha256(`${e.kind || 'desk'}:${e.id || ''}`)
+                    }),
+    ledgerEntries:  () => gov.oversight({ role: 'steward', id: 'system' }).view(),
+    verify:         () => beacon.verifyLedger()
+  };
+  if (routeDesk(url.pathname, req, res, deskCtx)) return;
 
   send(res, 404, { error: 'not-found' });
 });

@@ -1,0 +1,17 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { randomUUID } from 'node:crypto';
+const T=()=>join(tmpdir(),`desk-${randomUUID()}.json`);
+process.env.REGISTRY_FILE=T(); process.env.COST_FILE=T(); process.env.MEMBERS_FILE=T(); process.env.CURATE_FILE=T();
+const R=await import('../src/api/registry.js');
+const K=await import('../src/api/cost.js');
+const M=await import('../src/api/members.js');
+const C=await import('../src/api/curate.js');
+const A=await import('../src/api/audit.js');
+test('registry refuses secrets, keeps metadata', async()=>{ assert.throws(()=>R.scrub({id:'x',api_key:'abc'}),/metadata only/); const r=R.scrub({id:'anthropic-api-key',service:'Anthropic',last4:'wxyz1234'}); assert.equal(r.last4,'1234'); await R.upsertRecord({id:'fly-api',service:'fly.io',owner:'bobrapp'}); assert.ok((await R.listRegistry()).count>=1); });
+test('cost: Haiku 4.5 math + cap', async()=>{ assert.equal(K.priceCall({model:'claude-haiku-4-5',tokens_in:1_000_000,tokens_out:1_000_000}),6); await K.setBudget({daily_usd:5}); await K.recordCost({model:'claude-haiku-4-5',tokens_in:0,tokens_out:1_000_000}); assert.equal((await K.checkBudget()).over,true); assert.equal((await K.guardSpend()).allow,false); });
+test('members: PII refused, roles, forget', async()=>{ assert.throws(()=>M.scrub({id:'a',email:'x@y.z'}),/no PII/); await M.joinAs('bobrapp','US'); await M.setRole('bobrapp','steward'); assert.equal((await M.exportRecord('bobrapp')).role,'steward'); assert.equal((await M.forget('bobrapp')).status,'forgotten'); });
+test('curate: needs license + provenance', async()=>{ await C.submit({item_id:'doc-1',source:'member'}); await assert.rejects(()=>C.decide('doc-1','accepted','steward'),/license/); await C.submit({item_id:'doc-1',license:'MIT',provenance:'in-house'}); assert.equal((await C.decide('doc-1','accepted','steward')).decision,'accepted'); });
+test('audit: query + redacted public view', ()=>{ const e=[{kind:'registry',op:'upsert',id:'a',actor:'bobrapp',ts:'2026-06-07T00:00:00Z'}]; assert.equal(A.query(e,{kind:'registry'}).length,1); const pub=A.publicView(e,{entries:1,valid:true}); assert.equal(JSON.stringify(pub).includes('bobrapp'),false); });

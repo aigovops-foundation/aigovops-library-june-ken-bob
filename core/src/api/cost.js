@@ -1,0 +1,23 @@
+import { readFile, writeFile, rename, mkdir } from 'node:fs/promises';
+import { dirname } from 'node:path';
+import { createHash } from 'node:crypto';
+const COST_FILE = process.env.COST_FILE || `${process.env.DATA_DIR || '/data'}/cost.json`;
+export const MODELS={'claude-haiku-4-5-20251001':{in:1.0,out:5.0},'claude-haiku-4-5':{in:1.0,out:5.0},'stub':{in:0,out:0},'ollama':{in:0,out:0}};
+const CACHE_INPUT_DISCOUNT=0.10;
+function priceFor(m){ return MODELS[m]||{in:0,out:0}; }
+export function priceCall({model='stub',tokens_in=0,tokens_out=0,cache_hit=false,unit_in,unit_out}){ const p=priceFor(model); const ui=unit_in!=null?unit_in:p.in; const uo=unit_out!=null?unit_out:p.out; const cost=(tokens_in/1e6)*ui*(cache_hit?CACHE_INPUT_DISCOUNT:1)+(tokens_out/1e6)*uo; return Math.round(cost*1e6)/1e6; }
+const FORBIDDEN=new Set(['value','secret','token','password','api_key','apikey','key','client_secret']);
+function noSecrets(o){ for(const k of Object.keys(o||{})) if(FORBIDDEN.has(k.toLowerCase())) throw new Error(`refused: "${k}" — cost receipts hold metadata only`); }
+async function load(){ try{ const j=JSON.parse(await readFile(COST_FILE,'utf8')); return {receipts:j.receipts||[],budgets:j.budgets||{}}; }catch{ return {receipts:[],budgets:{}}; } }
+async function save(s){ await mkdir(dirname(COST_FILE),{recursive:true}).catch(()=>{}); const t=COST_FILE+'.tmp'; await writeFile(t,JSON.stringify(s,null,2)); await rename(t,COST_FILE); }
+const dayOf=ts=>new Date(ts).toISOString().slice(0,10);
+export async function recordCost(input){ noSecrets(input); const ts=input.ts||new Date().toISOString(); const rec={ts,model:input.model||'stub',tokens_in:input.tokens_in||0,tokens_out:input.tokens_out||0,cache_hit:!!input.cache_hit,cost_usd:input.cost_usd!=null?input.cost_usd:priceCall(input),agent:input.agent||null,member:input.member||null}; const s=await load(); s.receipts.push(rec); await save(s); return rec; }
+export async function spendOn(day,s){ s=s||await load(); const rows=s.receipts.filter(r=>dayOf(r.ts)===day); return {day,spent_usd:Math.round(rows.reduce((a,r)=>a+(r.cost_usd||0),0)*100)/100,calls:rows.length}; }
+export async function checkBudget(){ const s=await load(); const today=new Date().toISOString().slice(0,10); const {spent_usd}=await spendOn(today,s); const cap=s.budgets.daily_usd??null; const remaining=cap==null?null:Math.round((cap-spent_usd)*100)/100; return {day:today,spent_usd,cap,remaining,over:cap!=null&&spent_usd>=cap}; }
+export async function guardSpend(){ const b=await checkBudget(); return b.over?{allow:false,reason:`daily cap $${b.cap} reached (spent $${b.spent_usd})`,...b}:{allow:true,...b}; }
+export async function setBudget(budget){ noSecrets(budget); const s=await load(); s.budgets={...s.budgets,...budget}; await save(s); return s.budgets; }
+export async function rollup(days=7){ const s=await load(); const by={}; for(const r of s.receipts){ const d=dayOf(r.ts); (by[d]||(by[d]={day:d,spent_usd:0,calls:0})); by[d].spent_usd+=(r.cost_usd||0); by[d].calls++; } return Object.values(by).sort((a,b)=>a.day<b.day?1:-1).slice(0,days).map(x=>({...x,spent_usd:Math.round(x.spent_usd*100)/100})); }
+export function reconcile(rows,invoice_usd){ const summed=Math.round(rows.reduce((a,r)=>a+r.spent_usd,0)*100)/100; return {summed_usd:summed,invoice_usd,variance_usd:Math.round((invoice_usd-summed)*100)/100}; }
+function readJson(req){ return new Promise(r=>{let b='';req.on('data',c=>b+=c);req.on('end',()=>{try{r(b?JSON.parse(b):{})}catch{r({})}})}); }
+function sendJson(res,c,o){ res.writeHead(c,{'content-type':'application/json'}); res.end(JSON.stringify(o)); }
+export async function cost(req,res,ctx={}){ const json=ctx.json||((c,o)=>sendJson(res,c,o)); try{ if(ctx.requireSteward){ const ok=await ctx.requireSteward(req,res); if(!ok)return; } if(req.method==='GET'){ const today=await checkBudget(); return json(200,{today,budgets:(await load()).budgets,rollup_7d:await rollup(7),generated_at:new Date().toISOString()}); } if(req.method==='POST'){ const body=await readJson(req); const op=body.op||'record'; let result; if(op==='set-budget')result=await setBudget(body.budget||{}); else if(op==='rollup'){ result=await spendOn(new Date().toISOString().slice(0,10)); if(ctx.ledgerAppend)await ctx.ledgerAppend({kind:'cost-rollup',day:result.day,spent_usd:result.spent_usd,calls:result.calls,hash:createHash('sha256').update(`${result.day}:${result.spent_usd}`).digest('hex').slice(0,16),ts:new Date().toISOString()}); } else result=await recordCost(body.receipt||body); return json(200,{ok:true,op,result}); } return json(405,{error:'method-not-allowed'}); }catch(e){ return json(400,{error:'cost-refused',detail:String(e.message||e)}); } }
