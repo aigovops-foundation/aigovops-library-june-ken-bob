@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 import * as beacon from './core/beacon.js';
 import * as policy from './core/policy.js';
 import { frameworks } from './core/lantern.js';
-import { respond } from './core/router.js';
+import { respondAsync } from './core/router.js';
 import { member } from './core/identity.js';
 import { propose } from './core/agent.js';
 import { createGovernedCore } from './core/govapi.js';
@@ -120,7 +120,7 @@ const server = http.createServer(async (req, res) => {
   if (url.pathname === '/api/ask' && req.method === 'POST') {
     const { question = '' } = await readBody(req);
     const m = member(req);
-    const ans = respond({ prompt: question, allowCloud: ALLOW_CLOUD });
+    const ans = await respondAsync({ prompt: question });
     // metadata-only receipt: store a hash of the question, never the question
     const receipt = beacon.emit({
       kind: 'prompt', actor: m.id, action: 'ask',
