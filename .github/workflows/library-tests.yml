@@ -1,0 +1,23 @@
+name: library-tests
+# Scheduled drift check of the DEPLOYED site (HTTP mode): SSL expiry, dead
+# external links, broken CI badge, accidental un-publish — things the pre-deploy
+# --dir gate in pages.yml can't see. Pre-deploy structural checks live there.
+on:
+  schedule:
+    - cron: "17 13 * * *"   # 13:17 UTC daily
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: "Target base URL"
+        required: false
+        default: "https://aigovops-foundation.github.io/aigovops-library-june-ken-bob"
+permissions: { contents: read }
+concurrency: { group: library-tests, cancel-in-progress: true }
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: node scripts/test-library.mjs --base "${{ github.event.inputs.base_url || 'https://aigovops-foundation.github.io/aigovops-library-june-ken-bob' }}"

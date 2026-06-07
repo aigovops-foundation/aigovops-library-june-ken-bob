@@ -14,6 +14,7 @@ jobs:
         with: { node-version: 20 }
       - run: node scripts/build-docs.mjs   # inline the single-source Yes-Gate logic into docs/
       - run: cd core && node scripts/pulse.mjs   # exercise the engine → docs/pulse.html
+      - run: node scripts/test-library.mjs --dir docs   # gate: structure/link/SEO checks must pass before deploy
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with: { path: docs }

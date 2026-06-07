@@ -172,6 +172,11 @@ const html = `<!DOCTYPE html>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>System Pulse — AiGovOps Library</title>
+<meta name="description" content="Live system pulse for the AiGovOps Library: the governed core is exercised on every deploy, emitting a receipt from each Yes-Gate decision."/>
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="System Pulse — AiGovOps Library"/>
+<meta property="og:description" content="Live system pulse for the AiGovOps Library: the governed core is exercised on every deploy, emitting a receipt from each Yes-Gate decision."/>
+<meta property="og:url" content="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/pulse.html"/>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 :root{--bg:#0c1430;--teal:#01696f;--green:#2ecc71;--green2:#6fe6a3;--gold:#e8c25a;--ink:#e7f3f1;--ink2:#9fc0bd;--red:#e74c3c;--line:rgba(120,200,190,.18);--card:rgba(255,255,255,.04)}

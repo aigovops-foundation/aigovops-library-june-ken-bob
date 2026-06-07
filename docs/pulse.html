@@ -4,6 +4,11 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>System Pulse — AiGovOps Library</title>
+<meta name="description" content="Live system pulse for the AiGovOps Library: the governed core is exercised on every deploy, emitting a receipt from each Yes-Gate decision."/>
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="System Pulse — AiGovOps Library"/>
+<meta property="og:description" content="Live system pulse for the AiGovOps Library: the governed core is exercised on every deploy, emitting a receipt from each Yes-Gate decision."/>
+<meta property="og:url" content="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/pulse.html"/>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 :root{--bg:#0c1430;--teal:#01696f;--green:#2ecc71;--green2:#6fe6a3;--gold:#e8c25a;--ink:#e7f3f1;--ink2:#9fc0bd;--red:#e74c3c;--line:rgba(120,200,190,.18);--card:rgba(255,255,255,.04)}
@@ -50,8 +55,8 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font:40
 <a class="back" href="./index.html">← back to the library</a>
 <h1>System Pulse</h1>
 <div class="meta">
-  <span>Generated 2026-06-07 01:31:14 UTC</span>
-  <span>commit <a href="https://github.com/aigovops-foundation/aigovops-library-june-ken-bob/commit/ab6d723">ab6d723</a></span>
+  <span>Generated 2026-06-07 02:35:37 UTC</span>
+  <span>commit <a href="https://github.com/aigovops-foundation/aigovops-library-june-ken-bob/commit/0e90c7b">0e90c7b</a></span>
   <span>CI <img class="badge" src="https://github.com/aigovops-foundation/aigovops-library-june-ken-bob/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI status" height="18"/></span>
 </div>
 
@@ -72,11 +77,11 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font:40
 
 <h2>Engine Exercise</h2>
 <ul class="checks">
-  <li><span class="icon ok">●</span><span class="name">T0 · issue a scoped grant</span><span class="detail">grantId=c138a146… token≠master ✓ ttl=60s</span></li>
+  <li><span class="icon ok">●</span><span class="name">T0 · issue a scoped grant</span><span class="detail">grantId=c5686b3b… token≠master ✓ ttl=60s</span></li>
   <li><span class="icon ok">●</span><span class="name">T0 · redeem the token (valid)</span><span class="detail">redeem ok=true scope=github-deploy</span></li>
   <li><span class="icon ok">●</span><span class="name">T0 · revoke → token fails closed</span><span class="detail">revoked → revoked ✓</span></li>
   <li><span class="icon ok">●</span><span class="name">T0 · describe() leaks no secret</span><span class="detail">owner=lab scope=github-deploy activeGrants=2</span></li>
-  <li><span class="icon ok">●</span><span class="name">T1 · approve → paired linked receipts</span><span class="detail">approved ✓ proposalId=d89f8c0b… token=d7d8a48b…</span></li>
+  <li><span class="icon ok">●</span><span class="name">T1 · approve → paired linked receipts</span><span class="detail">approved ✓ proposalId=d273542b… token=8bdf5b4b…</span></li>
   <li><span class="icon ok">●</span><span class="name">T1 · deny → no token, fails closed</span><span class="detail">denied ✓ grant=null reason=denied</span></li>
   <li><span class="icon ok">●</span><span class="name">T5 · under cap → approved</span><span class="detail">approved=true ✓ spend recorded</span></li>
   <li><span class="icon ok">●</span><span class="name">T5 · at cap → halted + breach receipt</span><span class="detail">capped=true ✓ reason=capped:spend-cap</span></li>
