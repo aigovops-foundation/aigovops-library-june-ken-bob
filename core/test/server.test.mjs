@@ -80,6 +80,10 @@ test('HTTP: auth gate + governed loop + console', async () => {
     assert.ok(ag.body.proposal, 'agent returns a proposal');
 
     assert.match((await J('GET', '/console')).body, /Control Room/);
+
+    // embeddable widget (Phase 4) — public, no auth
+    assert.match((await J('GET', '/widget.js')).body, /Ask the Library/);
+    assert.match((await J('GET', '/widget')).body, /widget\.js/);
   } finally {
     child.kill();
   }

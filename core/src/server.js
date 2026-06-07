@@ -245,6 +245,16 @@ const server = http.createServer(async (req, res) => {
     return res.end(html);
   }
 
+  // --- EMBEDDABLE WIDGET (Phase 4 channel) -------------------------------
+  if (url.pathname === '/widget.js') {
+    res.writeHead(200, { 'Content-Type': 'application/javascript; charset=utf-8' });
+    return res.end(fs.readFileSync(path.join(here, '..', 'public', 'widget.js'), 'utf8'));
+  }
+  if (url.pathname === '/widget' || url.pathname === '/widget.html') {
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+    return res.end(fs.readFileSync(path.join(here, '..', 'public', 'widget.html'), 'utf8'));
+  }
+
   // --- FRONT DESK room (static) ------------------------------------------
   if (url.pathname === '/' || url.pathname === '/index.html') {
     const html = fs.readFileSync(path.join(here, '..', 'public', 'index.html'), 'utf8');
