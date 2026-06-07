@@ -265,8 +265,12 @@ and the build leaves a verifiable receipt trail — the self-hosting loop.
 `core/scripts/mcp-server.mjs`, advertises the tools `gov_propose / gov_decide /
 gov_run_tool / gov_verify / skills_list / skills_run`. Tests: `core/test/govapi.test.mjs`
 (5 — end-to-end, deny fails closed, over-cap breach, skills, kill switch) and
-`core/test/mcp-server.test.mjs` (handshake + tools/list + tools/call). **Remaining:** HTTP
-exposure of the same loop, and real identity/roles (T8) instead of the anon stub.
+`core/test/mcp-server.test.mjs` (handshake + tools/list + tools/call). HTTP exposure
+landed too: `server.js` serves `/api/skills`, `/api/gov/{propose,decide,run}`,
+`/api/oversight`, and an interactive **Control Room** at `/console`
+(`core/public/console.html`); tested by `core/test/server.test.mjs`. Deploy: root
+`Dockerfile` (+ `plan/`), `core/compose.yml`, `fly.toml`, and `DEPLOY.md`.
+**Remaining:** real identity/roles (T8 OIDC) instead of the anon stub.
 
 ---
 

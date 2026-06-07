@@ -40,10 +40,14 @@ aigovops-library/
 ```bash
 cd core
 cp .env.example .env
+cp secrets.local.example.json secrets.local.json   # enables the broker (full loop)
 docker compose up        # → http://localhost:8787   (or: npm start)
-npm test                 # sign/verify, tamper, policy
+npm test                 # sign/verify, tamper, policy, governed loop
 npm run verify           # walk the ledger (openssl-verifiable)
 ```
+Then open **http://localhost:8787/console** — the interactive **Control Room**: run
+skills, drive the Yes-Gate loop (propose → decide → run → verify), and watch the
+signed ledger. To host it (VPS or Fly.io), see [`DEPLOY.md`](DEPLOY.md).
 
 ## Run a skill (example)
 ```bash

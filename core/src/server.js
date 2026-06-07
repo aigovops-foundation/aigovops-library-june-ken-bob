@@ -15,6 +15,7 @@ import { frameworks } from './core/lantern.js';
 import { respond } from './core/router.js';
 import { member } from './core/identity.js';
 import { propose } from './core/agent.js';
+import { createGovernedCore } from './core/govapi.js';
 import { negotiate, t } from './core/i18n.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -23,6 +24,9 @@ const ALLOWED = (process.env.ALLOWED_ORIGINS || 'http://localhost:8787,http://12
 const ALLOW_CLOUD = String(process.env.ALLOW_CLOUD || 'false') === 'true';
 
 beacon.loadOrCreateKeys();
+
+// The governed loop, exposed to the local console (Ticket A2 over HTTP).
+const gov = createGovernedCore();
 
 // --- tiny rate limiter (per-IP token bucket) --------------------------------
 const buckets = new Map();
@@ -131,6 +135,46 @@ const server = http.createServer(async (req, res) => {
   if (url.pathname === '/api/propose' && req.method === 'POST') {
     const { intent = '' } = await readBody(req);
     return send(res, 200, propose(intent));
+  }
+
+  // --- SKILLS (Ticket A1 over HTTP) --------------------------------------
+  if (url.pathname === '/api/skills' && req.method === 'GET') {
+    return send(res, 200, { skills: gov.skills.list() });
+  }
+  if (url.pathname === '/api/skills/run' && req.method === 'POST') {
+    const { name, input } = await readBody(req);
+    try { return send(res, 200, gov.skills.run(name, { input })); }
+    catch (e) { return send(res, 400, { error: e.message }); }
+  }
+
+  // --- GOVERNED LOOP (Ticket A2 over HTTP) -------------------------------
+  if (url.pathname === '/api/gov/propose' && req.method === 'POST') {
+    const { intent = '' } = await readBody(req);
+    return send(res, 200, gov.propose(intent, { actor: member(req).id }));
+  }
+  if (url.pathname === '/api/gov/decide' && req.method === 'POST') {
+    const { pendingId, decision, scope, ttlSeconds, requiredLevel, spend } = await readBody(req);
+    try { return send(res, 200, gov.decide(pendingId, decision, { scope, ttlSeconds, cost: { requiredLevel, spend } })); }
+    catch (e) { return send(res, 400, { error: e.message }); }
+  }
+  if (url.pathname === '/api/gov/run' && req.method === 'POST') {
+    const { token, code, allowedEgress } = await readBody(req);
+    try { return send(res, 200, await gov.runTool({ token, code, allowedEgress })); }
+    catch (e) { return send(res, 400, { error: e.message }); }
+  }
+
+  // --- OVERSIGHT (Ticket 6 — role-scoped ledger view) --------------------
+  if (url.pathname === '/api/oversight' && req.method === 'GET') {
+    const role = url.searchParams.get('role') || 'member';
+    const id = url.searchParams.get('id') || 'member:anon';
+    return send(res, 200, { role, scope: role === 'steward' ? 'all' : 'own', receipts: gov.oversight({ role, id }).view() });
+  }
+
+  // --- CONSOLE (interactive local control room) --------------------------
+  if (url.pathname === '/console') {
+    const html = fs.readFileSync(path.join(here, '..', 'public', 'console.html'), 'utf8');
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+    return res.end(html);
   }
 
   // --- FRONT DESK room (static) ------------------------------------------
