@@ -40,21 +40,27 @@ Core tests: **78/78** green (added auth, router, storage suites). Everything is 
 Locally right now: `cd core && AUTH_DISABLED=true npm start` keeps the console fully
 open for you; real auth kicks in on the host.
 
-## ▶ Phases 2–5 — plan (what's buildable vs needs you)
+## ▶ Phases 2–5 — LANDED (day session, decisions: propose-only · extend console · web widget · finance stub)
 
-I stopped after Phase 1 on purpose: 2–5 carry product/design choices, and I won't push
-speculative half-built subsystems to `main` unreviewed. Prioritized next:
+- **Phase 2 · Agents ✅** — `agents.js`: named staff route intent → skill, run it
+  (read-only → receipt), and **always return a proposal (propose-only)**; reply voiced via
+  Ollama. Surfaced at `/api/agent`, MCP `agent_dispatch`, and the console **Front desk**.
+- **Phase 3 · Human interaction ✅** — **approval queue** (`/api/gov/pending` + console
+  approve/deny, steward-gated) and **live SSE oversight** (`/api/oversight/stream`),
+  role-scoped to the signed-in identity.
+- **Phase 4 · Reach ✅** — embeddable **web widget** (`/widget.js`, `/widget`) calling the
+  public `/api/ask`. (Telegram/email/i18n still open.)
+- **Phase 5 · Community/finance ✅ (stub)** — `finance.js`: PLANS + PaymentProvider +
+  StubProvider; membership/charge flows test green, **no real money**, metadata-only
+  receipts. Real processor (Stripe) is a later, account-gated step.
 
-- **Phase 2 · Real agents** — an agent runtime that routes intent → named agent → skill
-  through the gate, voiced via Ollama. *Buildable; one design call: how chatty/agentic.*
-- **Phase 3 · Human interaction** — member UI ("rooms"), the **approval-queue** inbox
-  (the human gate UX), and the **T6 live SSE oversight** dashboard. *Buildable; needs a
-  little UI direction.*
-- **Phase 4 · Reach** — channel adapters (Telegram/Discord/email/MCP) + i18n beyond en/es.
-- **Phase 5 · Community/finance** — membership + finance **interface + stub** (no real
-  money), Commons (publish signed workflows), Host. *Real payments need an account later.*
-- **Carry-overs:** wire `beacon` → `storage.js` (careful, touches signing); T2 Vault,
-  T4 gVisor, T7 OPA, T9 enclave; custom domain.
+Core tests: **85/85**. Everything pushed to `main`.
+
+### Still open (carry-overs / need you)
+- Wire `beacon` → `storage.js` (careful — touches the signing/chain core).
+- Real **Ollama host** for the deployed app (local dev already real); **T2** Vault,
+  **T4** gVisor, **T7** OPA, **T9** enclave; custom domain; Telegram/email channels.
+- **Make it all live:** the deploy + GitHub OAuth steps in the checklist above.
 
 ## Decisions to queue for the next session
 - Agent runtime: how autonomous should agents be (propose-only vs act-within-caps)?
