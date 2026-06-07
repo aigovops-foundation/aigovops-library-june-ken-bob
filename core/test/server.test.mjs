@@ -19,44 +19,52 @@ const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'aigov-srv-'));
 const STORE = path.join(TMP, 'secrets.json');
 fs.writeFileSync(STORE, JSON.stringify({ owner: 'lab', scopes: { 'github-deploy': 'LOCAL-DEV-VALUE' }, rotated: {} }));
 
-const J = async (m, p, b) => {
-  const r = await fetch(BASE + p, b ? { method: m, headers: { 'content-type': 'application/json' }, body: JSON.stringify(b) } : { method: m });
+const TOKEN = 'test-ops';
+const J = async (m, p, b, tok) => {
+  const headers = {};
+  if (b) headers['content-type'] = 'application/json';
+  if (tok) headers.authorization = `Bearer ${tok}`;
+  const r = await fetch(BASE + p, { method: m, headers, body: b ? JSON.stringify(b) : undefined });
   return { status: r.status, body: r.headers.get('content-type')?.includes('json') ? await r.json() : await r.text() };
 };
 
-test('HTTP: skills + governed loop + console', async () => {
+test('HTTP: auth gate + governed loop + console', async () => {
   const child = spawn(process.execPath, [SERVER], {
-    env: { ...process.env, PORT: String(PORT), KEYS_DIR: path.join(TMP, 'keys'), LEDGER_DIR: path.join(TMP, 'ledger'), SECRETS_FILE: STORE },
+    env: { ...process.env, PORT: String(PORT), KEYS_DIR: path.join(TMP, 'keys'), LEDGER_DIR: path.join(TMP, 'ledger'), SECRETS_FILE: STORE, STEWARD_TOKEN: TOKEN },
     stdio: ['ignore', 'ignore', 'pipe'],
   });
   try {
-    // wait for boot
     for (let i = 0; i < 40; i++) {
       try { const s = await J('GET', '/status'); if (s.status === 200) break; } catch {}
       await new Promise((r) => setTimeout(r, 250));
     }
     assert.equal((await J('GET', '/status')).body.ok, true);
 
-    const skills = (await J('GET', '/api/skills')).body.skills;
-    assert.ok(skills.some((s) => s.name === 'framework-map' && s.runnable));
+    // the door is closed: a write WITHOUT auth is rejected
+    const noauth = await J('POST', '/api/gov/decide', { pendingId: 'x', decision: 'approve' });
+    assert.equal(noauth.status, 401, 'unauthenticated write must be 401');
 
-    const sk = await J('POST', '/api/skills/run', { name: 'framework-map', input: 'an AI tool that screens job candidates' });
+    // reads stay open; skills list works
+    assert.ok((await J('GET', '/api/skills')).body.skills.some((s) => s.name === 'framework-map' && s.runnable));
+
+    // authenticated (steward) full loop
+    const sk = await J('POST', '/api/skills/run', { name: 'framework-map', input: 'an AI tool that screens job candidates' }, TOKEN);
     assert.ok(sk.body.result.gates.length > 0);
 
-    const prop = await J('POST', '/api/gov/propose', { intent: 'deploy the site' });
+    const prop = await J('POST', '/api/gov/propose', { intent: 'deploy the site' }, TOKEN);
     assert.equal(prop.body.requiresHumanGate, true);
 
-    const dec = await J('POST', '/api/gov/decide', { pendingId: prop.body.pendingId, decision: 'approve', scope: 'github-deploy', requiredLevel: 'act' });
+    const dec = await J('POST', '/api/gov/decide', { pendingId: prop.body.pendingId, decision: 'approve', scope: 'github-deploy', requiredLevel: 'act' }, TOKEN);
     assert.ok(dec.body.grant && dec.body.grant.token, 'approval brokers a token');
 
-    const run = await J('POST', '/api/gov/run', { token: dec.body.grant.token, code: 'export default async () => "built";' });
+    const run = await J('POST', '/api/gov/run', { token: dec.body.grant.token, code: 'export default async () => "built";' }, TOKEN);
     assert.equal(run.body.ok, true);
 
-    const ov = await J('GET', '/api/oversight?role=steward');
+    const ov = await J('GET', '/api/oversight', null, TOKEN);   // role comes from the authenticated identity
+    assert.equal(ov.body.role, 'steward');
     assert.ok(ov.body.receipts.length >= 3);
 
-    const con = await J('GET', '/console');
-    assert.match(con.body, /Control Room/);
+    assert.match((await J('GET', '/console')).body, /Control Room/);
   } finally {
     child.kill();
   }

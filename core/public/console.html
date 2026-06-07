@@ -33,8 +33,8 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>AiGovOps — Control Room <span id="health" class="pill">checking…</span></h1>
-  <div class="sub">Local interface to the governed core: run skills, drive the Yes-Gate loop, and watch the signed ledger. Every action leaves a receipt.</div>
+  <h1>AiGovOps — Control Room <span id="health" class="pill">checking…</span> <span id="auth" class="pill">…</span></h1>
+  <div class="sub">Interface to the governed core: run skills, drive the Yes-Gate loop, and watch the signed ledger. Writes require sign-in (members propose; stewards approve). Every action leaves a receipt.</div>
 
   <div class="grid">
     <!-- SKILLS -->
@@ -96,6 +96,15 @@ async function health() {
   try { const s = await J('GET', '/status'); $('health').innerHTML = s.ok ? `<span class="ok">healthy</span> · ledger ${s.ledger.entries} ${s.ledger.valid ? '✓' : '✗'} · kid ${s.kid}` : 'down'; }
   catch { $('health').textContent = 'core not reachable'; }
 }
+async function auth() {
+  try {
+    const me = await J('GET', '/auth/me');
+    if (me.authenticated) $('auth').innerHTML = `<span class="ok">${me.login}</span> · ${me.role} · <a href="#" onclick="logout();return false" style="color:var(--ink2)">log out</a>`;
+    else if (me.oauth) $('auth').innerHTML = `<a href="/auth/login" style="color:var(--green2)">Sign in with GitHub →</a>`;
+    else $('auth').innerHTML = `<span class="muted">auth not configured (writes locked)</span>`;
+  } catch { $('auth').textContent = ''; }
+}
+async function logout() { await fetch('/auth/logout', { method: 'POST' }); auth(); }
 async function loadSkills() {
   const { skills } = await J('GET', '/api/skills');
   $('skill').innerHTML = skills.map(s => `<option value="${s.name}" ${s.runnable ? '' : 'disabled'}>${s.runnable ? '✓' : '·'} ${s.name}</option>`).join('');
@@ -138,7 +147,7 @@ async function kill() {
   // console action. We surface it honestly: it is enforced server-side by role.
   $('killState').innerHTML = '<span class="muted">kill switch is steward-gated in govapi; not exposed over HTTP in this build (run via MCP/console host).</span>';
 }
-health(); loadSkills(); oversight();
+health(); auth(); loadSkills(); oversight();
 setInterval(health, 8000);
 </script>
 </body>

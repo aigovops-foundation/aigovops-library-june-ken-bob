@@ -16,6 +16,7 @@ import { respond } from './core/router.js';
 import { member } from './core/identity.js';
 import { propose } from './core/agent.js';
 import { createGovernedCore } from './core/govapi.js';
+import * as auth from './core/auth.js';
 import { negotiate, t } from './core/i18n.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -71,6 +72,30 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }
   if (!rateOk(ip)) return send(res, 429, { error: 'rate-limited' });
+
+  // Who is calling? (null if unauthenticated) — write endpoints check this.
+  const id = auth.identityFromReq(req);
+  const needAuth = (role) => { if (!auth.hasRole(id, role)) { send(res, id ? 403 : 401, { error: role === 'steward' ? 'steward-required' : 'auth-required' }); return true; } return false; };
+
+  // --- AUTH (GitHub OAuth) ------------------------------------------------
+  if (url.pathname === '/auth/login') {
+    if (!auth.oauthConfigured()) return send(res, 503, { error: 'oauth-not-configured', hint: 'set GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET' });
+    const state = auth.newState();
+    res.writeHead(302, { 'Set-Cookie': `aigov_oauth_state=${state}; HttpOnly; Path=/; SameSite=Lax; Max-Age=600; Secure`, Location: auth.loginRedirectUrl(state) });
+    return res.end();
+  }
+  if (url.pathname === '/auth/callback') {
+    const code = url.searchParams.get('code'); const state = url.searchParams.get('state');
+    if (!code || !state || !(req.headers.cookie || '').includes(`aigov_oauth_state=${state}`)) return send(res, 400, { error: 'bad-oauth-state' });
+    try { const { token } = await auth.completeLogin(code); res.writeHead(302, { 'Set-Cookie': auth.sessionCookie(token), Location: '/console' }); return res.end(); }
+    catch (e) { return send(res, 401, { error: e.message }); }
+  }
+  if (url.pathname === '/auth/me') {
+    return send(res, 200, id ? { authenticated: true, login: id.id, role: id.role } : { authenticated: false, oauth: auth.oauthConfigured() });
+  }
+  if (url.pathname === '/auth/logout' && req.method === 'POST') {
+    res.writeHead(200, { 'Set-Cookie': auth.clearCookie(), 'Content-Type': 'application/json' }); return res.end('{"ok":true}');
+  }
 
   // --- STATUS -------------------------------------------------------------
   if (url.pathname === '/status') {
@@ -142,6 +167,7 @@ const server = http.createServer(async (req, res) => {
     return send(res, 200, { skills: gov.skills.list() });
   }
   if (url.pathname === '/api/skills/run' && req.method === 'POST') {
+    if (needAuth('member')) return;
     const { name, input } = await readBody(req);
     try { return send(res, 200, gov.skills.run(name, { input })); }
     catch (e) { return send(res, 400, { error: e.message }); }
@@ -149,25 +175,28 @@ const server = http.createServer(async (req, res) => {
 
   // --- GOVERNED LOOP (Ticket A2 over HTTP) -------------------------------
   if (url.pathname === '/api/gov/propose' && req.method === 'POST') {
+    if (needAuth('member')) return;
     const { intent = '' } = await readBody(req);
-    return send(res, 200, gov.propose(intent, { actor: member(req).id }));
+    return send(res, 200, gov.propose(intent, { actor: id.id }));
   }
   if (url.pathname === '/api/gov/decide' && req.method === 'POST') {
+    if (needAuth('steward')) return;   // the human gate is a steward's call
     const { pendingId, decision, scope, ttlSeconds, requiredLevel, spend } = await readBody(req);
-    try { return send(res, 200, gov.decide(pendingId, decision, { scope, ttlSeconds, cost: { requiredLevel, spend } })); }
+    try { return send(res, 200, gov.decide(pendingId, decision, { scope, ttlSeconds, cost: { requiredLevel, spend }, decidedBy: id.id })); }
     catch (e) { return send(res, 400, { error: e.message }); }
   }
   if (url.pathname === '/api/gov/run' && req.method === 'POST') {
+    if (needAuth('member')) return;
     const { token, code, allowedEgress } = await readBody(req);
     try { return send(res, 200, await gov.runTool({ token, code, allowedEgress })); }
     catch (e) { return send(res, 400, { error: e.message }); }
   }
 
   // --- OVERSIGHT (Ticket 6 — role-scoped ledger view) --------------------
+  // Scope comes from the AUTHENTICATED identity, not a client-supplied param.
   if (url.pathname === '/api/oversight' && req.method === 'GET') {
-    const role = url.searchParams.get('role') || 'member';
-    const id = url.searchParams.get('id') || 'member:anon';
-    return send(res, 200, { role, scope: role === 'steward' ? 'all' : 'own', receipts: gov.oversight({ role, id }).view() });
+    const who = id || { role: 'member', id: 'member:anon' };
+    return send(res, 200, { role: who.role, scope: who.role === 'steward' ? 'all' : 'own', receipts: gov.oversight(who).view() });
   }
 
   // --- CONSOLE (interactive local control room) --------------------------
