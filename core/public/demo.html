@@ -1,0 +1,94 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AiGovOps Library — A Day in the Library</title>
+<style>
+:root{--bg:#16122c;--card:#1f1a3a;--ink:#ece8ff;--mut:#9a93c7;--teal:#4FB286;--gold:#e8c879;--violet:#7B61FF;--line:#332c5c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto}
+.wrap{max-width:1100px;margin:0 auto;padding:24px}
+h1{font:600 24px/1.2 Cinzel,Georgia,serif;letter-spacing:.5px;margin:0 0 2px}
+.sub{color:var(--mut);margin:0 0 16px}
+.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:14px 0;padding:10px;background:var(--card);border:1px solid var(--line);border-radius:12px}
+button{background:#2a2350;color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:8px 14px;font-weight:600;cursor:pointer}
+button:hover{border-color:var(--violet)}button.primary{background:var(--violet);border-color:var(--violet)}
+.grid{display:grid;grid-template-columns:230px 1fr;gap:16px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}}
+.agents{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.agent{display:flex;gap:8px;align-items:center;padding:7px 8px;border-radius:8px;color:var(--mut)}
+.agent .dot{width:9px;height:9px;border-radius:50%;background:#4a4470;flex:none}
+.agent.on{color:var(--ink);background:#241e44}.agent.on .dot{background:var(--teal);box-shadow:0 0 10px var(--teal)}
+.stage{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;min-height:340px}
+.room{font:600 18px/1.2 Cinzel,Georgia,serif;color:var(--gold)}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;margin-left:8px}
+.tag.live{background:#13351f;color:#7fe0a6;border:1px solid #1f9d5b}
+.tag.script{background:#2a2350;color:#b9a6ff;border:1px solid var(--violet)}
+.body{margin-top:12px}
+pre{background:#120f24;border:1px solid var(--line);border-radius:10px;padding:12px;overflow:auto;color:#cfeae0;font-size:12.5px;white-space:pre-wrap;word-break:break-word}
+.reck{margin-top:10px;font-size:12px;color:var(--mut)}.reck b{color:var(--gold)}
+.prog{height:4px;background:#241e44;border-radius:99px;overflow:hidden;margin:10px 0}
+.prog>i{display:block;height:100%;background:var(--violet);width:0;transition:width .4s}
+.dim{color:var(--mut)}
+</style></head><body><div class="wrap">
+<h1>A Day in the Library</h1>
+<p class="sub">A visitor walks every room. Agents do the bureaucracy; humans hold the meaning.</p>
+<div class="bar">
+<button class="primary" id="play">▶ Play</button>
+<button id="pause">⏸ Pause</button>
+<button id="next">⏭ Step</button>
+<button id="restart">↻ Restart</button>
+<span class="dim" id="clock"></span>
+<span class="dim" id="src" style="margin-left:auto"></span>
+</div>
+<div class="prog"><i id="bar"></i></div>
+<div class="grid">
+<div class="agents" id="agents"></div>
+<div class="stage">
+<div><span class="room" id="room">—</span><span id="mode" class="tag"></span></div>
+<div class="body"><div id="say" class="dim">Press Play to begin the walkthrough.</div><pre id="out" style="display:none"></pre><div class="reck" id="reck"></div></div>
+</div>
+</div>
+</div>
+<script>
+const CORE="https://aigovops-library-core.fly.dev";
+const AGENTS=["Concierge","Lantern","Beacon","Quartermaster","Treasurer","Registrar","Curator","Chronicle","Sentinel"];
+const A=document.getElementById("agents");
+AGENTS.forEach(n=>{const d=document.createElement("div");d.className="agent";d.id="ag-"+n;d.innerHTML='<span class="dot"></span>'+n;A.appendChild(d);});
+function lite(names){document.querySelectorAll(".agent").forEach(e=>e.classList.remove("on"));(names||[]).forEach(n=>{const e=document.getElementById("ag-"+n);if(e)e.classList.add("on");});}
+const $=id=>document.getElementById(id);
+async function liveGET(p){const r=await fetch(CORE+p);return {code:r.status,body:await r.text()};}
+async function livePOST(p,b){const r=await fetch(CORE+p,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(b)});return {code:r.status,body:await r.text()};}
+const steps=[
+{room:"Front Desk — George Peabody",agents:["Concierge"],mode:"live",say:"A visitor arrives and asks a question. The Concierge answers and Beacon signs a receipt.",
+ run:async()=>{const r=await livePOST("/api/ask",{question:"What does this library do?"});return {code:r.code,body:r.body};},reck:["Beacon"]},
+{room:"Reading Room — Trinity Long Room",agents:["Lantern"],mode:"live",say:"Lantern checks which governance frameworks are live in the core.",
+ run:async()=>{const r=await liveGET("/status");return {code:r.code,body:r.body};}},
+{room:"Archives — Tianjin Binhai",agents:["Beacon"],mode:"live",say:"Beacon's ledger is public and verifiable — anyone can confirm the receipts.",
+ run:async()=>{const r=await liveGET("/api/verify");return {code:r.code,body:r.body};}},
+{room:"Archives — the Registry desk",agents:["Quartermaster"],mode:"script",say:"Quartermaster tracks every service & key as metadata (never values). Steward-gated, so this is a sample.",
+ run:async()=>({code:200,body:JSON.stringify({records:[{id:"anthropic-api-key",service:"Anthropic",op_ref:"op://AiGovOps/anthropic-api-key/credential",rotate_by:"2026-09-01",status:"active"},{id:"fly-deploy",service:"fly.io",owner:"bobrapp",status:"active"}],due_for_rotation:[]},null,2)}),reck:["Quartermaster"]},
+{room:"Counting House — the Treasurer",agents:["Treasurer"],mode:"script",say:"Treasurer costs every model call to the penny and enforces a daily cap.",
+ run:async()=>({code:200,body:JSON.stringify({today:{day:"2026-06-07",spent_usd:0.42,cap:5,remaining:4.58,over:false},rollup_7d:[{day:"2026-06-07",spent_usd:0.42,calls:7}]},null,2)}),reck:["Treasurer"]},
+{room:"Front Desk — the Registrar",agents:["Registrar"],mode:"script",say:"A member joins via GitHub identity. Roles: visitor → member → steward → maintainer.",
+ run:async()=>({code:200,body:JSON.stringify({ok:true,member:{id:"new-member",role:"member",region:"US",joined:"2026-06-07"}},null,2)}),reck:["Registrar"]},
+{room:"Reading Room — the Curator",agents:["Curator"],mode:"live",say:"The acquisitions queue is public — anyone can see what's pending review.",
+ run:async()=>{const r=await liveGET("/api/curate");return {code:r.code,body:r.body};}},
+{room:"Commons — the transparency wall",agents:["Chronicle"],mode:"live",say:"Chronicle's public view: ledger integrity + activity counts, fully redacted (no actors).",
+ run:async()=>{const r=await liveGET("/api/audit?public=1");return {code:r.code,body:r.body};},reck:["Chronicle"]},
+{room:"The whole house",agents:AGENTS,mode:"live",say:"Every desk answered. The core is healthy and the ledger is valid. That's a day in the Library.",
+ run:async()=>{const r=await liveGET("/status");return {code:r.code,body:r.body};}}
+];
+let i=-1,playing=false,timer=null;
+function setMode(m){const e=$("mode");e.className="tag "+(m==="live"?"live":"script");e.textContent=m==="live"?"LIVE":"SAMPLE";}
+async function show(n){const s=steps[n];$("room").textContent=s.room;setMode(s.mode);$("say").textContent=s.say;lite(s.agents);$("bar").style.width=Math.round((n+1)/steps.length*100)+"%";$("clock").textContent="Scene "+(n+1)+" / "+steps.length;
+ const out=$("out");out.style.display="block";out.textContent="…";$("reck").textContent="";
+ try{const r=await s.run();out.textContent=(s.mode==="live"?"["+r.code+"] ":"")+ (()=>{try{return JSON.stringify(JSON.parse(r.body),null,2)}catch{return r.body}})();
+  $("src").textContent=s.mode==="live"?"● live from core":"● scripted sample (gated desk)";
+  if(s.reck)$("reck").innerHTML="↳ <b>"+s.reck.join(", ")+"</b> signs a metadata-only receipt to the ledger.";
+ }catch(e){out.textContent="(offline — showing the shape)\n"+e;}
+}
+async function step(){i=(i+1)%steps.length;if(i===0&&playing){} await show(i);}
+function play(){if(playing)return;playing=true;loop();}
+async function loop(){if(!playing)return;await step();timer=setTimeout(loop,3800);}
+function pause(){playing=false;if(timer)clearTimeout(timer);}
+$("play").onclick=play;$("pause").onclick=pause;$("next").onclick=async()=>{pause();await step();};
+$("restart").onclick=async()=>{pause();i=-1;await step();};
+step();
+</script></body></html>
