@@ -254,6 +254,48 @@
     <p class="thesis" style="max-width:760px">The <b style="color:#fff">Demo</b> says <i>why</i>. The <b style="color:#fff">Design Book</b> shows the <i>feel</i>. The <b style="color:#fff">Blueprint</b> is <i>what to build</i>. The <b style="color:#fff">Plan</b> is <i>how we operate</i> — the agents, skills, and processes that produce all of it. And the <b style="color:#fff">Core</b> is the <i>running skeleton</i> those processes ship to. Every piece bends toward the same spine, and every meaningful action leaves a signed receipt.</p>
   </section>
 
+  <section id="run">
+    <h2>Run it yourself</h2>
+    <p class="thesis" style="max-width:760px">The core is one dependency-free Node service — <b style="color:#fff">$0, local-first, no SaaS</b>. Run it three ways; each boots with its own <span class="mono">Ed25519</span> key and a signed, append-only ledger. This page is the static story — the commands below run the live core, with an interactive <b style="color:#fff">Control Room</b> at <span class="mono">/console</span>.</p>
+
+    <div class="pieces" style="margin-top:18px">
+      <div class="card" style="cursor:default">
+        <div class="tag">Local · Node ≥18</div>
+        <h3>On your machine</h3>
+        <div style="font-family:'DM Mono',monospace;font-size:12.5px;line-height:1.8;color:#cfeee2;margin-top:6px">
+          <div><span style="color:var(--green2)">$</span> cd core</div>
+          <div><span style="color:var(--green2)">$</span> <b style="color:#fff">npm start</b></div>
+        </div>
+        <span class="go">→ http://localhost:8787/console</span>
+      </div>
+
+      <div class="card" style="cursor:default">
+        <div class="tag">Docker</div>
+        <h3>As a container</h3>
+        <div style="font-family:'DM Mono',monospace;font-size:12.5px;line-height:1.8;color:#cfeee2;margin-top:6px">
+          <div><span style="color:var(--green2)">$</span> cd core</div>
+          <div><span style="color:var(--green2)">$</span> <b style="color:#fff">docker compose up --build</b></div>
+        </div>
+        <span class="go">one image; keys + ledger persist on a volume →</span>
+      </div>
+
+      <div class="card" style="cursor:default">
+        <div class="tag">Fly.io · hosted</div>
+        <h3>Any moment, anywhere</h3>
+        <div style="font-family:'DM Mono',monospace;font-size:12.5px;line-height:1.8;color:#cfeee2;margin-top:6px">
+          <div><span style="color:var(--green2)">$</span> fly apps create &lt;name&gt; --org personal</div>
+          <div><span style="color:var(--green2)">$</span> fly volumes create aigov_data -r iad -s 1</div>
+          <div><span style="color:var(--green2)">$</span> <b style="color:#fff">fly deploy</b></div>
+        </div>
+        <span class="go">→ https://&lt;name&gt;.fly.dev/console</span>
+      </div>
+    </div>
+
+    <div class="repo" style="margin-top:16px">
+      <b>Verify it, offline.</b> <span class="mono">npm run export:evidence</span> writes a bundle anyone can check with <span class="mono">openssl</span> or <span class="mono">node</span> — no network, no trust in our code. Full steps live in the repo's <span class="mono">DEPLOY.md</span>. The governed core is <b style="color:#fff">Apache-2.0</b>; agents propose, humans hold the keys.
+    </div>
+  </section>
+
   <footer>
     <div class="tagline">One governed library, run by agents, held by humans, warm in every language.</div>
     <div class="fcreed">AGENTS DO THE BUREAUCRACY · HUMANS HOLD THE MEANING</div>
