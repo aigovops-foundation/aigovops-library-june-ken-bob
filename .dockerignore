@@ -1,0 +1,13 @@
+# Keep the build context (and remote builder uploads) clean and secret-free.
+.git
+**/node_modules
+# never ship local dev keys / ledger / secret stores
+core/keys
+core/ledger
+**/secrets.local.json
+**/.env
+evidence-bundle
+core/evidence-bundle
+# misc
+*.log
+.DS_Store
