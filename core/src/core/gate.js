@@ -70,9 +70,13 @@ export function decide({ proposal, decision, scope, ttlSeconds, requestedBy = 'g
       blastRadius: cost.blastRadius || 0
     });
     if (!capCheck.ok) {
+      // Only include defined fields — undefined values break sign→JSON→verify roundtrip.
+      const breachDetail = { op: 'cap-breach', reason: capCheck.reason, scope };
+      if (capCheck.current !== undefined) breachDetail.current = capCheck.current;
+      if (capCheck.max !== undefined) breachDetail.max = capCheck.max;
       emit({
         kind: 'gate', actor: requestedBy, action: 'cap-breach',
-        detail: { op: 'cap-breach', reason: capCheck.reason, scope, current: capCheck.current, max: capCheck.max }
+        detail: breachDetail
       });
       return { approved: false, proposalId, grant: null, reason: `capped:${capCheck.reason}`, capped: true };
     }

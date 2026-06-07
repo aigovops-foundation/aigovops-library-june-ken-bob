@@ -10,7 +10,8 @@
     "start": "node src/server.js",
     "keygen": "node scripts/keygen.mjs",
     "verify": "node scripts/verify-ledger.mjs",
-    "test": "node --test"
+    "test": "node --test",
+    "pulse": "node scripts/pulse.mjs"
   },
   "dependencies": {},
   "comment": "v1 is intentionally dependency-free: it uses only Node's built-in http + crypto (Ed25519). No supply chain to audit, no keys in any client. Swap the simplified canonicalizer in src/core/beacon.js for a real RFC 8785 JCS library before production."
