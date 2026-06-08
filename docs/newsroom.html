@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AiGovOps Foundation — The Newsroom</title>
+<style>
+:root{--bg:#16122c;--card:#1f1a3a;--ink:#ece8ff;--mut:#9a93c7;--gold:#e8c879;--violet:#7B61FF;--line:#332c5c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto}
+.wrap{max-width:1080px;margin:0 auto;padding:24px}h1{font:600 24px/1.2 Cinzel,Georgia,serif;margin:0 0 2px}.sub{color:var(--mut);margin:0 0 14px}
+.role{float:right;font-size:12px;color:var(--mut);border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+.grid{display:grid;grid-template-columns:250px 1fr;gap:16px}@media(max-width:760px){.grid{grid-template-columns:1fr}}
+.agents{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px}
+.ag{display:block;width:100%;text-align:left;background:#241e44;color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:9px 10px;margin:6px 0;cursor:pointer}
+.ag:hover{border-color:var(--violet)}.ag b{display:block}.ag span{color:var(--mut);font-size:12px}.ag.orch{border-color:var(--gold)}
+.main{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;min-height:360px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+button.act{background:var(--violet);color:#fff;border:0;border-radius:9px;padding:8px 13px;font-weight:600;cursor:pointer}
+button.ghost{background:#2a2350;color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:8px 13px;cursor:pointer}
+input{background:#120f24;border:1px solid var(--line);border-radius:8px;color:var(--ink);padding:8px;flex:1;min-width:160px}
+pre{background:#120f24;border:1px solid var(--line);border-radius:10px;padding:12px;white-space:pre-wrap;word-break:break-word;color:#cfeae0;font-size:13px}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:#2a2350;color:#b9a6ff;border:1px solid var(--violet);margin-left:6px}
+.bubble{background:#241e44;border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin:7px 0}.bubble b{color:var(--gold)}
+.lbl{color:var(--mut);font-size:12px;margin:10px 0 4px}.gap{color:#e8c879}.dec{color:#7fe0a6}.note{color:var(--mut);font-size:12px;margin-top:10px}
+</style></head><body><div class="wrap">
+<span class="role" id="role">checking...</span><h1>The Newsroom</h1>
+<p class="sub">AiGovOps Foundation - agents draft, you decide. Nothing here publishes.</p>
+<div class="grid"><div class="agents" id="agents"></div>
+<div class="main"><div class="row">
+<button class="act" id="assemble">Assemble the Newsletter</button>
+<button class="ghost" id="bsbtn">Brainstorm</button>
+<input id="topic" placeholder="brainstorm topic, e.g. AI in education"></div>
+<div id="title" class="lbl">Pick an agent to see a draft, or assemble the issue.</div>
+<pre id="out" style="display:none"></pre><div id="thread"></div><div id="meta"></div><div class="note" id="note"></div>
+</div></div></div>
+<script>
+var CORE="https://aigovops-library-core.fly.dev";var $=function(id){return document.getElementById(id);};
+fetch(CORE+"/auth/me").then(function(r){return r.json();}).then(function(d){$("role").textContent=d.authenticated?((d.role||"member")+": "+d.login):"public (read-only)";}).catch(function(){$("role").textContent="offline";});
+fetch(CORE+"/api/newsroom").then(function(r){return r.json();}).then(function(d){var A=$("agents");(d.agents||[]).forEach(function(a){var b=document.createElement("button");b.className="ag"+(a.kind==="orchestrator"?" orch":"");b.innerHTML="<b>"+a.name+"</b><span>"+a.blurb+"</span>";b.onclick=function(){preview(a.id);};A.appendChild(b);});}).catch(function(){});
+function clr(){$("out").style.display="none";$("thread").innerHTML="";$("meta").innerHTML="";$("note").textContent="";}
+function render(d){clr();
+ if(d.thread){$("title").textContent="Brainstorm - "+(d.topic||"");d.thread.forEach(function(m){var e=document.createElement("div");e.className="bubble";e.innerHTML="<b>"+m.by+"</b><br>"+m.text;$("thread").appendChild(e);});}
+ else{$("title").innerHTML=(d.agent||"draft")+' <span class="tag">SAMPLE</span>';$("out").style.display="block";$("out").textContent=d.body||JSON.stringify(d,null,2);
+  var m="";if(d.decisions&&d.decisions.length){m+='<div class="lbl">Decisions waiting on you:</div>'+d.decisions.map(function(x){return '<div class="dec">- '+x+'</div>';}).join("");}
+  if(d.gaps&&d.gaps.length){m+='<div class="lbl">Gaps it flagged (never invented):</div>'+d.gaps.map(function(x){return '<div class="gap">- '+x+'</div>';}).join("");}$("meta").innerHTML=m;}
+ $("note").textContent=d.note||"";}
+function preview(id){fetch(CORE+"/api/newsroom?preview="+id).then(function(r){return r.json();}).then(render).catch(function(){$("title").textContent="offline";});}
+$("assemble").onclick=function(){fetch(CORE+"/api/newsroom?preview=assemble").then(function(r){return r.json();}).then(render);};
+$("bsbtn").onclick=function(){var t=encodeURIComponent($("topic").value||"AI governance");fetch(CORE+"/api/newsroom?preview=brainstorm&topic="+t).then(function(r){return r.json();}).then(render);};
+</script></body></html>
