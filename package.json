@@ -7,5 +7,8 @@
   "scripts": {
     "build:docs": "node scripts/build-docs.mjs",
     "test": "cd core && node --test"
+  },
+  "dependencies": {
+    "marked": "^18.0.5"
   }
 }
