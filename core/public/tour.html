@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The AiGovOps Library — A Guided Tour</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Spectral:wght@300;400;500&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --parch:#efe3c8; --ink:#2a2014; --ink-soft:#5c4a31;
+  --gold:#c79a3c; --gold-lt:#eccb78; --line:#c8b48a;
+  --shadow:0 22px 60px rgba(30,18,4,.5);
+  --serif:"Cormorant Garamond",Georgia,serif;
+  --display:"Cinzel",Georgia,serif;
+  --ui:"Spectral",Georgia,serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --glow:#e8c879;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:#140d06;color:var(--ink);font-family:var(--ui);overflow:hidden;-webkit-font-smoothing:antialiased}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:70;opacity:.5;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.3'/%3E%3C/svg%3E")}
+#stage{position:fixed;inset:0;overflow:hidden}
+
+/* ---------- MAP ---------- */
+#map{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:radial-gradient(120% 95% at 50% 26%,#f5ead2 0%,#e6d4ad 52%,#c6ad7d 100%);
+  transition:opacity .9s ease, transform 1.1s cubic-bezier(.6,.02,.2,1)}
+#map.hidden{opacity:0;transform:scale(1.2);pointer-events:none}
+.map-title{text-align:center;margin-bottom:8px}
+.map-title h1{font-family:var(--display);font-weight:700;letter-spacing:.08em;font-size:clamp(22px,4.4vw,42px);margin:0;color:#43321a;text-shadow:0 1px 0 #fff8}
+.map-title p{font-family:var(--serif);font-style:italic;font-size:clamp(15px,2vw,21px);color:var(--ink-soft);margin:6px 0 0}
+.map-card{position:relative;width:min(92vw,1040px);height:min(70vh,620px);border:2px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);
+  background:radial-gradient(80% 80% at 50% 40%,#efe0bc,#dcc798)}
+.map-card::before{content:"";position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cpath d='M0 20h40M20 0v40' stroke='%23000' stroke-opacity='0.03' stroke-width='1'/%3E%3C/svg%3E")}
+.node{position:absolute;transform:translate(-50%,-50%);cursor:pointer;text-align:center;width:130px;z-index:2}
+.node .seal{width:64px;height:64px;margin:0 auto;border-radius:50%;display:grid;place-items:center;font-size:27px;color:#fff;
+  border:2px solid #fff8;box-shadow:0 6px 18px rgba(0,0,0,.3),inset 0 0 16px rgba(255,255,255,.3);transition:transform .25s,box-shadow .25s}
+.node:hover .seal{transform:scale(1.13) translateY(-3px);box-shadow:0 0 0 7px rgba(199,154,60,.22),0 12px 28px rgba(0,0,0,.4)}
+.node .nm{font-family:var(--display);font-weight:600;font-size:13.5px;letter-spacing:.04em;margin-top:8px;color:#3a2c17}
+.node .who{font-family:var(--serif);font-style:italic;font-size:13px;color:var(--ink-soft)}
+.map-actions{display:flex;gap:12px;justify-content:center;margin-top:16px}
+.btn{font-family:var(--ui);font-size:15px;letter-spacing:.02em;padding:11px 22px;border-radius:999px;border:1.5px solid var(--gold);background:#fbf3df;color:#5a4524;cursor:pointer;transition:all .2s;box-shadow:0 3px 0 rgba(122,74,31,.22)}
+.btn:hover{background:#fff;transform:translateY(-1px)}
+.btn.gold{background:linear-gradient(#e7c277,#cf9f43);color:#3a2a10;border-color:#b8862f}
+
+/* ---------- ROOM ---------- */
+#room{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .8s ease}
+#room.show{opacity:1;pointer-events:auto}
+.scene{position:absolute;inset:0;overflow:hidden;transform-origin:50% 56%;transition:transform 1s cubic-bezier(.5,.02,.2,1),filter 1s,opacity .7s}
+.scene.walk{transform:scale(1.45);filter:blur(7px) brightness(1.18);opacity:0}
+.scene svg{width:100%;height:100%;display:block}
+.candle{position:absolute;inset:0;z-index:6;pointer-events:none;mix-blend-mode:soft-light;
+  background:radial-gradient(58% 48% at 50% 30%,rgba(255,212,140,.55),rgba(255,180,90,0) 70%);animation:flick 3.4s ease-in-out infinite}
+.candle.fast{animation:flick2 .9s ease-in-out infinite;opacity:.5}
+@keyframes flick{0%,100%{opacity:.82;transform:scale(1)}25%{opacity:1;transform:scale(1.02) translateY(-1px)}50%{opacity:.74}75%{opacity:.94}}
+@keyframes flick2{0%,100%{opacity:.4}33%{opacity:.55}66%{opacity:.3}}
+.rays{position:absolute;inset:0;z-index:5;pointer-events:none;
+  background:linear-gradient(102deg,transparent 41%,rgba(255,222,150,.10) 47%,transparent 53%),linear-gradient(94deg,transparent 56%,rgba(255,222,150,.07) 61%,transparent 67%);animation:rays 10s ease-in-out infinite}
+@keyframes rays{0%,100%{opacity:.35}50%{opacity:.62}}
+.dust{position:absolute;inset:0;pointer-events:none;z-index:7}
+.mote{position:absolute;width:4px;height:4px;border-radius:50%;background:radial-gradient(#fff,rgba(255,255,255,0));opacity:0;animation:drift linear infinite}
+@keyframes drift{0%{opacity:0;transform:translateY(20px)}20%{opacity:.7}80%{opacity:.45}100%{opacity:0;transform:translateY(-130px) translateX(34px)}}
+
+/* portrait medallion */
+.agent{position:absolute;left:50%;top:53%;transform:translate(-50%,-50%);text-align:center;z-index:9;opacity:0;transition:opacity .7s,top .7s}
+.agent.in{opacity:1;top:47%}
+.frame{position:relative;width:168px;height:168px;margin:0 auto;animation:bob 6s ease-in-out infinite}
+.frame svg{width:100%;height:100%;filter:drop-shadow(0 0 38px var(--glow))}
+.frame::before,.frame::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--glow);opacity:0}
+.agent.speaking .frame::before{animation:ring 1.6s ease-out infinite}
+.agent.speaking .frame::after{animation:ring 1.6s ease-out .8s infinite}
+@keyframes ring{0%{opacity:.5;transform:scale(.86)}100%{opacity:0;transform:scale(1.3)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.aname{font-family:var(--display);font-weight:600;letter-spacing:.08em;font-size:21px;color:#fff;margin-top:16px;text-shadow:0 2px 14px rgba(0,0,0,.7)}
+.arole{font-family:var(--serif);font-style:italic;font-size:15px;color:rgba(255,255,255,.85);text-shadow:0 1px 8px rgba(0,0,0,.7);max-width:420px;margin:2px auto 0}
+
+.bubble{position:absolute;left:50%;bottom:21%;transform:translateX(-50%);max-width:min(640px,86vw);z-index:10;
+  background:rgba(248,239,216,.97);border:1.5px solid var(--line);border-radius:18px;padding:16px 22px;box-shadow:var(--shadow);
+  font-family:var(--serif);font-size:clamp(16px,2.1vw,21px);line-height:1.5;color:#33260f;opacity:0;transition:opacity .5s}
+.bubble.in{opacity:1}
+.bubble::after{content:"";position:absolute;top:-12px;left:50%;transform:translateX(-50%);border:8px solid transparent;border-bottom-color:rgba(248,239,216,.97)}
+.cursor{display:inline-block;width:.5ch;background:#5a4524;animation:blink 1s steps(1) infinite;margin-left:1px}
+@keyframes blink{50%{opacity:0}}
+
+.room-top{position:absolute;top:18px;left:0;right:0;z-index:13;display:flex;align-items:center;justify-content:space-between;padding:0 18px}
+.room-name{font-family:var(--display);font-weight:600;letter-spacing:.06em;color:#fff;font-size:clamp(16px,2.4vw,25px);text-shadow:0 2px 14px rgba(0,0,0,.75)}
+.room-sub{font-family:var(--serif);font-style:italic;color:rgba(255,255,255,.82);font-size:14px;text-shadow:0 1px 8px rgba(0,0,0,.75)}
+.glassbtn{font-family:var(--ui);font-size:13.5px;color:#fff;background:rgba(20,12,4,.42);border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:8px 15px;cursor:pointer;backdrop-filter:blur(6px)}
+.glassbtn:hover{background:rgba(20,12,4,.62)}
+.nav{position:absolute;top:50%;transform:translateY(-50%);z-index:13;font-size:34px;color:#fff;cursor:pointer;width:54px;height:76px;display:grid;place-items:center;background:rgba(20,12,4,.32);border:1px solid rgba(255,255,255,.28);backdrop-filter:blur(4px)}
+.nav:hover{background:rgba(20,12,4,.55)}
+.nav.prev{left:14px;border-radius:0 12px 12px 0}.nav.next{right:14px;border-radius:12px 0 0 12px}
+
+.dock{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:14;width:min(700px,92vw)}
+.dockbar{display:flex;gap:8px;align-items:center;background:rgba(248,239,216,.96);border:1.5px solid var(--line);border-radius:999px;padding:6px 6px 6px 18px;box-shadow:var(--shadow)}
+.dockbar input{flex:1;border:0;background:transparent;font-family:var(--serif);font-size:17px;color:#33260f;outline:none}
+.dockbar input::placeholder{color:#9a855e}
+.send{border:0;border-radius:999px;padding:9px 17px;font-family:var(--ui);font-weight:500;background:linear-gradient(#e7c277,#cf9f43);color:#3a2a10;cursor:pointer}
+.log{max-height:32vh;overflow:auto;margin-bottom:8px;display:flex;flex-direction:column;gap:8px;padding:0 2px}
+.msg{font-family:var(--serif);font-size:16px;line-height:1.45;padding:9px 14px;border-radius:14px;max-width:84%;box-shadow:0 4px 14px rgba(0,0,0,.28)}
+.msg.you{align-self:flex-end;background:#3a2c17;color:#f3e7cb}
+.msg.them{align-self:flex-start;background:rgba(248,239,216,.97);color:#33260f;border:1px solid var(--line)}
+.msg.them b{font-family:var(--display);font-size:12px;letter-spacing:.05em;display:block;color:#8a6a2e;margin-bottom:2px}
+.note{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.72);text-align:center;margin-top:7px;text-shadow:0 1px 6px rgba(0,0,0,.7)}
+
+.roles{position:absolute;top:16px;left:50%;transform:translateX(-50%);z-index:15;display:flex;gap:6px;background:rgba(20,12,4,.4);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:4px;backdrop-filter:blur(6px)}
+.roles button{font-family:var(--ui);font-size:12px;color:#fff;background:transparent;border:0;border-radius:999px;padding:6px 12px;cursor:pointer}
+.roles button.on{background:rgba(255,255,255,.94);color:#3a2c17;font-weight:600}
+.tourbar{position:absolute;top:60px;left:50%;transform:translateX(-50%);z-index:15;display:none;gap:8px;align-items:center;background:rgba(20,12,4,.5);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:6px 8px 6px 14px;backdrop-filter:blur(6px)}
+.tourbar.on{display:flex}
+.tourbar span{font-family:var(--ui);font-size:13px;color:#fff}
+.tourbar button{font-family:var(--ui);font-size:13px;color:#3a2c17;background:#fff;border:0;border-radius:999px;padding:6px 12px;cursor:pointer}
+.tourbar button.ghost{background:rgba(255,255,255,.2);color:#fff}
+.sound{position:absolute;left:16px;bottom:18px;z-index:15;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(20,12,4,.42);color:#fff;cursor:pointer;font-size:17px;backdrop-filter:blur(6px)}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="map">
+    <div class="map-title">
+      <h1>The AiGovOps Library</h1>
+      <p>Agents do the bureaucracy. Humans hold the meaning. — choose a hall, or let the Docent walk you through.</p>
+    </div>
+    <div class="map-card" id="mapcard"></div>
+    <div class="map-actions">
+      <button class="btn gold" id="tourBtn">✦ Take the guided tour</button>
+      <button class="btn" id="wanderBtn">Wander freely</button>
+    </div>
+  </div>
+
+  <div id="room">
+    <div class="scene" id="scene"></div>
+    <div class="rays"></div>
+    <div class="candle"></div>
+    <div class="candle fast"></div>
+    <div class="dust" id="dust"></div>
+
+    <div class="roles" id="roles">
+      <button data-r="Bob" class="on">Bob</button><button data-r="Ken">Ken</button>
+      <button data-r="Member">Member</button><button data-r="Guest">Guest</button>
+    </div>
+    <div class="tourbar" id="tourbar">
+      <span id="tourStep">Tour</span>
+      <button id="tourNext">Next room →</button>
+      <button class="ghost" id="tourExit">Exit</button>
+    </div>
+    <div class="room-top">
+      <div><div class="room-name" id="roomName">—</div><div class="room-sub" id="roomSub">—</div></div>
+      <button class="glassbtn" id="toMap">⌖ Library map</button>
+    </div>
+    <div class="nav prev" id="prev">‹</div>
+    <div class="nav next" id="next">›</div>
+
+    <div class="agent" id="agent">
+      <div class="frame" id="frame"></div>
+      <div class="aname" id="aname">—</div>
+      <div class="arole" id="arole">—</div>
+    </div>
+    <div class="bubble" id="bubble"><span id="said"></span></div>
+
+    <div class="dock">
+      <div class="log" id="log"></div>
+      <div class="dockbar">
+        <input id="chatIn" placeholder="Ask the agent in this room…" autocomplete="off">
+        <button class="send" id="sendBtn">Ask</button>
+      </div>
+      <div class="note">Canned tour responses · agents propose, never publish · signed to the ledger</div>
+    </div>
+    <button class="sound" id="soundBtn" title="Ambient room tone">♪</button>
+  </div>
+</div>
+<script>
+const ROOMS=[
+ {id:"atrium",title:"The Atrium",sub:"after the George Peabody Library",tone:"#7a4a1f",tone2:"#341d06",glow:"#e8c879",
+  agent:{name:"The Docent",role:"your guide through the Library",glyph:"✦",color:"#caa24a"},also:[],
+  greet:"Welcome, {you}. This is the Library — a governed core dressed as a place. Every hall holds an agent that does the tedious work and signs a receipt for it. Shall I walk you through, or will you wander?",
+  chat:{"tour":"Say the word and I will lead you hall to hall — Reading Room, Archives, Makerspace, Human Library, Newsroom — and introduce each keeper.","what":"Six halls. Lantern maps your work to the frameworks; Beacon keeps the signed ledger; the Makerspace runs governed tools; the Human Library is membership; the Newsroom drafts the issue. Nothing acts without a human's yes.","_":"I am the Docent — ask me for the tour, or step through any door. Whatever an agent does, it proposes; you decide."}},
+ {id:"reading",title:"The Reading Room",sub:"after Trinity College's Long Room",tone:"#0f6f73",tone2:"#06302f",glow:"#7fe0d6",
+  agent:{name:"Lantern",role:"the framework cartographer",glyph:"☼",color:"#3fae9f"},also:["Curator"],
+  greet:"Welcome to the Reading Room, {you}. Bring me a capability you are weighing and I will map it to NIST AI RMF, ISO 42001, and the EU AI Act — and show you the path to yes.",
+  chat:{"eu":"Under the EU AI Act this likely lands as limited- or high-risk depending on use. I would attach transparency and human-oversight duties and flag a conformity check. [draft mapping — a curator confirms]","nist":"NIST AI RMF: anchor on GOVERN and MAP first, then MEASURE. I can generate the control checklist as a proposal.","framework":"Name the use-case and I cross-map all three frameworks side by side, gaps highlighted. I propose; the Curator accepts what is real.","_":"I read your intent against the frameworks and return a sourced map with the path to compliance. I never assert a control you do not have — I flag it."}},
+ {id:"archives",title:"The Archives",sub:"after the Tianjin Binhai 'Eye'",tone:"#23406b",tone2:"#0b1830",glow:"#9cc2f0",
+  agent:{name:"Beacon",role:"keeper of the signed ledger",glyph:"◉",color:"#5f8fd0"},also:["Quartermaster","Treasurer","Chronicle"],
+  greet:"You have reached the Archives, {you}. Every action in the Library leaves an Ed25519-signed receipt here — the metadata, never the secret. Ask, and I will show you the record.",
+  chat:{"verify":"The ledger is valid — every receipt chains to the last. Anyone may verify it; the public view is redacted to counts only. No actors, no contents.","secret":"I never hold a secret value. The Quartermaster tracks each key as metadata with a 1Password reference; the value lives in the vault. I keep the fact it exists, signed.","cost":"The Treasurer beside me costs every model call to the penny and refuses spend past your daily cap. Chronicle turns it all into the transparency wall.","_":"I sign the fact of a thing, never its body. Registry, cost, audit — the records cluster lives here, all metadata-only, soft-deleted, never erased."}},
+ {id:"makerspace",title:"The Makerspace",sub:"after Oodi, Helsinki",tone:"#1f7d49",tone2:"#0a2c1a",glow:"#86e3a8",
+  agent:{name:"Maker",role:"the governed workshop",glyph:"✛",color:"#3fae6a"},also:[],
+  greet:"This is the Makerspace, {you} — where proposals become tools. But nothing runs until a steward grants a scoped, time-boxed token. Propose first; I will show you the gate.",
+  chat:{"run":"I can run a tool — in a sandbox, with an egress allow-list, only after a steward approves the scope, TTL, and blast radius. Shall I draft the proposal?","build":"Hand me an intent and I return a build proposal: what it touches, the caps it needs, the receipt it will leave. You approve before anything executes.","_":"I am where work happens — but governed. Propose, a human approves the scope, I run inside the sandbox, Beacon signs the result."}},
+ {id:"human",title:"The Human Library",sub:"after Copenhagen's Menneskebiblioteket",tone:"#a8521f",tone2:"#3d1c08",glow:"#f0a86a",
+  agent:{name:"Registrar",role:"keeper of membership",glyph:"❧",color:"#d27a3e"},also:[],
+  greet:"The Human Library, {you} — where the foundation is its people. I keep a handle, a role, a region — never more. Members propose; stewards approve. Shall I show you the roles?",
+  chat:{"join":"Anyone signed in can join as a member. Roles climb visitor → member → steward → maintainer, and every change is signed. I would add Ken as steward the day he has a GitHub handle.","gdpr":"I store the least that works and support export and forget — a forget redacts the record, it never erases the audit trail. Global from day one.","_":"I hold identity lightly: handle, role, region, contributions. No email, no PII beyond that. People are the point; the bureaucracy is mine."}},
+ {id:"newsroom",title:"The Newsroom",sub:"after the Beitou Branch, Taipei",tone:"#5b4b8a",tone2:"#241d3f",glow:"#b9a6ff",
+  agent:{name:"The Newsletter",role:"editor & orchestrator",glyph:"✒",color:"#8a78d0"},also:["Rundown","FailFest","Event Recap","Speaker Shortlister","Reg-Intel"],
+  greet:"Welcome to the Newsroom, {you}. My leaf agents gather — failures, regulation, recaps, speakers — and I assemble the issue. Every claim source-linked, the voice left to you. Shall I draft?",
+  chat:{"draft":"I will assemble: past recaps, upcoming (Jul 9 Education · Aug 6 eCommerce/Manufacturing), the Rundown's top three, a FailFest headliner. Title and spine are yours — I propose three titles and flag the gaps.","rundown":"Rundown is drafting the monthly items with sources; FailFest pairs each with a fresh failure for the spine. I never invent a stat — I flag it and wait.","publish":"I never publish. I hand Bob or Ken a sourced draft and the list of decisions I am waiting on. You hit send.","_":"I conduct the leaf agents and assemble the issue — sourced, placeholdered, never published. The room can brainstorm together; you and Ken decide."}}
+];
+const $=id=>document.getElementById(id);
+let you="Bob",idx=0,touring=false,typeTimer=null;
+
+/* ---- bespoke painted scene per library ---- */
+function art(r){switch(r.id){
+ case"atrium":return `<g opacity=".9">
+   <ellipse cx="600" cy="86" rx="150" ry="46" fill="${r.glow}" opacity=".4"/>
+   ${[0,1,2,3].map(i=>`<path d="M${300-i*30} ${150+i*96} h${600+i*60} v60 h-${600+i*60} Z" fill="#000" opacity="${0.16+i*0.04}"/><path d="M${300-i*30} ${150+i*96} h${600+i*60}" stroke="${r.glow}" stroke-width="2" opacity="${0.18}"/>`).join("")}
+   <rect x="556" y="120" width="88" height="430" rx="8" fill="${r.glow}" opacity=".16"/></g>`;
+ case"reading":return `<g>
+   ${[0,1,2,3,4].map(i=>`<path d="M${300-i*52} 70 Q600 ${-20+i*8} ${900+i*52} 70" fill="none" stroke="${r.glow}" stroke-width="3" opacity="${0.32-i*0.05}"/>`).join("")}
+   <rect x="60" y="150" width="150" height="430" fill="#000" opacity=".22"/><rect x="990" y="150" width="150" height="430" fill="#000" opacity=".22"/>
+   ${[0,1,2,3,4,5].map(i=>`<rect x="70" y="${170+i*66}" width="130" height="10" fill="${r.glow}" opacity=".18"/><rect x="1000" y="${170+i*66}" width="130" height="10" fill="${r.glow}" opacity=".18"/>`).join("")}
+   ${[300,500,700,900].map(x=>`<circle cx="${x}" cy="150" r="20" fill="#000" opacity=".3"/>`).join("")}</g>`;
+ case"archives":return `<g>
+   <circle cx="600" cy="300" r="210" fill="${r.glow}" opacity=".10"/><circle cx="600" cy="300" r="150" fill="${r.glow}" opacity=".14"/><circle cx="600" cy="300" r="84" fill="${r.glow}" opacity=".5"/><circle cx="600" cy="300" r="84" fill="none" stroke="#fff" stroke-opacity=".3"/>
+   ${[0,1,2,3,4,5,6,7].map(i=>`<path d="M0 ${130+i*70} Q600 ${90+i*70} 1200 ${130+i*70}" fill="none" stroke="${r.glow}" stroke-width="2.5" opacity="${0.22-i*0.02}"/>`).join("")}</g>`;
+ case"makerspace":return `<g>
+   <path d="M0 60 Q600 240 1200 60 L1200 0 L0 0 Z" fill="${r.glow}" opacity=".2"/>
+   <path d="M0 120 Q600 300 1200 120" fill="none" stroke="${r.glow}" stroke-width="4" opacity=".3"/>
+   <rect x="120" y="170" width="280" height="300" rx="8" fill="${r.glow}" opacity=".22"/><rect x="800" y="170" width="280" height="300" rx="8" fill="${r.glow}" opacity=".22"/>
+   <rect x="460" y="430" width="280" height="110" rx="10" fill="#000" opacity=".25"/></g>`;
+ case"human":return `<g>
+   ${[300,600,900].map(x=>`<circle cx="${x}" cy="250" r="30" fill="${r.glow}" opacity=".5"/><line x1="${x}" y1="280" x2="${x}" y2="430" stroke="${r.glow}" stroke-width="3" opacity=".3"/>`).join("")}
+   ${[230,470,710,950].map(x=>`<path d="M${x} 470 q40 -60 80 0 v70 h-80 Z" fill="#000" opacity=".28"/>`).join("")}
+   <path d="M0 540 h1200 v220 h-1200 Z" fill="#000" opacity=".2"/></g>`;
+ case"newsroom":return `<g>
+   ${[0,1,2,3,4,5,6,7,8,9].map(i=>`<rect x="${i*128}" y="60" width="40" height="460" fill="#000" opacity="${0.14+ (i%2)*0.06}"/>`).join("")}
+   ${[200,520,840].map((x,i)=>`<circle cx="${x}" cy="${120+i*20}" r="${70-i*8}" fill="${r.glow}" opacity=".16"/>`).join("")}
+   <path d="M0 90 q150 40 300 0 t300 0 t300 0 t300 0" fill="none" stroke="${r.glow}" stroke-width="3" opacity=".25"/></g>`;
+ default:return "";
+}}
+function sceneSVG(r){return `<svg viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+   <radialGradient id="bg" cx="50%" cy="32%" r="78%"><stop offset="0%" stop-color="${r.tone}"/><stop offset="62%" stop-color="${r.tone}"/><stop offset="100%" stop-color="${r.tone2}"/></radialGradient>
+   <radialGradient id="halo" cx="50%" cy="30%" r="48%"><stop offset="0%" stop-color="${r.glow}" stop-opacity=".75"/><stop offset="55%" stop-color="${r.glow}" stop-opacity=".1"/><stop offset="100%" stop-color="${r.glow}" stop-opacity="0"/></radialGradient>
+   <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${r.tone2}"/><stop offset="100%" stop-color="#000"/></linearGradient>
+   <radialGradient id="vig" cx="50%" cy="48%" r="76%"><stop offset="58%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".6"/></radialGradient>
+  </defs>
+  <rect width="1200" height="760" fill="url(#bg)"/>
+  ${art(r)}
+  <path d="M0 560 H1200 V760 H0 Z" fill="url(#floor)"/>
+  <path d="M540 560 L430 760 M660 560 L770 760 M600 560 V760" stroke="${r.glow}" stroke-width="2" opacity=".12"/>
+  <rect width="1200" height="760" fill="url(#halo)"/>
+  <rect width="1200" height="760" fill="url(#vig)"/>
+ </svg>`;}
+
+/* ---- portrait medallion ---- */
+function medallion(r){const c=r.agent.color;return `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+   <radialGradient id="aura" cx="50%" cy="42%" r="55%"><stop offset="0%" stop-color="${r.glow}" stop-opacity=".9"/><stop offset="70%" stop-color="${c}" stop-opacity=".5"/><stop offset="100%" stop-color="${c}" stop-opacity="0"/></radialGradient>
+   <radialGradient id="disc" cx="50%" cy="38%" r="62%"><stop offset="0%" stop-color="${r.glow}"/><stop offset="60%" stop-color="${c}"/><stop offset="100%" stop-color="${r.tone2}"/></radialGradient>
+   <linearGradient id="bust" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${r.tone2}"/><stop offset="100%" stop-color="#000"/></linearGradient>
+  </defs>
+  <circle cx="100" cy="100" r="96" fill="url(#aura)"/>
+  <circle cx="100" cy="100" r="72" fill="url(#disc)"/>
+  <path d="M58 172 Q58 124 100 124 Q142 124 142 172 Z" fill="url(#bust)"/>
+  <path d="M58 172 Q58 124 100 124" fill="none" stroke="${r.glow}" stroke-width="2" opacity=".5"/>
+  <circle cx="100" cy="104" r="23" fill="url(#bust)"/>
+  <path d="M82 100 a18 18 0 0 1 36 0" fill="none" stroke="${r.glow}" stroke-width="2" opacity=".55"/>
+  <circle cx="100" cy="100" r="90" fill="none" stroke="${r.glow}" stroke-width="3"/>
+  <circle cx="100" cy="100" r="84" fill="none" stroke="${r.glow}" stroke-width="1" stroke-dasharray="2 6" opacity=".7"/>
+  <text x="100" y="58" text-anchor="middle" font-size="30" fill="#fff" opacity=".95" style="filter:drop-shadow(0 0 8px ${r.glow})">${r.agent.glyph}</text>
+ </svg>`;}
+
+function buildMap(){const c=$("mapcard");const pos=[[50,20],[23,45],[50,57],[77,45],[33,80],[70,80]];
+ ROOMS.forEach((r,i)=>{const n=document.createElement("div");n.className="node";n.style.left=pos[i][0]+"%";n.style.top=pos[i][1]+"%";
+  n.innerHTML=`<div class="seal" style="background:radial-gradient(circle at 35% 30%,${r.glow},${r.tone})">${r.agent.glyph}</div><div class="nm">${r.title}</div><div class="who">${r.agent.name}</div>`;
+  n.onclick=()=>enter(i);c.appendChild(n);});}
+function dust(){const d=$("dust");d.innerHTML="";for(let i=0;i<28;i++){const m=document.createElement("div");m.className="mote";m.style.left=Math.random()*100+"%";m.style.top=(60+Math.random()*40)+"%";m.style.animationDuration=(7+Math.random()*9)+"s";m.style.animationDelay=(-Math.random()*10)+"s";d.appendChild(m);}}
+function typeLine(text,el,done){clearInterval(typeTimer);el.innerHTML="";$("agent").classList.add("speaking");
+ const cur=document.createElement("span");cur.className="cursor";cur.innerHTML="&nbsp;";const span=document.createElement("span");el.appendChild(span);el.appendChild(cur);
+ let i=0;typeTimer=setInterval(()=>{span.textContent=text.slice(0,++i);if(i>=text.length){clearInterval(typeTimer);cur.remove();$("agent").classList.remove("speaking");done&&done();}},18);}
+function paint(){const r=ROOMS[idx];document.documentElement.style.setProperty("--glow",r.glow);
+ $("scene").innerHTML=sceneSVG(r);$("frame").innerHTML=medallion(r);
+ $("roomName").textContent=r.title;$("roomSub").textContent=r.sub;
+ $("aname").textContent=r.agent.name;$("arole").textContent=r.also.length?r.agent.role+"  ·  with "+r.also.join(", "):r.agent.role;
+ $("log").innerHTML="";$("agent").classList.remove("in");$("bubble").classList.remove("in");
+ setTimeout(()=>$("agent").classList.add("in"),250);
+ setTimeout(()=>{$("bubble").classList.add("in");typeLine(r.greet.replace("{you}",you),$("said"));},700);}
+function walkTo(i){const sc=$("scene");sc.classList.add("walk");setTimeout(()=>{idx=(i+ROOMS.length)%ROOMS.length;paint();sc.classList.remove("walk");},520);}
+function enter(i){idx=i;$("map").classList.add("hidden");$("room").classList.add("show");dust();setTimeout(paint,320);}
+function toMap(){$("room").classList.remove("show");$("map").classList.remove("hidden");stopTour();}
+function addMsg(t,cls,who){const m=document.createElement("div");m.className="msg "+cls;m.innerHTML=(cls==="them"&&who?`<b>${who}</b>`:"")+t;$("log").appendChild(m);$("log").scrollTop=$("log").scrollHeight;}
+function reply(q){const r=ROOMS[idx],t=q.toLowerCase();let a=r.chat["_"];for(const k in r.chat){if(k!=="_"&&t.includes(k)){a=r.chat[k];break;}}
+ $("agent").classList.add("speaking");setTimeout(()=>{addMsg(a,"them",r.agent.name);$("agent").classList.remove("speaking");},460);}
+function ask(){const v=$("chatIn").value.trim();if(!v)return;addMsg(v,"you");$("chatIn").value="";reply(v);}
+function startTour(){touring=true;$("tourbar").classList.add("on");enter(0);updTour();}
+function stopTour(){touring=false;$("tourbar").classList.remove("on");}
+function updTour(){$("tourStep").textContent=`Tour · ${idx+1} of ${ROOMS.length} — ${ROOMS[idx].title}`;}
+function tourNext(){if(idx>=ROOMS.length-1){stopTour();toMap();return;}walkTo(idx+1);setTimeout(updTour,560);}
+
+/* ambient room tone (off by default) */
+let actx=null,anodes=[];
+function toggleSound(){const b=$("soundBtn");
+ if(actx){anodes.forEach(n=>{try{n.stop&&n.stop()}catch(e){}});actx.close();actx=null;anodes=[];b.textContent="♪";b.style.color="#fff";return;}
+ actx=new (window.AudioContext||window.webkitAudioContext)();const g=actx.createGain();g.gain.value=0.05;g.connect(actx.destination);
+ const lp=actx.createBiquadFilter();lp.type="lowpass";lp.frequency.value=520;lp.connect(g);
+ [108,108.4,162].forEach(f=>{const o=actx.createOscillator();o.type="sine";o.frequency.value=f;const og=actx.createGain();og.gain.value=0.5;o.connect(og);og.connect(lp);o.start();anodes.push(o);});
+ const lfo=actx.createOscillator();lfo.frequency.value=0.07;const lg=actx.createGain();lg.gain.value=120;lfo.connect(lg);lg.connect(lp.frequency);lfo.start();anodes.push(lfo);
+ b.textContent="♫";b.style.color="#ffe6a8";}
+
+buildMap();
+$("tourBtn").onclick=startTour;$("wanderBtn").onclick=()=>enter(0);$("toMap").onclick=toMap;
+$("prev").onclick=()=>{walkTo(idx-1);if(touring)setTimeout(updTour,560);};
+$("next").onclick=()=>{touring?tourNext():walkTo(idx+1);};
+$("tourNext").onclick=tourNext;$("tourExit").onclick=stopTour;
+$("sendBtn").onclick=ask;$("chatIn").addEventListener("keydown",e=>{if(e.key==="Enter")ask();});
+$("soundBtn").onclick=toggleSound;
+$("roles").addEventListener("click",e=>{if(e.target.dataset.r){you=e.target.dataset.r;[...$("roles").children].forEach(b=>b.classList.toggle("on",b===e.target));$("bubble").classList.remove("in");setTimeout(()=>{$("bubble").classList.add("in");typeLine(ROOMS[idx].greet.replace("{you}",you),$("said"));},150);}});
+document.addEventListener("mousemove",e=>{if(!$("room").classList.contains("show"))return;const dx=(e.clientX/innerWidth-.5),dy=(e.clientY/innerHeight-.5);
+ $("scene").style.transform=`translate(${dx*-24}px,${dy*-15}px) scale(1.07)`;$("agent").style.transform=`translate(calc(-50% + ${dx*32}px),-50%)`;});
+</script>
+</body>
+</html>

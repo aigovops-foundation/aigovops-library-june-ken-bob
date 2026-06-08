@@ -12,6 +12,6 @@ function page(file){ return (req,res)=>{ const html=readFileSync(join(__d,"..","
 export const desks = {
   "/api/registry": registry, "/api/cost": cost, "/api/members": members,
   "/api/curate": curate, "/api/audit": audit, "/api/newsroom": newsroom,
-  "/demo": page("demo.html"), "/newsroom": page("newsroom.html")
+  "/demo": page("demo.html"), "/newsroom": page("newsroom.html"), "/tour": page("tour.html")
 };
 export function routeDesk(pathname, req, res, ctx){ const h = desks[pathname]; if(!h) return false; h(req,res,ctx); return true; }
