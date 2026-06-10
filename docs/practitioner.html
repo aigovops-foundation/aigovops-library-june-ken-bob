@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Practitioner Quiz · AiGovOps Library</title>
+<meta name="description" content="Drill the gate law against 100 real fail cases. Call the verdict: Yes, No, or the Maybe that never rests." />
+<style>
+  :root{
+    --warm:#fbf7f0; --ink:#1c1a17; --muted:#6b6459; --line:#e7ded0;
+    --card:#ffffff; --yes:#3b6d11; --yes-bg:#eaf3de; --no:#a32d2d; --no-bg:#fcebeb;
+    --maybe:#854f0b; --maybe-bg:#faeeda; --beacon:#b9772a; --focus:#185fa5;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --warm:#171410; --ink:#f3ece0; --muted:#a89e8e; --line:#332d24;
+      --card:#211c16; --yes:#97c459; --yes-bg:#1f2c12; --no:#f09595; --no-bg:#2e1414;
+      --maybe:#ef9f27; --maybe-bg:#2c2008; --beacon:#e0a35a; --focus:#85b7eb; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--warm);color:var(--ink);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  .wrap{max-width:760px;margin:0 auto;padding:1.5rem 1.25rem 4rem;}
+  a.back{display:inline-flex;align-items:center;gap:.4em;color:var(--muted);
+    text-decoration:none;font-size:14px;margin-bottom:1.5rem;}
+  a.back:hover{color:var(--ink);}
+  h1{font-size:24px;font-weight:600;margin:.2rem 0 .3rem;}
+  .lede{color:var(--muted);margin:0 0 1.5rem;}
+  .law{display:flex;gap:.6rem;flex-wrap:wrap;margin:0 0 1.5rem;}
+  .law span{font-size:13px;border:1px solid var(--line);border-radius:999px;
+    padding:.25rem .7rem;background:var(--card);}
+  .scores{display:flex;gap:.75rem;margin:0 0 1.25rem;flex-wrap:wrap;}
+  .stat{flex:1;min-width:120px;background:var(--card);border:1px solid var(--line);
+    border-radius:12px;padding:.7rem .9rem;}
+  .stat b{display:block;font-size:24px;font-weight:600;line-height:1.2;}
+  .stat small{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:1.25rem 1.4rem;margin:0 0 1.25rem;}
+  .meta{display:flex;gap:.5rem;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-bottom:.6rem;}
+  .meta .tag{border:1px solid var(--line);border-radius:6px;padding:.1rem .45rem;}
+  .scenario{font-size:18px;line-height:1.5;margin:.2rem 0 1rem;}
+  .gate{font-size:14px;color:var(--muted);margin:0 0 1rem;}
+  .gate b{color:var(--ink);font-weight:600;}
+  .ask{font-weight:600;margin:.2rem 0 .7rem;}
+  .choices{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;}
+  .choices button{font:inherit;cursor:pointer;border-radius:12px;padding:.85rem .5rem;
+    border:1.5px solid var(--line);background:var(--card);color:var(--ink);
+    display:flex;flex-direction:column;align-items:center;gap:.25rem;transition:transform .05s;}
+  .choices button:hover{border-color:var(--muted);}
+  .choices button:active{transform:scale(.98);}
+  .choices button:focus-visible{outline:3px solid var(--focus);outline-offset:2px;}
+  .choices .v{font-size:22px;font-weight:700;}
+  .choices .l{font-size:12px;color:var(--muted);}
+  .yes .v{color:var(--yes)} .no .v{color:var(--no)} .maybe .v{color:var(--maybe)}
+  .reveal{margin-top:1rem;border-top:1px solid var(--line);padding-top:1rem;}
+  .verdict-line{font-weight:600;margin:0 0 .5rem;display:flex;align-items:center;gap:.5em;}
+  .pill{font-size:13px;font-weight:600;border-radius:999px;padding:.15rem .7rem;}
+  .pill.yes{background:var(--yes-bg);color:var(--yes)}
+  .pill.no{background:var(--no-bg);color:var(--no)}
+  .pill.maybe{background:var(--maybe-bg);color:var(--maybe)}
+  .reveal p{margin:.4rem 0;font-size:15px;}
+  .reveal .k{color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:.04em;}
+  .frameworks{font-size:13px;color:var(--muted);margin-top:.6rem;}
+  .harm-note{background:var(--maybe-bg);border-radius:10px;padding:.6rem .8rem;font-size:14px;
+    color:var(--maybe);margin-top:.6rem;}
+  .next{margin-top:1rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;}
+  .next button{font:inherit;cursor:pointer;border:none;background:var(--ink);color:var(--warm);
+    border-radius:12px;padding:.65rem 1.2rem;font-weight:600;}
+  .next button:focus-visible{outline:3px solid var(--focus);outline-offset:2px;}
+  .shall{color:var(--muted);font-size:14px;font-style:italic;}
+  .streakmsg{font-size:14px;color:var(--beacon);min-height:1.2em;}
+  .done{text-align:center;padding:2rem 1rem;}
+  .err{background:var(--no-bg);color:var(--no);border-radius:12px;padding:1rem;}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="./index.html">&larr; AiGovOps Library</a>
+  <h1>Practitioner quiz</h1>
+  <p class="lede">One hundred real fail cases. For each, call the verdict the gate law would reach &mdash; then see the harm, the framework it touches, and the path back to Yes.</p>
+  <div class="law" aria-hidden="true">
+    <span><b style="color:var(--yes)">1</b> &nbsp;Yes, earned with evidence</span>
+    <span><b style="color:var(--no)">0</b> &nbsp;No, stop</span>
+    <span><b style="color:var(--maybe)">?</b> &nbsp;Maybe &mdash; the harm, never let it rest</span>
+  </div>
+
+  <div class="scores" role="status" aria-live="polite">
+    <div class="stat"><small>Score</small><b id="score">0 / 0</b></div>
+    <div class="stat"><small>Streak</small><b id="streak">0</b></div>
+    <div class="stat"><small>Best</small><b id="best">0</b></div>
+  </div>
+
+  <div id="stage" aria-live="polite"></div>
+
+  <p class="sr-only">A drill: each card shows a governance scenario; choose whether it earns a Yes, must Stop, or is a Maybe that needs an owner and an ETA.</p>
+</div>
+
+<script>
+const VERDICTS = {
+  1:{cls:'yes',label:'Yes',sub:'earned',glyph:'1'},
+  0:{cls:'no',label:'No',sub:'stop',glyph:'0'},
+  '?':{cls:'maybe',label:'Maybe',sub:'the harm',glyph:'?'}
+};
+let cases=[], order=[], i=0, score=0, asked=0, streak=0, best=0;
+
+const $=id=>document.getElementById(id);
+function shuffle(a){for(let j=a.length-1;j>0;j--){const k=Math.floor(Math.random()*(j+1));[a[j],a[k]]=[a[k],a[j]];}return a;}
+function paintScores(){$('score').textContent=score+' / '+asked;$('streak').textContent=streak;$('best').textContent=best;}
+
+function render(){
+  const c=cases[order[i]];
+  if(!c){return finish();}
+  const tags=c.tags.slice(0,3).map(t=>`<span class="tag">${t}</span>`).join('');
+  $('stage').innerHTML=`
+    <div class="card">
+      <div class="meta"><span class="tag">${c.id}</span><span class="tag">${c.domain}</span>${tags}</div>
+      <p class="scenario">${c.scenario}</p>
+      <p class="gate">Gate in question: <b>${c.gate}</b></p>
+      <p class="ask">What's the verdict?</p>
+      <div class="choices" role="group" aria-label="Choose a verdict">
+        <button class="yes"  data-v="1"><span class="v">1</span><span class="l">Yes &middot; earned</span></button>
+        <button class="no"   data-v="0"><span class="v">0</span><span class="l">No &middot; stop</span></button>
+        <button class="maybe" data-v="?"><span class="v">?</span><span class="l">Maybe &middot; the harm</span></button>
+      </div>
+      <div id="reveal"></div>
+    </div>`;
+  $('stage').querySelectorAll('.choices button').forEach(b=>{
+    b.addEventListener('click',()=>answer(b.dataset.v, c));
+  });
+}
+
+function answer(picked, c){
+  const correct = String(c.verdict);
+  const right = picked===correct;
+  asked++;
+  if(right){score++;streak++;best=Math.max(best,streak);}else{streak=0;}
+  paintScores();
+  $('stage').querySelectorAll('.choices button').forEach(b=>b.disabled=true);
+  const v=VERDICTS[c.verdict];
+  const msg = right
+    ? ['Clean call.','That holds.','Evidence wins.','Right gate, right verdict.'][asked%4]
+    : 'Not quite — sit with this one.';
+  const harmNote = c.verdict==='?'
+    ? `<div class="harm-note">This is a Maybe, not a quiet Yes. It must carry a named owner and an ETA &mdash; ${c.path_to_yes}</div>` : '';
+  $('reveal').innerHTML=`
+    <div class="reveal">
+      <p class="verdict-line">Gate law says <span class="pill ${v.cls}">${v.glyph} ${v.label}</span>
+        <span style="color:${right?'var(--yes)':'var(--no)'};font-weight:600">${right?'\u2713':'\u2717'}</span></p>
+      <p class="streakmsg">${msg}${streak>=3?'  \u00b7  streak \u00d7'+streak:''}</p>
+      <p><span class="k">The harm</span><br>${c.harm}</p>
+      ${c.verdict!=='?'?`<p><span class="k">Path to Yes</span><br>${c.path_to_yes}</p>`:''}
+      ${harmNote}
+      <p class="frameworks">Touches: ${c.framework.join(' &middot; ')}</p>
+      <div class="next">
+        <button id="nextBtn">Next case</button>
+        <span class="shall">&mdash; shall I?</span>
+      </div>
+    </div>`;
+  $('nextBtn').focus();
+  $('nextBtn').addEventListener('click',()=>{i++;render();});
+}
+
+function finish(){
+  const pct=asked?Math.round(100*score/asked):0;
+  $('stage').innerHTML=`<div class="card done">
+    <h1 style="margin-top:0">Deck complete</h1>
+    <p class="lede">You called <b>${score}</b> of <b>${asked}</b> right (${pct}%). Best streak: <b>${best}</b>.</p>
+    <p class="shall">The gate is never a dead end &mdash; every No carries a path, every Maybe an owner. Run it again?</p>
+    <div class="next" style="justify-content:center"><button id="again">Shuffle &amp; restart</button></div>
+  </div>`;
+  $('again').addEventListener('click',()=>{order=shuffle([...Array(cases.length).keys()]);i=0;score=0;asked=0;streak=0;best=Math.max(best,0);paintScores();render();});
+}
+
+(async function init(){
+  try{
+    const r=await fetch('data/failcases.json',{cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const data=await r.json();
+    cases=data.cases||[];
+    if(!cases.length) throw new Error('empty corpus');
+    order=shuffle([...Array(cases.length).keys()]);
+    paintScores();
+    render();
+  }catch(e){
+    $('stage').innerHTML=`<div class="err">Couldn't load the fail-case corpus (<code>data/failcases.json</code>): ${e.message}.<br>On a local file:// open this won't fetch &mdash; serve it (e.g. <code>python3 -m http.server</code>) or view it on the deployed Pages site.</div>`;
+  }
+})();
+</script>
+</body>
+</html>

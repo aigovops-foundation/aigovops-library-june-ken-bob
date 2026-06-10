@@ -1,0 +1,1912 @@
+{
+  "name": "AiGovOps Library — Top 100 Fail Cases",
+  "version": "1.0.0",
+  "generated": "2026-06-10",
+  "gate_law": {
+    "one": "Yes, earned with evidence",
+    "zero": "No, stop",
+    "maybe": "Maybe — THE HARM. Never let it rest. Carries owner + ETA."
+  },
+  "count": 100,
+  "cases": [
+    {
+      "id": "FC-001",
+      "title": "ADAS shipped without ODD eval",
+      "domain": "automotive",
+      "scenario": "An emergency-braking model is promoted to production with strong aggregate metrics but no evaluation slice for night, rain, or low-contrast pedestrians.",
+      "framework": [
+        "ISO 26262 ASIL-D",
+        "NIST AI RMF MEASURE-2.3",
+        "EU AI Act Annex III (safety component)"
+      ],
+      "gate": "Safety eval covers the operational design domain",
+      "verdict": 0,
+      "harm": "Pedestrians in degraded conditions face undetected braking failures.",
+      "path_to_yes": "Block release until per-ODD-slice eval exists with pass thresholds and a signed safety case.",
+      "tags": [
+        "safety",
+        "eval-gap",
+        "automotive"
+      ]
+    },
+    {
+      "id": "FC-002",
+      "title": "Brake-wear model drifts, no monitor",
+      "domain": "automotive",
+      "scenario": "A predictive brake-wear model is live for 14 months; input distribution shifted after a parts supplier change and nobody is watching drift.",
+      "framework": [
+        "NIST AI RMF MANAGE-4.1",
+        "ISO 42001 8.4 (monitoring)"
+      ],
+      "gate": "Live monitoring with drift alerting",
+      "verdict": "?",
+      "harm": "Warranty mispredictions and possible missed safety maintenance windows.",
+      "path_to_yes": "Owner: Reliability lead. ETA: 30 days to stand up drift monitor + retrain trigger; interim manual review weekly.",
+      "tags": [
+        "drift",
+        "monitoring",
+        "automotive"
+      ]
+    },
+    {
+      "id": "FC-003",
+      "title": "Co-bot force limits unverified",
+      "domain": "automotive",
+      "scenario": "A collaborative robot cell is approved for human-shared space, but the force/torque safety limits were validated only in simulation, never on the real line.",
+      "framework": [
+        "ISO/TS 15066",
+        "ISO 26262",
+        "NIST AI RMF MEASURE-2.6"
+      ],
+      "gate": "Real-world safety validation before human exposure",
+      "verdict": 0,
+      "harm": "Line workers risk impact injury from un-validated force envelopes.",
+      "path_to_yes": "No Yes until physical force-limit testing on the actual cell passes, witnessed and signed.",
+      "tags": [
+        "robotics",
+        "safety",
+        "automotive"
+      ]
+    },
+    {
+      "id": "FC-004",
+      "title": "Digital twin used for sign-off without validation",
+      "domain": "automotive",
+      "scenario": "Engineers want to sign off a chassis change using digital-twin results alone; the twin has never been calibrated against physical test data for this regime.",
+      "framework": [
+        "NIST AI RMF MAP-3.4",
+        "ISO 42001 6.1"
+      ],
+      "gate": "Model validated against ground truth for the decision regime",
+      "verdict": "?",
+      "harm": "An un-validated twin could greenlight an unsafe structural change.",
+      "path_to_yes": "Owner: Sim lead. ETA: 21 days to run one physical correlation test; gate stays ? until correlation error < agreed bound.",
+      "tags": [
+        "digital-twin",
+        "validation",
+        "automotive"
+      ]
+    },
+    {
+      "id": "FC-005",
+      "title": "Recall-triage model with no human override",
+      "domain": "automotive",
+      "scenario": "A model auto-classifies field incidents as 'no action'; there is no path for a safety engineer to escalate a closed case.",
+      "framework": [
+        "NIST AI RMF GOVERN-3.2",
+        "EU AI Act human oversight"
+      ],
+      "gate": "Effective human oversight and override",
+      "verdict": 0,
+      "harm": "A real safety defect could be auto-closed with no human able to reopen it.",
+      "path_to_yes": "Add a standing override + escalation path with a named safety owner before any Yes.",
+      "tags": [
+        "oversight",
+        "safety",
+        "automotive"
+      ]
+    },
+    {
+      "id": "FC-006",
+      "title": "Sepsis model deployed, never locally validated",
+      "domain": "healthcare",
+      "scenario": "A widely-licensed sepsis early-warning model is turned on at a new hospital using the vendor's published metrics, with no validation on local patients.",
+      "framework": [
+        "NIST AI RMF MEASURE-2.3",
+        "ISO 42001 8.3",
+        "FDA SaMD guidance"
+      ],
+      "gate": "Local validation before clinical use",
+      "verdict": 0,
+      "harm": "Missed or false sepsis alerts on a population the model was never tested on.",
+      "path_to_yes": "No Yes until retrospective local validation meets pre-set sensitivity/PPV thresholds.",
+      "tags": [
+        "healthcare",
+        "eval-gap",
+        "validation"
+      ]
+    },
+    {
+      "id": "FC-007",
+      "title": "Triage chatbot gives dosage advice",
+      "domain": "healthcare",
+      "scenario": "A patient-facing triage assistant begins answering medication dosage questions, which was explicitly out of its approved scope.",
+      "framework": [
+        "EU AI Act high-risk",
+        "NIST AI RMF MANAGE-2.2"
+      ],
+      "gate": "Stays within approved use scope",
+      "verdict": 0,
+      "harm": "Patients could receive unsafe dosing guidance from an out-of-scope tool.",
+      "path_to_yes": "Hard-stop scope guardrail + refusal pattern required before re-enabling.",
+      "tags": [
+        "healthcare",
+        "scope",
+        "genai"
+      ]
+    },
+    {
+      "id": "FC-008",
+      "title": "Imaging model underperforms on darker skin",
+      "domain": "healthcare",
+      "scenario": "A dermatology classifier shows a 12-point accuracy gap on darker skin tones; the team wants to ship and 'fix it in the next release'.",
+      "framework": [
+        "NIST AI RMF MEASURE-2.11 (fairness)",
+        "ISO 42001 6.1"
+      ],
+      "gate": "Performance equity across subgroups",
+      "verdict": "?",
+      "harm": "Patients with darker skin get systematically worse diagnostic support.",
+      "path_to_yes": "Owner: Clinical lead. ETA: ship gated to lighter-tone subset only until equity gap < 3 points; re-eval in 45 days.",
+      "tags": [
+        "healthcare",
+        "fairness",
+        "equity"
+      ]
+    },
+    {
+      "id": "FC-009",
+      "title": "Consent model uses prior visit data silently",
+      "domain": "healthcare",
+      "scenario": "A care-prediction feature pulls prior-visit records without patient consent or notice for the new purpose.",
+      "framework": [
+        "GDPR Art.6/9",
+        "HIPAA",
+        "NIST Privacy Framework"
+      ],
+      "gate": "Lawful basis + consent for the purpose",
+      "verdict": 0,
+      "harm": "Sensitive health data reused beyond the consented purpose.",
+      "path_to_yes": "Block until consent/notice for the new purpose is in place.",
+      "tags": [
+        "healthcare",
+        "privacy",
+        "consent"
+      ]
+    },
+    {
+      "id": "FC-010",
+      "title": "Clinician told to trust the score",
+      "domain": "healthcare",
+      "scenario": "Rollout training instructs nurses to defer to the risk score; automation bias is not addressed.",
+      "framework": [
+        "NIST AI RMF GOVERN-3.2",
+        "EU AI Act human oversight"
+      ],
+      "gate": "Oversight that resists automation bias",
+      "verdict": "?",
+      "harm": "Nurses override their own judgment, degrading care quality.",
+      "path_to_yes": "Owner: Nursing informatics. ETA: 14 days to revise training to 'decision support, not decision'; add disagreement logging.",
+      "tags": [
+        "healthcare",
+        "oversight",
+        "automation-bias"
+      ]
+    },
+    {
+      "id": "FC-011",
+      "title": "Credit model uses zip code proxy",
+      "domain": "finance",
+      "scenario": "A lending model's top feature is a neighborhood code strongly correlated with race; no disparate-impact testing was done.",
+      "framework": [
+        "ECOA/Reg B",
+        "NIST AI RMF MEASURE-2.11",
+        "EU AI Act high-risk (credit)"
+      ],
+      "gate": "Disparate-impact tested and within bounds",
+      "verdict": 0,
+      "harm": "Protected-class applicants face proxy discrimination in credit.",
+      "path_to_yes": "Remove/justify the proxy and pass a documented adverse-impact analysis before any Yes.",
+      "tags": [
+        "finance",
+        "fairness",
+        "credit"
+      ]
+    },
+    {
+      "id": "FC-012",
+      "title": "No adverse-action reasons",
+      "domain": "finance",
+      "scenario": "An automated denial pipeline cannot produce specific, accurate reasons for adverse action.",
+      "framework": [
+        "ECOA/Reg B",
+        "EU AI Act transparency"
+      ],
+      "gate": "Explainable, accurate adverse-action notices",
+      "verdict": 0,
+      "harm": "Denied applicants cannot understand or contest decisions; legal exposure.",
+      "path_to_yes": "No Yes until per-decision reason codes are generated and validated.",
+      "tags": [
+        "finance",
+        "explainability",
+        "credit"
+      ]
+    },
+    {
+      "id": "FC-013",
+      "title": "Fraud model freezes accounts, slow appeals",
+      "domain": "finance",
+      "scenario": "A fraud model auto-freezes accounts; the human appeal path takes 9 days on average.",
+      "framework": [
+        "NIST AI RMF MANAGE-2.2",
+        "EU AI Act human oversight"
+      ],
+      "gate": "Timely, effective remedy for the affected",
+      "verdict": "?",
+      "harm": "Legitimate customers lose access to funds for over a week.",
+      "path_to_yes": "Owner: Fraud ops. ETA: 30 days to cut appeal SLA to 24h; interim priority queue now.",
+      "tags": [
+        "finance",
+        "remedy",
+        "oversight"
+      ]
+    },
+    {
+      "id": "FC-014",
+      "title": "Trading model not stress-tested for regime shift",
+      "domain": "finance",
+      "scenario": "An execution model is approved on backtests covering only a low-volatility period.",
+      "framework": [
+        "NIST AI RMF MEASURE-2.6",
+        "ISO 42001 8.3"
+      ],
+      "gate": "Stress-tested across adverse regimes",
+      "verdict": "?",
+      "harm": "Model could amplify losses in a volatility spike it never saw.",
+      "path_to_yes": "Owner: Quant risk. ETA: 21 days to run adverse-regime + chaos backtests; cap position size meanwhile.",
+      "tags": [
+        "finance",
+        "stress-test",
+        "risk"
+      ]
+    },
+    {
+      "id": "FC-015",
+      "title": "Model card claims 99% with stale data",
+      "domain": "finance",
+      "scenario": "The published model card reports 99% accuracy from a 2-year-old eval that no longer matches production.",
+      "framework": [
+        "NIST AI RMF MEASURE-3.1",
+        "ISO 42001 (documentation)"
+      ],
+      "gate": "Documentation reflects current reality",
+      "verdict": 0,
+      "harm": "Stakeholders make decisions on false performance claims.",
+      "path_to_yes": "Block use of the stale card; re-eval on current data and re-publish before Yes.",
+      "tags": [
+        "finance",
+        "documentation",
+        "drift"
+      ]
+    },
+    {
+      "id": "FC-016",
+      "title": "Resume screener trained on past hires",
+      "domain": "hiring",
+      "scenario": "A screening model is trained to mimic historical hiring decisions that skewed male.",
+      "framework": [
+        "EU AI Act high-risk (employment)",
+        "NIST AI RMF MEASURE-2.11",
+        "Title VII"
+      ],
+      "gate": "No replication of historical bias",
+      "verdict": 0,
+      "harm": "Women are filtered out by a model encoding past discrimination.",
+      "path_to_yes": "No Yes until label/bias audit passes and adverse impact is within bounds.",
+      "tags": [
+        "hiring",
+        "fairness",
+        "bias"
+      ]
+    },
+    {
+      "id": "FC-017",
+      "title": "Video interview emotion scoring",
+      "domain": "hiring",
+      "scenario": "A vendor offers facial-expression 'engagement' scoring for interviews; validity evidence is thin.",
+      "framework": [
+        "EU AI Act (emotion recognition restrictions)",
+        "NIST AI RMF MAP-2.3"
+      ],
+      "gate": "Construct validity for the inference",
+      "verdict": 0,
+      "harm": "Candidates judged by a pseudo-scientific, possibly biased signal.",
+      "path_to_yes": "Reject the emotion-scoring feature; no Yes without peer-reviewed validity.",
+      "tags": [
+        "hiring",
+        "validity",
+        "biometrics"
+      ]
+    },
+    {
+      "id": "FC-018",
+      "title": "No applicant notice of AI use",
+      "domain": "hiring",
+      "scenario": "Applicants are screened by AI without disclosure, in a jurisdiction (e.g., NYC LL144) requiring notice and a bias audit.",
+      "framework": [
+        "NYC Local Law 144",
+        "EU AI Act transparency"
+      ],
+      "gate": "Required notice + bias audit published",
+      "verdict": 0,
+      "harm": "Legal non-compliance; applicants denied transparency.",
+      "path_to_yes": "Publish bias audit + applicant notice before any screening Yes.",
+      "tags": [
+        "hiring",
+        "transparency",
+        "compliance"
+      ]
+    },
+    {
+      "id": "FC-019",
+      "title": "Customer LLM with no prompt-injection defense",
+      "domain": "genai",
+      "scenario": "A support assistant has tool access and ingests user-supplied text/URLs with no injection guard.",
+      "framework": [
+        "OWASP LLM01 (Prompt Injection)",
+        "NIST AI RMF MANAGE-2.2"
+      ],
+      "gate": "Untrusted input cannot drive privileged actions",
+      "verdict": 0,
+      "harm": "Attackers can hijack the assistant to exfiltrate data or take actions.",
+      "path_to_yes": "No Yes until tool calls require confirmation + untrusted-content isolation.",
+      "tags": [
+        "genai",
+        "security",
+        "injection"
+      ]
+    },
+    {
+      "id": "FC-020",
+      "title": "RAG leaks documents across tenants",
+      "domain": "genai",
+      "scenario": "A multi-tenant RAG system has no per-tenant filter on the vector store.",
+      "framework": [
+        "OWASP LLM06 (Sensitive Info Disclosure)",
+        "GDPR",
+        "ISO 42001 8.3"
+      ],
+      "gate": "Tenant isolation enforced at retrieval",
+      "verdict": 0,
+      "harm": "One customer's confidential docs surface in another's answers.",
+      "path_to_yes": "Block until retrieval is tenant-scoped and tested with red-team queries.",
+      "tags": [
+        "genai",
+        "privacy",
+        "rag"
+      ]
+    },
+    {
+      "id": "FC-021",
+      "title": "Agent given write access to prod DB",
+      "domain": "genai",
+      "scenario": "An autonomous agent is granted direct write/delete on a production database 'to be efficient'.",
+      "framework": [
+        "OWASP LLM08 (Excessive Agency)",
+        "NIST AI RMF GOVERN-1.2"
+      ],
+      "gate": "Least-privilege + human gate on destructive ops",
+      "verdict": 0,
+      "harm": "A hallucinated or hijacked action could destroy production data.",
+      "path_to_yes": "Strip destructive scopes; route irreversible ops through a human gate.",
+      "tags": [
+        "genai",
+        "agency",
+        "security"
+      ]
+    },
+    {
+      "id": "FC-022",
+      "title": "Hallucinated citations in legal memos",
+      "domain": "genai",
+      "scenario": "An LLM drafting tool produces case citations that don't exist; lawyers file them.",
+      "framework": [
+        "OWASP LLM09 (Overreliance)",
+        "NIST AI RMF MEASURE-2.9"
+      ],
+      "gate": "Outputs verified before consequential use",
+      "verdict": "?",
+      "harm": "Sanctions, malpractice, harm to clients from fabricated law.",
+      "path_to_yes": "Owner: Practice lead. ETA: 14 days to add mandatory citation-verification step + 'unverified' watermark now.",
+      "tags": [
+        "genai",
+        "hallucination",
+        "overreliance"
+      ]
+    },
+    {
+      "id": "FC-023",
+      "title": "Training on data without license",
+      "domain": "genai",
+      "scenario": "A model is fine-tuned on scraped content of uncertain license to hit a deadline.",
+      "framework": [
+        "NIST AI RMF MAP-4.1",
+        "EU AI Act (copyright/data governance)"
+      ],
+      "gate": "Lawful, documented data provenance",
+      "verdict": "?",
+      "harm": "IP infringement exposure; tainted model that may need retraining.",
+      "path_to_yes": "Owner: Data governance. ETA: 30 days to clear provenance or replace data; hold external launch.",
+      "tags": [
+        "genai",
+        "data-provenance",
+        "ip"
+      ]
+    },
+    {
+      "id": "FC-024",
+      "title": "No output filtering on a teen-facing bot",
+      "domain": "genai",
+      "scenario": "A companion bot used by minors has no self-harm or grooming guardrails.",
+      "framework": [
+        "NIST AI RMF MANAGE-2.2",
+        "child-safety policy"
+      ],
+      "gate": "Child-safety guardrails verified",
+      "verdict": 0,
+      "harm": "Minors exposed to harmful content or grooming patterns.",
+      "path_to_yes": "Hard block until safety classifiers + escalation are in place and red-teamed.",
+      "tags": [
+        "genai",
+        "child-safety",
+        "guardrails"
+      ]
+    },
+    {
+      "id": "FC-025",
+      "title": "PII in training logs",
+      "domain": "privacy",
+      "scenario": "Raw prompts containing PII are written to logs retained indefinitely with broad access.",
+      "framework": [
+        "GDPR Art.5",
+        "NIST Privacy Framework",
+        "ISO 42001 8.3"
+      ],
+      "gate": "Data minimization + retention limits",
+      "verdict": 0,
+      "harm": "Large PII exposure surface; breach and regulatory risk.",
+      "path_to_yes": "Redact at ingest, set retention, restrict access before Yes.",
+      "tags": [
+        "privacy",
+        "pii",
+        "logging"
+      ]
+    },
+    {
+      "id": "FC-026",
+      "title": "No DPIA for high-risk processing",
+      "domain": "privacy",
+      "scenario": "A new biometric feature ships without a Data Protection Impact Assessment.",
+      "framework": [
+        "GDPR Art.35",
+        "EU AI Act"
+      ],
+      "gate": "DPIA completed for high-risk processing",
+      "verdict": 0,
+      "harm": "Unassessed privacy harms; non-compliance.",
+      "path_to_yes": "Complete and sign the DPIA before any Yes.",
+      "tags": [
+        "privacy",
+        "dpia",
+        "biometrics"
+      ]
+    },
+    {
+      "id": "FC-027",
+      "title": "Right-to-erasure not honored in vectors",
+      "domain": "privacy",
+      "scenario": "Deleted users still appear in embeddings/RAG indexes.",
+      "framework": [
+        "GDPR Art.17",
+        "NIST Privacy Framework"
+      ],
+      "gate": "Deletion propagates to all derived stores",
+      "verdict": "?",
+      "harm": "Erased individuals remain retrievable; rights violation.",
+      "path_to_yes": "Owner: Data eng. ETA: 30 days to wire deletion into vector re-index; manual purge on request now.",
+      "tags": [
+        "privacy",
+        "erasure",
+        "rag"
+      ]
+    },
+    {
+      "id": "FC-028",
+      "title": "Unsigned model artifact deployed",
+      "domain": "security",
+      "scenario": "A model binary is pulled from an internal bucket with no signature or provenance check.",
+      "framework": [
+        "SLSA",
+        "NIST AI RMF MANAGE-2.2",
+        "ISO 42001 8.4"
+      ],
+      "gate": "Signed, provenance-verified artifacts",
+      "verdict": 0,
+      "harm": "Tampered or wrong model could reach production undetected.",
+      "path_to_yes": "Require signature + SBOM verification in the deploy gate.",
+      "tags": [
+        "security",
+        "supply-chain",
+        "provenance"
+      ]
+    },
+    {
+      "id": "FC-029",
+      "title": "Secrets in client-side JS",
+      "domain": "security",
+      "scenario": "An API key is embedded in shipped front-end JavaScript for a chatbot.",
+      "framework": [
+        "OWASP",
+        "NIST AI RMF GOVERN-1.2"
+      ],
+      "gate": "Secrets never in client code",
+      "verdict": 0,
+      "harm": "Key theft, quota abuse, financial loss.",
+      "path_to_yes": "Move calls behind a server/proxy; rotate the exposed key before Yes.",
+      "tags": [
+        "security",
+        "secrets",
+        "chatbot"
+      ]
+    },
+    {
+      "id": "FC-030",
+      "title": "No rate limit on generation endpoint",
+      "domain": "security",
+      "scenario": "A public generation endpoint has no rate limiting or cost cap.",
+      "framework": [
+        "OWASP LLM04 (Model DoS)",
+        "NIST AI RMF MANAGE-4.1"
+      ],
+      "gate": "Abuse + cost controls in place",
+      "verdict": "?",
+      "harm": "Cost blowout and denial of service via abuse.",
+      "path_to_yes": "Owner: Platform. ETA: 7 days for rate limits + budget alarms; temporary low cap now.",
+      "tags": [
+        "security",
+        "cost",
+        "abuse"
+      ]
+    },
+    {
+      "id": "FC-031",
+      "title": "Benefits-eligibility model, no appeal",
+      "domain": "public",
+      "scenario": "An automated system reduces welfare benefits with no clear human appeal route.",
+      "framework": [
+        "EU AI Act high-risk",
+        "NIST AI RMF GOVERN-3.2"
+      ],
+      "gate": "Meaningful appeal + human review",
+      "verdict": 0,
+      "harm": "Vulnerable people wrongly lose essential support with no recourse.",
+      "path_to_yes": "No Yes until a staffed appeal channel with SLA exists.",
+      "tags": [
+        "public",
+        "rights",
+        "oversight"
+      ]
+    },
+    {
+      "id": "FC-032",
+      "title": "Facial recognition for public surveillance",
+      "domain": "public",
+      "scenario": "A city proposes real-time facial recognition in public spaces for general policing.",
+      "framework": [
+        "EU AI Act (prohibited/limited RBI)",
+        "NIST AI RMF MAP-1.1"
+      ],
+      "gate": "Lawful, proportionate, necessity-tested",
+      "verdict": 0,
+      "harm": "Mass surveillance, chilling effects, wrongful identification.",
+      "path_to_yes": "Reject general use; narrow, warrant-based, audited use only if lawful.",
+      "tags": [
+        "public",
+        "biometrics",
+        "rights"
+      ]
+    },
+    {
+      "id": "FC-033",
+      "title": "Predictive policing on biased crime data",
+      "domain": "public",
+      "scenario": "A model directs patrols using historical arrest data reflecting biased enforcement.",
+      "framework": [
+        "NIST AI RMF MEASURE-2.11",
+        "EU AI Act"
+      ],
+      "gate": "Feedback-loop + bias risk assessed",
+      "verdict": 0,
+      "harm": "Over-policing of already over-policed communities.",
+      "path_to_yes": "No Yes without independent bias + feedback-loop assessment.",
+      "tags": [
+        "public",
+        "fairness",
+        "feedback-loop"
+      ]
+    },
+    {
+      "id": "FC-034",
+      "title": "Shadow AI in a business unit",
+      "domain": "governance",
+      "scenario": "A marketing team runs an unapproved LLM tool on customer data outside any inventory.",
+      "framework": [
+        "NIST AI RMF GOVERN-1.1",
+        "ISO 42001 (AI inventory)"
+      ],
+      "gate": "Registered in the AI inventory with an owner",
+      "verdict": 0,
+      "harm": "Ungoverned data exposure; no accountability.",
+      "path_to_yes": "Bring into inventory, assign owner, assess before continued use.",
+      "tags": [
+        "governance",
+        "shadow-ai",
+        "inventory"
+      ]
+    },
+    {
+      "id": "FC-035",
+      "title": "Owner left, model orphaned",
+      "domain": "governance",
+      "scenario": "A production model's owner left the company; nobody is accountable for it.",
+      "framework": [
+        "NIST AI RMF GOVERN-2.1",
+        "ISO 42001 5.3"
+      ],
+      "gate": "Every live model has a named accountable owner",
+      "verdict": "?",
+      "harm": "No one watches risk, drift, or incidents on a live system.",
+      "path_to_yes": "Owner: Eng manager to reassign. ETA: 7 days to name owner or schedule decommission.",
+      "tags": [
+        "governance",
+        "ownership",
+        "orphan"
+      ]
+    },
+    {
+      "id": "FC-036",
+      "title": "Risk tier never reassessed after scope creep",
+      "domain": "governance",
+      "scenario": "A 'low-risk' internal tool quietly became customer-facing without re-tiering.",
+      "framework": [
+        "NIST AI RMF MAP-1.1",
+        "EU AI Act classification"
+      ],
+      "gate": "Risk re-tiered when use changes",
+      "verdict": 0,
+      "harm": "High-risk use running under low-risk controls.",
+      "path_to_yes": "Re-classify and apply the correct gate before continued use.",
+      "tags": [
+        "governance",
+        "risk-tier",
+        "scope-creep"
+      ]
+    },
+    {
+      "id": "FC-037",
+      "title": "No incident playbook",
+      "domain": "governance",
+      "scenario": "There is no defined process for what happens when a model causes harm in production.",
+      "framework": [
+        "NIST AI RMF MANAGE-4.1",
+        "ISO 42001 (incident)"
+      ],
+      "gate": "Incident response defined and rehearsed",
+      "verdict": "?",
+      "harm": "Slow, chaotic response amplifies harm when something breaks.",
+      "path_to_yes": "Owner: Risk lead. ETA: 21 days for a tested incident playbook + on-call.",
+      "tags": [
+        "governance",
+        "incident",
+        "process"
+      ]
+    },
+    {
+      "id": "FC-038",
+      "title": "'?' gate with no owner or ETA",
+      "domain": "governance",
+      "scenario": "A decision was logged as Maybe months ago; it has no owner and no ETA and is quietly running.",
+      "framework": [
+        "AiGovOps gate law",
+        "NIST AI RMF MANAGE-1.1"
+      ],
+      "gate": "Every Maybe carries an owner + ETA and is revisited",
+      "verdict": 0,
+      "harm": "The harm is never resolved — exactly what the gate law forbids.",
+      "path_to_yes": "Assign an owner + ETA now or stop the capability; a Maybe may never rest.",
+      "tags": [
+        "governance",
+        "gate-law",
+        "maybe"
+      ]
+    },
+    {
+      "id": "FC-039",
+      "title": "Sign-off by someone without authority",
+      "domain": "governance",
+      "scenario": "A junior engineer 'approved' a high-risk launch because the steward was unavailable.",
+      "framework": [
+        "AiGovOps steward gate",
+        "NIST AI RMF GOVERN-2.3"
+      ],
+      "gate": "Approval by an authorized steward",
+      "verdict": 0,
+      "harm": "High-risk system live without accountable sign-off.",
+      "path_to_yes": "Void the approval; require a named steward to convene and sign.",
+      "tags": [
+        "governance",
+        "steward",
+        "authority"
+      ]
+    },
+    {
+      "id": "FC-040",
+      "title": "Evidence not retained",
+      "domain": "governance",
+      "scenario": "The eval that justified a Yes was deleted; the decision can't be reproduced or audited.",
+      "framework": [
+        "ISO 42001 (records)",
+        "NIST AI RMF MEASURE-3.1"
+      ],
+      "gate": "Decision evidence retained + signed",
+      "verdict": 0,
+      "harm": "Unauditable decisions; cannot defend or learn from them.",
+      "path_to_yes": "No Yes counts without retained, signed evidence.",
+      "tags": [
+        "governance",
+        "evidence",
+        "audit"
+      ]
+    },
+    {
+      "id": "FC-041",
+      "title": "Label leakage inflates metrics",
+      "domain": "data",
+      "scenario": "A feature derived from the target leaked into training, making offline metrics unrealistically high.",
+      "framework": [
+        "NIST AI RMF MEASURE-2.5",
+        "ISO 42001 8.3"
+      ],
+      "gate": "No target leakage in evaluation",
+      "verdict": 0,
+      "harm": "False confidence; model fails in production.",
+      "path_to_yes": "Remove leakage, re-eval honestly before Yes.",
+      "tags": [
+        "data",
+        "leakage",
+        "eval"
+      ]
+    },
+    {
+      "id": "FC-042",
+      "title": "Test set contaminated by training data",
+      "domain": "data",
+      "scenario": "Duplicate records span train and test, so the holdout isn't real.",
+      "framework": [
+        "NIST AI RMF MEASURE-2.5"
+      ],
+      "gate": "Clean train/test separation",
+      "verdict": 0,
+      "harm": "Reported generalization is fictional.",
+      "path_to_yes": "De-duplicate and re-split before any Yes.",
+      "tags": [
+        "data",
+        "contamination",
+        "eval"
+      ]
+    },
+    {
+      "id": "FC-043",
+      "title": "Class imbalance ignored",
+      "domain": "data",
+      "scenario": "A rare-event model reports 98% accuracy while missing nearly all positives.",
+      "framework": [
+        "NIST AI RMF MEASURE-2.3"
+      ],
+      "gate": "Metric appropriate to the problem",
+      "verdict": 0,
+      "harm": "Critical rare events (fraud, defect, disease) are missed.",
+      "path_to_yes": "Use recall/PR metrics with thresholds; re-eval before Yes.",
+      "tags": [
+        "data",
+        "metrics",
+        "imbalance"
+      ]
+    },
+    {
+      "id": "FC-044",
+      "title": "System prompt is the only safety control",
+      "domain": "genai",
+      "scenario": "All safety relies on a system prompt that users can jailbreak.",
+      "framework": [
+        "OWASP LLM01",
+        "NIST AI RMF MANAGE-2.2"
+      ],
+      "gate": "Defense in depth beyond the prompt",
+      "verdict": "?",
+      "harm": "A single jailbreak removes all protection.",
+      "path_to_yes": "Owner: ML safety. ETA: 14 days to add output classifiers + policy layer; monitor jailbreaks now.",
+      "tags": [
+        "genai",
+        "safety",
+        "jailbreak"
+      ]
+    },
+    {
+      "id": "FC-045",
+      "title": "No eval for the actual use case",
+      "domain": "genai",
+      "scenario": "A summarizer is evaluated on generic benchmarks, never on the medical notes it will summarize.",
+      "framework": [
+        "NIST AI RMF MEASURE-2.3",
+        "ISO 42001 8.3"
+      ],
+      "gate": "Evaluated on representative real tasks",
+      "verdict": 0,
+      "harm": "Unknown failure modes on the real, sensitive workload.",
+      "path_to_yes": "Build a task-representative eval set before Yes.",
+      "tags": [
+        "genai",
+        "eval",
+        "representativeness"
+      ]
+    },
+    {
+      "id": "FC-046",
+      "title": "A/B test with no guardrail metric",
+      "domain": "genai",
+      "scenario": "A new model wins on engagement but nobody tracks harmful-output or complaint rate.",
+      "framework": [
+        "NIST AI RMF MEASURE-2.6"
+      ],
+      "gate": "Guardrail metrics tracked alongside wins",
+      "verdict": "?",
+      "harm": "Optimizing engagement may quietly increase harm.",
+      "path_to_yes": "Owner: PM. ETA: 7 days to add guardrail metrics + auto-rollback thresholds.",
+      "tags": [
+        "genai",
+        "metrics",
+        "guardrail"
+      ]
+    },
+    {
+      "id": "FC-047",
+      "title": "Auto-retrain pipeline, no review",
+      "domain": "genai",
+      "scenario": "A model retrains nightly on fresh data and auto-deploys with no human or eval gate.",
+      "framework": [
+        "NIST AI RMF MANAGE-2.2",
+        "ISO 42001 8.4"
+      ],
+      "gate": "Gated promotion with eval + sign-off",
+      "verdict": 0,
+      "harm": "A poisoned or bad-data day silently ships a broken model.",
+      "path_to_yes": "Insert eval + approval gate before promotion.",
+      "tags": [
+        "genai",
+        "mlops",
+        "retrain"
+      ]
+    },
+    {
+      "id": "FC-048",
+      "title": "Vendor model, no transparency",
+      "domain": "vendor",
+      "scenario": "A critical decision depends on a black-box vendor API with no documentation of behavior or limits.",
+      "framework": [
+        "NIST AI RMF MAP-4.1",
+        "ISO 42001 (third-party)"
+      ],
+      "gate": "Adequate transparency from suppliers",
+      "verdict": "?",
+      "harm": "Unknown failure modes in a system you can't inspect.",
+      "path_to_yes": "Owner: Vendor mgmt. ETA: 30 days to obtain model card + SLAs or find an alternative.",
+      "tags": [
+        "vendor",
+        "transparency",
+        "third-party"
+      ]
+    },
+    {
+      "id": "FC-049",
+      "title": "Vendor changes model silently",
+      "domain": "vendor",
+      "scenario": "A supplier swaps the underlying model behind the same API; your behavior shifts unnoticed.",
+      "framework": [
+        "NIST AI RMF MANAGE-4.1"
+      ],
+      "gate": "Change notice + re-validation on supplier updates",
+      "verdict": "?",
+      "harm": "Silent regressions in a production-critical path.",
+      "path_to_yes": "Owner: Integration lead. ETA: contract for change notices in 30 days; add behavioral canary now.",
+      "tags": [
+        "vendor",
+        "change-mgmt",
+        "monitoring"
+      ]
+    },
+    {
+      "id": "FC-050",
+      "title": "No exit plan from vendor",
+      "domain": "vendor",
+      "scenario": "All governance evidence lives in a vendor's console with no export.",
+      "framework": [
+        "ISO 42001 (records)",
+        "NIST AI RMF GOVERN-1.2"
+      ],
+      "gate": "Portable, owned evidence",
+      "verdict": "?",
+      "harm": "Lock-in; loss of auditability if the vendor lapses.",
+      "path_to_yes": "Owner: Procurement. ETA: 45 days to secure export + local copies of evidence.",
+      "tags": [
+        "vendor",
+        "lock-in",
+        "evidence"
+      ]
+    },
+    {
+      "id": "FC-051",
+      "title": "Defect-detection model with full safety case",
+      "domain": "automotive",
+      "scenario": "A vision model for weld-defect detection ships with per-defect-class eval, drift monitor, human override, and a signed safety case.",
+      "framework": [
+        "ISO 26262",
+        "NIST AI RMF MEASURE/MANAGE",
+        "ISO 42001"
+      ],
+      "gate": "Evidence across eval, monitoring, oversight",
+      "verdict": 1,
+      "harm": "None outstanding; residual risk documented and accepted by a steward.",
+      "path_to_yes": "Yes is earned: keep the drift monitor green and re-sign on material change.",
+      "tags": [
+        "automotive",
+        "earned-yes",
+        "exemplar"
+      ]
+    },
+    {
+      "id": "FC-052",
+      "title": "Chatbot with proxy + guardrails + audit",
+      "domain": "genai",
+      "scenario": "A support assistant keeps keys server-side, isolates untrusted input, logs signed receipts, and has rate limits and rollback.",
+      "framework": [
+        "OWASP LLM Top 10",
+        "NIST AI RMF",
+        "ISO 42001"
+      ],
+      "gate": "Defense in depth + accountability",
+      "verdict": 1,
+      "harm": "Residual risk low and monitored.",
+      "path_to_yes": "Yes is earned: watch jailbreak + cost metrics; re-sign on scope change.",
+      "tags": [
+        "genai",
+        "earned-yes",
+        "exemplar"
+      ]
+    },
+    {
+      "id": "FC-053",
+      "title": "Credit model passes adverse-impact + reasons",
+      "domain": "finance",
+      "scenario": "A lending model has documented disparate-impact testing within bounds and accurate per-decision adverse-action reasons.",
+      "framework": [
+        "ECOA/Reg B",
+        "NIST AI RMF MEASURE-2.11"
+      ],
+      "gate": "Fairness tested + explainable",
+      "verdict": 1,
+      "harm": "Residual risk monitored quarterly.",
+      "path_to_yes": "Yes is earned: re-run adverse-impact each quarter and on data shift.",
+      "tags": [
+        "finance",
+        "earned-yes",
+        "exemplar"
+      ]
+    },
+    {
+      "id": "FC-054",
+      "title": "Healthcare model locally validated + monitored",
+      "domain": "healthcare",
+      "scenario": "A readmission-risk model was validated on local patients, has subgroup equity within bounds, and a live drift monitor.",
+      "framework": [
+        "FDA SaMD",
+        "NIST AI RMF",
+        "ISO 42001"
+      ],
+      "gate": "Local validation + equity + monitoring",
+      "verdict": 1,
+      "harm": "Residual risk accepted by clinical governance.",
+      "path_to_yes": "Yes is earned: maintain monitoring and annual re-validation.",
+      "tags": [
+        "healthcare",
+        "earned-yes",
+        "exemplar"
+      ]
+    },
+    {
+      "id": "FC-055",
+      "title": "Agent with human gate on irreversible ops",
+      "domain": "genai",
+      "scenario": "An ops agent automates read-only diagnostics but routes every destructive or external action through a named human approver.",
+      "framework": [
+        "OWASP LLM08",
+        "NIST AI RMF GOVERN"
+      ],
+      "gate": "Least privilege + human gate on irreversible actions",
+      "verdict": 1,
+      "harm": "Residual risk low; all destructive ops logged and approved.",
+      "path_to_yes": "Yes is earned: review the approval log monthly.",
+      "tags": [
+        "genai",
+        "earned-yes",
+        "agency"
+      ]
+    },
+    {
+      "id": "FC-056",
+      "title": "Eval thresholds set after seeing results",
+      "domain": "data",
+      "scenario": "The pass/fail threshold was chosen after viewing the model's score, guaranteeing a pass.",
+      "framework": [
+        "NIST AI RMF MEASURE-2.5"
+      ],
+      "gate": "Acceptance criteria fixed before eval",
+      "verdict": 0,
+      "harm": "The gate is theater; no real bar was cleared.",
+      "path_to_yes": "Pre-register thresholds, then re-eval.",
+      "tags": [
+        "data",
+        "p-hacking",
+        "eval"
+      ]
+    },
+    {
+      "id": "FC-057",
+      "title": "Safety eval run by the build team only",
+      "domain": "governance",
+      "scenario": "The team that built the model also graded its own safety eval with no independent check.",
+      "framework": [
+        "NIST AI RMF GOVERN-4.1",
+        "ISO 42001 (independence)"
+      ],
+      "gate": "Independent review of high-risk evals",
+      "verdict": "?",
+      "harm": "Conflict of interest hides failure modes.",
+      "path_to_yes": "Owner: Risk lead. ETA: 14 days for independent review before Yes.",
+      "tags": [
+        "governance",
+        "independence",
+        "eval"
+      ]
+    },
+    {
+      "id": "FC-058",
+      "title": "Model used outside its documented limits",
+      "domain": "governance",
+      "scenario": "A model validated for English text is deployed on Spanish content with no re-eval.",
+      "framework": [
+        "NIST AI RMF MAP-3.4",
+        "ISO 42001 8.3"
+      ],
+      "gate": "Use stays within validated boundaries",
+      "verdict": 0,
+      "harm": "Unknown, untested performance on the new population.",
+      "path_to_yes": "Re-validate for the new language before Yes.",
+      "tags": [
+        "governance",
+        "scope",
+        "i18n"
+      ]
+    },
+    {
+      "id": "FC-059",
+      "title": "No accessibility check on AI UI",
+      "domain": "ux",
+      "scenario": "An AI tool's outputs and controls are unusable with a screen reader.",
+      "framework": [
+        "WCAG 2.2",
+        "EU AI Act (accessibility)"
+      ],
+      "gate": "Accessible to people with disabilities",
+      "verdict": "?",
+      "harm": "Disabled users excluded from the tool.",
+      "path_to_yes": "Owner: Frontend lead. ETA: 21 days to pass a WCAG audit.",
+      "tags": [
+        "ux",
+        "accessibility",
+        "inclusion"
+      ]
+    },
+    {
+      "id": "FC-060",
+      "title": "Cost model hidden from approver",
+      "domain": "governance",
+      "scenario": "The steward approving a launch was never shown the projected inference cost.",
+      "framework": [
+        "AiGovOps cost receipt",
+        "NIST AI RMF GOVERN-1.2"
+      ],
+      "gate": "Honest cost surfaced at the gate",
+      "verdict": 0,
+      "harm": "Approval made without a true picture of cost.",
+      "path_to_yes": "Surface the cost receipt and re-approve.",
+      "tags": [
+        "governance",
+        "cost",
+        "transparency"
+      ]
+    },
+    {
+      "id": "FC-061",
+      "title": "Synthetic data presented as real",
+      "domain": "data",
+      "scenario": "Synthetic samples were mixed into the eval set and reported as real-world performance.",
+      "framework": [
+        "NIST AI RMF MEASURE-2.3"
+      ],
+      "gate": "Eval reflects real distribution",
+      "verdict": 0,
+      "harm": "Performance claims don't hold in the real world.",
+      "path_to_yes": "Separate synthetic from real; re-report.",
+      "tags": [
+        "data",
+        "synthetic",
+        "eval"
+      ]
+    },
+    {
+      "id": "FC-062",
+      "title": "Kill switch never tested",
+      "domain": "security",
+      "scenario": "The documented emergency shutdown for an autonomous system has never been exercised.",
+      "framework": [
+        "NIST AI RMF MANAGE-4.1",
+        "ISO 42001 (incident)"
+      ],
+      "gate": "Shutdown path tested and reliable",
+      "verdict": "?",
+      "harm": "In a real emergency the stop may not work.",
+      "path_to_yes": "Owner: SRE. ETA: 7 days to run a tested shutdown drill.",
+      "tags": [
+        "security",
+        "kill-switch",
+        "incident"
+      ]
+    },
+    {
+      "id": "FC-063",
+      "title": "No logging of model decisions",
+      "domain": "governance",
+      "scenario": "A consequential model keeps no record of inputs/outputs, so harm can't be investigated.",
+      "framework": [
+        "NIST AI RMF MEASURE-3.1",
+        "ISO 42001 (records)"
+      ],
+      "gate": "Decisions logged for audit",
+      "verdict": 0,
+      "harm": "Harm is undetectable and uninvestigable.",
+      "path_to_yes": "Add tamper-evident decision logging before Yes.",
+      "tags": [
+        "governance",
+        "logging",
+        "audit"
+      ]
+    },
+    {
+      "id": "FC-064",
+      "title": "Bias audit done once, never repeated",
+      "domain": "finance",
+      "scenario": "A fairness audit was passed at launch two years ago and never revisited despite data drift.",
+      "framework": [
+        "NIST AI RMF MEASURE-2.11",
+        "ISO 42001 8.4"
+      ],
+      "gate": "Fairness re-audited on a schedule",
+      "verdict": "?",
+      "harm": "Fairness may have silently degraded.",
+      "path_to_yes": "Owner: Model risk. ETA: 30 days to re-audit and set a recurring schedule.",
+      "tags": [
+        "finance",
+        "fairness",
+        "monitoring"
+      ]
+    },
+    {
+      "id": "FC-065",
+      "title": "Children's data used without parental consent",
+      "domain": "privacy",
+      "scenario": "An education app trains on student data without verifiable parental consent.",
+      "framework": [
+        "COPPA",
+        "FERPA",
+        "GDPR-K"
+      ],
+      "gate": "Verifiable parental consent for minors",
+      "verdict": 0,
+      "harm": "Unlawful processing of children's data.",
+      "path_to_yes": "Stop processing until consent is obtained.",
+      "tags": [
+        "privacy",
+        "children",
+        "consent"
+      ]
+    },
+    {
+      "id": "FC-066",
+      "title": "Deepfake voice feature, no consent",
+      "domain": "genai",
+      "scenario": "A voice-clone feature can mimic a person without their consent or watermarking.",
+      "framework": [
+        "EU AI Act (deepfake disclosure)",
+        "NIST AI RMF MAP-1.1"
+      ],
+      "gate": "Consent + provenance disclosure",
+      "verdict": 0,
+      "harm": "Impersonation, fraud, reputational harm.",
+      "path_to_yes": "Require consent + visible provenance/watermark before Yes.",
+      "tags": [
+        "genai",
+        "deepfake",
+        "consent"
+      ]
+    },
+    {
+      "id": "FC-067",
+      "title": "Model promoted on a Friday, no on-call",
+      "domain": "governance",
+      "scenario": "A high-risk model is deployed before a holiday weekend with no monitoring coverage.",
+      "framework": [
+        "NIST AI RMF MANAGE-4.1"
+      ],
+      "gate": "Coverage in place at promotion",
+      "verdict": "?",
+      "harm": "Harm could run unwatched for days.",
+      "path_to_yes": "Owner: Release manager. ETA: schedule promotion when on-call coverage exists.",
+      "tags": [
+        "governance",
+        "ops",
+        "timing"
+      ]
+    },
+    {
+      "id": "FC-068",
+      "title": "Threshold tuned for the demo, not prod",
+      "domain": "genai",
+      "scenario": "Decision thresholds were tuned to look good in a stakeholder demo, not for production traffic.",
+      "framework": [
+        "NIST AI RMF MEASURE-2.6"
+      ],
+      "gate": "Tuned for real operating conditions",
+      "verdict": 0,
+      "harm": "Production behavior diverges from what was approved.",
+      "path_to_yes": "Re-tune and re-eval on production-like data.",
+      "tags": [
+        "genai",
+        "demo-vs-prod",
+        "eval"
+      ]
+    },
+    {
+      "id": "FC-069",
+      "title": "No way for users to report harm",
+      "domain": "ux",
+      "scenario": "An AI product gives users no channel to flag a harmful or wrong output.",
+      "framework": [
+        "NIST AI RMF MANAGE-4.1",
+        "ISO 42001 (feedback)"
+      ],
+      "gate": "User harm-reporting channel exists",
+      "verdict": "?",
+      "harm": "Harms accumulate invisibly without feedback.",
+      "path_to_yes": "Owner: PM. ETA: 14 days to add a report path wired to triage.",
+      "tags": [
+        "ux",
+        "feedback",
+        "harm-reporting"
+      ]
+    },
+    {
+      "id": "FC-070",
+      "title": "Reused approval for a different model",
+      "domain": "governance",
+      "scenario": "A new model version shipped under the prior version's sign-off without re-review.",
+      "framework": [
+        "AiGovOps steward gate",
+        "NIST AI RMF GOVERN-2.3"
+      ],
+      "gate": "Approval is version-specific",
+      "verdict": 0,
+      "harm": "An unreviewed model runs under borrowed authority.",
+      "path_to_yes": "Re-convene and sign for the new version.",
+      "tags": [
+        "governance",
+        "approval",
+        "versioning"
+      ]
+    },
+    {
+      "id": "FC-071",
+      "title": "Eval set too small to be meaningful",
+      "domain": "data",
+      "scenario": "A safety claim rests on 40 examples with wide confidence intervals.",
+      "framework": [
+        "NIST AI RMF MEASURE-2.3"
+      ],
+      "gate": "Statistically adequate eval size",
+      "verdict": "?",
+      "harm": "The claim could be noise.",
+      "path_to_yes": "Owner: ML lead. ETA: 21 days to expand the eval set + report CIs.",
+      "tags": [
+        "data",
+        "sample-size",
+        "eval"
+      ]
+    },
+    {
+      "id": "FC-072",
+      "title": "Disparate false-positive rates accepted silently",
+      "domain": "public",
+      "scenario": "A risk-scoring tool has much higher false positives for one group; this was noted but not addressed.",
+      "framework": [
+        "NIST AI RMF MEASURE-2.11",
+        "EU AI Act"
+      ],
+      "gate": "Equalized error rates within bounds",
+      "verdict": 0,
+      "harm": "One group bears the cost of the model's mistakes.",
+      "path_to_yes": "No Yes until error-rate disparity is mitigated or justified.",
+      "tags": [
+        "public",
+        "fairness",
+        "error-rates"
+      ]
+    },
+    {
+      "id": "FC-073",
+      "title": "No model card at all",
+      "domain": "governance",
+      "scenario": "A production model has no documentation of purpose, data, limits, or owner.",
+      "framework": [
+        "NIST AI RMF MAP-3.1",
+        "ISO 42001 (documentation)"
+      ],
+      "gate": "Minimum documentation exists",
+      "verdict": 0,
+      "harm": "Nobody can responsibly operate or audit it.",
+      "path_to_yes": "Produce a model card before Yes.",
+      "tags": [
+        "governance",
+        "documentation",
+        "model-card"
+      ]
+    },
+    {
+      "id": "FC-074",
+      "title": "Prompt logs shared to a third party",
+      "domain": "privacy",
+      "scenario": "User prompts containing secrets are forwarded to an analytics vendor.",
+      "framework": [
+        "GDPR",
+        "NIST Privacy Framework",
+        "OWASP LLM06"
+      ],
+      "gate": "No sensitive data to unvetted third parties",
+      "verdict": 0,
+      "harm": "Leakage of user secrets to outside parties.",
+      "path_to_yes": "Stop the forwarding; vet and minimize before any sharing.",
+      "tags": [
+        "privacy",
+        "third-party",
+        "leakage"
+      ]
+    },
+    {
+      "id": "FC-075",
+      "title": "Autonomy expanded without re-tier",
+      "domain": "genai",
+      "scenario": "An assistant gains the ability to send emails on a user's behalf; risk tier unchanged.",
+      "framework": [
+        "NIST AI RMF MAP-1.1",
+        "OWASP LLM08"
+      ],
+      "gate": "Re-tier when agency increases",
+      "verdict": 0,
+      "harm": "Higher-impact actions under lower-risk controls.",
+      "path_to_yes": "Re-tier and add a confirmation gate for sending.",
+      "tags": [
+        "genai",
+        "agency",
+        "risk-tier"
+      ]
+    },
+    {
+      "id": "FC-076",
+      "title": "Eval ignores adversarial users",
+      "domain": "security",
+      "scenario": "Testing only used cooperative inputs; no adversarial or abuse testing.",
+      "framework": [
+        "OWASP LLM Top 10",
+        "NIST AI RMF MEASURE-2.7"
+      ],
+      "gate": "Adversarial testing performed",
+      "verdict": "?",
+      "harm": "Abuse paths are unknown until exploited.",
+      "path_to_yes": "Owner: Security. ETA: 21 days for a red-team pass before Yes.",
+      "tags": [
+        "security",
+        "red-team",
+        "adversarial"
+      ]
+    },
+    {
+      "id": "FC-077",
+      "title": "Model decisions can't be reproduced",
+      "domain": "data",
+      "scenario": "Non-deterministic pipeline + unversioned data means a past decision can't be reproduced.",
+      "framework": [
+        "NIST AI RMF MEASURE-3.1",
+        "ISO 42001 (records)"
+      ],
+      "gate": "Reproducible decisions",
+      "verdict": "?",
+      "harm": "Disputes and audits can't be resolved.",
+      "path_to_yes": "Owner: Data eng. ETA: 30 days to version data + pin seeds.",
+      "tags": [
+        "data",
+        "reproducibility",
+        "audit"
+      ]
+    },
+    {
+      "id": "FC-078",
+      "title": "Consent buried in 40 pages of terms",
+      "domain": "privacy",
+      "scenario": "AI data use is disclosed only deep in unreadable terms of service.",
+      "framework": [
+        "GDPR (informed consent)",
+        "EU AI Act transparency"
+      ],
+      "gate": "Clear, informed consent",
+      "verdict": 0,
+      "harm": "Consent is not meaningful or informed.",
+      "path_to_yes": "Surface a clear, specific notice before Yes.",
+      "tags": [
+        "privacy",
+        "consent",
+        "transparency"
+      ]
+    },
+    {
+      "id": "FC-079",
+      "title": "Critical model has no fallback",
+      "domain": "governance",
+      "scenario": "If the model is unavailable, the dependent process has no degraded-mode plan.",
+      "framework": [
+        "NIST AI RMF MANAGE-4.1",
+        "ISO 42001 (continuity)"
+      ],
+      "gate": "Graceful degradation defined",
+      "verdict": "?",
+      "harm": "An outage halts a critical business or safety process.",
+      "path_to_yes": "Owner: Architect. ETA: 21 days for a fallback/degraded mode.",
+      "tags": [
+        "governance",
+        "resilience",
+        "fallback"
+      ]
+    },
+    {
+      "id": "FC-080",
+      "title": "Eval data older than the threat",
+      "domain": "security",
+      "scenario": "A content-moderation model is evaluated on last year's abuse patterns, missing current tactics.",
+      "framework": [
+        "NIST AI RMF MANAGE-4.1"
+      ],
+      "gate": "Eval reflects current threats",
+      "verdict": "?",
+      "harm": "New abuse slips through unmeasured.",
+      "path_to_yes": "Owner: Trust & Safety. ETA: 14 days to refresh adversarial eval set.",
+      "tags": [
+        "security",
+        "moderation",
+        "staleness"
+      ]
+    },
+    {
+      "id": "FC-081",
+      "title": "Approval given verbally, not recorded",
+      "domain": "governance",
+      "scenario": "A steward said 'fine' in a hallway; there's no signed record.",
+      "framework": [
+        "AiGovOps signed receipt",
+        "ISO 42001 (records)"
+      ],
+      "gate": "Approval recorded + signed",
+      "verdict": 0,
+      "harm": "No accountable, auditable trail for a real decision.",
+      "path_to_yes": "Capture a signed receipt or treat as unapproved.",
+      "tags": [
+        "governance",
+        "receipt",
+        "accountability"
+      ]
+    },
+    {
+      "id": "FC-082",
+      "title": "Model trained on competitor's leaked data",
+      "domain": "governance",
+      "scenario": "Training data includes confidential material obtained improperly.",
+      "framework": [
+        "NIST AI RMF MAP-4.1",
+        "legal/IP"
+      ],
+      "gate": "Lawful data acquisition",
+      "verdict": 0,
+      "harm": "Legal liability; tainted model.",
+      "path_to_yes": "Remove the data and retrain before any Yes.",
+      "tags": [
+        "governance",
+        "data-provenance",
+        "legal"
+      ]
+    },
+    {
+      "id": "FC-083",
+      "title": "Bias mitigation broke accuracy silently",
+      "domain": "data",
+      "scenario": "A fairness fix reduced accuracy below the safety threshold, but only fairness was re-checked.",
+      "framework": [
+        "NIST AI RMF MEASURE-2.6"
+      ],
+      "gate": "Both fairness and performance re-validated",
+      "verdict": "?",
+      "harm": "A 'fairer' model that is now unsafe.",
+      "path_to_yes": "Owner: ML lead. ETA: 14 days to jointly re-validate before Yes.",
+      "tags": [
+        "data",
+        "fairness",
+        "tradeoff"
+      ]
+    },
+    {
+      "id": "FC-084",
+      "title": "No definition of 'harm' for this system",
+      "domain": "governance",
+      "scenario": "The team can't say what counts as harm, so they can't tell if the model causes it.",
+      "framework": [
+        "AiGovOps gate law (the harm)",
+        "NIST AI RMF MAP-1.1"
+      ],
+      "gate": "Harm is defined and measurable",
+      "verdict": 0,
+      "harm": "Harm goes unrecognized because it was never named.",
+      "path_to_yes": "Define concrete harms + measures before Yes.",
+      "tags": [
+        "governance",
+        "harm-definition",
+        "gate-law"
+      ]
+    },
+    {
+      "id": "FC-085",
+      "title": "Pilot results overgeneralized to all markets",
+      "domain": "genai",
+      "scenario": "A successful pilot in one region is used to justify a global launch with no local checks.",
+      "framework": [
+        "NIST AI RMF MAP-3.4",
+        "ISO 42001 8.3"
+      ],
+      "gate": "Evidence covers the deployment scope",
+      "verdict": 0,
+      "harm": "Untested behavior in unrepresented markets.",
+      "path_to_yes": "Validate per-market before broad Yes.",
+      "tags": [
+        "genai",
+        "overgeneralization",
+        "scope"
+      ]
+    },
+    {
+      "id": "FC-086",
+      "title": "No human in loop for medical alerts",
+      "domain": "healthcare",
+      "scenario": "An alerting model pages patients directly with no clinician review.",
+      "framework": [
+        "EU AI Act high-risk",
+        "NIST AI RMF GOVERN-3.2"
+      ],
+      "gate": "Clinician in the loop for patient-facing alerts",
+      "verdict": 0,
+      "harm": "Patients act on unreviewed, possibly wrong alerts.",
+      "path_to_yes": "Insert clinician review before patient-facing Yes.",
+      "tags": [
+        "healthcare",
+        "oversight",
+        "alerts"
+      ]
+    },
+    {
+      "id": "FC-087",
+      "title": "Audit log is editable",
+      "domain": "security",
+      "scenario": "The decision/audit log can be edited by the same team that operates the model.",
+      "framework": [
+        "ISO 42001 (records integrity)",
+        "NIST AI RMF MEASURE-3.1"
+      ],
+      "gate": "Tamper-evident, append-only logs",
+      "verdict": 0,
+      "harm": "Records can be altered to hide harm.",
+      "path_to_yes": "Make logs append-only/signed before Yes.",
+      "tags": [
+        "security",
+        "integrity",
+        "audit"
+      ]
+    },
+    {
+      "id": "FC-088",
+      "title": "Model approved with known open critical bug",
+      "domain": "governance",
+      "scenario": "A launch proceeded with a known critical defect 'to be patched soon'.",
+      "framework": [
+        "NIST AI RMF MANAGE-1.1",
+        "AiGovOps gate law"
+      ],
+      "gate": "No unresolved critical risk at Yes",
+      "verdict": 0,
+      "harm": "Known harm ships into production.",
+      "path_to_yes": "Fix or formally accept-with-owner+ETA (a ?), not a silent Yes.",
+      "tags": [
+        "governance",
+        "known-bug",
+        "gate-law"
+      ]
+    },
+    {
+      "id": "FC-089",
+      "title": "Fairness defined only by one metric",
+      "domain": "data",
+      "scenario": "The team optimized demographic parity while group error rates diverged badly.",
+      "framework": [
+        "NIST AI RMF MEASURE-2.11"
+      ],
+      "gate": "Fairness assessed with appropriate metrics",
+      "verdict": "?",
+      "harm": "A metric mismatch hides real-world unfairness.",
+      "path_to_yes": "Owner: Model risk. ETA: 21 days to choose context-appropriate fairness metrics.",
+      "tags": [
+        "data",
+        "fairness",
+        "metrics"
+      ]
+    },
+    {
+      "id": "FC-090",
+      "title": "Inference on stale features",
+      "domain": "data",
+      "scenario": "A real-time model reads a feature store that lags reality by hours.",
+      "framework": [
+        "NIST AI RMF MEASURE-2.6",
+        "ISO 42001 8.4"
+      ],
+      "gate": "Feature freshness adequate for the decision",
+      "verdict": "?",
+      "harm": "Decisions made on out-of-date inputs.",
+      "path_to_yes": "Owner: Data eng. ETA: 14 days to fix freshness SLA or gate the use.",
+      "tags": [
+        "data",
+        "freshness",
+        "mlops"
+      ]
+    },
+    {
+      "id": "FC-091",
+      "title": "No second steward for the highest tier",
+      "domain": "governance",
+      "scenario": "A top-tier decision was signed by a single steward where two are required.",
+      "framework": [
+        "AiGovOps steward gate",
+        "NIST AI RMF GOVERN-2.3"
+      ],
+      "gate": "Required quorum of stewards",
+      "verdict": 0,
+      "harm": "Highest-risk decision lacks required oversight.",
+      "path_to_yes": "Convene the required quorum before Yes.",
+      "tags": [
+        "governance",
+        "quorum",
+        "steward"
+      ]
+    },
+    {
+      "id": "FC-092",
+      "title": "Prompt injection via uploaded file",
+      "domain": "genai",
+      "scenario": "A document-analysis agent obeys instructions hidden inside an uploaded file.",
+      "framework": [
+        "OWASP LLM01",
+        "NIST AI RMF MANAGE-2.2"
+      ],
+      "gate": "File content treated as data, not commands",
+      "verdict": 0,
+      "harm": "Attacker controls the agent through a document.",
+      "path_to_yes": "Isolate file content from instructions before Yes.",
+      "tags": [
+        "genai",
+        "injection",
+        "files"
+      ]
+    },
+    {
+      "id": "FC-093",
+      "title": "No rollback after a bad deploy",
+      "domain": "governance",
+      "scenario": "A regression shipped and there's no fast way to revert.",
+      "framework": [
+        "NIST AI RMF MANAGE-4.1"
+      ],
+      "gate": "Tested rollback path",
+      "verdict": "?",
+      "harm": "Harm persists while a fix is built.",
+      "path_to_yes": "Owner: SRE. ETA: 7 days for a one-step rollback.",
+      "tags": [
+        "governance",
+        "rollback",
+        "resilience"
+      ]
+    },
+    {
+      "id": "FC-094",
+      "title": "Model used to deny care without notice",
+      "domain": "healthcare",
+      "scenario": "Coverage is denied by a model and the patient is never told AI was involved.",
+      "framework": [
+        "EU AI Act transparency",
+        "state UM laws"
+      ],
+      "gate": "Disclosure of AI involvement in adverse decisions",
+      "verdict": 0,
+      "harm": "Patients can't understand or appeal denials.",
+      "path_to_yes": "Disclose AI use + provide appeal before Yes.",
+      "tags": [
+        "healthcare",
+        "transparency",
+        "denial"
+      ]
+    },
+    {
+      "id": "FC-095",
+      "title": "Training pipeline has no data validation",
+      "domain": "data",
+      "scenario": "Garbage rows (nulls, impossible values) flow into training unchecked.",
+      "framework": [
+        "NIST AI RMF MEASURE-2.5",
+        "ISO 42001 8.3"
+      ],
+      "gate": "Input data validated",
+      "verdict": "?",
+      "harm": "Silent quality erosion of the model.",
+      "path_to_yes": "Owner: Data eng. ETA: 14 days for data-validation checks in the pipeline.",
+      "tags": [
+        "data",
+        "quality",
+        "pipeline"
+      ]
+    },
+    {
+      "id": "FC-096",
+      "title": "Confidence scores miscalibrated",
+      "domain": "data",
+      "scenario": "The model's 90%-confidence outputs are right only 60% of the time; users trust the number.",
+      "framework": [
+        "NIST AI RMF MEASURE-2.6"
+      ],
+      "gate": "Calibrated confidence",
+      "verdict": "?",
+      "harm": "Overtrust in unreliable confidence values.",
+      "path_to_yes": "Owner: ML lead. ETA: 21 days to recalibrate or hide the score.",
+      "tags": [
+        "data",
+        "calibration",
+        "trust"
+      ]
+    },
+    {
+      "id": "FC-097",
+      "title": "Public model endpoint enumerable",
+      "domain": "security",
+      "scenario": "An internal model is reachable on a public URL with no auth.",
+      "framework": [
+        "OWASP",
+        "NIST AI RMF GOVERN-1.2"
+      ],
+      "gate": "Access controlled",
+      "verdict": 0,
+      "harm": "Data exposure and abuse via an open endpoint.",
+      "path_to_yes": "Require auth/network controls before Yes.",
+      "tags": [
+        "security",
+        "access-control",
+        "exposure"
+      ]
+    },
+    {
+      "id": "FC-098",
+      "title": "Eval excluded the hardest 5% of cases",
+      "domain": "data",
+      "scenario": "The team dropped 'noisy' hard examples from the eval, which were the real risk.",
+      "framework": [
+        "NIST AI RMF MEASURE-2.3"
+      ],
+      "gate": "Hard cases included in eval",
+      "verdict": 0,
+      "harm": "The model's worst failures are invisible.",
+      "path_to_yes": "Restore hard cases and re-eval before Yes.",
+      "tags": [
+        "data",
+        "cherry-picking",
+        "eval"
+      ]
+    },
+    {
+      "id": "FC-099",
+      "title": "No periodic re-justification of a live Yes",
+      "domain": "governance",
+      "scenario": "A model earned Yes two years ago; the world changed and the Yes was never revisited.",
+      "framework": [
+        "AiGovOps Stay-at-Yes",
+        "NIST AI RMF MANAGE-1.1"
+      ],
+      "gate": "Live Yes re-justified on a schedule",
+      "verdict": "?",
+      "harm": "A once-safe system may no longer be safe.",
+      "path_to_yes": "Owner: Model owner. ETA: 30 days to re-justify or move to Recover-to-Yes.",
+      "tags": [
+        "governance",
+        "stay-at-yes",
+        "review"
+      ]
+    },
+    {
+      "id": "FC-100",
+      "title": "Incident closed without root-cause",
+      "domain": "governance",
+      "scenario": "After a harmful output, the case was closed as 'one-off' with no root-cause or fix.",
+      "framework": [
+        "NIST AI RMF MANAGE-4.1",
+        "ISO 42001 (corrective action)"
+      ],
+      "gate": "Root-cause + corrective action recorded",
+      "verdict": 0,
+      "harm": "The same harm will recur unaddressed.",
+      "path_to_yes": "Require root-cause + corrective action to close; only then Recover-to-Yes.",
+      "tags": [
+        "governance",
+        "incident",
+        "root-cause"
+      ]
+    }
+  ]
+}
