@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AiGovOps Library — Durability Plan</title>
+<meta name="description" content="How the AiGovOps Library stays up — the end-to-end design, why the core was sleeping, and the tiered plan to make it durable.">
+<meta property="og:title" content="The Library — Durability Plan">
+<meta property="og:description" content="Tier 1 ends the sleep. Tier 3 moves the ledger to Postgres. Tier 2 follows. Plus uptime monitor + backup keys.">
+<style>
+  body{margin:0;background:#14110b;color:#f3e9d2;font-family:Georgia,'Times New Roman',serif;line-height:1.6}
+  a.back{position:fixed;top:14px;left:18px;color:#cdbf9f;text-decoration:none;font-size:13px;letter-spacing:.3px}
+  a.back:hover{color:#d8a657}
+  .wrap{max-width:780px;margin:0 auto;padding:64px 28px 64px}
+  h1{color:#f3c977;font-weight:600;margin:0 0 6px;font-size:30px;letter-spacing:.3px}
+  h2{color:#d8a657;font-weight:600;margin:38px 0 10px;font-size:22px}
+  h3{color:#e9c45f;font-weight:600;margin:24px 0 6px;font-size:17px}
+  p{margin:10px 0}
+  blockquote{border-left:3px solid #4a3c22;margin:18px 0;padding:6px 16px;color:#cdbf9f;background:rgba(255,255,255,.02)}
+  ul,ol{padding-left:22px;margin:8px 0}
+  li{margin:6px 0}
+  code{background:#2b2316;padding:2px 6px;border-radius:4px;font-size:13px;color:#f3c977}
+  strong{color:#f3c977}
+  em{color:#cdbf9f}
+  hr{border:none;border-top:1px solid #4a3c22;margin:28px 0}
+</style></head>
+<body>
+<a class="back" href="./index.html" data-home>&larr; the Library</a>
+<div class="wrap">
+<h1>The Library — Durability Plan</h1>
+<p><em>How the system stays up, what makes it sleep, and the proper end-to-end shape.</em></p>
+<blockquote>The Library lives in two layers. <strong>The hub</strong> (this site, on GitHub Pages) is served by a CDN and is effectively always-up. <strong>The core</strong> (the API, the agents, the Beacon-signed ledger) runs on Fly.io and is the layer that's behaved like it "goes down." It hasn't been crashing — it's been <strong>sleeping on idle</strong>, by default. This plan ends that and lays out the durable shape we want next.</blockquote>
+<hr>
+<h2>1 · The end-to-end design today</h2>
+<p><strong>Static layer — GitHub Pages.</strong> The hub (index, tour, rooms, design book, plan, blueprint, pulse, the live Gates demo, the recorded walkthrough) is plain HTML/JS/MP4 served by GitHub's CDN. No machine to sleep, no volume to lose. Currency comes from a build/test gate on every push.</p>
+<p><strong>Dynamic layer — Fly.io.</strong> One app (<code>aigovops-library-core</code>) on <strong>one machine, one region (iad), one volume</strong>, with <strong>scale-to-zero on</strong>. Surfaces: <code>/</code>, <code>/console</code>, <code>/tour</code>, <code>/demo</code>, <code>/newsroom</code>, <code>/status</code>, <code>/auth/login</code>, <code>/api/socrates</code>. Identity is GitHub OAuth (real). Members propose; stewards (Bob, Ken) hold the gate. Every accepted decision becomes a <strong>Beacon-signed receipt</strong> in the ledger (NDJSON on the volume).</p>
+<p><strong>The honest single points of failure, in order:</strong></p>
+<ol>
+<li><strong>Auto-stop</strong> (certain to bite — it's the default behavior): the machine suspends on idle and cold-starts on the next request, which reads as "down" for ~1–3 seconds.</li>
+<li><strong>Single machine, single region:</strong> a host issue takes the URL down until Fly reschedules.</li>
+<li><strong>The ledger volume:</strong> the signed history lives on one disk. For a governance product, this is the crown jewel — if it goes, the system of record goes.</li>
+</ol>
+<p>One thing the design already does well: the live Gates demo <strong>degrades gracefully</strong> — when the core is unreachable it shows an honest OFFLINE badge with embedded data instead of breaking. Keep that.</p>
+<hr>
+<h2>2 · The durability tiers</h2>
+<h3>Tier 1 — <em>Never sleeps</em> (config only, ~5 minutes)</h3>
+<p>Disable scale-to-zero and pin one machine running. In <code>fly.toml</code>'s <code>[http_service]</code> block:</p>
+<p>auto_stop_machines = false</p>
+<p>auto_start_machines = true</p>
+<p>min_machines_running = 1</p>
+<p>Then:</p>
+<p>~/.fly/bin/flyctl scale count 1 --app aigovops-library-core</p>
+<p>~/.fly/bin/flyctl deploy --app aigovops-library-core</p>
+<p>Cost: ~a few dollars/month for one always-on <code>shared-cpu-1x</code>. Eliminates "looks down."</p>
+<h3>Tier 2 — <em>Survives a single machine failure</em></h3>
+<p>Run <strong>two machines</strong> behind Fly's proxy with an HTTP health check on <code>/status</code>:</p>
+<p>~/.fly/bin/flyctl scale count 2 --app aigovops-library-core</p>
+<p><strong>The catch — and it's real:</strong> Beacon keys and the NDJSON ledger live on a per-machine volume. Two machines means two volumes that <em>don't share state</em>; receipts would split. So Tier 2 is only correct <strong>after</strong> Tier 3.</p>
+<h3>Tier 3 — <em>State that survives anything</em> (the real shape)</h3>
+<p>Move shared state off any single machine:</p>
+<ul>
+<li><strong>Ledger → managed Postgres.</strong> The code already supports it: <code>createStore()</code> falls back to FileStore only when <code>DATABASE_URL</code> is unset. So this is <strong>config, not new code.</strong> Provision a small managed Postgres, set <code>DATABASE_URL</code> as a Fly secret, redeploy.</li>
+<li><strong>Beacon keys → Fly secrets</strong> (read at boot, never on disk).</li>
+<li><strong>Daily ledger export → private repo</strong> (a small scheduled job exports NDJSON snapshots and commits them; survives even total infra loss; matches the product's promise of durable, tamper-evident records).</li>
+</ul>
+<p>When Tier 3 is in place, Tier 2 (scale count 2) becomes safe and correct.</p>
+<hr>
+<h2>3 · Operational hygiene</h2>
+<ul>
+<li><strong>Health check.</strong> Add a <code>/status</code> HTTP check to <code>[http_service.checks]</code> so Fly restarts a hung machine without manual intervention.</li>
+<li><strong>Uptime monitor.</strong> A free external pinger (UptimeRobot or similar) on the hub URL and <code>/status</code>, alerting Bob on first failure. Cheapest, highest signal.</li>
+<li><strong>Backup keys.</strong> A second Beacon keypair stored offline (printed or in 1Password), so a key-rotation can be done without a key-recovery drama.</li>
+<li><strong>The canonical URL we share is the hub.</strong> The hub is the always-up front door. The core is the engine behind it. The live Gates demo already embodies this: it loads from the CDN and lights up LIVE only when the core answers.</li>
+</ul>
+<hr>
+<h2>4 · Honest recommendation, in order</h2>
+<ol>
+<li><strong>Today — Tier 1.</strong> Disable auto-stop. One always-on machine. This ends the visible problem and costs a couple of dollars a month. Five-minute change.</li>
+<li><strong>This week — Tier 3a.</strong> Provision managed Postgres, set <code>DATABASE_URL</code>, redeploy. The code already speaks Postgres; this is the durable shape.</li>
+<li><strong>When ready — Tier 2.</strong> Scale to two machines behind the proxy with health checks. Safe to do <em>after</em> Postgres.</li>
+<li><strong>This week, parallel — daily ledger export to the private repo.</strong> Cheapest insurance for the system of record.</li>
+<li><strong>Always — uptime monitor + backup keys.</strong> Hygiene.</li>
+</ol>
+<p>What we are not doing, deliberately: we are not multi-region, multi-cloud, or running a GPU model in production yet. Those are <em>later</em> decisions, made with evidence — exactly per the gate law. We hold them as Maybes with owners, not chase them as Yeses without.</p>
+<hr>
+<p><em>Plan ratified by:</em> <strong>Bob Rapp + Ken Johnston</strong> · <em>Date:</em> ____</p>
+</div>
+</body></html>
