@@ -56,8 +56,8 @@ const section = (t) => console.log(`\n  ${C.dim}→ ${t}${C.reset}`);
 // ── HTML extractors (regex — fine for these static pages) ──────────────────────
 const attr = (tag, n) => { const m = tag.match(new RegExp(`${n}\\s*=\\s*"([^"]*)"`, "i")); return m ? m[1] : null; };
 const allTags = (h, t) => h.match(new RegExp(`<${t}\\b[^>]*>`, "gi")) || [];
-const hrefs = (h) => [...h.matchAll(/href\s*=\s*"([^"]+)"/gi)].map(m => m[1]);
-const srcs  = (h) => [...h.matchAll(/(?:src|href)\s*=\s*"([^"]+\.(?:css|js|png|jpe?g|svg|gif|webp|ico)(?:\?[^"]*)?)"/gi)].map(m => m[1]);
+const hrefs = (h) => [...h.replace(/<script[\s\S]*?<\/script>/gi,"").matchAll(/href\s*=\s*"([^"]+)"/gi)].map(m => m[1]);
+const srcs  = (h) => [...h.replace(/<script[\s\S]*?<\/script>/gi,"").matchAll(/(?:src|href)\s*=\s*"([^"]+\.(?:css|js|png|jpe?g|svg|gif|webp|ico)(?:\?[^"]*)?)"/gi)].map(m => m[1]);
 const idsOf = (h) => new Set([...h.matchAll(/\b(?:id|name)\s*=\s*"([^"]+)"/gi)].map(m => m[1]));
 const titleOf = (h) => { const m = h.match(/<title>([\s\S]*?)<\/title>/i); return m ? m[1].trim() : ""; };
 const metaDesc = (h) => { const m = h.match(/<meta\s+name="description"\s+content="([^"]*)"/i); return m ? m[1].trim() : ""; };
