@@ -219,6 +219,7 @@ const ROMAN = ["I","II","III","IV","V","VI","VII","VIII","IX"];
 
 // Per-seat presentation + the AUTHORED subject scenario (verdict/evidence/owner),
 // keyed by the council 'fn'. Agent name + question come LIVE from the API.
+const FN_LABEL = { legal:"Legal", prodsec:"Product Security", ai_gov:"AI Governance", it_security:"IT Security", insurance:"Insurance / Risk", safety:"Safety", devsecops:"DevSecOps", finops:"FinOps", public_policy:"Public Policy" };
 const SCENARIO = {
   legal:        { room:"The Reading Room", glyph:"scale", tint:"#c9a25e", verdict:1, evidence:"DPIA on file; Art. 6 lawful basis documented.", by:"Amara Okeke" },
   prodsec:      { room:"The Bastion Gate", glyph:"shield", tint:"#7fae8e", verdict:1, evidence:"Prompt-injection suite green; egress allow-list live.", by:"Diego Fernández" },
@@ -312,7 +313,7 @@ function showSeat(idx){
   $("roomName").textContent = sc.room;
   $("roomPlace").textContent = "Seat of " + (c.fn||"").replace("_"," ");
   $("creature").innerHTML = creatureSVG(sc.glyph, sc.tint);
-  $("agentName").textContent = c.agent;
+  $("agentName").textContent = FN_LABEL[c.fn] || c.fn;
   $("agentRole").textContent = (c.fn||"").replace("_"," ");
   const asks=$("asks"), ev=$("evidence"), vd=$("verdict");
   asks.classList.remove("in"); ev.classList.remove("in"); vd.classList.remove("in");
@@ -334,8 +335,8 @@ function showSeat(idx){
 }
 function addReceipt(c, sc, vk){
   const box=$("receipts"); const r=document.createElement("div"); r.className="receipt";
-  r.innerHTML=`<div class="rtop"><span class="dot ${vk}"></span><span class="rseat">${c.agent}</span>
-     <span style="color:var(--parch-dim);font-size:11px">· ${(c.fn||"").replace("_"," ")}</span><span class="rverd ${vk}">${sc.verdict}</span></div>`;
+  r.innerHTML=`<div class="rtop"><span class="dot ${vk}"></span><span class="rseat">${FN_LABEL[c.fn] || c.fn}</span>
+     <span class="rverd ${vk}">${sc.verdict}</span></div>`;
   box.appendChild(r); while(box.children.length>6) box.removeChild(box.firstChild); requestAnimationFrame(()=>r.classList.add("in"));
 }
 
