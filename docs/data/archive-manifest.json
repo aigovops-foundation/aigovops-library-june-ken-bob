@@ -1,0 +1,79 @@
+{
+  "archive": "AiGovOps Verified AI Harms Archive",
+  "goal": "~100 new verified incidents per week; honest batch sizes over padded quotas; all batches immutable and signed",
+  "series": {
+    "fridayFailFest": "#FridayFailFest weekly card, derived from this corpus",
+    "practitionerQuiz": "Quiz questions derived from same corpus \u2014 one source of truth"
+  },
+  "batches": [
+    {
+      "batch": "2026-W24",
+      "file": "batches/2026-W24.json",
+      "count": 100,
+      "sha256": "b86e0a7e3670d623c239815536b8453c85d6d3b958e7c733a76dd4bdf47738b2",
+      "status": "ready-for-review",
+      "verification_tiers": {
+        "primary": 67,
+        "strong-secondary": 33
+      },
+      "note": "FINAL state for batch 2026-W24: 100 entries, all verified across 6 turns. 3 entries replaced (VH-050, VH-091, VH-081). 6 entries renamed for accuracy (VH-067, VH-074, VH-078, VH-089, VH-092, VH-099). 5 entries outcome-corrected (VH-031, VH-034, VH-064, VH-077, VH-082). 2 honest tier downgrades. Tier: 67 primary / 33 strong-secondary / 0 single-source. Status: READY FOR PUBLIC DEPLOY via #FridayFailFest series.",
+      "last_updated": "2026-06-10",
+      "re_verification_progress": {
+        "completed_batches": [
+          "VH-001..VH-015 (turn 1)",
+          "VH-016..VH-030 (turn 2)",
+          "VH-031..VH-045 (turn 3)",
+          "VH-046..VH-060 (turn 4)",
+          "VH-061..VH-075 (turn 5)",
+          "VH-076..VH-100 (turn 6 \u2014 final)"
+        ],
+        "completed_count": 100,
+        "total_in_corpus": 100,
+        "replacements_from_original_100": [
+          "VH-050: Air India Maya (unverifiable) \u2192 McDonald's IBM AOT drive-through (primary: AIID 475 + CNBC)",
+          "VH-091: Vistara (unverifiable) \u2192 DoNotPay FTC settlement (primary: FTC press release + final order)",
+          "VH-081: McDonald's IBM (duplicate of VH-050) \u2192 Twitter saliency-based image cropping (primary: Twitter engineering blog + ACM CSCW2)"
+        ],
+        "renames_for_accuracy": [
+          "VH-067: 'iRecognition / AI Healy' \u2192 'Australian political deepfake investment scams' (ACCC v. Meta March 2024)",
+          "VH-074: 'Texas AG v. PimEyes (concept)' \u2192 'PimEyes \u2014 UK ICO investigation' (UK ICO April 2023)",
+          "VH-078: 'Stanford Medicine COVID FRT (related)' \u2192 'NIST FRVT 2019 demographic study (NISTIR 8280)' (matches actual described incident)",
+          "VH-089: 'Bloomberg GPT / financial misuse' \u2192 'Generative-AI scam scripts \u2014 SEC/FINRA warnings' (SEC alerts + AI-washing enforcement)",
+          "VH-092: 'DPD/Yodel chatbot (extension)' \u2192 'Hawaiian Airlines / Air Canada-style chatbot follow-ons' (named pattern, not generic 'extension')",
+          "VH-099: 'Various AI companions targeting minors' \u2192 'Common Sense Media \u2014 AI Companion Risk Assessment' (April 2025 specific report)"
+        ],
+        "outcome_corrections": [
+          "VH-031 Woodruff: lawsuit DISMISSED by Judge Levy Aug 5 2024 (not just 'filed')",
+          "VH-034 MSG: class action DISMISSED by Judge Kaplan May 8 2024 (SLA + AG inquiries continued)",
+          "VH-064 Getty v Stability: UK primary copyright claim DROPPED mid-trial; secondary claim rejected Nov 2025",
+          "VH-077 Wit v UBH: 9th Circuit REVERSED district court March 2022; revised Aug 2023; UBH effectively prevailed",
+          "VH-082 USAF Skyborg: official RETRACTION June 2 2023; story was hypothetical not actual"
+        ],
+        "honest_tier_downgrades": [
+          "VH-015 Arup HK$200M: primary \u2192 strong-secondary (no public case file; multi-source reportage only)",
+          "VH-018 Google Photos: primary \u2192 strong-secondary (no Google primary postmortem; Zunger tweets + PR statements only)"
+        ],
+        "tier_distribution": {
+          "primary": 67,
+          "strong-secondary": 33
+        },
+        "final_state": "VERIFIED 100 of 100"
+      },
+      "total_cases": 100
+    }
+  ],
+  "running_total": 100,
+  "weekly_target": 100,
+  "notes_on_future_batches": {
+    "sources_to_systematically_sweep": [
+      "AIID weekly digest (newest 100 cite IDs each week)",
+      "OECD AIM new entries (filtered for non-duplicates)",
+      "AIAAIC repository new entries",
+      "DAIL / AI Litigation Database updates",
+      "EU AI Act serious-incident reports (once reporting goes live)",
+      "Regulator press: FTC, EEOC, FCC, FDA, CFPB, NHTSA, ICO, CNIL, Garante, BfDI, OPC, OAIC"
+    ],
+    "success_cases": "Per Bob: 100 success cases will be a separate later batch series ('#WinOfTheWeek'); two earned-Yes entries already exist in this batch (VH-071 WPP near-miss; VH-083 EU AI Act adoption) as teaching contrast and will move to the success series when it begins."
+  },
+  "version": "1.0-final"
+}

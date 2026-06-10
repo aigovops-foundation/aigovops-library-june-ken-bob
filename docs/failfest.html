@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>#FridayFailFest — AiGovOps Library</title>
+  <meta name="description" content="A daily rotation through 100 verified, source-cited AI harm incidents. Each one carries the gate that would have caught it.">
+  <link rel="canonical" href="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/failfest.html">
+  <style>
+    :root {
+      --bg: #0a0e14;
+      --bg-card: #131820;
+      --bg-accent: #1a2030;
+      --fg: #e8eaed;
+      --fg-dim: #9aa0a6;
+      --fg-faint: #5f6368;
+      --border: #2d333d;
+      --accent: #4fc3f7;
+      --accent-warm: #ffb74d;
+      --no: #ef5350;
+      --maybe: #ffb74d;
+      --yes: #66bb6a;
+      --serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.55;
+      min-height: 100vh;
+    }
+    header {
+      padding: 32px 24px 24px;
+      border-bottom: 1px solid var(--border);
+      max-width: 880px;
+      margin: 0 auto;
+    }
+    header h1 {
+      margin: 0 0 8px;
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    header p { margin: 0; color: var(--fg-dim); font-size: 14px; }
+    main { max-width: 880px; margin: 0 auto; padding: 24px; }
+    .nav {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+      font-size: 13px;
+      color: var(--fg-dim);
+    }
+    .nav button, .nav a {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--fg);
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      text-decoration: none;
+      font-family: inherit;
+    }
+    .nav button:hover, .nav a:hover { background: var(--bg-accent); border-color: var(--accent); }
+    .nav .spacer { flex: 1; }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 32px;
+      margin-bottom: 16px;
+    }
+    .card .id {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--fg-faint);
+      letter-spacing: 0.05em;
+    }
+    .card h2 {
+      margin: 8px 0 4px;
+      font-family: var(--serif);
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .card .meta {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 13px;
+      color: var(--fg-dim);
+      margin-bottom: 24px;
+    }
+    .verdict {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 3px;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .verdict-0 { background: rgba(239,83,80,0.15); color: var(--no); border: 1px solid rgba(239,83,80,0.35); }
+    .verdict-maybe { background: rgba(255,183,77,0.15); color: var(--maybe); border: 1px solid rgba(255,183,77,0.35); }
+    .verdict-1 { background: rgba(102,187,106,0.15); color: var(--yes); border: 1px solid rgba(102,187,106,0.35); }
+    .tier {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.05em;
+    }
+    h3 {
+      font-family: var(--sans);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--fg-faint);
+      margin: 24px 0 8px;
+      font-weight: 600;
+    }
+    .gate {
+      font-family: var(--serif);
+      font-size: 18px;
+      font-style: italic;
+      color: var(--accent);
+      border-left: 3px solid var(--accent);
+      padding: 8px 0 8px 16px;
+      margin: 16px 0;
+      line-height: 1.45;
+    }
+    .body p { margin: 0 0 12px; }
+    .source-list { font-size: 13px; }
+    .source-list a { color: var(--accent); text-decoration: none; word-break: break-all; }
+    .source-list a:hover { text-decoration: underline; }
+    .source-list li { margin-bottom: 6px; }
+    .framework-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .framework-list li {
+      font-family: var(--mono);
+      font-size: 11px;
+      background: var(--bg-accent);
+      padding: 4px 8px;
+      border-radius: 3px;
+      color: var(--fg);
+    }
+    footer {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 32px 24px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--fg-faint);
+    }
+    footer a { color: var(--accent); }
+    .loading, .error { padding: 48px; text-align: center; color: var(--fg-dim); }
+    .error { color: var(--no); }
+    @media (max-width: 600px) {
+      .card { padding: 20px; }
+      .card h2 { font-size: 22px; }
+      .gate { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>#FridayFailFest</h1>
+    <p>A daily rotation through 100 verified, source-cited AI-harm incidents from the AiGovOps Library. Each one carries the gate that would have caught it.</p>
+  </header>
+  <main>
+    <div class="nav">
+      <button id="prev" aria-label="Previous">← Prev</button>
+      <button id="today" aria-label="Today">Today's pick</button>
+      <button id="next" aria-label="Next">Next →</button>
+      <button id="random" aria-label="Random">🎲 Random</button>
+      <span class="spacer"></span>
+      <span id="counter" class="tier"></span>
+      <a href="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/data/verified-harms-2026-W24.json" target="_blank" rel="noopener">JSON</a>
+    </div>
+    <div id="card" class="card"><div class="loading">Loading verified harms corpus…</div></div>
+  </main>
+  <footer>
+    <p>Batch 2026-W24 · 100 entries · re-verified against primary sources across 6 review turns.<br>
+    Tier: 67 primary / 33 strong-secondary / 0 single-source. Verdict: 85 No-stop / 13 Maybe-needs-owner / 2 Yes-earned.<br>
+    Built by the <a href="https://aigovops-foundation.com">AiGovOps Foundation</a>. The corpus is open. Contributions welcome.</p>
+  </footer>
+  <script>
+    const VERDICT_LABEL = { 0: "No, stop", 1: "Yes, earned", "?": "Maybe — needs owner + ETA" };
+    const VERDICT_CLASS = { 0: "verdict-0", 1: "verdict-1", "?": "verdict-maybe" };
+
+    let CASES = [];
+    let idx = 0;
+
+    function dayOfYear(d = new Date()) {
+      const start = new Date(d.getFullYear(), 0, 0);
+      const diff = d - start + (start.getTimezoneOffset() - d.getTimezoneOffset()) * 60_000;
+      return Math.floor(diff / (1000 * 60 * 60 * 24));
+    }
+
+    function render() {
+      if (!CASES.length) return;
+      const c = CASES[idx];
+      const verdictKey = c.verdict === 0 || c.verdict === 1 ? c.verdict : "?";
+      const sources = (c.source || []).map(s =>
+        `<li><a href="${s}" target="_blank" rel="noopener noreferrer">${s}</a></li>`).join("");
+      const frameworks = (c.frameworks || []).map(f =>
+        `<li>${f.replace(/</g,"&lt;")}</li>`).join("");
+
+      document.getElementById("card").innerHTML = `
+        <div class="id">${c.id} · ${c.country || ""} · ${c.domain}</div>
+        <h2>${c.org} <span style="color:var(--fg-faint);font-weight:400">(${c.year})</span></h2>
+        <div class="meta">
+          <span class="verdict ${VERDICT_CLASS[verdictKey]}">${VERDICT_LABEL[verdictKey]}</span>
+          <span class="tier">tier: ${c.verification}</span>
+          <span class="tier">verified: ${c.last_verified || "—"}</span>
+        </div>
+
+        <div class="gate">${c.gate}</div>
+
+        <h3>What happened</h3>
+        <div class="body"><p>${c.incident}</p></div>
+
+        <h3>Outcome</h3>
+        <div class="body"><p>${c.outcome}</p></div>
+
+        <h3>Harm</h3>
+        <div class="body"><p>${c.harm}</p></div>
+
+        <h3>Frameworks that apply</h3>
+        <ul class="framework-list">${frameworks}</ul>
+
+        <h3>Primary &amp; supporting sources</h3>
+        <ol class="source-list">${sources}</ol>
+      `;
+      document.getElementById("counter").textContent = `${idx + 1} / ${CASES.length}`;
+      const url = new URL(window.location);
+      url.searchParams.set("id", c.id);
+      window.history.replaceState({}, "", url);
+      if (window.plausible) window.plausible('failfest_view', {props: {id: c.id}});
+    }
+
+    function show(id) {
+      const i = CASES.findIndex(c => c.id === id);
+      if (i >= 0) { idx = i; render(); }
+    }
+
+    document.getElementById("prev").onclick = () => { idx = (idx - 1 + CASES.length) % CASES.length; render(); };
+    document.getElementById("next").onclick = () => { idx = (idx + 1) % CASES.length; render(); };
+    document.getElementById("today").onclick = () => { idx = dayOfYear() % CASES.length; render(); };
+    document.getElementById("random").onclick = () => { idx = Math.floor(Math.random() * CASES.length); render(); };
+    document.addEventListener("keydown", e => {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+      if (e.key === "ArrowLeft") document.getElementById("prev").click();
+      if (e.key === "ArrowRight") document.getElementById("next").click();
+      if (e.key === " ") { document.getElementById("random").click(); e.preventDefault(); }
+    });
+
+    fetch("./data/verified-harms-2026-W24.json")
+      .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then(b => {
+        CASES = b.cases;
+        const urlId = new URLSearchParams(window.location.search).get("id");
+        idx = urlId ? Math.max(0, CASES.findIndex(c => c.id === urlId)) : dayOfYear() % CASES.length;
+        if (idx < 0) idx = dayOfYear() % CASES.length;
+        render();
+      })
+      .catch(err => {
+        document.getElementById("card").innerHTML =
+          `<div class="error">Could not load corpus: ${err.message}.<br>Expected JSON at ./data/verified-harms-2026-W24.json</div>`;
+      });
+  </script>
+</body>
+</html>
