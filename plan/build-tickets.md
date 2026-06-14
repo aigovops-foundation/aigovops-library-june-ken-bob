@@ -211,8 +211,22 @@ Contract tags: **[SEC]** secrets · **[BOX]** sandbox · **[GATE]** policy/caps 
    **Status — static core landed (2026-06):** `identity.js` has `ROLES`
    (steward→auto/see-all, member→propose/see-own), `identify()`, and a `resolveIdentity()`
    OIDC seam; capability levels unified with the caps dial. Tests:
-   `core/test/identity.test.mjs`. **Remaining (dynamic):** the real OIDC provider/IdP +
-   login flow (human decision — choose the IdP).
+   `core/test/identity.test.mjs`.
+   **Status — ✅ OIDC implemented + verified (2026-06-14):** `core/src/core/oidc.js` is a
+   provider-agnostic OIDC client (dependency-free): discovery, JWKS, PKCE, and full
+   **id_token verification** (signature via JWKS using `node:crypto`; `iss`/`aud`/`exp`/`nbf`/
+   `nonce` checks; RS256/384/512 + ES256/384/512). `identity.identityFromClaims()` maps
+   verified claims → role → the capability dial (steward=auto/see-all, member=propose/see-own);
+   role is asserted only by the id_token's groups/roles or the `STEWARDS` list, never
+   client-supplied. `auth.js` adds `completeOidcLogin()` (code exchange → verify → signed
+   session); `server.js` serves `/auth/oidc/login` + `/auth/oidc/callback`.
+   **IdP decision (made):** default **Keycloak** (self-hostable, fits the enclave
+   verify-offline principle); **Auth0/Okta/Entra/Google** work via the same `OIDC_*` vars;
+   GitHub OAuth stays as the lightweight hub default. Verified end-to-end in
+   `core/test/oidc.test.mjs` (locally-generated keypair signs an id_token; a fake IdP via
+   injected fetch drives discovery/JWKS/token; tamper, wrong iss/aud, expiry, and nonce-replay
+   all rejected; role mapping correct). **Blocker:** a real IdP tenant is the operator's
+   irreversible credential step — set the `OIDC_*` vars to go live. Enables **A2** real roles.
 
 9. **Enclave profile hardening** · L · [BOX][SEC][CORE] · dep: T2, T4.
    Egress deny-all, internal-models-only, in-VPC Postgres, Vault in perimeter. Ship the

@@ -21,8 +21,16 @@ export function identify({ id = 'member:anon', role = 'member' } = {}) {
   return { id, role: known, level: r.level, scope: r.scope };
 }
 
-// OIDC seam (Ticket 8): swap this resolver to map an OIDC subject + claims to an
-// identity. Until then, every caller is the anonymous library card.
+// OIDC (Ticket 8): map verified id_token claims to a full identity (id + role +
+// capability level + oversight scope). auth.js calls this after verifyIdToken().
+import { claimsToIdentity } from './oidc.js';
+export function identityFromClaims(claims, opts = {}) {
+  const { id, role } = claimsToIdentity(claims, opts);
+  return { ...identify({ id, role }), username: claims.preferred_username || claims.email || claims.sub };
+}
+
+// Back-compat resolver. Until a session is established, every caller is the
+// anonymous library card; auth.identityFromReq does the real resolution.
 export function resolveIdentity(req) {
   return identify({ id: 'member:anon', role: 'member' });
 }

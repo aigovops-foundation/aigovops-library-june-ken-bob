@@ -92,6 +92,33 @@ const server = http.createServer(async (req, res) => {
     try { const { token } = await auth.completeLogin(code); res.writeHead(302, { 'Set-Cookie': auth.sessionCookie(token), Location: '/console' }); return res.end(); }
     catch (e) { return send(res, 401, { error: e.message }); }
   }
+  // --- AUTH (OIDC — provider-agnostic, Ticket 8) -------------------------
+  if (url.pathname === '/auth/oidc/login') {
+    if (!auth.oidcConfigured()) return send(res, 503, { error: 'oidc-not-configured', hint: 'set OIDC_ISSUER and OIDC_CLIENT_ID' });
+    try {
+      const state = auth.newState();
+      const { verifier, challenge } = (await import('./core/oidc.js')).pkce();
+      const nonce = (await import('./core/oidc.js')).newNonce();
+      const location = await auth.oidcLoginRedirect({ state, nonce, codeChallenge: challenge });
+      const cookieOpts = 'HttpOnly; Path=/; SameSite=Lax; Max-Age=600; Secure';
+      res.writeHead(302, { Location: location, 'Set-Cookie': [
+        `aigov_oidc_state=${state}; ${cookieOpts}`,
+        `aigov_oidc_nonce=${nonce}; ${cookieOpts}`,
+        `aigov_oidc_verifier=${verifier}; ${cookieOpts}`,
+      ] });
+      return res.end();
+    } catch (e) { return send(res, 502, { error: 'oidc-discovery-failed', detail: e.message }); }
+  }
+  if (url.pathname === '/auth/oidc/callback') {
+    const code = url.searchParams.get('code'); const state = url.searchParams.get('state');
+    const cookies = Object.fromEntries((req.headers.cookie || '').split(';').map((c) => { const i = c.indexOf('='); return [c.slice(0, i).trim(), c.slice(i + 1).trim()]; }));
+    if (!code || !state || cookies.aigov_oidc_state !== state) return send(res, 400, { error: 'bad-oidc-state' });
+    try {
+      const { token } = await auth.completeOidcLogin(code, { codeVerifier: cookies.aigov_oidc_verifier, nonce: cookies.aigov_oidc_nonce });
+      res.writeHead(302, { 'Set-Cookie': auth.sessionCookie(token), Location: '/console' });
+      return res.end();
+    } catch (e) { return send(res, 401, { error: e.message }); }
+  }
   if (url.pathname === '/auth/me') {
     return send(res, 200, id ? { authenticated: true, login: id.id, role: id.role } : { authenticated: false, oauth: auth.oauthConfigured() });
   }

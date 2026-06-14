@@ -15,7 +15,8 @@
 // Fail-closed: with nothing configured, writes are denied (401).
 
 import crypto from 'node:crypto';
-import { identify } from './identity.js';
+import { identify, identityFromClaims } from './identity.js';
+import * as oidc from './oidc.js';
 
 const b64u = (b) => Buffer.from(b).toString('base64url');
 const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
@@ -109,3 +110,36 @@ export const sessionCookie = (token) =>
   `${COOKIE}=${encodeURIComponent(token)}; HttpOnly; Path=/; SameSite=Lax; Max-Age=${TTL_MS / 1000}; Secure`;
 export const clearCookie = () => `${COOKIE}=; HttpOnly; Path=/; SameSite=Lax; Max-Age=0`;
 export const newState = () => crypto.randomBytes(16).toString('hex');
+
+// --- OIDC web flow (Ticket 8) — standards-based, provider-agnostic ------------
+// Same session machinery (signed cookie); the difference is WHO vouches for the
+// human. Config via env (see oidc.js). Role comes from the verified id_token's
+// groups/roles or the STEWARDS allow-list — never a client-supplied value.
+export const oidcConfigured = () => !!(process.env.OIDC_ISSUER && process.env.OIDC_CLIENT_ID);
+
+export async function oidcLoginRedirect({ state, nonce, codeChallenge, fetchImpl = fetch } = {}) {
+  const disco = await oidc.discover(process.env.OIDC_ISSUER, { fetchImpl });
+  return oidc.buildAuthUrl(disco, {
+    clientId: process.env.OIDC_CLIENT_ID,
+    redirectUri: process.env.OIDC_REDIRECT_URI,
+    scope: process.env.OIDC_SCOPE || 'openid email profile',
+    state, nonce, codeChallenge,
+  });
+}
+
+// Exchange the code, verify the id_token, map claims -> role, mint a session.
+export async function completeOidcLogin(code, { codeVerifier, nonce, fetchImpl = fetch, now } = {}) {
+  const issuer = process.env.OIDC_ISSUER;
+  const disco = await oidc.discover(issuer, { fetchImpl });
+  const jwks = await oidc.getJwks(disco.jwks_uri, { fetchImpl });
+  const tok = await oidc.exchangeCode({
+    disco, code, clientId: process.env.OIDC_CLIENT_ID, clientSecret: process.env.OIDC_CLIENT_SECRET,
+    redirectUri: process.env.OIDC_REDIRECT_URI, codeVerifier, fetchImpl,
+  });
+  const claims = oidc.verifyIdToken(tok.id_token, {
+    jwks, issuer, audience: process.env.OIDC_CLIENT_ID, nonce, ...(now ? { now } : {}),
+  });
+  const idn = identityFromClaims(claims, { stewards: STEWARDS, stewardGroup: process.env.OIDC_STEWARD_GROUP || 'steward' });
+  const token = signSession({ login: idn.username || idn.id, role: idn.role, sub: claims.sub, exp: Date.now() + TTL_MS });
+  return { login: idn.username || idn.id, role: idn.role, token };
+}
