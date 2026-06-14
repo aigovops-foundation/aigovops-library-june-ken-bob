@@ -1,5 +1,5 @@
 // failcases.test.mjs — integrity + gate-law tests for the Top 100 Fail Cases corpus.
-// Runs under `node --test`. Reads the corpus from docs/data/failcases.json.
+// Runs under `node --test`. Reads the corpus from docs/data/failcases-archetypes.json.
 // The corpus is the content behind the Reading Room and the practitioner quiz.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -8,8 +8,10 @@ import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-// core/test/ -> repo root -> docs/data/failcases.json
-const CORPUS = resolve(__dirname, '../../docs/data/failcases.json');
+// core/test/ -> repo root -> docs/data/failcases-archetypes.json
+// (the corpus was renamed failcases.json -> failcases-archetypes.json in the
+// 2026-W24 batch; identical schema. Keep this path in sync with the Reading Room.)
+const CORPUS = resolve(__dirname, '../../docs/data/failcases-archetypes.json');
 const data = JSON.parse(readFileSync(CORPUS, 'utf8'));
 const cases = data.cases;
 
