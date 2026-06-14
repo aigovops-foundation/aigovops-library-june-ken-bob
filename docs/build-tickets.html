@@ -61,6 +61,8 @@
   .badge.sz{color:var(--gold);border-color:rgba(232,194,90,.4)}
   .badge.c{color:var(--teal);border-color:rgba(63,208,200,.4)}
   .badge.dep{color:var(--pur);border-color:rgba(155,140,255,.4)}
+  .badge.ship{color:var(--green);border-color:rgba(54,224,138,.5);background:rgba(54,224,138,.08)}
+  .badge.host{color:var(--gold);border-color:rgba(232,194,90,.45);background:rgba(232,194,90,.07)}
   .ms{border:1px solid var(--line);border-radius:11px;padding:13px 16px;background:var(--paper2);margin-bottom:9px}
   .ms b{color:#fff}
   footer{text-align:center;margin-top:46px;color:var(--ink2);font-style:italic;font-size:16px}
@@ -83,7 +85,7 @@
 
   <!-- TICKET 0 -->
   <section id="t0">
-    <h2><span class="n">T0</span> SecretsProvider + FileProvider <span class="badge sz">M</span> <span class="badge dep">no deps</span></h2>
+    <h2><span class="n">T0</span> SecretsProvider + FileProvider <span class="badge sz">M</span> <span class="badge dep">no deps</span> <span class="badge ship">✅ shipped</span></h2>
     <div class="lead">The smallest slice that proves the whole brokering pattern end-to-end — mint → scope → expire → log → revoke — without standing up Vault. Everything else plugs into it.</div>
     <div class="panel">
       <h4>THE INTERFACE · env-neutral, lives in core like yesgate.shared.js</h4>
@@ -124,34 +126,34 @@ Record = { ref, owner, scope, lastRotated, activeGrants }</div>
     <h2><span class="n">1–10</span> The next ten big items</h2>
     <div class="lead">Each carries its size, contract tag, and dependency. Tags: SEC secrets · BOX sandbox · GATE policy/caps · SEE oversight · ID identity · CORE evidence.</div>
 
-    <div class="tk"><div class="top"><span class="num">1</span><span class="ti">Gate ↔ SecretsProvider wiring</span><span class="badge sz">M</span><span class="badge c">SEC · GATE</span><span class="badge dep">dep T0</span></div>
+    <div class="tk"><div class="top"><span class="num">1</span><span class="ti">Gate ↔ SecretsProvider wiring</span><span class="badge sz">M</span><span class="badge c">SEC · GATE</span><span class="badge dep">dep T0</span><span class="badge ship">✅ shipped</span></div>
       <p>The gate requests a grant only on an <i>approved</i> proposal; the deny path issues nothing and fails closed; the secret receipt links to the proposal receipt. <span class="done">Done: an approved tool call gets a scoped token + paired receipts; a denied one gets neither.</span></p></div>
 
-    <div class="tk"><div class="top"><span class="num">2</span><span class="ti">VaultProvider adapter</span><span class="badge sz">L</span><span class="badge c">SEC</span><span class="badge dep">dep T0</span></div>
+    <div class="tk"><div class="top"><span class="num">2</span><span class="ti">VaultProvider adapter</span><span class="badge sz">L</span><span class="badge c">SEC</span><span class="badge dep">dep T0</span><span class="badge host">✅ built · needs Vault host</span></div>
       <p>The same interface against HashiCorp Vault (dynamic-secrets engine for true ephemeral creds; auto-unseal via cloud KMS). FileProvider↔VaultProvider is <b>config-only</b> (PROFILE). <span class="done">Done: identical contract tests pass against both; swapping providers needs no code change.</span></p></div>
 
-    <div class="tk"><div class="top"><span class="num">3</span><span class="ti">Sandbox boundary v1 (laptop fallback)</span><span class="badge sz">L</span><span class="badge c">BOX</span><span class="badge dep">parallel</span></div>
+    <div class="tk"><div class="top"><span class="num">3</span><span class="ti">Sandbox boundary v1 (laptop fallback)</span><span class="badge sz">L</span><span class="badge c">BOX</span><span class="badge dep">parallel</span><span class="badge ship">✅ shipped</span></div>
       <p>Define the Sandbox contract (no ambient network/filesystem, declared egress only) and a tool-runner that executes tools inside a locked container: seccomp default profile + network namespace + read-only rootfs. <span class="done">Done: a tool cannot open an undeclared socket or read outside its scratch dir; attempts fail and emit a receipt.</span></p></div>
 
-    <div class="tk"><div class="top"><span class="num">4</span><span class="ti">gVisor backend + egress proxy</span><span class="badge sz">L</span><span class="badge c">BOX</span><span class="badge dep">dep T3</span></div>
+    <div class="tk"><div class="top"><span class="num">4</span><span class="ti">gVisor backend + egress proxy</span><span class="badge sz">L</span><span class="badge c">BOX</span><span class="badge dep">dep T3</span><span class="badge host">✅ built · needs Linux/gVisor</span></div>
       <p>Wire <span class="mono">runsc</span> as the runtime class on Linux community/enclave hosts; route declared egress through a controlled proxy enforcing the allow-list. <span class="done">Done: the same Sandbox contract tests pass under gVisor; undeclared egress is blocked at the proxy.</span></p></div>
 
-    <div class="tk"><div class="top"><span class="num">5</span><span class="ti">Capability dial + hard caps</span><span class="badge sz">M</span><span class="badge c">GATE</span><span class="badge dep">dep T1</span></div>
+    <div class="tk"><div class="top"><span class="num">5</span><span class="ti">Capability dial + hard caps</span><span class="badge sz">M</span><span class="badge c">GATE</span><span class="badge dep">dep T1</span><span class="badge ship">✅ shipped</span></div>
       <p>Explicit, reversible capability levels per member/agent; hard caps on spend, rate, and blast radius, evaluated at the gate. The agent <b>pauses at the cap</b>; a breach emits a receipt. <span class="done">Done: an agent at its cap halts; turning the dial down takes effect on the next request.</span></p></div>
 
-    <div class="tk"><div class="top"><span class="num">6</span><span class="ti">Oversight console v1 (one surface, role-scoped)</span><span class="badge sz">L</span><span class="badge c">SEE · ID</span><span class="badge dep">dep T1 · T5</span></div>
+    <div class="tk"><div class="top"><span class="num">6</span><span class="ti">Oversight console v1 (one surface, role-scoped)</span><span class="badge sz">L</span><span class="badge c">SEE · ID</span><span class="badge dep">dep T1 · T5</span><span class="badge ship">✅ shipped</span></div>
       <p>Live SSE tail over the ledger. Stewards see all receipts + dials + the armed global kill switch; members see only their own effects and pause only their own work. The global kill switch is a steward-only action that emits its own signed receipt. <span class="done">Done: two roles, one codebase, correct scoping; the kill switch halts running workflows.</span></p></div>
 
-    <div class="tk"><div class="top"><span class="num">7</span><span class="ti">OPA policy engine</span><span class="badge sz">L</span><span class="badge c">GATE</span><span class="badge dep">dep T1</span></div>
+    <div class="tk"><div class="top"><span class="num">7</span><span class="ti">OPA policy engine</span><span class="badge sz">L</span><span class="badge c">GATE</span><span class="badge dep">dep T1</span><span class="badge host">✅ built · needs opa binary</span></div>
       <p>Move Yes-Gate rules to OPA (rego), evaluated at the gate; policies reviewable in PRs; policy bundles are Beacon-signed so a rule change is itself an auditable artifact. <span class="done">Done: existing gate decisions reproduce under OPA; a policy change ships as a signed bundle.</span></p></div>
 
-    <div class="tk"><div class="top"><span class="num">8</span><span class="ti">Identity + roles (OIDC)</span><span class="badge sz">M</span><span class="badge c">ID</span><span class="badge dep">enables T6</span></div>
+    <div class="tk"><div class="top"><span class="num">8</span><span class="ti">Identity + roles (OIDC)</span><span class="badge sz">M</span><span class="badge c">ID</span><span class="badge dep">enables T6</span><span class="badge host">✅ built · needs live IdP</span></div>
       <p>Library-Card membership, OIDC auth, roles mapping to the capability dial <i>and</i> to oversight visibility scope. <span class="done">Done: a member logs in, gets a role, and sees exactly their scoped view; a steward sees the full view.</span></p></div>
 
-    <div class="tk"><div class="top"><span class="num">9</span><span class="ti">Enclave profile hardening</span><span class="badge sz">L</span><span class="badge c">BOX · SEC · CORE</span><span class="badge dep">dep T2 · T4</span></div>
+    <div class="tk"><div class="top"><span class="num">9</span><span class="ti">Enclave profile hardening</span><span class="badge sz">L</span><span class="badge c">BOX · SEC · CORE</span><span class="badge dep">dep T2 · T4</span><span class="badge host">✅ built · needs enclave host</span></div>
       <p>Egress deny-all, internal-models-only, in-VPC Postgres, Vault in perimeter. Ship the "run-it-yourself, verify-offline" package: SBOM, signed releases, published verification keys, setup docs. <span class="done">Done: a fresh enclave install runs air-gapped and verifies our ledgers offline with openssl.</span></p></div>
 
-    <div class="tk"><div class="top"><span class="num">10</span><span class="ti">RFC 8785 JCS canonicalizer + signed evidence export</span><span class="badge sz">M</span><span class="badge c">CORE</span><span class="badge dep">no deps</span></div>
+    <div class="tk"><div class="top"><span class="num">10</span><span class="ti">RFC 8785 JCS canonicalizer + signed evidence export</span><span class="badge sz">M</span><span class="badge c">CORE</span><span class="badge dep">no deps</span><span class="badge ship">✅ shipped</span></div>
       <p>Swap the simplified canonicalizer in Beacon for full RFC 8785 (JCS); add verifiable bundle export so an auditor can take the whole history and check it offline. <span class="done">Done: canonicalization matches the RFC test vectors; an exported bundle verifies with openssl and a published public key.</span></p></div>
   </section>
 
