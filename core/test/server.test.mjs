@@ -30,7 +30,7 @@ const J = async (m, p, b, tok) => {
 
 test('HTTP: auth gate + governed loop + console', async () => {
   const child = spawn(process.execPath, [SERVER], {
-    env: { ...process.env, PORT: String(PORT), KEYS_DIR: path.join(TMP, 'keys'), LEDGER_DIR: path.join(TMP, 'ledger'), SECRETS_FILE: STORE, STEWARD_TOKEN: TOKEN },
+    env: { ...process.env, PORT: String(PORT), KEYS_DIR: path.join(TMP, 'keys'), LEDGER_DIR: path.join(TMP, 'ledger'), SECRETS_FILE: STORE, STEWARD_TOKEN: TOKEN, OLLAMA_TIMEOUT_MS: '300' },
     stdio: ['ignore', 'ignore', 'pipe'],
   });
   try {
@@ -53,6 +53,11 @@ test('HTTP: auth gate + governed loop + console', async () => {
 
     const prop = await J('POST', '/api/gov/propose', { intent: 'deploy the site' }, TOKEN);
     assert.equal(prop.body.requiresHumanGate, true);
+
+    // agentic chat (#6): the model drafts a plan + queues a gated proposal
+    const planned = await J('POST', '/api/gov/plan', { message: 'publish the Q3 update' }, TOKEN);
+    assert.ok(planned.body.plan && planned.body.pendingId, 'plan returns a drafted plan + a pending proposal');
+    assert.equal(planned.body.requiresHumanGate, true);
 
     const dec = await J('POST', '/api/gov/decide', { pendingId: prop.body.pendingId, decision: 'approve', scope: 'github-deploy', requiredLevel: 'act' }, TOKEN);
     assert.ok(dec.body.grant && dec.body.grant.token, 'approval brokers a token');

@@ -37,6 +37,15 @@
   <div class="sub">Interface to the governed core: run skills, drive the Yes-Gate loop, and watch the signed ledger. Writes require sign-in (members propose; stewards approve). Every action leaves a receipt.</div>
 
   <div class="grid">
+    <!-- AGENTIC CHAT (#6) -->
+    <div class="card full">
+      <h2>💬 Agentic chat <span class="muted" style="font-size:12px">— the model drafts a plan, you approve inline</span></h2>
+      <input id="chatMsg" value="help me publish our Q3 governance update"/>
+      <button onclick="chatSend()">Send</button>
+      <pre id="chatOut" class="muted">Type a request — the local model proposes a plan. Nothing acts without your yes; the gate holds every effect.</pre>
+      <div id="chatApprove" class="row"></div>
+    </div>
+
     <!-- FRONT DESK (agents) -->
     <div class="card full">
       <h2>🛎 Front desk — ask an agent</h2>
@@ -123,6 +132,26 @@ async function askAgent() {
   s += `\nproposal: ${r.proposal.summary}\nhuman gate: ${r.proposal.requiresHumanGate}  (${r.note})`;
   $('fdOut').textContent = s;
   oversight();
+}
+let chatPending = null;
+async function chatSend() {
+  $('chatOut').textContent = 'thinking…'; $('chatApprove').innerHTML = ''; chatPending = null;
+  const r = await J('POST', '/api/gov/plan', { message: $('chatMsg').value });
+  if (r.error) { $('chatOut').textContent = 'error: ' + r.error + (/auth/.test(r.error) ? ' — sign in above' : ''); return; }
+  chatPending = r.pendingId;
+  $('chatOut').textContent = r.plan + `\n\n[${(r.model && r.model.provider) || 'model'}] proposal: ${r.proposal.summary}\nhuman gate: ${r.requiresHumanGate}`;
+  $('chatApprove').innerHTML = r.requiresHumanGate
+    ? `scope <input id="chatScope" value="github-deploy" style="width:130px"/> <button onclick="chatDecide('approve')">approve</button> <button class="alt" onclick="chatDecide('deny')">deny</button>`
+    : '<span class="muted">reversible — no gate needed.</span>';
+}
+async function chatDecide(d) {
+  if (!chatPending) return;
+  const scope = ($('chatScope') || {}).value || 'github-deploy';
+  const r = await J('POST', '/api/gov/decide', { pendingId: chatPending, decision: d, scope, requiredLevel: 'act' });
+  $('chatApprove').innerHTML = (r.grant && r.grant.token)
+    ? '<span class="ok">approved — scoped token brokered, ready to run.</span>'
+    : `<span class="muted">${r.reason || 'decided'}</span>`;
+  chatPending = null; oversight(); loadQueue();
 }
 async function loadSkills() {
   const { skills } = await J('GET', '/api/skills');

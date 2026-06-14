@@ -25,6 +25,7 @@ import { listSkills, runSkill } from '../../scripts/run-skill.mjs';
 import { createToolRegistry, buildToolCode, ToolError } from './tools.js';
 import { createPolicyEngine } from './policy-engine.js';
 import { WorktreeRunner } from './worktree.js';
+import { complete as defaultComplete } from './llm.js';
 
 /**
  * Create a governed core. Dependencies are injectable for tests.
@@ -48,6 +49,9 @@ export function createGovernedCore(opts = {}) {
   // unless a repoDir is supplied (so the default core has no host dependency).
   const worktree = opts.worktree || (opts.repoDir ? new WorktreeRunner({ repoDir: opts.repoDir, emit }) : null);
   const mutationScope = opts.mutationScope || 'self-host';
+  // #6: the model that drafts plans for the conversational console (local-first;
+  // gate still holds every effect). Injectable for tests.
+  const model = opts.model || defaultComplete;
 
   const pending = new Map();   // pendingId -> { proposal, actor }
   const grants = new Map();    // token     -> { scope, grantId, proposalId, actor }
@@ -56,21 +60,39 @@ export function createGovernedCore(opts = {}) {
   const ensureLive = () => { if (halted) throw new Error('halted: the kill switch is armed'); };
   const doHalt = () => { halted = true; return emit({ kind: 'gate', actor: 'steward', action: 'kill-switch', detail: { armed: true } }); };
 
+  // Classify an intent through the runtime policy engine and queue it for a human
+  // decision. Shared by propose() and plan().
+  const doPropose = (intent, actor) => {
+    const proposal = agentPropose(intent);
+    const d = policy.evaluate({ intent });
+    proposal.requiresHumanGate = d.requiresHumanGate;
+    proposal.requiredLevel = d.requiredLevel;
+    proposal.policyReasons = d.reasons;
+    const pendingId = 'prop_' + crypto.randomBytes(8).toString('hex');
+    pending.set(pendingId, { proposal, actor, requiredLevel: d.requiredLevel });
+    return { pendingId, proposal, requiresHumanGate: proposal.requiresHumanGate };
+  };
+
   return {
     // 1) propose — the agent submits an intent. We classify it (reversible?) and
     //    hold it for a human decision. No receipt yet; the receipt IS the decision.
     propose(intent, { actor = 'agent:anon' } = {}) {
       ensureLive();
-      const proposal = agentPropose(intent);
-      // #5: classify through the runtime policy engine (reproduces the built-in
-      // rule by default; OPA/rego when configured).
-      const d = policy.evaluate({ intent });
-      proposal.requiresHumanGate = d.requiresHumanGate;
-      proposal.requiredLevel = d.requiredLevel;
-      proposal.policyReasons = d.reasons;
-      const pendingId = 'prop_' + crypto.randomBytes(8).toString('hex');
-      pending.set(pendingId, { proposal, actor, requiredLevel: d.requiredLevel });
-      return { pendingId, proposal, requiresHumanGate: proposal.requiresHumanGate };
+      return doPropose(intent, actor);   // #5: classified by the runtime policy engine
+    },
+
+    // 0) plan — the conversational front of the loop (#6). The model drafts a
+    //    short plan for the member's message (local-first; gate still holds every
+    //    effect), and the intent is classified + queued as a proposal the human
+    //    approves inline. No effect happens here — it's propose-with-a-plan.
+    async plan(message, { actor = 'agent:anon' } = {}) {
+      ensureLive();
+      const drafted = await model({
+        prompt: `A member says: "${message}". Draft a short numbered plan (max 4 steps) to help them, ` +
+          `then state plainly whether any step needs human approval. You only PROPOSE — never claim to have acted.`,
+      });
+      const queued = doPropose(message, actor);
+      return { plan: drafted.text, model: drafted.model, ...queued };
     },
 
     // The approval queue — proposals awaiting a human decision (steward view).

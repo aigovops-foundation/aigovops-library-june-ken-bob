@@ -489,6 +489,15 @@ once.)
   one verifiable receipt; a seeded regression is caught; no-prior → no drift). The recurring,
   signed artifact a regulated org renews.
 
+- **N6 · Conversational/agentic console** — M — **✅ shipped (2026-06-14).**
+  `govapi.plan(message)` is the conversational front of the loop: the **local model drafts a short
+  plan** (via `llm.js`, local-first; injectable), the ask is classified by the runtime policy
+  engine, and it's queued as a proposal the human approves **inline** — no effect happens at plan
+  time. `server.js` serves `POST /api/gov/plan`; `console.html` gains an **Agentic chat** card
+  (type a request → see the plan + proposal → approve/deny inline, scoped). The gate still holds
+  every effect; a hallucinated plan is contained. Tests: `core/test/plan.test.mjs` + a
+  `/api/gov/plan` server check. Makes the whole system demoable to a non-engineer.
+
 - **First brokered action** — T0 + T1: an agent does one real, scoped, expiring,
   fully-receipted thing.
 - **First sandboxed useful agent** — + T3 + T5: a tool runs isolated, under caps, with a

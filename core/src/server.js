@@ -233,6 +233,13 @@ const server = http.createServer(async (req, res) => {
     try { return send(res, 200, gov.propose(intent, { actor: id.id })); }
     catch (e) { return send(res, 400, { error: e.message }); }   // e.g. fails closed while halted
   }
+  // Conversational/agentic plan (#6): the model drafts a plan + queues a proposal.
+  if (url.pathname === '/api/gov/plan' && req.method === 'POST') {
+    if (needAuth('member')) return;
+    const { message = '' } = await readBody(req);
+    try { return send(res, 200, await gov.plan(message, { actor: id.id })); }
+    catch (e) { return send(res, 400, { error: e.message }); }
+  }
   if (url.pathname === '/api/gov/pending' && req.method === 'GET') {
     if (needAuth('steward')) return;   // the approval queue is a steward view
     return send(res, 200, { pending: gov.pending() });
