@@ -2,6 +2,8 @@ node_modules/
 .env
 keys/*.pem
 ledger/*.ndjson
+ledger/*.lock
+*.lock
 *.log
 .DS_Store
 

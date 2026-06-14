@@ -445,7 +445,23 @@ Order: #1 first, then #2/#4, then #3, then #5/#6.
 
 ---
 
-## Milestones
+## Next moves (post-integrations, 2026-06) — the host-independent half
+
+Built everything from the "top 6 next moves" that does NOT need an operator's irreversible
+credential/ops steps. (The one that does — **standing up the Linux enclave host**: Docker+gVisor,
+Vault, Keycloak, Postgres, the `opa` binary — is left for Bob; it flips five gold items green at
+once.)
+
+- **N2 · Durable ledger: multi-process safety + Postgres** — M — **✅ shipped (2026-06-14).**
+  `core/src/core/flock.js` is a dependency-free cross-process lock; `beacon.emit` now runs the
+  read-prev→append critical section under it, so concurrent writers/instances can't interleave and
+  break the hash chain (proven by `core/test/ledger-concurrency.test.mjs` — 6 processes × 8
+  receipts stay one valid chain). `storage.js` `PgStore` is now a real multi-writer durable ledger
+  (`emitSigned` computes `prev` under `pg_advisory_xact_lock` in a transaction; `verifyChain`),
+  proven against a fake in-memory pg client with a real async mutex
+  (`core/test/storage-pg.test.mjs`). **Default unchanged** when `DATABASE_URL` is unset; Postgres
+  stays opt-in (`npm i pg`). **Blocker:** a live multi-instance run needs a real Postgres
+  (`DATABASE_URL` + `pg`) — operator/ops step; the chaining + locking are proven here.
 
 - **First brokered action** — T0 + T1: an agent does one real, scoped, expiring,
   fully-receipted thing.

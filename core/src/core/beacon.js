@@ -11,6 +11,7 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { withLock } from './flock.js';
 
 const PROFILE = 'aigovops-beacon.v1';
 
@@ -143,8 +144,13 @@ export function append(signed) {
 }
 
 // Convenience: build → sign → append in one call.
+// MULTI-PROCESS SAFE (#2): the read-prev (buildReceipt) → append sequence runs
+// under a cross-process lock so concurrent writers/instances can't interleave
+// and break the hash chain. Single-process callers pay only an uncontended
+// O_EXCL create/unlink; the default file behaviour is otherwise unchanged.
 export function emit(meta) {
-  return append(sign(buildReceipt(meta)));
+  fs.mkdirSync(ledgerDir(), { recursive: true });
+  return withLock(ledgerFile() + '.lock', () => append(sign(buildReceipt(meta))));
 }
 
 export function verifySigned(signed, publicKey = _pub) {

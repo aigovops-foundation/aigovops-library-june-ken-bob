@@ -12,6 +12,10 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { withLock } from './flock.js';
+import { canonicalize, sha256 } from './beacon.js';
+
+const chainHash = (signed) => sha256(canonicalize(signed.record));
 
 export class FileStore {
   constructor({ dir } = {}) {
@@ -20,20 +24,22 @@ export class FileStore {
   }
   append(signed) {
     fs.mkdirSync(this.dir, { recursive: true });
-    fs.appendFileSync(this.file, JSON.stringify(signed) + '\n');
-    return signed;
+    // Lock-protected so concurrent processes don't interleave appends (#2).
+    return withLock(this.file + '.lock', () => { fs.appendFileSync(this.file, JSON.stringify(signed) + '\n'); return signed; });
   }
   readAll() {
     if (!fs.existsSync(this.file)) return [];
     return fs.readFileSync(this.file, 'utf8').trim().split('\n').filter(Boolean).map((l) => JSON.parse(l));
   }
+  lastHash() { const a = this.readAll(); return a.length ? chainHash(a[a.length - 1]) : null; }
   count() { return this.readAll().length; }
   async close() {}
 }
 
-// Postgres adapter — structurally complete; activated only when DATABASE_URL is
-// set AND `pg` is installed. Untested in CI (no DB); enable in an environment
-// that has both.
+// Postgres adapter — a genuine MULTI-WRITER durable ledger (#2). Activated only
+// when DATABASE_URL is set AND `pg` is installed (opt-in, preserving the
+// dependency-free default). `client` is injectable so the transactional chaining
+// is proven against a fake in-memory client without a live database.
 export class PgStore {
   static async connect(url = process.env.DATABASE_URL) {
     let pg;
@@ -41,13 +47,48 @@ export class PgStore {
     catch { throw new Error('PgStore needs the `pg` package — run `npm i pg` (kept optional to preserve the dependency-free default)'); }
     const client = new pg.Client({ connectionString: url });
     await client.connect();
-    await client.query('CREATE TABLE IF NOT EXISTS aigov_ledger (seq BIGSERIAL PRIMARY KEY, signed JSONB NOT NULL, ts TIMESTAMPTZ DEFAULT now())');
-    return new PgStore(client);
+    const store = new PgStore(client);
+    await store.init();
+    return store;
   }
   constructor(client) { this.client = client; }
+  async init() {
+    await this.client.query('CREATE TABLE IF NOT EXISTS aigov_ledger (seq BIGSERIAL PRIMARY KEY, signed JSONB NOT NULL, ts TIMESTAMPTZ DEFAULT now())');
+  }
+
+  // Transactionally append a SIGNED record whose `prev` is computed UNDER LOCK,
+  // so concurrent writers across instances produce one correct chain. The caller
+  // passes buildAndSign(prevHash) so the signature covers the in-transaction prev.
+  async emitSigned(buildAndSign) {
+    const c = this.client;
+    await c.query('BEGIN');
+    try {
+      await c.query('SELECT pg_advisory_xact_lock($1)', [424242]);          // serialize appenders
+      const last = await c.query('SELECT signed FROM aigov_ledger ORDER BY seq DESC LIMIT 1');
+      const prev = last.rows[0] ? chainHash(last.rows[0].signed) : null;
+      const signed = buildAndSign(prev);
+      await c.query('INSERT INTO aigov_ledger(signed) VALUES ($1)', [signed]);
+      await c.query('COMMIT');
+      return signed;
+    } catch (e) { await c.query('ROLLBACK'); throw e; }
+  }
+
   async append(signed) { await this.client.query('INSERT INTO aigov_ledger(signed) VALUES ($1)', [signed]); return signed; }
   async readAll() { const r = await this.client.query('SELECT signed FROM aigov_ledger ORDER BY seq ASC'); return r.rows.map((x) => x.signed); }
   async count() { const r = await this.client.query('SELECT count(*)::int AS n FROM aigov_ledger'); return r.rows[0].n; }
+  async lastHash() { const r = await this.client.query('SELECT signed FROM aigov_ledger ORDER BY seq DESC LIMIT 1'); return r.rows[0] ? chainHash(r.rows[0].signed) : null; }
+
+  // Verify the prev-hash chain over the whole ledger (signature verification is
+  // beacon.verifySigned — storage owns only the chain links).
+  async verifyChain() {
+    const all = await this.readAll();
+    let prev = null;
+    for (let i = 0; i < all.length; i++) {
+      if (all[i].record.prev !== prev) return { valid: false, brokenAt: i };
+      prev = chainHash(all[i]);
+    }
+    return { valid: true, entries: all.length };
+  }
   async close() { await this.client.end(); }
 }
 
