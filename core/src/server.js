@@ -16,6 +16,8 @@ import { respondAsync, modelPosture } from './core/router.js';
 import { member } from './core/identity.js';
 import { propose } from './core/agent.js';
 import { createGovernedCore } from './core/govapi.js';
+import { Caps } from './core/caps.js';
+import { createMemberCaps } from './core/member-caps.js';
 import { dispatch as agentDispatch, listAgents } from './core/agents.js';
 import * as auth from './core/auth.js';
 import { negotiate, t } from './core/i18n.js';
@@ -28,8 +30,12 @@ const ALLOW_CLOUD = String(process.env.ALLOW_CLOUD || 'false') === 'true';
 
 beacon.loadOrCreateKeys();
 
+// Per-member capability profiles (#6): one Caps the gate evaluates, shared with
+// the governed core, plus a registry that onboards each member on first auth.
+const caps = new Caps();
+const memberCaps = createMemberCaps({ caps });
 // The governed loop, exposed to the local console (Ticket A2 over HTTP).
-const gov = createGovernedCore();
+const gov = createGovernedCore({ caps });
 
 // --- tiny rate limiter (per-IP token bucket) --------------------------------
 const buckets = new Map();
@@ -77,6 +83,8 @@ const server = http.createServer(async (req, res) => {
 
   // Who is calling? (null if unauthenticated) — write endpoints check this.
   const id = auth.identityFromReq(req);
+  // #6: onboard every authenticated caller into the capability dial (idempotent).
+  if (id) memberCaps.onboard(id);
   const needAuth = (role) => { if (!auth.hasRole(id, role)) { send(res, id ? 403 : 401, { error: role === 'steward' ? 'steward-required' : 'auth-required' }); return true; } return false; };
 
   // --- AUTH (GitHub OAuth) ------------------------------------------------
@@ -249,6 +257,18 @@ const server = http.createServer(async (req, res) => {
     if (needAuth('member')) return;
     const { token, tool, input } = await readBody(req);
     try { return send(res, 200, await gov.runRegisteredTool({ token, tool, input })); }
+    catch (e) { return send(res, 400, { error: e.message }); }
+  }
+
+  // --- CAPABILITY DIAL (#6 — per-member profiles, steward-managed) -------
+  if (url.pathname === '/api/caps' && req.method === 'GET') {
+    if (needAuth('steward')) return;
+    return send(res, 200, { members: memberCaps.list() });
+  }
+  if (url.pathname === '/api/caps' && req.method === 'POST') {
+    if (needAuth('steward')) return;     // only a steward turns the dial
+    const { id: memberId, level } = await readBody(req);
+    try { return send(res, 200, { ok: true, member: memberCaps.setLevel(memberId, level) }); }
     catch (e) { return send(res, 400, { error: e.message }); }
   }
 

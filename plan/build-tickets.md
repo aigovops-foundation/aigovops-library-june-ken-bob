@@ -430,7 +430,18 @@ Order: #1 first, then #2/#4, then #3, then #5/#6.
    artifact. Tests: `core/test/policy-diff.test.mjs` (loosen/tighten/zero-diff; the loop honors an
    injected policy). Live rego diff still needs the `opa` binary (T7 blocker); the JS path runs
    everywhere.
-6. **Live IdP + per-member onboarding** — M — _pending (activates by config; no IdP creds created)._
+6. **Live IdP + per-member onboarding** — M — **✅ built (2026-06-14); activates by config.**
+   `core/src/core/member-caps.js` bridges identity (T8) to the capability dial (T5): every
+   authenticated caller is **onboarded** with a default profile — narrow by construction
+   (member→`propose`, steward→`auto`) — and a steward turns any member's dial up/down,
+   effective on the next request. `server.js` shares one `Caps` with the governed core, onboards
+   on auth, and exposes a steward-only dial (`GET`/`POST /api/caps`). `seed()` / `AIGOV_MEMBERS`
+   pre-load profiles from config so it works without a live login. Enforced end-to-end: a member
+   at `propose` is **paused** at an `act` action (no credential brokered) until a steward raises
+   the dial; dialing back down takes effect immediately. Tests: `core/test/member-caps.test.mjs`
+   + a `/api/caps` server test. **Blocker:** going fully live needs a real OIDC IdP tenant
+   (Keycloak — the operator's irreversible credential step, T8); **no IdP credential is created
+   here** — set `OIDC_*` + (optionally) `AIGOV_MEMBERS` to activate.
 
 ---
 

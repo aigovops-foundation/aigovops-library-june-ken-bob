@@ -85,6 +85,14 @@ test('HTTP: auth gate + governed loop + console', async () => {
     assert.match((await J('GET', '/widget.js')).body, /Ask the Library/);
     assert.match((await J('GET', '/widget')).body, /widget\.js/);
 
+    // --- CAPABILITY DIAL (#6) — steward lists + turns member profiles ---------
+    assert.equal((await J('GET', '/api/caps')).status, 401, 'caps list needs steward auth');
+    const capsList = await J('GET', '/api/caps', null, TOKEN);
+    assert.ok(Array.isArray(capsList.body.members), 'steward sees the member capability profiles');
+    const setDial = await J('POST', '/api/caps', { id: capsList.body.members[0]?.id || 'ops:token', level: 'act' }, TOKEN);
+    assert.equal(setDial.body.ok, true); assert.equal(setDial.body.member.level, 'act');
+    assert.equal((await J('POST', '/api/caps', { id: 'nobody', level: 'act' }, TOKEN)).status, 400, 'unknown member fails closed');
+
     // --- KILL SWITCH (Ticket 6) — steward-only, halts the loop, then resume ---
     // unauthenticated kill is refused
     assert.equal((await J('POST', '/api/oversight/kill')).status, 401, 'kill needs steward auth');
