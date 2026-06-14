@@ -108,3 +108,20 @@ test('proposeAndDecide brokers a linked token for an approved irreversible inten
   const secretRec = ledgerRecords().slice(-1)[0].record;
   assert.strictEqual(secretRec.detail.parent, r.proposalId);
 });
+
+// 6 — Ticket 7: the gate's human-gate decision comes from a PolicyEngine when one
+// is supplied (reviewable/signable policy), reproducing the built-in rule.
+test('proposeAndDecide consults a PolicyEngine for the human-gate decision', async () => {
+  const { JsPolicyEngine } = await import('../src/core/policy-engine.js');
+  const policy = new JsPolicyEngine();
+  const secrets = new FileProvider({ storePath: store() });
+  // reversible under policy -> no gate, no credential
+  const rev = gate.proposeAndDecide({ intent: 'summarize the document', decision: 'approve', scope: SCOPE, ttlSeconds: 60, secrets, policy });
+  assert.strictEqual(rev.reason, 'reversible');
+  assert.deepStrictEqual(rev.proposal.policyReasons, []);
+  // irreversible under policy -> gated, brokers on approve
+  const irr = gate.proposeAndDecide({ intent: 'deploy the site', decision: 'approve', scope: SCOPE, ttlSeconds: 60, secrets, policy });
+  assert.strictEqual(irr.approved, true);
+  assert.ok(irr.grant && irr.grant.token);
+  assert.ok(irr.proposal.policyReasons.includes('matched irreversible verb: deploy'));
+});

@@ -98,8 +98,18 @@ export function decide({ proposal, decision, scope, ttlSeconds, requestedBy = 'g
  * Convenience: take a raw intent, run it through propose(), and only reach the
  * gate if the action actually needs one. Reversible actions need no credential.
  */
-export function proposeAndDecide({ intent, decision, scope, ttlSeconds, requestedBy = 'gate', secrets, emit = beacon.emit, caps = null, cost = {} }) {
+export function proposeAndDecide({ intent, decision, scope, ttlSeconds, requestedBy = 'gate', secrets, emit = beacon.emit, caps = null, cost = {}, policy = null }) {
   const proposal = propose(intent);
+  // Ticket 7: when a PolicyEngine is supplied, the gate's human-gate / required-
+  // level decision comes from the (reviewable, signable) policy — not hard-coded
+  // here. Default (no engine) preserves the prior behavior exactly.
+  if (policy) {
+    const d = policy.evaluate({ intent });
+    proposal.requiresHumanGate = d.requiresHumanGate;
+    proposal.irreversible = d.irreversible;
+    proposal.policyReasons = d.reasons;
+    if (d.requiredLevel && cost.requiredLevel === undefined) cost = { ...cost, requiredLevel: d.requiredLevel };
+  }
   if (!proposal.requiresHumanGate) {
     // Reversible: no human gate, no secret needed.
     return { approved: true, proposalId: null, grant: null, reason: 'reversible', proposal };

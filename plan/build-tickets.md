@@ -188,6 +188,20 @@ Contract tags: **[SEC]** secrets · **[BOX]** sandbox · **[GATE]** policy/caps 
    policy bundles are Beacon-signed so a rule change is itself an auditable artifact.
    *Done:* existing gate decisions reproduce under OPA; a policy change ships as a signed
    bundle.
+   **Status — ✅ seam implemented + verified; live `opa` behind detection (2026-06-14):**
+   `core/src/core/policy-engine.js` defines a `PolicyEngine` interface with `JsPolicyEngine`
+   (the rule in dependency-free JS — the SAME verb list `agent.propose()` uses) and
+   `OpaPolicyEngine` (shells to `opa eval`; pure `buildOpaArgs`; injectable transport).
+   `core/policy/aigov.rego` encodes the identical rule (`data.aigov.gate.decision`).
+   `core/src/core/policy-bundle.js` hashes the rego and emits ONE Beacon-signed bundle
+   receipt (`kind=policy, action=bundle`) so a policy change is auditable; `verifyBundle()`
+   lets an auditor recompute + match. `gate.proposeAndDecide({ policy })` now takes the
+   human-gate/required-level decision from the engine when supplied (default behavior
+   unchanged). Tests: `policy-engine.test.mjs` (JS reproduces `agent.propose`; OPA marshalling
+   matches JS via a fake transport; fails closed without the binary) + `policy-bundle.test.mjs`
+   (one verifiable receipt; tamper detected) + a gate test. **Blocker:** no `opa` binary on
+   this host, so the real-rego parity test is skipped (1 skipped) — install `opa` in CI/enclave
+   to run it. `POLICY_ENGINE=js|opa|auto`.
 
 8. **Identity + roles (OIDC)** · M · [ID] · dep: none (enables T6).
    Library-Card membership, OIDC auth, roles mapping to the capability dial *and* to
