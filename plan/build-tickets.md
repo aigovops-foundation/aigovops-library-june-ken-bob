@@ -134,6 +134,20 @@ Contract tags: **[SEC]** secrets · **[BOX]** sandbox · **[GATE]** policy/caps 
    through a controlled proxy enforcing the allow-list.
    *Done:* the same Sandbox contract tests pass under gVisor; undeclared egress is blocked
    at the proxy.
+   **Status — ✅ egress proxy implemented + verified; gVisor runtime behind detection
+   (2026-06-14):** `core/src/core/egress-proxy.js` is a dependency-free forward proxy
+   (CONNECT tunnels + plain-HTTP) that permits ONLY declared `host:port` pairs and blocks
+   everything else at the boundary with a signed receipt — fully runnable and verified by
+   `core/test/egress-proxy.test.mjs` (4 checks: allowed tunnel carries bytes, disallowed
+   CONNECT → 403 + receipt, disallowed HTTP → 403, wildcard). `core/src/core/sandbox.gvisor.js`
+   implements the SAME Sandbox contract via `docker run --runtime=runsc` with read-only
+   rootfs, `--cap-drop=ALL`, a dedicated egress network, and the guest forced through the
+   proxy (`HTTPS_PROXY`); `buildRunArgs()` is pure and its security flags are asserted in
+   `core/test/sandbox.gvisor.test.mjs`. `core/src/core/sandbox.factory.js` selects gVisor when
+   `runsc` is usable and **falls back to ProcessSandbox** otherwise (`SANDBOX_BACKEND`).
+   **Blocker:** gVisor/`runsc` is Linux-only and this host is macOS with no Docker, so the
+   kernel-enforced *run* path can't execute here — it fails closed (`gvisor-unavailable`) and
+   the factory falls back. Verify the live run on a Linux enclave host (Ticket 9).
 
 5. **Capability dial + hard caps** · M · [GATE] · dep: T1.
    Explicit, reversible capability levels per member/agent; hard caps on spend, request
