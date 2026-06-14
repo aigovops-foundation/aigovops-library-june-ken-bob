@@ -22,6 +22,7 @@ import { FileProvider } from './secrets.fileprovider.js';
 import { ProcessSandbox } from './sandbox.process.js';
 import { ledgerView, canKill } from './oversight.js';
 import { listSkills, runSkill } from '../../scripts/run-skill.mjs';
+import { createToolRegistry, buildToolCode, ToolError } from './tools.js';
 
 /**
  * Create a governed core. Dependencies are injectable for tests.
@@ -36,6 +37,7 @@ export function createGovernedCore(opts = {}) {
   const caps = opts.caps || null;
   const sandbox = opts.sandbox || new ProcessSandbox();
   const emit = opts.emit || beacon.emit;
+  const tools = opts.tools || createToolRegistry();
 
   const pending = new Map();   // pendingId -> { proposal, actor }
   const grants = new Map();    // token     -> { scope, grantId, proposalId, actor }
@@ -97,6 +99,42 @@ export function createGovernedCore(opts = {}) {
         },
       });
       return result;
+    },
+
+    // 3b) runRegisteredTool — run a VETTED tool by name (#3). The token's scope
+    //     must equal the tool's declared requiredScope; egress comes from the
+    //     tool, not the caller; kernel-only tools refuse to run on the laptop
+    //     ProcessSandbox (fail closed, never silently unsandboxed).
+    async runRegisteredTool({ token, tool: toolName, input = null } = {}) {
+      ensureLive();
+      if (!token) throw new Error('runRegisteredTool: a brokered token is required (fails closed)');
+      const tool = tools.get(toolName);
+      if (!tool) throw new ToolError('unknown-tool', `no registered tool '${toolName}'`);
+      secrets.redeem(token);                         // throws if the token is invalid
+      const meta = grants.get(token) || null;
+      const scope = meta ? meta.scope : null;
+      if (scope !== tool.requiredScope) {
+        throw new ToolError('scope-mismatch', `tool '${toolName}' needs scope '${tool.requiredScope}', token is for '${scope}'`);
+      }
+      if (tool.requiresKernelSandbox && !sandbox.kernelEnforced) {
+        throw new ToolError('needs-kernel-sandbox', `tool '${toolName}' mutates real resources and requires a kernel sandbox (gVisor) — refused on the application-level fallback`);
+      }
+      const result = await sandbox.run(
+        { code: buildToolCode(tool, input) },
+        { allowedEgress: tool.allowedEgress, timeoutMs: 10_000 }   // vetted egress, not caller-supplied
+      );
+      emit({
+        kind: 'tool', actor: meta ? meta.actor : 'agent:anon', action: 'tool-run',
+        detail: { tool: toolName, scope, ok: !!result.ok, violations: (result.violations || []).length, parent: meta ? meta.proposalId : null },
+      });
+      return result;
+    },
+
+    // The vetted tool catalog (public view — no code bodies).
+    tools: {
+      list: () => tools.list(),
+      get: (name) => { const t = tools.get(name); return t ? tools.list().find((x) => x.name === name) : null; },
+      register: (t) => tools.register(t),
     },
 
     // 4) verify — walk the whole ledger (signatures + hash chain).

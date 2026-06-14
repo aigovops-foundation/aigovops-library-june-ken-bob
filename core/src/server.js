@@ -241,6 +241,16 @@ const server = http.createServer(async (req, res) => {
     try { return send(res, 200, await gov.runTool({ token, code, allowedEgress })); }
     catch (e) { return send(res, 400, { error: e.message }); }
   }
+  // Vetted tool registry (#3)
+  if (url.pathname === '/api/gov/tools' && req.method === 'GET') {
+    return send(res, 200, { tools: gov.tools.list() });
+  }
+  if (url.pathname === '/api/gov/tool-run' && req.method === 'POST') {
+    if (needAuth('member')) return;
+    const { token, tool, input } = await readBody(req);
+    try { return send(res, 200, await gov.runRegisteredTool({ token, tool, input })); }
+    catch (e) { return send(res, 400, { error: e.message }); }
+  }
 
   // --- OVERSIGHT (Ticket 6 — role-scoped ledger view) --------------------
   // Scope comes from the AUTHENTICATED identity, not a client-supplied param.

@@ -119,6 +119,10 @@ export class GvisorSandbox extends SandboxProvider {
     this.requireGvisor = opts.requireGvisor !== false;
   }
 
+  // Kernel-enforced (gVisor) — no application-level bypass. Tools that mutate
+  // real resources may run here.
+  get kernelEnforced() { return true; }
+
   async run(tool, opts = {}) {
     if (!gvisorAvailable()) {
       // Fail closed and loud — the factory is responsible for choosing a fallback.

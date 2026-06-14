@@ -38,6 +38,10 @@ const TOOLS = [
     inputSchema: { type: 'object', properties: { pendingId: { type: 'string' }, decision: { enum: ['approve', 'deny'] }, scope: { type: 'string' }, ttlSeconds: { type: 'number' }, requiredLevel: { type: 'string' }, spend: { type: 'number' } }, required: ['pendingId', 'decision'] } },
   { name: 'gov_run_tool', description: 'Run tool code in the sandbox. Requires a valid brokered token (fails closed). Emits a tool-run receipt.',
     inputSchema: { type: 'object', properties: { token: { type: 'string' }, code: { type: 'string' }, allowedEgress: { type: 'array', items: { type: 'string' } } }, required: ['token', 'code'] } },
+  { name: 'gov_tools_list', description: 'List the VETTED tool registry — each tool with its declared requiredScope, egress allow-list, capability level, and whether it needs a kernel sandbox. No code bodies.',
+    inputSchema: { type: 'object', properties: {} } },
+  { name: 'gov_run_registered', description: 'Run a VETTED tool by name with a brokered token. The token scope must equal the tool requiredScope; egress is the tool\'s declared allow-list; kernel-only tools fail closed without gVisor.',
+    inputSchema: { type: 'object', properties: { token: { type: 'string' }, tool: { type: 'string' }, input: { type: 'object' } }, required: ['token', 'tool'] } },
   { name: 'gov_verify', description: 'Verify the whole ledger (signatures + hash chain).',
     inputSchema: { type: 'object', properties: {} } },
   { name: 'gov_status', description: 'Governance posture of THIS server — confirm an external agent is actually being governed: the principal role/scope, the signed-ledger state (entries + valid), and the model tier in force. Read-only.',
@@ -60,6 +64,8 @@ async function callTool(name, a = {}) {
     case 'gov_decide':   return core.decide(a.pendingId, a.decision, { scope: a.scope, ttlSeconds: a.ttlSeconds, cost: { requiredLevel: a.requiredLevel, spend: a.spend }, decidedBy: PRINCIPAL.id });
     case 'gov_run_tool': return await core.runTool({ token: a.token, code: a.code, allowedEgress: a.allowedEgress });
     case 'gov_verify':   return core.verify();
+    case 'gov_tools_list':    return core.tools.list();
+    case 'gov_run_registered': return await core.runRegisteredTool({ token: a.token, tool: a.tool, input: a.input });
     case 'gov_status':   { const v = core.verify(); return { governed: true, principal: { id: PRINCIPAL.id, role: PRINCIPAL.role, scope: PRINCIPAL.scope }, ledger: { entries: v.entries, valid: v.valid }, model: modelPosture(), halted: core.isHalted() }; }
     case 'skills_list':  return core.skills.list();
     case 'skills_run':   return core.skills.run(a.name, { input: a.input, meta: a.meta, approve: a.approve });

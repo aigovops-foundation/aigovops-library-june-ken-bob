@@ -109,6 +109,11 @@ export class ProcessSandbox extends SandboxProvider {
     this.emit = opts.emit || ((meta) => beacon.emit(meta));
   }
 
+  // Application-level enforcement (module patching) — NOT kernel-enforced, so it
+  // has the documented ESM-import bypass. Tools that mutate real resources must
+  // refuse to run here (see tools.js requiresKernelSandbox).
+  get kernelEnforced() { return false; }
+
   async run(tool, opts = {}) {
     const allowedEgress = opts.allowedEgress || [];
     const timeoutMs = opts.timeoutMs || 10_000;

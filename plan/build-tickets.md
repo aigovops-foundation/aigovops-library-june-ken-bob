@@ -405,7 +405,20 @@ Order: #1 first, then #2/#4, then #3, then #5/#6.
    report:compliance` writes a JSON + standalone HTML artifact for an auditor. Tests:
    `core/test/compliance.test.mjs` (counts a seeded loop, maps hiring frameworks, one verifiable
    receipt, no secret material). This is the artifact a regulated org actually buys.
-3. **Real tool-runner + vetted tool registry** — L — _pending._
+3. **Real tool-runner + vetted tool registry** — L — **✅ built (2026-06-14); mutation needs gVisor.**
+   `core/src/core/tools.js` is the effectful sibling of the skill registry: each tool DECLARES
+   its safety envelope — `requiredScope`, `allowedEgress`, `requiredLevel`, `requiresKernelSandbox`
+   — so the gate enforces it instead of trusting per-call args. `govapi.runRegisteredTool({token,
+   tool,input})` enforces that the brokered **token's scope equals the tool's requiredScope**, runs
+   it sandboxed with the tool's **declared** egress (not caller-supplied), under caps, with a
+   signed receipt. Built-in vetted tools: `echo`/`sha256`/`scratch-write` (laptop-safe, run
+   anywhere) and `http-get`/`git-commit` (mutate real resources → `requiresKernelSandbox`).
+   Exposed over MCP (`gov_tools_list`/`gov_run_registered`) and HTTP (`/api/gov/tools`,
+   `/api/gov/tool-run`); sandboxes now report `kernelEnforced`. Tests: `core/test/tools.test.mjs`
+   (sha256 runs end-to-end in the sandbox; scope-mismatch, unknown-tool, missing-token all fail
+   closed). **Blocker:** the mutation tools (`git-commit`, real-egress `http-get`) fail closed on
+   the laptop ProcessSandbox (documented ESM bypass) and need a **Linux gVisor host** to run —
+   never a silent unsandboxed run. Worktree isolation is the interim for file ops.
 5. **Runtime OPA + policy-change review flow** — M — _pending._
 6. **Live IdP + per-member onboarding** — M — _pending (activates by config; no IdP creds created)._
 
