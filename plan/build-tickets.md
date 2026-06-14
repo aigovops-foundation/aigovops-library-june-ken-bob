@@ -419,7 +419,17 @@ Order: #1 first, then #2/#4, then #3, then #5/#6.
    closed). **Blocker:** the mutation tools (`git-commit`, real-egress `http-get`) fail closed on
    the laptop ProcessSandbox (documented ESM bypass) and need a **Linux gVisor host** to run —
    never a silent unsandboxed run. Worktree isolation is the interim for file ops.
-5. **Runtime OPA + policy-change review flow** — M — _pending._
+5. **Runtime OPA + policy-change review flow** — M — **✅ shipped (2026-06-14).**
+   The governed loop now classifies every proposal through the policy engine **at runtime**
+   (`govapi` calls `createPolicyEngine()` — JS by default, OPA/rego when `POLICY_ENGINE=opa` +
+   the binary are present; the JS engine reproduces the built-in rule). `JsPolicyEngine({verbs})`
+   makes a policy change expressible as data, so `core/src/core/policy-diff.js` produces a
+   **decision-diff**: which real intents flip between gated/reversible, with **loosening** (a
+   human gate that disappears) flagged loudly. `npm run policy:diff --add/--remove <verb> [--sign]`
+   prints the diff and Beacon-signs the rego bundle, making a policy change a reviewable, signed
+   artifact. Tests: `core/test/policy-diff.test.mjs` (loosen/tighten/zero-diff; the loop honors an
+   injected policy). Live rego diff still needs the `opa` binary (T7 blocker); the JS path runs
+   everywhere.
 6. **Live IdP + per-member onboarding** — M — _pending (activates by config; no IdP creds created)._
 
 ---

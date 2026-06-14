@@ -32,9 +32,12 @@ export class PolicyEngine {
 
 // --- JS engine (default) -----------------------------------------------------
 export class JsPolicyEngine extends PolicyEngine {
+  // `verbs` lets a policy CHANGE be expressed as data (not code), so two engines
+  // can be diffed over a corpus (#5 policy-change review) without the opa binary.
+  constructor({ verbs = IRREVERSIBLE_VERBS } = {}) { super(); this.verbs = verbs; }
   evaluate({ intent = '' } = {}) {
     const text = String(intent).toLowerCase();
-    const matched = IRREVERSIBLE_VERBS.filter((v) => text.includes(v));
+    const matched = this.verbs.filter((v) => text.includes(v));
     const irreversible = matched.length > 0;
     return {
       irreversible,

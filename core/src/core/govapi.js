@@ -23,6 +23,7 @@ import { ProcessSandbox } from './sandbox.process.js';
 import { ledgerView, canKill } from './oversight.js';
 import { listSkills, runSkill } from '../../scripts/run-skill.mjs';
 import { createToolRegistry, buildToolCode, ToolError } from './tools.js';
+import { createPolicyEngine } from './policy-engine.js';
 
 /**
  * Create a governed core. Dependencies are injectable for tests.
@@ -38,6 +39,10 @@ export function createGovernedCore(opts = {}) {
   const sandbox = opts.sandbox || new ProcessSandbox();
   const emit = opts.emit || beacon.emit;
   const tools = opts.tools || createToolRegistry();
+  // #5: the human-gate / required-level decision comes from a PolicyEngine at
+  // runtime — JS by default, OPA/rego when the binary + policyDir are present
+  // (POLICY_ENGINE=opa). The JS engine reproduces the built-in rule exactly.
+  const policy = opts.policy || createPolicyEngine({ engine: process.env.POLICY_ENGINE, policyDir: opts.policyDir });
 
   const pending = new Map();   // pendingId -> { proposal, actor }
   const grants = new Map();    // token     -> { scope, grantId, proposalId, actor }
@@ -52,8 +57,14 @@ export function createGovernedCore(opts = {}) {
     propose(intent, { actor = 'agent:anon' } = {}) {
       ensureLive();
       const proposal = agentPropose(intent);
+      // #5: classify through the runtime policy engine (reproduces the built-in
+      // rule by default; OPA/rego when configured).
+      const d = policy.evaluate({ intent });
+      proposal.requiresHumanGate = d.requiresHumanGate;
+      proposal.requiredLevel = d.requiredLevel;
+      proposal.policyReasons = d.reasons;
       const pendingId = 'prop_' + crypto.randomBytes(8).toString('hex');
-      pending.set(pendingId, { proposal, actor });
+      pending.set(pendingId, { proposal, actor, requiredLevel: d.requiredLevel });
       return { pendingId, proposal, requiresHumanGate: proposal.requiresHumanGate };
     },
 
@@ -72,7 +83,8 @@ export function createGovernedCore(opts = {}) {
       pending.delete(pendingId);
       const res = gateDecide({
         proposal: p.proposal, decision, scope, ttlSeconds,
-        requestedBy: p.actor, secrets, emit, caps, cost,
+        requestedBy: p.actor, secrets, emit, caps,
+        cost: { requiredLevel: p.requiredLevel, ...cost },   // policy-derived level, caller may override
       });
       if (res.approved && res.grant) {
         grants.set(res.grant.token, { scope: res.grant.scope, grantId: res.grant.grantId, proposalId: res.proposalId, actor: p.actor });

@@ -16,6 +16,7 @@
     "sbom": "node scripts/sbom.mjs",
     "release": "node scripts/release.mjs",
     "report:compliance": "node scripts/compliance-report.mjs",
+    "policy:diff": "node scripts/policy-diff.mjs",
     "mcp": "node scripts/mcp-server.mjs"
   },
   "dependencies": {},
