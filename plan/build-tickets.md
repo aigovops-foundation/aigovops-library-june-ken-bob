@@ -100,6 +100,19 @@ Contract tags: **[SEC]** secrets · **[BOX]** sandbox · **[GATE]** policy/caps 
    (`PROFILE`).
    *Done:* the *identical* contract tests pass against both; swapping providers needs no
    code change.
+   **Status — ✅ implemented (2026-06-14):** `core/src/core/secrets.vaultprovider.js` mints
+   short-lived **child tokens** scoped by a per-scope policy (`auth/token/create`), revokes
+   by accessor, and reuses the exact `secrets.shared.js` fail-closed + receipt semantics —
+   so it stays synchronous and the gate/govapi/tools are unchanged. Backend swap is
+   config-only via `core/src/core/secrets.factory.js` (`SECRETS_PROFILE` lab→File,
+   community/enclave→Vault). The contract is written once in
+   `core/test/secrets-contract.shared.mjs` and run against **both** providers in
+   `core/test/secrets.contract.test.mjs` (6 checks × 2 = 12), plus
+   `core/test/secrets.factory.test.mjs` (5). The Vault tests use an in-process fake
+   transport; a live Vault is the same class with `VAULT_ADDR`/`VAULT_TOKEN` and the default
+   dependency-free `curl` transport. **Blocker for live verification here:** no Vault server
+   on this macOS host — wire `VAULT_ADDR`/`VAULT_TOKEN` in an enclave to exercise the real
+   API. Next: **Ticket 9** (enclave) consumes this via `PROFILE=enclave`.
 
 3. **Sandbox boundary v1 (laptop fallback)** · L · [BOX] · dep: none (parallel to SEC).
    Define the Sandbox contract (no ambient network/filesystem, declared egress only) and a
