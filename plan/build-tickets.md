@@ -234,6 +234,20 @@ Contract tags: **[SEC]** secrets · **[BOX]** sandbox · **[GATE]** policy/caps 
    keys, setup docs.
    *Done:* a fresh enclave install runs air-gapped and verifies our ledgers offline with
    `openssl`.
+   **Status — ✅ package implemented + verified (2026-06-14):** `core/src/core/enclave.js`
+   encodes the hardened posture as a **fail-closed preflight** (`enclavePreflight` /
+   `assertEnclave`): Vault-in-perimeter, gVisor, egress deny-all, internal-models-only, signed
+   rego policy, in-VPC Postgres — each weak dial is named and refuses to serve
+   (`core/profiles/enclave.env.example`). `npm run sbom` writes a **CycloneDX 1.5 SBOM** that
+   asserts **zero third-party runtime components** (dependency-free). `npm run release` writes a
+   **signed release** (`release/`): `MANIFEST.json` (every source file + SHA-256 + SBOM hash),
+   `MANIFEST.sig.json` (Ed25519), `public-key.pem`, `sbom.cdx.json`, and a self-contained
+   `verify.mjs` — `node release/verify.mjs` confirms the signature + every file hash offline
+   (verified: `signature OK — files checked 96 mismatches 0`). Ledger offline-verification is
+   T10's `export:evidence` (openssl + published key). Runbook: `plan/enclave-runbook.md`. Tests:
+   `core/test/enclave.test.mjs` + `core/test/release.test.mjs`. **Blocker:** the full air-gapped
+   *run* needs a Linux enclave (gVisor `runsc`, Vault, Keycloak, in-VPC Postgres) — can't be
+   exercised on this macOS host; the package + preflight + offline verification are proven here.
 
 10. **RFC 8785 JCS canonicalizer + signed evidence export** · M · [CORE] · dep: none.
     Swap the simplified canonicalizer in Beacon for full RFC 8785 (JCS); add verifiable
