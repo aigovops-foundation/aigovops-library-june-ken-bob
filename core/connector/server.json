@@ -1,0 +1,22 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schemas/registry/server.json",
+  "name": "io.github.aigovops-foundation/governed-core",
+  "title": "AiGovOps Governed Core",
+  "description": "Route any AI agent's effectful actions through the AiGovOps Yes-Gate: propose -> human decide -> brokered scoped token -> sandboxed run -> signed receipt. Dependency-free; a steward holds a global kill switch.",
+  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/aigovops-foundation/aigovops-library-june-ken-bob",
+    "source": "github"
+  },
+  "runtime": "node>=20",
+  "transports": ["stdio"],
+  "install": { "command": "node", "args": ["core/scripts/mcp-server.mjs"] },
+  "tools": [
+    "gov_propose", "gov_decide", "gov_run_tool", "gov_run_registered", "gov_tools_list",
+    "gov_verify", "gov_status", "skills_list", "skills_run", "oversight_view",
+    "agent_dispatch", "agent_list"
+  ],
+  "keywords": ["governance", "ai-safety", "yes-gate", "audit", "human-in-the-loop", "sandbox", "compliance"],
+  "license": "Apache-2.0",
+  "_note": "Registry-listing SCAFFOLD only. NOT yet published — submit to the MCP registry (PR/API) when ready. Filling in a real namespace + publishing is an operator step (needs the registry account)."
+}

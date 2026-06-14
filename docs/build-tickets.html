@@ -80,7 +80,7 @@
   </header>
 
   <nav>
-    <a href="#t0">TICKET 0 · FIRST SLICE</a><a href="#ten">THE NEXT TEN</a><a href="#integrations">INTEGRATIONS</a><a href="#milestones">MILESTONES</a>
+    <a href="#t0">TICKET 0 · FIRST SLICE</a><a href="#ten">THE NEXT TEN</a><a href="#integrations">INTEGRATIONS</a><a href="#nextmoves">NEXT MOVES</a><a href="#milestones">MILESTONES</a>
   </nav>
 
   <!-- TICKET 0 -->
@@ -179,6 +179,30 @@ Record = { ref, owner, scope, lastRotated, activeGrants }</div>
 
     <div class="tk"><div class="top"><span class="num">6</span><span class="ti">Per-member onboarding + dial</span><span class="badge sz">M</span><span class="badge c">ID · GATE</span><span class="badge host">✅ built · needs live IdP</span></div>
       <p>Every member onboards narrow (propose); a steward turns any member's capability dial up or down, effective on the next request. A member is paused at an irreversible action until trusted. <span class="done">Done: enforced end-to-end; activates by config — needs a real IdP tenant to go fully live, no credentials created.</span></p></div>
+  </section>
+
+  <!-- NEXT MOVES -->
+  <section id="nextmoves">
+    <h2><span class="n">→→</span> Next moves</h2>
+    <div class="lead">The host-independent half — built while the one move that needs live ops (the enclave host) waits for a human.</div>
+
+    <div class="tk"><div class="top"><span class="num">N2</span><span class="ti">Durable ledger: multi-process + Postgres</span><span class="badge sz">M</span><span class="badge c">CORE</span><span class="badge ship">✅ shipped</span></div>
+      <p>A dependency-free cross-process lock makes concurrent ledger writes keep one valid hash chain (proven: 6 processes at once); a transactional Postgres backend is a real multi-writer durable ledger, proven against a fake client. <span class="done">Done: default file path unchanged; Postgres opt-in.</span></p></div>
+
+    <div class="tk"><div class="top"><span class="num">N3</span><span class="ti">First self-hosted change</span><span class="badge sz">M</span><span class="badge c">BOX · GATE</span><span class="badge ship">✅ shipped</span></div>
+      <p>An agent authored a real change to this repo through its own gate — in an isolated git worktree it couldn't escape, captured as a reviewable diff + signed receipt, never committed (a human landed it). The laptop-safe stand-in for gVisor. <span class="done">Done: exercised end-to-end; see plan/self-hosted/first-change.md.</span></p></div>
+
+    <div class="tk"><div class="top"><span class="num">N4</span><span class="ti">Continuous compliance attestation</span><span class="badge sz">M</span><span class="badge c">CORE</span><span class="badge ship">✅ shipped</span></div>
+      <p>A repeatable, signed daily statement mapping the live posture to named controls — EU AI Act Art. 9/12/14/15, NYC LL144, GDPR Art. 30 — with drift detection that flags any regression loudly. <span class="done">Done: cron-friendly; exits non-zero on a regression.</span></p></div>
+
+    <div class="tk"><div class="top"><span class="num">N6</span><span class="ti">Conversational / agentic console</span><span class="badge sz">M</span><span class="badge c">LLM · GATE</span><span class="badge ship">✅ shipped</span></div>
+      <p>A chat surface where the local model drafts a plan and emits a proposal you approve inline — the gate still holds every effect. <span class="done">Done: /api/gov/plan + an Agentic chat card; demoable to a non-engineer.</span></p></div>
+
+    <div class="tk"><div class="top"><span class="num">N5</span><span class="ti">Connector distribution (packaging)</span><span class="badge sz">S/M</span><span class="badge c">MCP</span><span class="badge ship">✅ shipped</span></div>
+      <p>A one-line installer, an <span class="mono">npx</span> bin, and an MCP-registry listing scaffold, with docs. <span class="done">Done — code only; the actual npm publish + registry submission + pilot outreach are left for a human.</span></p></div>
+
+    <div class="tk"><div class="top"><span class="num">N1</span><span class="ti">Stand up the Linux enclave host</span><span class="badge sz">L</span><span class="badge c">OPS</span><span class="badge host">⏳ needs operator (Bob)</span></div>
+      <p>Docker+gVisor, Vault, Keycloak, Postgres, the opa binary on a Linux VM — flips the gold items (live Vault, gVisor run, real rego, live OIDC, mutation tools) green at once. <span class="done">Left for Bob: irreversible credential + ops steps.</span></p></div>
   </section>
 
   <!-- MILESTONES -->

@@ -24,17 +24,32 @@ The core is **dependency-free** — no `npm install`, just Node ≥ 20.
 
 ## Install
 
-### Claude Code
+### One-liner (recommended)
+```bash
+bash core/connector/install.sh           # adds it to Claude Code, or prints the config
+bash core/connector/install.sh --print   # just print the config, install nothing
+```
+It resolves absolute paths for you, is idempotent, and needs no account. Remove
+with `claude mcp remove aigovops-governed-core`.
+
+### Claude Code (manual)
 ```bash
 claude mcp add aigovops-governed-core -- node /ABS/PATH/core/scripts/mcp-server.mjs
 ```
 
 ### Claude Desktop / Cursor / generic MCP client
-Copy `mcp.json` into your client's MCP config, replacing `<ABS_PATH>` with the
-absolute path to this repo. Or run it directly:
+Copy `mcp.json` into your client's MCP config, replacing `<ABS_PATH>`. Or run it
+directly:
 ```bash
 cd core && npm run mcp        # speaks MCP (JSON-RPC 2.0) on stdio
 ```
+
+### npm / npx
+A `bin` is declared (`aigovops-mcp` → `scripts/mcp-server.mjs`), so once this
+package is published you can `npx aigovops-mcp`. Locally, `npm link` in `core/`
+exposes the same command. Publishing to npm and submitting `server.json` to the
+MCP registry are operator steps (they need the npm/registry accounts) — the
+scaffolding here is ready; the actual publish is intentionally left to a human.
 
 ## Identity & trust
 

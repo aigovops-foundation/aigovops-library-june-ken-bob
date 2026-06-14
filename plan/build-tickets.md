@@ -498,6 +498,22 @@ once.)
   every effect; a hallucinated plan is contained. Tests: `core/test/plan.test.mjs` + a
   `/api/gov/plan` server check. Makes the whole system demoable to a non-engineer.
 
+- **N5 · Connector distribution (code/packaging only)** — S/M — **✅ shipped (2026-06-14);
+  publish is Bob's step.** `core/connector/install.sh` is a one-line installer (adds the connector
+  to Claude Code if `claude` is present, else prints a path-resolved `mcp.json`; idempotent,
+  reversible, no account). A `bin` (`aigovops-mcp` → `mcp-server.mjs`) is declared for future
+  `npx`/`npm link`. `core/connector/server.json` is an MCP-registry listing scaffold (name,
+  description, tools, install). README documents all paths. Tests:
+  `core/test/connector-dist.test.mjs` (installer is valid bash + prints a usable config;
+  registry listing well-formed; bin points at the real server). **Deliberately NOT published** —
+  npm publish + MCP-registry submission + pilot outreach need accounts/credentials and are left
+  for Bob; the scaffolding is ready.
+
+- **N1 · Stand up the Linux enclave host** — L — _left for Bob (irreversible ops)._ Docker+gVisor,
+  Vault, Keycloak, Postgres, the `opa` binary on a Linux VM; flips the gold items (live Vault,
+  gVisor run, real rego, live OIDC, mutation tools) green at once. Not started — needs Bob's
+  credential/ops steps.
+
 - **First brokered action** — T0 + T1: an agent does one real, scoped, expiring,
   fully-receipted thing.
 - **First sandboxed useful agent** — + T3 + T5: a tool runs isolated, under caps, with a

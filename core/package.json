@@ -6,6 +6,7 @@
   "license": "Apache-2.0",
   "type": "module",
   "engines": { "node": ">=20" },
+  "bin": { "aigovops-mcp": "scripts/mcp-server.mjs" },
   "scripts": {
     "start": "node src/server.js",
     "keygen": "node scripts/keygen.mjs",
