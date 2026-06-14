@@ -463,6 +463,20 @@ once.)
   stays opt-in (`npm i pg`). **Blocker:** a live multi-instance run needs a real Postgres
   (`DATABASE_URL` + `pg`) — operator/ops step; the chaining + locking are proven here.
 
+- **N3 · First self-hosted change (worktree interim)** — M — **✅ shipped + exercised (2026-06-14).**
+  `core/src/core/worktree.js` lets an agent author a real code change WITHOUT gVisor: it writes
+  into an **isolated detached git worktree** (path-guarded, can't touch the main tree), captures a
+  reviewable **diff + a signed metadata-only mutation receipt**, and **never commits** — a human
+  lands it (the irreversibility boundary). `govapi.proposeFileChange({token,relPath,content})`
+  gates it on a brokered token whose scope must equal the mutation scope (`self-host`); fails
+  closed with no `repoDir` or wrong scope. **Exercised end-to-end on this repo** via
+  `npm run self-host:demo`: propose → approve → token → worktree author → receipt (parent-linked to
+  the approval) → verify; the landed artifact with its provenance is
+  `plan/self-hosted/first-change.md`. Tests: `core/test/worktree.test.mjs` (diff+receipt, main tree
+  untouched, no commit, path-escape + wrong-scope fail closed, full governed-loop trail verifies).
+  gVisor (T4) hardens the same contract on a Linux enclave; the worktree path is the laptop-safe
+  interim. **This reaches the "first self-hosted change" milestone.**
+
 - **First brokered action** — T0 + T1: an agent does one real, scoped, expiring,
   fully-receipted thing.
 - **First sandboxed useful agent** — + T3 + T5: a tool runs isolated, under caps, with a

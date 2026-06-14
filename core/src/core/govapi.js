@@ -24,6 +24,7 @@ import { ledgerView, canKill } from './oversight.js';
 import { listSkills, runSkill } from '../../scripts/run-skill.mjs';
 import { createToolRegistry, buildToolCode, ToolError } from './tools.js';
 import { createPolicyEngine } from './policy-engine.js';
+import { WorktreeRunner } from './worktree.js';
 
 /**
  * Create a governed core. Dependencies are injectable for tests.
@@ -43,6 +44,10 @@ export function createGovernedCore(opts = {}) {
   // runtime — JS by default, OPA/rego when the binary + policyDir are present
   // (POLICY_ENGINE=opa). The JS engine reproduces the built-in rule exactly.
   const policy = opts.policy || createPolicyEngine({ engine: process.env.POLICY_ENGINE, policyDir: opts.policyDir });
+  // #3: optional worktree runner for governed, laptop-safe code mutation. Off
+  // unless a repoDir is supplied (so the default core has no host dependency).
+  const worktree = opts.worktree || (opts.repoDir ? new WorktreeRunner({ repoDir: opts.repoDir, emit }) : null);
+  const mutationScope = opts.mutationScope || 'self-host';
 
   const pending = new Map();   // pendingId -> { proposal, actor }
   const grants = new Map();    // token     -> { scope, grantId, proposalId, actor }
@@ -140,6 +145,22 @@ export function createGovernedCore(opts = {}) {
         detail: { tool: toolName, scope, ok: !!result.ok, violations: (result.violations || []).length, parent: meta ? meta.proposalId : null },
       });
       return result;
+    },
+
+    // 3c) proposeFileChange — author a real code change in an ISOLATED worktree
+    //     (#3). Token-gated (scope must equal the mutation scope); writes only in
+    //     the worktree; NEVER commits — returns a reviewable diff + a signed
+    //     receipt so a human can land it. Fails closed if no worktree runner is
+    //     configured (no repoDir) or the token scope is wrong.
+    proposeFileChange({ token, relPath, content } = {}) {
+      ensureLive();
+      if (!worktree) throw new Error('proposeFileChange: no worktree runner (pass repoDir to createGovernedCore)');
+      if (!token) throw new Error('proposeFileChange: a brokered token is required (fails closed)');
+      secrets.redeem(token);
+      const meta = grants.get(token) || null;
+      const scope = meta ? meta.scope : null;
+      if (scope !== mutationScope) throw new Error(`proposeFileChange needs scope '${mutationScope}', token is for '${scope}'`);
+      return worktree.proposeFileChange({ relPath, content, parent: meta ? meta.proposalId : null, actor: meta ? meta.actor : 'agent:self-host' });
     },
 
     // The vetted tool catalog (public view — no code bodies).
