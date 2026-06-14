@@ -1,6 +1,9 @@
 ---
 name: security-privacy-review
 description: Strip secrets, scan for PII, and check the threat model before anything is exposed, shared, or released. Use before any exposure or Commons share. Trigger on "security review", "is this safe to publish", "scan for secrets", "PII check", "privacy review".
+run: handler:security-privacy-review
+inputs: {"type":"object","required":["input"],"properties":{"input":{"type":"string","minLength":1}}}
+outputs: {"type":"object"}
 ---
 
 # security-privacy-review

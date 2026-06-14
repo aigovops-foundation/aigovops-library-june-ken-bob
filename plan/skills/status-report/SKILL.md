@@ -1,6 +1,9 @@
 ---
 name: status-report
 description: Compose status, leadership, and community updates from signed evidence only — facts, not guesses. Use weekly and on milestones. Trigger on "write the status update", "leadership report", "what shipped this week", "3P update", "community update".
+run: handler:status-report
+inputs: {"type":"object","properties":{"input":{"type":"string"}}}
+outputs: {"type":"object"}
 ---
 
 # status-report

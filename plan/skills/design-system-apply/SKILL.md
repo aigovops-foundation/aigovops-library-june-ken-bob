@@ -1,6 +1,7 @@
 ---
 name: design-system-apply
 description: Apply the AiGovOps visual system (Beacon look + library garden-of-delight) to any surface, illustration, or page. Use when building or restyling a room, page, mockup, or graphic. Trigger on "design this", "make it on-brand", "style this room", "apply the design system", "make it look like Beacon".
+run: prose
 ---
 
 # design-system-apply

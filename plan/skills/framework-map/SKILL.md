@@ -1,6 +1,9 @@
 ---
 name: framework-map
 description: Map a member problem to the AI-governance frameworks that apply and compile the Yes/No gates they will face. Use when someone describes an AI system or use case and asks "what applies to me", "what are my obligations", "is this high-risk", or whenever the Reading Room assesses a hard problem. Trigger on "map my frameworks", "what regulations apply", "assess this", "what gates do I face".
+run: handler:framework-map
+inputs: {"type":"object","required":["input"],"properties":{"input":{"type":"string","minLength":1}}}
+outputs: {"type":"object"}
 ---
 
 # framework-map

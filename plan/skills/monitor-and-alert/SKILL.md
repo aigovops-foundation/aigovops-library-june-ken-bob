@@ -1,6 +1,9 @@
 ---
 name: monitor-and-alert
 description: Watch production health, gate failures, and cap breaches; alert and cap-and-pause on breach. Use to stand up or run monitoring. Trigger on "set up monitoring", "watch for failures", "alerting", "is it healthy", "observability".
+run: handler:monitor-and-alert
+inputs: {"type":"object"}
+outputs: {"type":"object"}
 ---
 
 # monitor-and-alert

@@ -1,6 +1,7 @@
 ---
 name: ux-flow-spec
 description: Specify how a member moves through a room toward Yes — every state, transition, and fallback. Use before building a new journey or interaction. Trigger on "design the flow", "spec the UX", "map the states", "what happens when…".
+run: prose
 ---
 
 # ux-flow-spec

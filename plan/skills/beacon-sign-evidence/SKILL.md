@@ -1,6 +1,9 @@
 ---
 name: beacon-sign-evidence
 description: Produce a metadata-only, Ed25519-signed receipt for any meaningful action and append it to the verifiable ledger. Use after ANY process step that should leave evidence (a design approved, a test run, a translation reviewed, a release shipped). Trigger on "sign this", "emit a receipt", "log to the ledger", "make it verifiable".
+run: handler:beacon-sign-evidence
+inputs: {"type":"object","required":["meta"],"properties":{"meta":{"type":"object"}}}
+outputs: {"type":"object"}
 ---
 
 # beacon-sign-evidence

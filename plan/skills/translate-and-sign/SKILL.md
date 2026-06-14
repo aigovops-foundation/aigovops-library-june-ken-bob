@@ -1,6 +1,7 @@
 ---
 name: translate-and-sign
 description: Localize any string (UI, agent prompt, help, voice) — machine translation for instant coverage, human review per locale, then sign the reviewed bundle. English-first, never English-only. Trigger on "translate this", "add a locale", "localize", "i18n", "make it speak Spanish/Arabic/…".
+run: prose
 ---
 
 # translate-and-sign

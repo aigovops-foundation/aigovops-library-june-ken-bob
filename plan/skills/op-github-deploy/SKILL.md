@@ -7,6 +7,7 @@ description: >
   referencing op:// secrets in a job, or deploying a change that depends on a brokered
   credential. Trigger on "deploy the 1Password connection", "wire 1Password to GitHub",
   "add a secret to the workflow", "load secrets in CI", "op://", "service account token".
+run: handler:op-github-deploy
 ---
 
 # op-github-deploy — 1Password → GitHub Actions, the governed way

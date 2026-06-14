@@ -292,8 +292,19 @@ beacon-sign-evidence, op-github-deploy, security-privacy-review (`scanners.js`),
 accessibility-audit (`a11y.js`, static WCAG subset), status-report and monitor-and-alert
 (`reports.js`, ledger-derived). The remaining 5 (design-system-apply, ux-flow-spec,
 ua-help-authoring, doc-generate, translate-and-sign) are generative authoring skills the
-agent performs through the loop, not tool-wirable. Remaining infra: generic `run:`/schema in
-every `SKILL.md`; full WCAG (axe/pa11y) for a11y.*
+agent performs through the loop, not tool-wirable.
+**Update — ✅ generic dispatch landed (2026-06-14):** every `SKILL.md` now declares a
+`run:` line (`handler:<key>` for the 7 wired skills, `core:<module>#<fn>` for generic
+dispatch, `prose` for the 5 authoring skills) plus single-line JSON `inputs`/`outputs`
+schemas. `run-skill.mjs` dispatches generically: a `core:` skill runs through a synchronous
+invoker over pre-loaded core modules with declared-schema input validation (dependency-free
+subset validator), and `SKILLS_DIR` is overridable — so **a new skill becomes runnable by
+adding a `run:` line with no runner code change**, proven in
+`core/test/run-skill-generic.test.mjs` (register a fresh `gate-evaluate` skill in a temp dir;
+it lists, runs, emits one receipt, and enforces its schema). The 7 bespoke handlers are
+unchanged (back-compat). **Deferred (documented):** full WCAG via axe-core/pa11y is held out
+on purpose — it would add npm deps and break the dependency-free guarantee; the static WCAG
+subset stays. Wire axe/pa11y only in an opt-in profile.*
 
 ### A2 — Governed agent API / MCP · L · dep: A1, T1, T3, T5
 

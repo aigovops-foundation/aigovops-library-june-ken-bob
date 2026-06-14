@@ -1,6 +1,9 @@
 ---
 name: accessibility-audit
 description: Audit any user-facing surface to WCAG 2.2 AA and drive it to pass. Use on every surface before it ships. Trigger on "check accessibility", "a11y audit", "is this accessible", "WCAG", "screen-reader test".
+run: handler:accessibility-audit
+inputs: {"type":"object","required":["input"],"properties":{"input":{"type":"string","minLength":1}}}
+outputs: {"type":"object"}
 ---
 
 # accessibility-audit
