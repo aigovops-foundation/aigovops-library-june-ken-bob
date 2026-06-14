@@ -15,9 +15,20 @@ console.log = (...a) => console.error(...a);
 
 import { createGovernedCore } from '../src/core/govapi.js';
 import { dispatch as agentDispatch, listAgents } from '../src/core/agents.js';
+import { identify } from '../src/core/identity.js';
 
 const core = createGovernedCore();
 const PROTOCOL_VERSION = '2024-11-05';
+
+// A2: the MCP stdio server is a SINGLE trusted principal — its identity is
+// resolved server-side from the launch environment, NEVER from client-supplied
+// tool args (which a caller could forge to claim steward). Default is a member
+// scoped to its own effects; steward requires explicit opt-in by whoever ran the
+// process. In a networked deployment the transport carries an OIDC token and
+// auth.identityFromReq resolves the caller instead.
+const PRINCIPAL = (process.env.AIGOV_MCP_ROLE === 'steward' || (process.env.STEWARD_TOKEN && process.env.AIGOV_MCP_STEWARD === process.env.STEWARD_TOKEN))
+  ? identify({ id: process.env.AIGOV_MCP_ID || 'mcp:steward', role: 'steward' })
+  : identify({ id: process.env.AIGOV_MCP_ID || 'mcp:local', role: 'member' });
 
 const TOOLS = [
   { name: 'gov_propose', description: 'Submit an intent for a human gate. Returns a pendingId and whether it needs approval.',
@@ -32,8 +43,8 @@ const TOOLS = [
     inputSchema: { type: 'object', properties: {} } },
   { name: 'skills_run', description: 'Run a skill by name through the gate+ledger (Ticket A1).',
     inputSchema: { type: 'object', properties: { name: { type: 'string' }, input: { type: 'string' }, meta: { type: 'object' }, approve: { type: 'boolean' } }, required: ['name'] } },
-  { name: 'oversight_view', description: 'Role-scoped view of the ledger: a steward sees all receipts; anyone else sees only their own. (The kill switch is a steward-console action, not exposed here.)',
-    inputSchema: { type: 'object', properties: { role: { type: 'string' }, id: { type: 'string' } } } },
+  { name: 'oversight_view', description: 'Role-scoped view of the ledger for THIS server\'s principal (resolved server-side from the launch context — role/id args are ignored and cannot be forged): a steward sees all receipts; a member sees only their own. (The kill switch is a steward-console action, not exposed here.)',
+    inputSchema: { type: 'object', properties: {} } },
   { name: 'agent_dispatch', description: 'Front desk: route an intent to the right named agent (Lantern/Guardian/Aperture/Herald/Sentinel/Beacon/Concierge), run its skill, and return its reply + a proposal. Propose-only — never auto-acts.',
     inputSchema: { type: 'object', properties: { intent: { type: 'string' } }, required: ['intent'] } },
   { name: 'agent_list', description: 'List the named library agents and the skill each wields.',
@@ -42,13 +53,13 @@ const TOOLS = [
 
 async function callTool(name, a = {}) {
   switch (name) {
-    case 'gov_propose':  return core.propose(a.intent, { actor: a.actor });
-    case 'gov_decide':   return core.decide(a.pendingId, a.decision, { scope: a.scope, ttlSeconds: a.ttlSeconds, cost: { requiredLevel: a.requiredLevel, spend: a.spend } });
+    case 'gov_propose':  return core.propose(a.intent, { actor: PRINCIPAL.id });
+    case 'gov_decide':   return core.decide(a.pendingId, a.decision, { scope: a.scope, ttlSeconds: a.ttlSeconds, cost: { requiredLevel: a.requiredLevel, spend: a.spend }, decidedBy: PRINCIPAL.id });
     case 'gov_run_tool': return await core.runTool({ token: a.token, code: a.code, allowedEgress: a.allowedEgress });
     case 'gov_verify':   return core.verify();
     case 'skills_list':  return core.skills.list();
     case 'skills_run':   return core.skills.run(a.name, { input: a.input, meta: a.meta, approve: a.approve });
-    case 'oversight_view': return core.oversight({ role: a.role || 'member', id: a.id || 'member:anon' }).view();
+    case 'oversight_view': return core.oversight(PRINCIPAL).view(); // role from the trusted principal, not the args
     case 'agent_dispatch': return await agentDispatch(a.intent);
     case 'agent_list':   return listAgents();
     default: throw new Error('unknown tool: ' + name);

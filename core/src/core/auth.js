@@ -66,9 +66,14 @@ export function identityFromReq(req) {
   }
   // 2) local-dev override (must be explicit; logs loudly)
   if (process.env.AUTH_DISABLED === 'true') return identify({ id: 'local:dev', role: 'steward' });
-  // 3) signed GitHub session cookie
+  // 3) signed session cookie (GitHub OAuth or OIDC). Provider-aware so the
+  //    governed loop attributes + scopes by the real subject, not a stub.
   const s = verifySession(parseCookies(req)[COOKIE]);
-  if (s) return identify({ id: `github:${s.login}`, role: s.role });
+  if (s) {
+    const provider = s.provider || 'github';
+    const subject = s.sub || s.login;
+    return identify({ id: `${provider}:${subject}`, role: s.role });
+  }
   return null;
 }
 
@@ -102,7 +107,7 @@ export async function completeLogin(code) {
   const user = await userRes.json();
   if (!user.login) throw new Error('oauth: could not read GitHub user');
   const role = roleFor(user.login);
-  const token = signSession({ login: user.login, role, exp: Date.now() + TTL_MS });
+  const token = signSession({ login: user.login, role, provider: 'github', exp: Date.now() + TTL_MS });
   return { login: user.login, role, token };
 }
 
@@ -140,6 +145,6 @@ export async function completeOidcLogin(code, { codeVerifier, nonce, fetchImpl =
     jwks, issuer, audience: process.env.OIDC_CLIENT_ID, nonce, ...(now ? { now } : {}),
   });
   const idn = identityFromClaims(claims, { stewards: STEWARDS, stewardGroup: process.env.OIDC_STEWARD_GROUP || 'steward' });
-  const token = signSession({ login: idn.username || idn.id, role: idn.role, sub: claims.sub, exp: Date.now() + TTL_MS });
+  const token = signSession({ login: idn.username || idn.id, role: idn.role, provider: 'oidc', sub: claims.sub, exp: Date.now() + TTL_MS });
   return { login: idn.username || idn.id, role: idn.role, token };
 }

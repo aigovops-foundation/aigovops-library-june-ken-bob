@@ -344,7 +344,16 @@ landed too: `server.js` serves `/api/skills`, `/api/gov/{propose,decide,run}`,
 `/api/oversight`, and an interactive **Control Room** at `/console`
 (`core/public/console.html`); tested by `core/test/server.test.mjs`. Deploy: root
 `Dockerfile` (+ `plan/`), `core/compose.yml`, `fly.toml`, and `DEPLOY.md`.
-**Remaining:** real identity/roles (T8 OIDC) instead of the anon stub.
+**Update — ✅ real identity wired (2026-06-14):** with T8 in place, `auth.identityFromReq`
+is provider-aware — a signed OIDC session resolves to `oidc:<sub>` (GitHub to `github:<login>`)
+with the role + capability scope from `identity.js`, so the governed loop attributes and
+scopes by the **real** subject, not `member:anon`. The MCP stdio server now resolves a
+single trusted **server-side principal** from its launch env (`AIGOV_MCP_ROLE`/`STEWARD_TOKEN`),
+and `oversight_view` uses it — the spoofable client-supplied `role`/`id` args are gone, so a
+caller can no longer claim steward. Verified in `core/test/auth-identity.test.mjs` (OIDC
+steward→all, member→own, legacy GitHub, expired→null). In a networked deployment the transport
+carries an OIDC token resolved the same way. **A2 done** (the demo Caps-per-member dial remains
+an optional future enhancement, not a blocker).
 
 ---
 
