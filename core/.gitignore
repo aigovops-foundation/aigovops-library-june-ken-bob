@@ -8,7 +8,8 @@ ledger/*.ndjson
 # secret broker backing store (FileProvider) — NEVER commit
 secrets.local.json
 
-# generated artifacts (rebuilt by npm run sbom / release / export:evidence)
+# generated artifacts (rebuilt by npm run sbom / release / export:evidence / report:compliance)
 release/
 evidence-bundle/
 sbom.cdx.json
+compliance/

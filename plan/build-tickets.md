@@ -395,7 +395,16 @@ Order: #1 first, then #2/#4, then #3, then #5/#6.
    steward by env) — never a forgeable tool arg. Networked multi-tenant use points at the HTTP
    governed API with real OIDC roles. Tests: `core/test/connector.test.mjs` (manifest valid +
    references the real server; `gov_status` over MCP reports an honest posture).
-4. **Signed compliance/evidence report** — M — _in progress._
+4. **Signed compliance/evidence report** — M — **✅ shipped (2026-06-14).**
+   `core/src/core/compliance.js` reads only the signed ledger and synthesizes a governance
+   attestation — human-gate approvals/denials, scoped credentials brokered/revoked, tool runs,
+   sandbox violations, cap breaches, kill-switch events, skill runs, policy bundles — plus the
+   **frameworks** the activity touched (mapped via the Yes-Gate library, each with its gate
+   question) and the ledger-integrity result. `signComplianceReport()` emits ONE signed receipt
+   anchoring the report hash, so the report is itself verifiable offline. `npm run
+   report:compliance` writes a JSON + standalone HTML artifact for an auditor. Tests:
+   `core/test/compliance.test.mjs` (counts a seeded loop, maps hiring frameworks, one verifiable
+   receipt, no secret material). This is the artifact a regulated org actually buys.
 3. **Real tool-runner + vetted tool registry** — L — _pending._
 5. **Runtime OPA + policy-change review flow** — M — _pending._
 6. **Live IdP + per-member onboarding** — M — _pending (activates by config; no IdP creds created)._
