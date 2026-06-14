@@ -163,10 +163,20 @@ async function oversight() {
   const r = await J('GET', '/api/oversight');   // scope comes from the signed-in identity
   renderLedger(r.receipts);
 }
+function reflectHalt(halted) {
+  const el = $('killState');
+  if (!el) return;
+  el.innerHTML = halted
+    ? '<span class="danger">⛔ HALTED — the governed loop is paused. Resume to continue.</span> <button class="alt" onclick="resumeLoop()">resume</button>'
+    : '<span class="muted">loop live</span>';
+}
 function subscribeOversight() {
   try {
     const es = new EventSource('/api/oversight/stream');
-    es.addEventListener('ledger', (e) => { try { renderLedger(JSON.parse(e.data).latest); } catch {} });
+    es.addEventListener('hello', (e) => { try { reflectHalt(JSON.parse(e.data).halted); } catch {} });
+    es.addEventListener('ledger', (e) => {
+      try { const d = JSON.parse(e.data); renderLedger(d.latest); if ('halted' in d) reflectHalt(d.halted); } catch {}
+    });
   } catch {}
 }
 async function loadQueue() {
@@ -186,9 +196,16 @@ async function decideQ(pid, decision) {
   loadQueue(); oversight();
 }
 async function kill() {
-  // The HTTP surface exposes oversight read-only; the kill switch is a steward
-  // console action. We surface it honestly: it is enforced server-side by role.
-  $('killState').innerHTML = '<span class="muted">kill switch is steward-gated in govapi; not exposed over HTTP in this build (run via MCP/console host).</span>';
+  // Steward-only, enforced server-side by the authenticated identity. The halt
+  // fails the in-flight governed loop closed and emits its own signed receipt.
+  const r = await J('POST', '/api/oversight/kill');
+  if (r.error) { $('killState').innerHTML = `<span class="muted">${r.error} — stewards only (sign in)</span>`; return; }
+  reflectHalt(true); oversight();
+}
+async function resumeLoop() {
+  const r = await J('POST', '/api/oversight/resume');
+  if (r.error) { $('killState').innerHTML = `<span class="muted">${r.error} — stewards only</span>`; return; }
+  reflectHalt(false);
 }
 health(); auth(); loadSkills(); oversight(); loadQueue(); subscribeOversight();
 setInterval(health, 8000);

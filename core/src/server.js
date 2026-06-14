@@ -194,7 +194,8 @@ const server = http.createServer(async (req, res) => {
   if (url.pathname === '/api/gov/propose' && req.method === 'POST') {
     if (needAuth('member')) return;
     const { intent = '' } = await readBody(req);
-    return send(res, 200, gov.propose(intent, { actor: id.id }));
+    try { return send(res, 200, gov.propose(intent, { actor: id.id })); }
+    catch (e) { return send(res, 400, { error: e.message }); }   // e.g. fails closed while halted
   }
   if (url.pathname === '/api/gov/pending' && req.method === 'GET') {
     if (needAuth('steward')) return;   // the approval queue is a steward view
@@ -217,20 +218,36 @@ const server = http.createServer(async (req, res) => {
   // Scope comes from the AUTHENTICATED identity, not a client-supplied param.
   if (url.pathname === '/api/oversight' && req.method === 'GET') {
     const who = id || { role: 'member', id: 'member:anon' };
-    return send(res, 200, { role: who.role, scope: who.role === 'steward' ? 'all' : 'own', receipts: gov.oversight(who).view() });
+    return send(res, 200, { role: who.role, scope: who.role === 'steward' ? 'all' : 'own', halted: gov.isHalted(), receipts: gov.oversight(who).view() });
+  }
+
+  // --- OVERSIGHT KILL SWITCH (Ticket 6 — steward-only, signed) -----------
+  // The global kill switch halts the in-flight governed loop (propose/decide/
+  // runTool fail closed) and emits its own signed receipt. Steward-only, by the
+  // authenticated identity — never a client-supplied role.
+  if (url.pathname === '/api/oversight/kill' && req.method === 'POST') {
+    if (needAuth('steward')) return;
+    try { gov.oversight(id).kill(); return send(res, 200, { halted: true }); }
+    catch (e) { return send(res, 403, { error: e.message }); }
+  }
+  if (url.pathname === '/api/oversight/resume' && req.method === 'POST') {
+    if (needAuth('steward')) return;     // only a steward can lift the halt
+    gov.resume();
+    return send(res, 200, { halted: false });
   }
 
   // --- OVERSIGHT LIVE STREAM (Ticket 6 — SSE, role-scoped) ---------------
   if (url.pathname === '/api/oversight/stream') {
     const who = id || { role: 'member', id: 'member:anon' };
     res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', Connection: 'keep-alive' });
-    res.write(`event: hello\ndata: ${JSON.stringify({ role: who.role })}\n\n`);
-    let last = -1;
+    res.write(`event: hello\ndata: ${JSON.stringify({ role: who.role, canKill: who.role === 'steward', halted: gov.isHalted() })}\n\n`);
+    let last = -1, lastHalt = null;
     const tick = () => {
       const view = gov.oversight(who).view();
-      if (view.length !== last) {
-        last = view.length;
-        res.write(`event: ledger\ndata: ${JSON.stringify({ count: view.length, latest: view.slice(-6).map((r) => ({ kind: r.kind, action: r.action, actor: r.actor, ts: r.ts })) })}\n\n`);
+      const halted = gov.isHalted();
+      if (view.length !== last || halted !== lastHalt) {
+        last = view.length; lastHalt = halted;
+        res.write(`event: ledger\ndata: ${JSON.stringify({ count: view.length, halted, latest: view.slice(-6).map((r) => ({ kind: r.kind, action: r.action, actor: r.actor, ts: r.ts })) })}\n\n`);
       }
     };
     tick();

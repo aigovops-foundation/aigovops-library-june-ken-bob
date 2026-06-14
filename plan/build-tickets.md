@@ -172,8 +172,16 @@ Contract tags: **[SEC]** secrets · **[BOX]** sandbox · **[GATE]** policy/caps 
    **Status — core landed (2026-06):** `core/src/core/oversight.js` (`ledgerView` role-scoped:
    steward→all, member→own; `canKill` steward-only) + `govapi.oversight(identity)`
    (`view`/`kill`/`status`); kill emits a signed receipt and fails new work closed. Read-only
-   `oversight_view` MCP tool. Tests: `core/test/oversight.test.mjs`. **Remaining (dynamic):**
-   the live SSE web console UI.
+   `oversight_view` MCP tool. Tests: `core/test/oversight.test.mjs`.
+   **Status — ✅ live console completed (2026-06-14):** `server.js` serves a role-scoped SSE
+   tail (`/api/oversight/stream`, steward→all / member→own) now carrying the `halted` flag,
+   plus a **steward-only kill switch** over HTTP (`POST /api/oversight/kill` / `/resume`)
+   that arms `gov.oversight(id).kill()` — halting the in-flight loop (propose/decide/runTool
+   fail closed) and emitting its own signed receipt. `console.html` subscribes via
+   `EventSource`, renders the live ledger, and drives kill/resume with state reflected live.
+   Verified in `core/test/server.test.mjs` (unauth kill → 401; steward kill → halted; propose
+   refused while halted; resume restores the loop). Two roles, one codebase, correct scoping;
+   the kill switch halts running workflows. **T6 done.**
 
 7. **OPA policy engine** · L · [GATE] · dep: T1.
    Move Yes-Gate rules to OPA (rego), evaluated at the gate; policies reviewable in PRs;

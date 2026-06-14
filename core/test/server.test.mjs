@@ -84,6 +84,21 @@ test('HTTP: auth gate + governed loop + console', async () => {
     // embeddable widget (Phase 4) — public, no auth
     assert.match((await J('GET', '/widget.js')).body, /Ask the Library/);
     assert.match((await J('GET', '/widget')).body, /widget\.js/);
+
+    // --- KILL SWITCH (Ticket 6) — steward-only, halts the loop, then resume ---
+    // unauthenticated kill is refused
+    assert.equal((await J('POST', '/api/oversight/kill')).status, 401, 'kill needs steward auth');
+    // a steward arms it: the loop halts and the oversight view reflects it
+    const killed = await J('POST', '/api/oversight/kill', null, TOKEN);
+    assert.equal(killed.status, 200); assert.equal(killed.body.halted, true);
+    assert.equal((await J('GET', '/api/oversight', null, TOKEN)).body.halted, true);
+    // while halted, a new proposal fails closed
+    const blocked = await J('POST', '/api/gov/propose', { intent: 'deploy while halted' }, TOKEN);
+    assert.equal(blocked.status, 400, 'propose is refused while halted');
+    // resume lifts the halt and the loop works again
+    const resumed = await J('POST', '/api/oversight/resume', null, TOKEN);
+    assert.equal(resumed.body.halted, false);
+    assert.equal((await J('POST', '/api/gov/propose', { intent: 'deploy after resume' }, TOKEN)).status, 200);
   } finally {
     child.kill();
   }
