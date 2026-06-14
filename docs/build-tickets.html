@@ -80,7 +80,7 @@
   </header>
 
   <nav>
-    <a href="#t0">TICKET 0 · FIRST SLICE</a><a href="#ten">THE NEXT TEN</a><a href="#milestones">MILESTONES</a>
+    <a href="#t0">TICKET 0 · FIRST SLICE</a><a href="#ten">THE NEXT TEN</a><a href="#integrations">INTEGRATIONS</a><a href="#milestones">MILESTONES</a>
   </nav>
 
   <!-- TICKET 0 -->
@@ -155,6 +155,30 @@ Record = { ref, owner, scope, lastRotated, activeGrants }</div>
 
     <div class="tk"><div class="top"><span class="num">10</span><span class="ti">RFC 8785 JCS canonicalizer + signed evidence export</span><span class="badge sz">M</span><span class="badge c">CORE</span><span class="badge dep">no deps</span><span class="badge ship">✅ shipped</span></div>
       <p>Swap the simplified canonicalizer in Beacon for full RFC 8785 (JCS); add verifiable bundle export so an auditor can take the whole history and check it offline. <span class="done">Done: canonicalization matches the RFC test vectors; an exported bundle verifies with openssl and a published public key.</span></p></div>
+  </section>
+
+  <!-- AGENT-FEATURE INTEGRATIONS -->
+  <section id="integrations">
+    <h2><span class="n">+6</span> Agent-feature integrations</h2>
+    <div class="lead">With the substrate complete, these turn it from <i>safe</i> into <i>useful + plug-innable</i>. Green ships everywhere; gold is built and tested but needs an in-perimeter host.</div>
+
+    <div class="tk"><div class="top"><span class="num">1</span><span class="ti">Real model in the loop</span><span class="badge sz">M</span><span class="badge c">LLM</span><span class="badge ship">✅ shipped</span></div>
+      <p>One model interface, local-first: Ollama → cloud (opt-in) → deterministic stub. Cloud is OFF by default and needs both <span class="mono">ALLOW_CLOUD=true</span> and a configured provider, so an enclave never reaches out. The model only proposes language; the gate still holds every effect. <span class="done">Done: all tiers tested, fail-closed; /status shows the active tier.</span></p></div>
+
+    <div class="tk"><div class="top"><span class="num">2</span><span class="ti">Govern-any-agent MCP connector</span><span class="badge sz">S/M</span><span class="badge c">MCP</span><span class="badge ship">✅ shipped</span></div>
+      <p>Point any MCP client (Claude Code, Desktop, Cursor) at the governed core and its effectful actions route through the Yes-Gate. Drop-in <span class="mono">connector/mcp.json</span>, <span class="mono">npm run mcp</span>, a <span class="mono">gov_status</span> tool to confirm you're governed, and the public <a href="./connect.html" style="color:var(--teal)">Govern Any Agent</a> page. <span class="done">Done: installable; identity stays server-side, non-spoofable.</span></p></div>
+
+    <div class="tk"><div class="top"><span class="num">4</span><span class="ti">Signed compliance report</span><span class="badge sz">M</span><span class="badge c">CORE</span><span class="badge ship">✅ shipped</span></div>
+      <p>From the signed ledger: how many actions passed a human gate, what was brokered, what was blocked, and which frameworks the activity touched — as a self-signed JSON + HTML artifact an auditor reads and verifies offline. <span class="done">Done: the artifact a regulated org actually buys; one verifiable receipt anchors it.</span></p></div>
+
+    <div class="tk"><div class="top"><span class="num">3</span><span class="ti">Vetted tool registry + runner</span><span class="badge sz">L</span><span class="badge c">BOX · GATE</span><span class="badge host">✅ built · needs gVisor</span></div>
+      <p>Effectful tools each declare their envelope — required scope, egress allow-list, capability level, kernel-sandbox need — so the gate enforces it, not the caller. A brokered token's scope must equal the tool's. <span class="done">Done: pure tools run anywhere; tools that mutate real resources fail closed off gVisor — never a silent unsandboxed run.</span></p></div>
+
+    <div class="tk"><div class="top"><span class="num">5</span><span class="ti">Runtime policy + decision-diff review</span><span class="badge sz">M</span><span class="badge c">GATE</span><span class="badge ship">✅ shipped</span></div>
+      <p>The loop classifies every proposal through the policy engine at runtime. A policy change is reviewed by its <b>decision-diff</b> — which real intents flip between gated and reversible — with loosening (a gate that disappears) flagged loudly, and the bundle Beacon-signed. <span class="done">Done: JS path runs everywhere; live rego diff needs the opa binary.</span></p></div>
+
+    <div class="tk"><div class="top"><span class="num">6</span><span class="ti">Per-member onboarding + dial</span><span class="badge sz">M</span><span class="badge c">ID · GATE</span><span class="badge host">✅ built · needs live IdP</span></div>
+      <p>Every member onboards narrow (propose); a steward turns any member's capability dial up or down, effective on the next request. A member is paused at an irreversible action until trusted. <span class="done">Done: enforced end-to-end; activates by config — needs a real IdP tenant to go fully live, no credentials created.</span></p></div>
   </section>
 
   <!-- MILESTONES -->
