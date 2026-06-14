@@ -371,6 +371,29 @@ an optional future enhancement, not a blocker).
 
 ---
 
+## Agent-feature integrations (post-substrate, 2026-06)
+
+With the governed substrate complete, these six turn it from "safe" to "useful + plug-innable".
+Order: #1 first, then #2/#4, then #3, then #5/#6.
+
+1. **Real model in the loop (local-first)** — M — **✅ shipped (2026-06-14).**
+   `core/src/core/llm.js` unifies the model behind one interface with tiers Ollama (local, $0,
+   private) → cloud (opt-in) → deterministic stub. **Cloud is OFF by default and needs BOTH
+   `ALLOW_CLOUD=true` AND a configured provider** — an enclave (deny-all) never reaches out;
+   fails closed to the stub. Dependency-free (OpenAI-compatible `fetch`), injectable transport.
+   `router.js` delegates here; `/status` shows the active tier (`model` posture). Tests:
+   `core/test/llm.test.mjs` (Ollama, stub, cloud-blocked-by-default, cloud-when-allowed,
+   allow-but-unconfigured, posture). The model only proposes language; the gate/caps/sandbox
+   still hold every effect.
+
+2. **Govern-any-agent MCP connector** — S/M — _in progress._
+4. **Signed compliance/evidence report** — M — _in progress._
+3. **Real tool-runner + vetted tool registry** — L — _pending._
+5. **Runtime OPA + policy-change review flow** — M — _pending._
+6. **Live IdP + per-member onboarding** — M — _pending (activates by config; no IdP creds created)._
+
+---
+
 ## Milestones
 
 - **First brokered action** — T0 + T1: an agent does one real, scoped, expiring,

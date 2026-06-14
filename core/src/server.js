@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 import * as beacon from './core/beacon.js';
 import * as policy from './core/policy.js';
 import { frameworks } from './core/lantern.js';
-import { respondAsync } from './core/router.js';
+import { respondAsync, modelPosture } from './core/router.js';
 import { member } from './core/identity.js';
 import { propose } from './core/agent.js';
 import { createGovernedCore } from './core/govapi.js';
@@ -135,6 +135,7 @@ const server = http.createServer(async (req, res) => {
       ledger: { entries: led.entries, valid: led.valid },
       kid: beacon.loadOrCreateKeys().kid,
       cloud: ALLOW_CLOUD ? 'opt-in available' : 'local-only',
+      model: modelPosture(),
       frameworks: frameworks().length
     });
   }
