@@ -1,0 +1,15 @@
+{
+  "_comment": "AiGovOps governed-core MCP connector. Point any MCP client (Claude Code, Claude Desktop, Cursor) at this so the agent's effectful actions route through the Yes-Gate: propose -> human decide -> brokered scoped token -> sandboxed run -> signed receipt. Replace <ABS_PATH> with the absolute path to this repo's core/ dir.",
+  "mcpServers": {
+    "aigovops-governed-core": {
+      "command": "node",
+      "args": ["<ABS_PATH>/core/scripts/mcp-server.mjs"],
+      "env": {
+        "AIGOV_MCP_ROLE": "member",
+        "AIGOV_MCP_ID": "mcp:local",
+        "KEYS_DIR": "<ABS_PATH>/core/keys",
+        "LEDGER_DIR": "<ABS_PATH>/core/ledger"
+      }
+    }
+  }
+}

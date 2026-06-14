@@ -16,6 +16,7 @@ console.log = (...a) => console.error(...a);
 import { createGovernedCore } from '../src/core/govapi.js';
 import { dispatch as agentDispatch, listAgents } from '../src/core/agents.js';
 import { identify } from '../src/core/identity.js';
+import { modelPosture } from '../src/core/router.js';
 
 const core = createGovernedCore();
 const PROTOCOL_VERSION = '2024-11-05';
@@ -39,6 +40,8 @@ const TOOLS = [
     inputSchema: { type: 'object', properties: { token: { type: 'string' }, code: { type: 'string' }, allowedEgress: { type: 'array', items: { type: 'string' } } }, required: ['token', 'code'] } },
   { name: 'gov_verify', description: 'Verify the whole ledger (signatures + hash chain).',
     inputSchema: { type: 'object', properties: {} } },
+  { name: 'gov_status', description: 'Governance posture of THIS server — confirm an external agent is actually being governed: the principal role/scope, the signed-ledger state (entries + valid), and the model tier in force. Read-only.',
+    inputSchema: { type: 'object', properties: {} } },
   { name: 'skills_list', description: 'List the available skills and whether each is runnable.',
     inputSchema: { type: 'object', properties: {} } },
   { name: 'skills_run', description: 'Run a skill by name through the gate+ledger (Ticket A1).',
@@ -57,6 +60,7 @@ async function callTool(name, a = {}) {
     case 'gov_decide':   return core.decide(a.pendingId, a.decision, { scope: a.scope, ttlSeconds: a.ttlSeconds, cost: { requiredLevel: a.requiredLevel, spend: a.spend }, decidedBy: PRINCIPAL.id });
     case 'gov_run_tool': return await core.runTool({ token: a.token, code: a.code, allowedEgress: a.allowedEgress });
     case 'gov_verify':   return core.verify();
+    case 'gov_status':   { const v = core.verify(); return { governed: true, principal: { id: PRINCIPAL.id, role: PRINCIPAL.role, scope: PRINCIPAL.scope }, ledger: { entries: v.entries, valid: v.valid }, model: modelPosture(), halted: core.isHalted() }; }
     case 'skills_list':  return core.skills.list();
     case 'skills_run':   return core.skills.run(a.name, { input: a.input, meta: a.meta, approve: a.approve });
     case 'oversight_view': return core.oversight(PRINCIPAL).view(); // role from the trusted principal, not the args

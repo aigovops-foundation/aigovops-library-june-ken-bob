@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AiGovOps — Govern Any Agent</title>
+<meta name="description" content="Point any MCP client at the AiGovOps governed core and your agent's effectful actions route through the Yes-Gate, leaving a signed receipt for each one."/>
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="AiGovOps — Govern Any Agent"/>
+<meta property="og:description" content="Route any AI agent's risky actions through the Yes-Gate: propose, human-approve, brokered token, sandboxed run, signed receipt. A dependency-free MCP connector."/>
+<meta property="og:url" content="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/connect.html"/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --paper:#0c1430; --paper2:#0a1026; --ink:#dce6f5; --ink2:#8da3c8;
+    --line:rgba(120,160,210,.22); --grid:rgba(120,160,210,.07);
+    --teal:#3fd0c8; --green:#36e08a; --gold:#e8c25a; --pur:#9b8cff; --warn:#f08a8a;
+    --card:rgba(255,255,255,.035);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Spectral',Georgia,serif;color:var(--ink);background:var(--paper);min-height:100%;
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:30px 30px}
+  .wrap{max-width:1040px;margin:0 auto;padding:34px 20px 90px}
+  .home{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:var(--ink2);text-decoration:none;border:1px solid var(--line);border-radius:8px;padding:6px 11px;margin-bottom:18px}
+  .home:hover{color:#fff;border-color:var(--teal)}
+  header{text-align:center;border:1px solid var(--line);border-radius:16px;padding:30px 22px;background:linear-gradient(180deg,rgba(63,208,200,.05),transparent)}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;letter-spacing:.34em;font-size:11px;color:var(--teal)}
+  h1{font-family:'Cinzel',serif;font-weight:600;font-size:clamp(25px,4.4vw,42px);margin:10px 0 6px;color:#fff}
+  .thesis{font-family:'Spectral',serif;font-style:italic;font-size:clamp(16px,2.1vw,20px);color:var(--ink2);max-width:720px;margin:0 auto}
+  section{margin-top:34px;scroll-margin-top:60px}
+  h2{font-family:'Cinzel',serif;font-weight:600;font-size:clamp(19px,2.8vw,26px);color:#fff;display:flex;align-items:baseline;gap:12px}
+  h2 .n{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--teal);letter-spacing:.1em}
+  .lead{color:var(--ink2);font-style:italic;font-size:16px;margin:6px 0 16px}
+  p{line-height:1.66;margin-bottom:12px;color:#cdd9ec}
+  b{color:#fff}
+  .mono{font-family:'IBM Plex Mono',monospace;color:var(--teal)}
+  .panel{border:1px solid var(--line);border-radius:14px;padding:22px 24px;background:var(--card);margin-bottom:14px}
+  .code{font-family:'IBM Plex Mono',monospace;background:var(--paper2);border:1px solid var(--line);border-radius:11px;
+    padding:14px 16px;font-size:12.5px;line-height:1.62;color:#bfe9d0;white-space:pre-wrap;overflow-x:auto;margin:10px 0}
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13.5px}
+  th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line)}
+  th{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;color:var(--teal)}
+  td .mono{color:var(--green)}
+  ul{list-style:none;margin:4px 0 12px}
+  li{padding-left:22px;position:relative;line-height:1.6;margin-bottom:7px;color:#cdd9ec}
+  li::before{content:"▸";position:absolute;left:2px;color:var(--green)}
+  li b{color:#fff}
+  .flow{font-family:'IBM Plex Mono',monospace;color:var(--gold);font-size:13px;text-align:center;margin:8px 0 2px}
+  footer{text-align:center;margin-top:46px;color:var(--ink2);font-style:italic;font-size:16px}
+  .fcreed{font-family:'IBM Plex Mono',monospace;letter-spacing:.2em;font-size:10.5px;color:var(--green);margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="home" href="./control-plane.html">← back to the Control Plane</a>
+  <header>
+    <div class="eyebrow">AIGOVOPS FOUNDATION · MCP CONNECTOR</div>
+    <h1>Govern Any Agent</h1>
+    <div class="thesis">Point any MCP client at the governed core, and your agent's irreversible actions route through the Yes-Gate — each one paused for a human and sealed with a signed receipt.</div>
+  </header>
+
+  <section>
+    <h2><span class="n">→</span> The loop your agent inherits</h2>
+    <div class="lead">No new trust to configure — the agent simply can't act irreversibly without a human's yes.</div>
+    <div class="panel">
+      <div class="flow">propose → human decide → brokered scoped token → sandboxed run → verify</div>
+      <p>Your coding agent (Claude Code, Claude Desktop, Cursor — anything that speaks MCP) keeps doing what it does. But when it reaches for something irreversible — a deploy, a secret, a destructive write — that action becomes a <b>proposal</b> a human approves. On approval the gate mints a short-lived, <b>scoped</b> credential; the agent never sees the master secret. The tool runs sandboxed. Every step leaves a metadata-only, Ed25519-signed receipt. A steward holds a global <b>kill switch</b>.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">→</span> Tools the connector exposes</h2>
+    <div class="panel">
+      <table>
+        <thead><tr><th>tool</th><th>what it does</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">gov_propose</td><td>submit an intent; returns whether it needs a human gate</td></tr>
+          <tr><td class="mono">gov_decide</td><td>a human approves/denies; approve brokers a scoped, expiring token</td></tr>
+          <tr><td class="mono">gov_run_tool</td><td>run code in the sandbox — requires a valid brokered token (fails closed)</td></tr>
+          <tr><td class="mono">gov_verify</td><td>verify the whole ledger — signatures + hash chain</td></tr>
+          <tr><td class="mono">gov_status</td><td>confirm you're governed: principal role, ledger state, model tier</td></tr>
+          <tr><td class="mono">skills_list / run</td><td>the governed skills registry</td></tr>
+          <tr><td class="mono">oversight_view</td><td>role-scoped ledger view for this server's principal</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">→</span> Install — zero dependencies</h2>
+    <div class="panel">
+      <p>The core is dependency-free; you need only Node ≥ 20.</p>
+      <p><b>Claude Code:</b></p>
+      <div class="code">claude mcp add aigovops-governed-core -- node /ABS/PATH/core/scripts/mcp-server.mjs</div>
+      <p><b>Claude Desktop / Cursor / any MCP client:</b> copy <span class="mono">core/connector/mcp.json</span> into your client's config (replace <span class="mono">&lt;ABS_PATH&gt;</span>), or run it directly:</p>
+      <div class="code">cd core &amp;&amp; npm run mcp     # speaks MCP (JSON-RPC 2.0) on stdio</div>
+      <p>The stdio server is a single trusted principal resolved from its launch env — a <b>member</b> by default, a <b>steward</b> with <span class="mono">AIGOV_MCP_ROLE=steward</span>. For multi-tenant networked use, point at the HTTP governed API instead, where each caller carries a real OIDC identity.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">→</span> What stays true, no matter the agent</h2>
+    <div class="panel">
+      <ul>
+        <li>An agent <b>never receives a raw secret</b> — only a short-lived, scoped token.</li>
+        <li>Anything irreversible <b>pauses for a human</b>; a denial brokers nothing.</li>
+        <li>Every action is a <b>signed, metadata-only receipt</b> — no prompts, no payloads, no PII.</li>
+        <li>A steward can arm the <b>global kill switch</b> and halt the loop, fail-closed.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    <div>Agents do the bureaucracy; humans hold the meaning — and humans hold the keys.</div>
+    <div class="fcreed">PROPOSE · DECIDE · BROKER · RUN · VERIFY</div>
+  </footer>
+</div>
+<a href="./index.html" style="position:fixed;left:14px;bottom:14px;z-index:9999;font-family:DM Mono,ui-monospace,monospace;font-size:11px;letter-spacing:.08em;text-decoration:none;color:#bff3d6;background:rgba(4,24,26,.85);border:1px solid rgba(46,204,113,.45);padding:8px 13px;border-radius:99px">‹ the library set</a>
+</body>
+</html>

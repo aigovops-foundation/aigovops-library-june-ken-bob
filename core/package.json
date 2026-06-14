@@ -14,7 +14,8 @@
     "pulse": "node scripts/pulse.mjs",
     "export:evidence": "node scripts/export-evidence.mjs",
     "sbom": "node scripts/sbom.mjs",
-    "release": "node scripts/release.mjs"
+    "release": "node scripts/release.mjs",
+    "mcp": "node scripts/mcp-server.mjs"
   },
   "dependencies": {},
   "comment": "v1 is intentionally dependency-free: it uses only Node's built-in http + crypto (Ed25519). No supply chain to audit, no keys in any client. The canonicalizer in src/core/beacon.js implements RFC 8785 (JCS); `npm run export:evidence` produces an openssl-verifiable evidence bundle."

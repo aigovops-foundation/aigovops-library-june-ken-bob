@@ -386,7 +386,15 @@ Order: #1 first, then #2/#4, then #3, then #5/#6.
    allow-but-unconfigured, posture). The model only proposes language; the gate/caps/sandbox
    still hold every effect.
 
-2. **Govern-any-agent MCP connector** — S/M — _in progress._
+2. **Govern-any-agent MCP connector** — S/M — **✅ shipped (2026-06-14).**
+   Packaged the existing MCP server as an installable connector: `core/connector/mcp.json`
+   (drop-in for Claude Code/Desktop/Cursor) + `core/connector/README.md` + `npm run mcp`, and
+   a public adoption page `docs/connect.html` (linked from the hub). Added a `gov_status` MCP
+   tool so an external agent can confirm it's actually governed (non-spoofable principal role,
+   signed-ledger state, model tier). Identity stays server-side resolved (member by default,
+   steward by env) — never a forgeable tool arg. Networked multi-tenant use points at the HTTP
+   governed API with real OIDC roles. Tests: `core/test/connector.test.mjs` (manifest valid +
+   references the real server; `gov_status` over MCP reports an honest posture).
 4. **Signed compliance/evidence report** — M — _in progress._
 3. **Real tool-runner + vetted tool registry** — L — _pending._
 5. **Runtime OPA + policy-change review flow** — M — _pending._
