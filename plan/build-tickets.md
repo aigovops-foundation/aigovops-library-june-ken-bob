@@ -477,6 +477,18 @@ once.)
   gVisor (T4) hardens the same contract on a Linux enclave; the worktree path is the laptop-safe
   interim. **This reaches the "first self-hosted change" milestone.**
 
+- **N4 · Continuous compliance attestation + drift** — M — **✅ shipped (2026-06-14).**
+  `core/src/core/attestation.js` maps the live governance posture (from `compliance.js`) to a
+  catalog of **named framework controls** — EU AI Act Art. 9 / 12 / 14 / 15, NYC LL144 § 5-301,
+  GDPR Art. 30, and least-privilege credentials — each with a pass/partial/attention/fail status
+  derived from the signed ledger and a rationale. `signAttestation()` emits one signed receipt
+  anchoring the attestation; **drift detection** compares to the prior attestation and flags
+  **regressions** (a control dropping rank) loudly. `npm run attest` is cron-friendly (writes
+  `attestations/latest.json` + a stamped JSON + HTML, exits non-zero on a regression so CI/cron
+  surfaces it). Tests: `core/test/attestation.test.mjs` (controls mapped from a seeded ledger;
+  one verifiable receipt; a seeded regression is caught; no-prior → no drift). The recurring,
+  signed artifact a regulated org renews.
+
 - **First brokered action** — T0 + T1: an agent does one real, scoped, expiring,
   fully-receipted thing.
 - **First sandboxed useful agent** — + T3 + T5: a tool runs isolated, under caps, with a
