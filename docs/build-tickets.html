@@ -80,7 +80,7 @@
   </header>
 
   <nav>
-    <a href="#t0">TICKET 0 · FIRST SLICE</a><a href="#ten">THE NEXT TEN</a><a href="#integrations">INTEGRATIONS</a><a href="#nextmoves">NEXT MOVES</a><a href="#milestones">MILESTONES</a>
+    <a href="#t0">TICKET 0 · FIRST SLICE</a><a href="#ten">THE NEXT TEN</a><a href="#integrations">INTEGRATIONS</a><a href="#nextmoves">NEXT MOVES</a><a href="#scale">SCALE · 100K</a><a href="#milestones">MILESTONES</a>
   </nav>
 
   <!-- TICKET 0 -->
@@ -203,6 +203,27 @@ Record = { ref, owner, scope, lastRotated, activeGrants }</div>
 
     <div class="tk"><div class="top"><span class="num">N1</span><span class="ti">Stand up the Linux enclave host</span><span class="badge sz">L</span><span class="badge c">OPS</span><span class="badge host">⏳ needs operator (Bob)</span></div>
       <p>Docker+gVisor, Vault, Keycloak, Postgres, the opa binary on a Linux VM — flips the gold items (live Vault, gVisor run, real rego, live OIDC, mutation tools) green at once. <span class="done">Left for Bob: irreversible credential + ops steps.</span></p></div>
+  </section>
+
+  <!-- SCALE TO 100K -->
+  <section id="scale">
+    <h2><span class="n">100k</span> Scale &amp; operations</h2>
+    <div class="lead">The foundations for running this as a workflow + management system for the global community — every secret in 1Password, deploy as code. Full map: plan/scale-architecture.md.</div>
+
+    <div class="tk"><div class="top"><span class="num">🔐</span><span class="ti">1Password secret storage</span><span class="badge sz">M</span><span class="badge c">SEC</span><span class="badge ship">✅ shipped</span></div>
+      <p>Every backend credential lives in a 1Password vault, referenced as <span class="mono">op://</span> and resolved at boot; API keys are brokered as short-lived scoped tokens (<span class="mono">SECRETS_PROFILE=1password</span>) — an agent never sees a raw key. <span class="done">Done: proven against a fake op runner; real op auth is the operator step.</span></p></div>
+
+    <div class="tk"><div class="top"><span class="num">🚀</span><span class="ti">Deploy stack as code</span><span class="badge sz">M</span><span class="badge c">OPS</span><span class="badge ship">✅ shipped</span></div>
+      <p>One command brings up the full backend — core, Postgres, Redis, Vault, Keycloak, OPA, Prometheus, Grafana — with secrets rendered from 1Password and CI validation. <span class="done">Done: docker-compose + bootstrap.sh + runbook; the live <span class="mono">up</span> on a host is Bob's step.</span></p></div>
+
+    <div class="tk"><div class="top"><span class="num">📊</span><span class="ti">Observability (#5)</span><span class="badge sz">M</span><span class="badge c">OPS</span><span class="badge ship">✅ shipped</span></div>
+      <p>Dependency-free <span class="mono">/metrics</span> (Prometheus), <span class="mono">/livez</span>, <span class="mono">/readyz</span>, wired to Prometheus + Grafana. <span class="done">Done: request/response counters, ledger + halted gauges.</span></p></div>
+
+    <div class="tk"><div class="top"><span class="num">⚖️</span><span class="ti">Horizontal-scale seam (#1/#6)</span><span class="badge sz">M</span><span class="badge c">CORE</span><span class="badge ship">✅ foundation</span></div>
+      <p>A shared state store (Memory default, Redis opt-in) and a distributed rate limiter enforced across instances. <span class="done">Done: the seam; migrating the loop's in-memory state to it is the first follow-up.</span></p></div>
+
+    <div class="tk"><div class="top"><span class="num">1–10</span><span class="ti">The full 100k roadmap</span><span class="badge sz">—</span><span class="badge c">PLAN</span><span class="badge host">🗺 mapped + staged</span></div>
+      <p>Workflow engine, review-queue routing, org/team RBAC, notifications, search, ledger checkpointing, and KMS/DSAR are mapped to shipped / partial / next in <span class="mono">plan/scale-architecture.md</span>, each with its interface. <span class="done">The one blocker that needs a human: standing up the enclave host (accounts, Vault, IdP, DNS).</span></p></div>
   </section>
 
   <!-- MILESTONES -->
