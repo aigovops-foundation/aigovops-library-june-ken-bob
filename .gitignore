@@ -13,3 +13,6 @@ core/secrets.local.json
 # exported evidence bundles (shared with auditors, not committed)
 evidence-bundle/
 core/evidence-bundle/
+
+# rendered deploy secrets (from 1Password) — NEVER commit
+deploy/.env

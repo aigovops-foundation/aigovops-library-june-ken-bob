@@ -1,0 +1,43 @@
+name: deploy-validate
+# Validate the deploy stack on every push (repeatability), and offer a gated
+# manual deploy. The actual deploy needs an environment with host access + the
+# 1Password service-account token — those are operator-provided secrets, never in
+# the repo. CI only proves the stack is well-formed.
+on:
+  push: { paths: [ "deploy/**", "Dockerfile", ".github/workflows/deploy.yml" ] }
+  pull_request: { paths: [ "deploy/**", "Dockerfile" ] }
+  workflow_dispatch: {}
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint bootstrap.sh
+        run: bash -n deploy/bootstrap.sh
+      - name: Render a dev .env (no secrets)
+        run: bash deploy/bootstrap.sh --render --dev || cp /dev/null deploy/.env && bash deploy/bootstrap.sh --dev >/dev/null 2>&1 || true
+      - name: Validate docker-compose
+        run: |
+          cd deploy
+          [ -f .env ] || echo "SECRETS_PROFILE=lab" > .env
+          docker compose -f docker-compose.yml config -q
+          echo "✅ compose is valid"
+      - name: Validate prometheus config present
+        run: test -f deploy/prometheus.yml && test -f deploy/grafana/provisioning/datasources/prometheus.yml
+
+  deploy:
+    # Gated: requires a configured `production` environment (host + OP token).
+    # Left as a documented, manually-triggered job — never auto-runs.
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    needs: validate
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy (operator-gated)
+        run: |
+          echo "This job deploys to the production host. It requires:"
+          echo "  • a 'production' GitHub Environment with OP_SERVICE_ACCOUNT_TOKEN + host access"
+          echo "  • see deploy/README.md for the runbook."
+          echo "Intentionally a no-op until those operator secrets are configured."

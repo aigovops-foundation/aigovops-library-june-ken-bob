@@ -1,0 +1,17 @@
+# deploy/prometheus.yml — scrape the governed core's /metrics.
+# At 100k scale run one core replica per pod; add a target per replica (or use
+# service discovery). Each /metrics is per-process; Prometheus aggregates.
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: aigovops-core
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["core:8787"]
+        labels: { service: "governed-core" }
+
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]
