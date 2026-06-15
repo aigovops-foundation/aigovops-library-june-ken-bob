@@ -44,6 +44,25 @@ test('the 1Password script creates items matching the op:// references', () => {
   assert.match(sh, /self-host/);
 });
 
+test('the dead-simple orchestrator is valid bash and chains the phases', () => {
+  const f = path.join(ROOT, 'deploy/dead-simple.sh');
+  execFileSync('bash', ['-n', f]);                       // valid syntax
+  const sh = read('deploy/dead-simple.sh');
+  for (const phase of ['preflight', 'onepassword', 'host', 'stack', 'vault', 'keycloak', 'dns', 'verify']) {
+    assert.ok(sh.includes(`phase_${phase}`), `orchestrator defines phase_${phase}`);
+  }
+  assert.match(sh, /ACTION REQUIRED/, 'pauses at human checkpoints');
+  assert.match(sh, /bootstrap\.sh/);
+  assert.match(sh, /provision\/3-vault\.sh/);
+});
+
+test('the dead-simple agent is defined with the right name + boundary', () => {
+  const md = read('.claude/agents/dead-simple.md');
+  assert.match(md, /^name:\s*dead-simple\s*$/m, 'agent is named dead-simple');
+  assert.match(md, /irreversible/i, 'states the irreversibility boundary');
+  assert.match(md, /dead-simple\.sh/, 'drives the orchestrator');
+});
+
 test('cloud-init installs docker + op and the runbook covers all four steps', () => {
   const ci = read(`${P}/2-cloud-init.yaml`);
   assert.match(ci, /get\.docker\.com/);

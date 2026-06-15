@@ -1,5 +1,11 @@
 # The four go-live steps — turnkey, but yours to run
 
+> **The dead-simple way:** run the agent — `> use the dead-simple agent to deploy` —
+> or its backbone directly: `bash deploy/dead-simple.sh`. It chains every
+> automatable step and stops at each human checkpoint below, driving you to the
+> exact page for the one irreversible action. (`.claude/agents/dead-simple.md`)
+
+
 These are the **irreversible, credentialed moves** the AiGovOps system deliberately
 keeps in human hands: creating accounts/keys, provisioning infrastructure, and
 changing DNS. The agent prepared each one as a single command; **you** run it and
