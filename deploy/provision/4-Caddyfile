@@ -1,0 +1,24 @@
+# deploy/provision/4-Caddyfile — STEP 4: public TLS termination.
+# Caddy gets + renews Let's Encrypt certs automatically. Run it on the host once
+# DNS A/AAAA records point at the host's IP (the DNS change is YOUR registrar
+# action — the agent cannot touch DNS).
+#
+#   docker run -d --name caddy --network host \
+#     -v $(pwd)/deploy/provision/4-Caddyfile:/etc/caddy/Caddyfile \
+#     -v caddy_data:/data caddy:2
+#
+# Replace the hostnames with your real domains.
+
+console.aigovops.org {
+	encode gzip
+	reverse_proxy localhost:8787
+}
+
+id.aigovops.org {
+	encode gzip
+	reverse_proxy localhost:8080
+}
+
+# Optional: keep /metrics, /livez, /readyz internal-only by NOT exposing them here
+# (scrape them on the private network). The blocks above publish only the console
+# and the IdP.

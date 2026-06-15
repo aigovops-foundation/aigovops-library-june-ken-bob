@@ -1,0 +1,40 @@
+#cloud-config
+# deploy/provision/2-cloud-init.yaml — STEP 2: provision a Linux host.
+# Paste this as "user-data" when you create a VM (DigitalOcean, Hetzner, AWS EC2,
+# GCP, Azure all accept cloud-init). It installs Docker + the 1Password CLI, clones
+# the repo, and leaves the stack ONE command away. YOU create the VM and provide
+# the OP service-account token — the agent cannot provision infrastructure.
+package_update: true
+package_upgrade: true
+packages:
+  - ca-certificates
+  - curl
+  - git
+  - gnupg
+
+runcmd:
+  # Docker (official convenience script)
+  - curl -fsSL https://get.docker.com | sh
+  - systemctl enable --now docker
+  # 1Password CLI
+  - curl -sS https://downloads.1password.com/linux/keys/1password.asc | gpg --dearmor -o /usr/share/keyrings/1password-archive-keyring.gpg
+  - echo "deb [arch=amd64 signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main" > /etc/apt/sources.list.d/1password.list
+  - apt-get update && apt-get install -y 1password-cli
+  # the repo
+  - git clone https://github.com/aigovops-foundation/aigovops-library-june-ken-bob.git /opt/aigovops
+  - chown -R root:root /opt/aigovops
+
+write_files:
+  - path: /opt/aigovops/NEXT-STEPS.txt
+    content: |
+      Host is ready. To bring up the AiGovOps stack:
+
+        export OP_SERVICE_ACCOUNT_TOKEN=ops_...     # from step 1
+        cd /opt/aigovops
+        bash deploy/provision/3-vault.sh            # init+unseal Vault, write scopes (step 3)
+        bash deploy/provision/3-keycloak.sh         # import the OIDC realm (step 3)
+        bash deploy/bootstrap.sh                     # render secrets from 1Password + up
+
+      Then point DNS at this host (step 4) and run Caddy for TLS:
+        docker run -d --name caddy --network host \
+          -v /opt/aigovops/deploy/provision/4-Caddyfile:/etc/caddy/Caddyfile caddy:2

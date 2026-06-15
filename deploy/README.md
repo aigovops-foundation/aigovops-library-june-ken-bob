@@ -85,3 +85,13 @@ The whole stack is automated and repeatable, but four steps need your credential
 and cannot be done autonomously: **creating the 1Password vault + service account**,
 **initializing/unsealing Vault**, **creating the Keycloak realm + client secret**,
 and **provisioning the production host/DNS**. Everything else is one command.
+
+Each of those four is now **turnkey** — a single prepared command + the credential
+entry only you can make. See **[`deploy/provision/README.md`](provision/README.md)**:
+
+| Step | Run | You provide |
+|------|-----|-------------|
+| 1 · 1Password | `bash deploy/provision/1-onepassword.sh` | sign-in + create a service account |
+| 2 · Host | paste `deploy/provision/2-cloud-init.yaml` as VM user-data | the VM + the OP token |
+| 3 · Vault + IdP | `bash deploy/provision/3-vault.sh` · `3-keycloak.sh` | Vault unseal-key custody, KC admin pw |
+| 4 · DNS + TLS | run `caddy` with `deploy/provision/4-Caddyfile` | the DNS A records |
