@@ -13,6 +13,7 @@
 
 import { FileProvider } from './secrets.fileprovider.js';
 import { VaultProvider } from './secrets.vaultprovider.js';
+import { OnePasswordProvider } from './secrets.onepassword.js';
 
 export const PROFILES = {
   lab: FileProvider,
@@ -20,6 +21,9 @@ export const PROFILES = {
   community: VaultProvider,
   enclave: VaultProvider,
   vault: VaultProvider,
+  '1password': OnePasswordProvider,
+  onepassword: OnePasswordProvider,
+  op: OnePasswordProvider,
 };
 
 export function resolveProfile(opts = {}) {

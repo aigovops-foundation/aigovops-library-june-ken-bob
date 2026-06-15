@@ -22,6 +22,18 @@ import { dispatch as agentDispatch, listAgents } from './core/agents.js';
 import * as auth from './core/auth.js';
 import { negotiate, t } from './core/i18n.js';
 import { routeDesk } from './api/desks.js';
+import { resolveSecret, isOpRef } from './core/op.js';
+
+// Boot: any backend credential supplied as an op:// reference is resolved from
+// 1Password (service-account token / `op signin`). Literals pass through
+// untouched; a failed resolution unsets the var (fail closed) rather than leaking
+// the reference string. This is how "every credential lives in 1Password" holds.
+for (const k of ['SESSION_SECRET', 'STEWARD_TOKEN', 'OIDC_CLIENT_SECRET', 'GITHUB_CLIENT_SECRET', 'DATABASE_URL', 'VAULT_TOKEN', 'LLM_CLOUD_KEY', 'REDIS_URL', 'OP_SERVICE_ACCOUNT_TOKEN']) {
+  if (isOpRef(process.env[k])) {
+    try { process.env[k] = resolveSecret(process.env[k]); }
+    catch (e) { console.error(`[op] could not resolve ${k} from 1Password: ${e.message}`); delete process.env[k]; }
+  }
+}
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.PORT || 8787);
