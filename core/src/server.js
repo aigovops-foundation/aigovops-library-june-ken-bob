@@ -24,6 +24,8 @@ import { negotiate, t } from './core/i18n.js';
 import { routeDesk } from './api/desks.js';
 import { resolveSecret, isOpRef } from './core/op.js';
 import * as metrics from './core/metrics.js';
+import { MemoryStore, createStateStore } from './core/statestore.js';
+import { createRateLimiter } from './core/ratelimit.js';
 
 // Boot: any backend credential supplied as an op:// reference is resolved from
 // 1Password (service-account token / `op signin`). Literals pass through
@@ -50,14 +52,16 @@ const memberCaps = createMemberCaps({ caps });
 // The governed loop, exposed to the local console (Ticket A2 over HTTP).
 const gov = createGovernedCore({ caps });
 
-// --- tiny rate limiter (per-IP token bucket) --------------------------------
-const buckets = new Map();
-function rateOk(ip, max = 60, windowMs = 60_000) {
-  const now = Date.now();
-  const b = buckets.get(ip) || { n: 0, reset: now + windowMs };
-  if (now > b.reset) { b.n = 0; b.reset = now + windowMs; }
-  b.n++; buckets.set(ip, b);
-  return b.n <= max;
+// --- rate limiter — store-backed so it works ACROSS instances (#1/#6) -------
+// MemoryStore by default (single-node, unchanged); RedisStore when REDIS_URL is
+// set, sharing the limit cluster-wide. createStateStore is async; we resolve it
+// at boot before listen().
+let stateStore = new MemoryStore();
+let rateLimiter = createRateLimiter(stateStore, { max: Number(process.env.RATE_MAX || 60) });
+async function initState() {
+  stateStore = await createStateStore();
+  rateLimiter = createRateLimiter(stateStore, { max: Number(process.env.RATE_MAX || 60) });
+  if (process.env.REDIS_URL) console.log('[state] shared state store: redis (multi-instance)');
 }
 
 function cors(origin, res) {
@@ -112,7 +116,7 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain; version=0.0.4; charset=utf-8' }); return res.end(out);
   }
 
-  if (!rateOk(ip)) return send(res, 429, { error: 'rate-limited' });
+  if (!(await rateLimiter.hit(ip))) return send(res, 429, { error: 'rate-limited' });
 
   // Who is calling? (null if unauthenticated) — write endpoints check this.
   const id = auth.identityFromReq(req);
@@ -400,7 +404,9 @@ const server = http.createServer(async (req, res) => {
   send(res, 404, { error: 'not-found' });
 });
 
-server.listen(PORT, () => {
-  console.log(`AiGovOps Library core listening on http://localhost:${PORT}`);
-  console.log(`  kid=${beacon.loadOrCreateKeys().kid}  cloud=${ALLOW_CLOUD ? 'opt-in' : 'local-only'}  origins=${ALLOWED.join(', ')}`);
+initState().catch((e) => console.error('[state] init failed, using in-memory store:', e.message)).finally(() => {
+  server.listen(PORT, () => {
+    console.log(`AiGovOps Library core listening on http://localhost:${PORT}`);
+    console.log(`  kid=${beacon.loadOrCreateKeys().kid}  cloud=${ALLOW_CLOUD ? 'opt-in' : 'local-only'}  origins=${ALLOWED.join(', ')}`);
+  });
 });
