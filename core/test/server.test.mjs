@@ -40,6 +40,14 @@ test('HTTP: auth gate + governed loop + console', async () => {
     }
     assert.equal((await J('GET', '/status')).body.ok, true);
 
+    // observability (#5): probes + metrics, unauthenticated
+    assert.equal((await J('GET', '/livez')).status, 200);
+    assert.equal((await J('GET', '/readyz')).status, 200);
+    const m = await J('GET', '/metrics');
+    assert.equal(m.status, 200);
+    assert.match(m.body, /aigov_http_requests_total/);
+    assert.match(m.body, /aigov_ledger_entries/);
+
     // the door is closed: a write WITHOUT auth is rejected
     const noauth = await J('POST', '/api/gov/decide', { pendingId: 'x', decision: 'approve' });
     assert.equal(noauth.status, 401, 'unauthenticated write must be 401');

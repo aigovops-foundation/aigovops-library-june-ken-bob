@@ -23,6 +23,7 @@ import * as auth from './core/auth.js';
 import { negotiate, t } from './core/i18n.js';
 import { routeDesk } from './api/desks.js';
 import { resolveSecret, isOpRef } from './core/op.js';
+import * as metrics from './core/metrics.js';
 
 // Boot: any backend credential supplied as an op:// reference is resolved from
 // 1Password (service-account token / `op signin`). Literals pass through
@@ -71,6 +72,7 @@ function cors(origin, res) {
 
 function send(res, code, obj) {
   const body = JSON.stringify(obj);
+  metrics.inc('aigov_http_responses_total', { code }, 1, 'HTTP responses by status code');
   res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8' });
   res.end(body);
 }
@@ -91,6 +93,25 @@ const server = http.createServer(async (req, res) => {
   cors(origin, res);
 
   if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }
+
+  // --- Observability (#5) — unauthenticated, rate-limit-exempt for probes -----
+  metrics.inc('aigov_http_requests_total', { method: req.method }, 1, 'HTTP requests by method');
+  if (url.pathname === '/livez') { res.writeHead(200, { 'Content-Type': 'text/plain' }); return res.end('ok'); }
+  if (url.pathname === '/readyz') {
+    let ready = true, detail = 'ready';
+    try { beacon.loadOrCreateKeys(); beacon.ledgerCount(); } catch (e) { ready = false; detail = 'not-ready: ' + e.message; }
+    res.writeHead(ready ? 200 : 503, { 'Content-Type': 'text/plain' }); return res.end(detail);
+  }
+  if (url.pathname === '/metrics') {
+    const out = metrics.render({
+      aigov_ledger_entries: beacon.ledgerCount(),       // cheap line count (full verify is on /readyz, not the scrape hot path)
+      aigov_loop_halted: gov.isHalted() ? 1 : 0,
+      aigov_members_total: memberCaps.list().length,
+      aigov_uptime_seconds: Math.floor(process.uptime()),
+    });
+    res.writeHead(200, { 'Content-Type': 'text/plain; version=0.0.4; charset=utf-8' }); return res.end(out);
+  }
+
   if (!rateOk(ip)) return send(res, 429, { error: 'rate-limited' });
 
   // Who is calling? (null if unauthenticated) — write endpoints check this.
