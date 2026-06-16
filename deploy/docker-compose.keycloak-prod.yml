@@ -1,0 +1,31 @@
+# deploy/docker-compose.keycloak-prod.yml — overlay to run Keycloak in PRODUCTION
+# mode: a persistent Postgres-backed DB (no dev in-memory store), behind Caddy TLS.
+# Apply ON TOP of the base compose:
+#   docker compose -f docker-compose.yml -f docker-compose.keycloak-prod.yml up -d keycloak
+#
+# The operator sets these in deploy/.env first (the irreversible credential step):
+#   KEYCLOAK_ADMIN_PASSWORD=…        (strong; the admin console password)
+#   POSTGRES_USER / POSTGRES_PASSWORD (the stack's postgres creds)
+#   KC_HOSTNAME=198.199.121.180      (or the real DNS name once DNS is set)
+# and creates the keycloak database once:
+#   docker compose exec postgres createdb -U "$POSTGRES_USER" keycloak
+services:
+  keycloak:
+    # `start` (not start-dev): production mode. Auto-builds on first run.
+    command:
+      - start
+      - --http-port=8080
+      - --hostname-strict=false
+      - --proxy-headers=xforwarded     # Caddy terminates TLS and forwards X-Forwarded-*
+      - --http-enabled=true
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+      KC_DB_USERNAME: ${POSTGRES_USER:?set POSTGRES_USER}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+      KC_HOSTNAME: ${KC_HOSTNAME:-198.199.121.180}
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:?set KEYCLOAK_ADMIN_PASSWORD}
+    depends_on:
+      postgres:
+        condition: service_healthy
