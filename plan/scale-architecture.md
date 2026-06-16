@@ -32,10 +32,10 @@ needs Bob's irreversible credential/ops steps.
 | 3 | Review queue at scale (routing/bulk) | 🟡 **partial** | `/api/gov/pending` queue + the caps dial exist. **Next:** routing rules, assignment, bulk actions, SLA clock, search-backed filtering. |
 | 4 | RBAC hierarchy + orgs/teams | 🟡 **partial** | `member-caps.js` is the per-member dial; `identity.js` roles. **Next:** org/team model, delegated admin, reviewer/auditor/regional-steward roles, member lifecycle. |
 | 5 | Observability + SLOs | ✅ **shipped** | `/metrics` + `/livez` + `/readyz`; Prometheus + Grafana in the stack. **Next:** alert rules + dashboards JSON + tracing. |
-| 6 | Distributed rate-limit + abuse | 🟡 **partial** | `ratelimit.js` is store-backed (cluster-wide). **Next:** per-identity quotas tied to caps, Sybil/abuse checks on signup + proposals. |
-| 7 | Notifications + async comms | ⬜ **next build** | Drift/regression signals exist (`attest.mjs`). **Next:** an email/web-push/in-app notifier with digests + preferences. |
-| 8 | Search + indexing | ⬜ **next build** | Ledger + members are queryable linearly today. **Next:** Postgres FTS (or OpenSearch) indexes over receipts/members/skills/frameworks. |
-| 9 | Ledger scalability (checkpoints) | ⬜ **next build** | `verifyLedger()` is O(n) — fine to ~10⁵, not 10⁷. **Next:** periodic signed Merkle/checkpoint anchors + segmented/partial verification + retention/archival. |
+| 6 | Distributed rate-limit + abuse | ✅ **shipped** | `ratelimit.js` (IP) + `quota.js` (per-identity, store-backed/cluster-wide, tiered steward>member>anon) wired into the gateway. **Next:** Sybil/abuse checks on signup. |
+| 7 | Notifications + async comms | ✅ **shipped (Hermes)** | `notify.*` multi-channel messenger (dashboard/email/sms/voice/telegram) + two-way bridge + metadata-only receipts. **Next:** digests + per-member channel preferences. |
+| 8 | Search + indexing | ✅ **shipped** | `search.js` (dependency-free TF·IDF inverted index over frameworks/skills/members/receipts) + role-scoped `/api/search`. **Scale backend:** Postgres FTS / OpenSearch when the corpus outgrows memory. |
+| 9 | Ledger scalability (checkpoints) | ✅ **shipped** | `checkpoints.js` — signed anchors over the chain head + segmented `verifyFromCheckpoint()` (O(n−checkpoint)); `/api/checkpoint`, `/api/verify?fast=1`, `npm run checkpoint`. **Next:** automated archival of anchored segments. |
 | 10 | KMS + data lifecycle (DSAR, i18n, a11y) | 🟡 **partial** | Beacon keys can come from 1Password (`BEACON_*_PEM` as `op://`); i18n `en`/`es`. **Next:** KMS/HSM + key rotation with multi-key verify, automated GDPR/DPDP DSAR, residency, full WCAG. |
 
 ## How a request scales (target topology)

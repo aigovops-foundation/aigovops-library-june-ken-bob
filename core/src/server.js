@@ -31,6 +31,9 @@ import { createTelegramBridge } from './core/bridge.telegram.js';
 import * as metrics from './core/metrics.js';
 import { MemoryStore, createStateStore } from './core/statestore.js';
 import { createRateLimiter } from './core/ratelimit.js';
+import { createQuota } from './core/quota.js';
+import { searchCorpus } from './core/search.js';
+import { createCheckpoint, verifyFromCheckpoint } from './core/checkpoints.js';
 
 // Boot: any backend credential supplied as an op:// reference is resolved from
 // 1Password (service-account token / `op signin`). Literals pass through
@@ -79,9 +82,11 @@ const safeEqual = (a, b) => { const x = Buffer.from(String(a)), y = Buffer.from(
 // at boot before listen().
 let stateStore = new MemoryStore();
 let rateLimiter = createRateLimiter(stateStore, { max: Number(process.env.RATE_MAX || 60) });
+let quota = createQuota(stateStore);   // #6: per-identity, cluster-wide via the same store
 async function initState() {
   stateStore = await createStateStore();
   rateLimiter = createRateLimiter(stateStore, { max: Number(process.env.RATE_MAX || 60) });
+  quota = createQuota(stateStore);
   // #1: bind the shared store to the governed loop and keep the global kill switch
   // in sync across replicas (a kill on any instance halts this one within the poll
   // interval; the originating instance is instant). MemoryStore = same-process, no-op.
@@ -155,6 +160,9 @@ const server = http.createServer(async (req, res) => {
   const id = auth.identityFromReq(req);
   // #6: onboard every authenticated caller into the capability dial (idempotent).
   if (id) memberCaps.onboard(id);
+  // #6: per-identity quota on top of the IP limiter — stops one identity over-
+  // consuming across hosts/sessions. Tiered (steward > member > anon), cluster-wide.
+  if (id) { const qd = await quota.check(id); if (!qd.allowed) return send(res, 429, { error: 'quota-exceeded', tier: qd.tier, max: qd.max }); }
   const needAuth = (role) => { if (!auth.hasRole(id, role)) { send(res, id ? 403 : 401, { error: role === 'steward' ? 'steward-required' : 'auth-required' }); return true; } return false; };
 
   // --- AUTH (GitHub OAuth) ------------------------------------------------
@@ -262,8 +270,29 @@ const server = http.createServer(async (req, res) => {
   }
 
   // --- VERIFY the ledger --------------------------------------------------
+  // Full walk by default; ?fast=1 uses the latest signed checkpoint (#9) to verify
+  // only entries since the anchor — O(n - checkpoint) for a large ledger.
   if (url.pathname === '/api/verify') {
-    return send(res, 200, beacon.verifyLedger());
+    return send(res, 200, url.searchParams.get('fast') === '1' ? verifyFromCheckpoint() : beacon.verifyLedger());
+  }
+  // --- CHECKPOINT (#9 — steward anchors the ledger) -----------------------
+  if (url.pathname === '/api/checkpoint' && req.method === 'POST') {
+    if (needAuth('steward')) return;
+    return send(res, 200, createCheckpoint());
+  }
+  // --- SEARCH (#8 — role-scoped index over frameworks/skills/members/receipts) ---
+  if (url.pathname === '/api/search' && req.method === 'GET') {
+    const q = url.searchParams.get('q') || '';
+    const typeParam = url.searchParams.get('type');
+    const types = typeParam ? typeParam.split(',').map((s) => s.trim()).filter(Boolean) : null;
+    const who = id || { role: 'member', id: 'member:anon' };
+    const corpus = {
+      frameworks: frameworks(),
+      skills: gov.skills.list(),
+      members: who.role === 'steward' ? memberCaps.list() : [],   // member directory is steward-only
+      receipts: gov.oversight(who).view(),                         // already role-scoped
+    };
+    return send(res, 200, { q, results: searchCorpus(corpus, q, { types, limit: 25 }) });
   }
 
   // --- AGENT proposal demo (propose-not-execute) --------------------------

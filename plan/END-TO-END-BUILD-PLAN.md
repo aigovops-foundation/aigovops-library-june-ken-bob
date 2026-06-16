@@ -81,15 +81,25 @@ demands them; none blocks Phase A.
 |---|-------------|--------|--------|-----------|
 | #3 | Review queue at scale | 🟡 | M | `/api/gov/pending` + caps dial exist → routing rules, assignment, bulk actions, SLA clock, filtering. |
 | #4 | RBAC hierarchy + orgs/teams | 🟡 | M | `member-caps.js` per-member dial → org/team model, delegated admin, reviewer/auditor/regional-steward roles, member lifecycle. |
-| #6 | Distributed rate-limit + abuse | 🟡 | M | cluster-wide limiter shipped → per-identity quotas tied to caps, Sybil/abuse checks on signup + proposals. |
+| #6 | Distributed rate-limit + abuse | ✅ | M | **Per-identity quota shipped** (`quota.js`, store-backed/cluster-wide, tiered steward>member>anon; wired into the gateway). Remaining (→ A4b-adjacent): Sybil/abuse checks on signup. |
 | #7 | Notifications + async comms | ✅→🟡 | — | **Largely delivered by Hermes** (multi-channel + receipts). Remaining: digests + per-member channel preferences. |
+| #8 | Search + indexing | ✅ | M | **Shipped** — `search.js` (dependency-free TF·IDF inverted index over frameworks/skills/members/receipts) + role-scoped `/api/search`. Postgres FTS is the documented scale backend when the corpus outgrows memory. |
+| #9 | Ledger scalability (checkpoints) | ✅ | M | **Shipped** — `checkpoints.js` (signed anchors + segmented `verifyFromCheckpoint` = O(n−checkpoint)) + `/api/checkpoint`, `/api/verify?fast=1`, `npm run checkpoint`, non-destructive archive insight. |
 | #10 | KMS + data lifecycle | 🟡 | L | Beacon keys can come from 1Password; i18n en/es → KMS/HSM + key rotation w/ multi-key verify, automated GDPR/DPDP DSAR, residency, full WCAG. |
 | #2 | Workflow engine (multi-step, SLAs) | ⬜ | L | the governed loop is the step primitive → durable workflow/task model on the ledger: states, assignment, SLA timers, escalation, resumability. |
-| #8 | Search + indexing | ⬜ | M | linear queries today → Postgres FTS (or OpenSearch) over receipts/members/skills/frameworks. |
-| #9 | Ledger scalability (checkpoints) | ⬜ | M | `verifyLedger()` is O(n), fine to ~10⁵ → periodic signed Merkle/checkpoint anchors + segmented verification + retention/archival. |
 
-**Recommended order:** #3 + #4 (member-facing leverage) → #6 → #8 → #2 → #9 → #10 as
-compliance demand lands. Hermes already closed the bulk of #7.
+**Done this pass:** #6 (per-identity quotas), #8 (search), #9 (checkpoints) — the
+clean, dependency-free, infrastructural wins. **Remaining (product surface):** #3
+(queue routing/SLA) + #4 (orgs/teams) — member-facing leverage, next; #2 (workflow
+engine, L) and #10 (KMS/DSAR, L) as compliance demand lands. Hermes covers most of #7.
+
+**On A4b (stateless brokering) — candid recommendation:** the full version converts
+the *synchronous* `SecretsProvider` contract to async (rippling through the gate,
+govapi, caps, and every test) just to remove the sticky-session requirement. That is
+high blast radius for modest benefit — sticky sessions (A5) are a standard, sound
+pattern. **Recommend: keep sticky sessions; defer A4b** until a concrete need (e.g.
+mid-loop replica failover) justifies the surgery. The global kill switch (the one
+safety-critical piece) is already cluster-wide.
 
 ---
 

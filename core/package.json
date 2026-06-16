@@ -11,6 +11,7 @@
     "start": "node src/server.js",
     "keygen": "node scripts/keygen.mjs",
     "verify": "node scripts/verify-ledger.mjs",
+    "checkpoint": "node scripts/checkpoint.mjs",
     "test": "node --test",
     "pulse": "node scripts/pulse.mjs",
     "export:evidence": "node scripts/export-evidence.mjs",
