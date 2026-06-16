@@ -15,6 +15,7 @@
     "rotate-keys": "node scripts/rotate-keys.mjs",
     "gate": "node scripts/governance-gate.mjs",
     "scan": "node scripts/scan.mjs",
+    "demo": "node scripts/demo.mjs",
     "test": "node --test",
     "pulse": "node scripts/pulse.mjs",
     "export:evidence": "node scripts/export-evidence.mjs",

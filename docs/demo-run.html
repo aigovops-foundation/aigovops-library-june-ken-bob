@@ -1,0 +1,99 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AiGovOps — end-to-end demo</title>
+<style>
+:root{--paper:#0c1430;--ink:#dce6f5;--ink2:#8da3c8;--line:rgba(120,160,210,.22);--card:rgba(255,255,255,.04);--teal:#3fd0c8;--green:#36e08a;--gold:#e8c25a}
+*{box-sizing:border-box;margin:0;padding:0}body{font:16px/1.6 ui-serif,Georgia,serif;color:var(--ink);background:var(--paper);padding:40px 20px 90px}
+.wrap{max-width:820px;margin:0 auto}.hdr{text-align:center;margin-bottom:8px}
+h1{font-family:ui-sans-serif,system-ui;font-size:30px;color:#fff;letter-spacing:.01em}
+.sub{color:var(--ink2);font-size:15px;margin:6px 0 4px}.quote{color:var(--gold);font-style:italic;margin:14px 0 34px;text-align:center}
+.scene{display:flex;gap:18px;border-top:1px solid var(--line);padding:26px 0}
+.num{font-family:ui-sans-serif;font-weight:800;color:var(--teal);font-size:22px;min-width:34px}
+h2{font-family:ui-sans-serif;font-size:19px;color:#fff;margin-bottom:8px}p{color:var(--ink);margin-bottom:10px}
+.detail{font-family:ui-monospace,monospace;font-size:13px;color:#bfe;background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:9px;padding:9px 11px}
+.receipt{margin-top:9px;font-size:12px;color:var(--ink2)}.receipt code{color:var(--green);font-size:12px}.tag{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:1px 8px;color:var(--teal);font-family:ui-sans-serif;font-size:11px}.ts{font-family:ui-monospace,monospace}
+.finale{margin-top:30px;border:1px solid var(--line);border-radius:14px;background:var(--card);padding:20px}
+.finale b{color:var(--green)}.meta{color:var(--ink2);font-size:13px;text-align:center;margin-top:26px}
+</style></head><body><div class="wrap">
+<div class="hdr"><h1>AiGovOps — the governed core, end to end</h1>
+<div class="sub">A live walk through the whole system. Every step below was actually executed to generate this page; each left a signed, metadata-only receipt.</div></div>
+<div class="quote">“Agents do the bureaucracy; humans hold the meaning — and humans hold the keys.”</div>
+
+  <section class="scene">
+    <div class="num">1</div>
+    <div class="body">
+      <h2>A risky ask, governed</h2>
+      <p>An agent asks to publish. The Yes-Gate classifies it as irreversible and PAUSES for a human. A steward approves; the broker mints a scoped token that expires in 60s — never the master secret — and a sandboxed tool runs with it.</p>
+      <div class="detail">gated ✓ → steward approved ✓ → token 119113efe4… (≠ master) → sandboxed run → result: "published"</div>
+      <div class="receipt"><span class="tag">signed receipt</span> <code>tool/tool-run</code> · kid <code>d31a29d8000e1567</code> · sig <code>TBfJBiMCs1/AhwgWxU1r…</code> · <span class="ts">2026-06-16T11:02:15.832Z</span></div>
+    </div>
+  </section>
+  <section class="scene">
+    <div class="num">2</div>
+    <div class="body">
+      <h2>What regulations apply</h2>
+      <p>A member asks about an AI tool that screens job candidates. Lantern maps the problem to the frameworks that bind it and the gates to pass.</p>
+      <div class="detail">mapped to 9 frameworks (incl. EU AI Act — high-risk: employment) → human-gate required before any effect</div>
+      <div class="receipt"><span class="tag">signed receipt</span> <code>artifact/assess</code> · kid <code>d31a29d8000e1567</code> · sig <code>skQ0g6VbfXd7ftenUI9c…</code> · <span class="ts">2026-06-16T11:02:15.833Z</span></div>
+    </div>
+  </section>
+  <section class="scene">
+    <div class="num">3</div>
+    <div class="body">
+      <h2>The dial they earn, not a switch they flip</h2>
+      <p>Capability is bounded. Even with a human yes, the agent is paused at its spend cap — it does not push through. A signed breach receipt records the pause.</p>
+      <div class="detail">steward approved, but spend 50 &gt; cap 10 → PAUSED (capped:spend-cap); no token brokered</div>
+      <div class="receipt"><span class="tag">signed receipt</span> <code>gate/cap-breach</code> · kid <code>d31a29d8000e1567</code> · sig <code>ZlbKZsAN+4tCLVfwDw5W…</code> · <span class="ts">2026-06-16T11:02:15.833Z</span></div>
+    </div>
+  </section>
+  <section class="scene">
+    <div class="num">4</div>
+    <div class="body">
+      <h2>Scale without losing the thread</h2>
+      <p>The whole loop is replica-agnostic. A member proposes on one instance, a steward approves on a second, and the brokered tool runs on a third — one cluster, one signed ledger. No sticky sessions.</p>
+      <div class="detail">propose@A → approve@B → run@C = "built" (token issued by B, redeemed by C)</div>
+      <div class="receipt"><span class="tag">signed receipt</span> <code>tool/tool-run</code> · kid <code>d31a29d8000e1567</code> · sig <code>yQqCleRStMlCban4OkZU…</code> · <span class="ts">2026-06-16T11:02:15.866Z</span></div>
+    </div>
+  </section>
+  <section class="scene">
+    <div class="num">5</div>
+    <div class="body">
+      <h2>Multi-step work, with SLAs</h2>
+      <p>Beyond one decision: a durable, resumable workflow with per-step assignment, SLA timers, and escalation. State lives in the shared store — any replica can advance it.</p>
+      <div class="detail">workflow "q3-review" — 3 steps → state: completed</div>
+      <div class="receipt"><span class="tag">signed receipt</span> <code>workflow/complete</code> · kid <code>d31a29d8000e1567</code> · sig <code>ugJn4gkV3qoYEjB4hWB+…</code> · <span class="ts">2026-06-16T11:02:15.868Z</span></div>
+    </div>
+  </section>
+  <section class="scene">
+    <div class="num">6</div>
+    <div class="body">
+      <h2>The messenger, governed</h2>
+      <p>Hermes delivers — alerts, reports, "a proposal is waiting" — across channels (dashboard/email/SMS/voice/telegram). Propose-only, and the receipt is metadata-only: the fact of the message, never its contents.</p>
+      <div class="detail">notification delivered to stewards (dashboard); body never logged</div>
+      <div class="receipt"><span class="tag">signed receipt</span> <code>notify/deliver</code> · kid <code>d31a29d8000e1567</code> · sig <code>/dPSUlhOBh8hl5rlVwv8…</code> · <span class="ts">2026-06-16T11:02:15.868Z</span></div>
+    </div>
+  </section>
+  <section class="scene">
+    <div class="num">7</div>
+    <div class="body">
+      <h2>Find anything; prove everything</h2>
+      <p>Search indexes the frameworks/skills/members/receipts. Checkpoints anchor the chain so verification stays fast at scale. And the signing key rotates — yet every receipt signed under the old key still verifies.</p>
+      <div class="detail">search "ai act" → 2 hit(s) (EU AI Act); ledger anchored; key rotated d31a29d8…→26b1a049…; pre-rotation receipt still verifies: true</div>
+      <div class="receipt"><span class="tag">signed receipt</span> <code>gate/key-rotation</code> · kid <code>26b1a049e0a364f7</code> · sig <code>zApjQD8SGlZYkiIDnbWP…</code> · <span class="ts">2026-06-16T11:02:15.871Z</span></div>
+    </div>
+  </section>
+  <section class="scene">
+    <div class="num">8</div>
+    <div class="body">
+      <h2>Your data, on demand</h2>
+      <p>A data-subject access request returns the complete record held for a subject — metadata only, no payloads, no PII — and the export is itself signed, so it’s verifiable offline.</p>
+      <div class="detail">DSAR for "agent:maker": 8 receipts, signed (kid=26b1a049e0a364f7), residency=unspecified</div>
+      <div class="receipt"><span class="tag">signed receipt</span> <code>dsar/export</code> · kid <code>26b1a049e0a364f7</code> · sig <code>sLFL/kuaeWQlRqDu2JoG…</code> · <span class="ts">2026-06-16T11:02:15.872Z</span></div>
+    </div>
+  </section>
+<div class="finale">
+  <h2 style="margin-bottom:10px">The whole trail verifies</h2>
+  <p><b>15 signed receipts.</b> Signatures + hash chain valid: <b>true</b>. Governance gate: <b>PASS</b>. The signing key was rotated mid-run and pre-rotation receipts still verify.</p>
+  <div class="detail">verify it yourself: every receipt is Ed25519-signed; the public key is at <code>/beacon/pubkey</code>, and <code>npm run verify</code> / <code>openssl</code> check the chain offline. No payloads, no PII — metadata only.</div>
+</div>
+<div class="meta">Generated by <code>npm run demo</code> · dependency-free · the same engine that runs in production.</div>
+</div></body></html>
