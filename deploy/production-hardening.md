@@ -7,7 +7,7 @@ Foundation can onboard real members onto. Status as of this pass:
 |------|-------|---------------------|
 | **3. Backups** | ✅ **done** | nothing — verify it ran |
 | **2. Live broker secrets** | ✅ **wired (placeholders)** | swap placeholders for real keys when a tool hits a real target |
-| **1. Keycloak prod + live OIDC** | 🟡 **config ready** | the credential steps below |
+| **1. Keycloak prod + live OIDC** | ✅ **live** | only: create Ken/Bob accounts + add to `steward` |
 
 ---
 
@@ -42,28 +42,44 @@ docker compose restart core
 > For a 1Password-brokered gov-loop (instead of the file), wire the OnePasswordProvider
 > for A4b (store-backed grants) first — a follow-up; the file path is A4b-ready today.
 
-## 1. Keycloak production mode (config ready — your credential step)
+## 1. Keycloak production mode — LIVE
 
-Config overlay: `deploy/docker-compose.keycloak-prod.yml` (Postgres-backed,
-behind Caddy TLS). The realm/client already exist (`provision/3-keycloak-realm.json`,
-`provision/3-keycloak.sh`). Your moves (the irreversible credential entry):
+What's done on the box (all verified):
+- Keycloak runs in **prod mode**, Postgres-backed (`docker-compose.keycloak-prod.yml`;
+  `POSTGRES_USER/PASSWORD=aigov`, a `keycloak` DB).
+- The `aigovops` realm is imported; the `aigov-console` client has the box redirect
+  (`https://198.199.121.180/auth/oidc/callback`) + web origin and a **freshly rotated
+  secret** (on the box `.env`, never in the repo).
+- **Caddy** routes the OIDC paths to Keycloak (IP-only transitional config — the
+  DNS target stays `provision/4-Caddyfile`):
+  ```caddy
+  198.199.121.180:443 {
+      tls internal
+      @kc path /realms/* /resources/* /admin/* /js/keycloak/* /robots.txt
+      handle @kc { reverse_proxy localhost:8080 }   # Keycloak
+      handle      { reverse_proxy localhost:8787 }   # the core
+  }
+  ```
+- The core trusts Caddy's self-signed CA via `NODE_EXTRA_CA_CERTS=/app/core/keys/
+  caddy-root.crt` (so server-side OIDC discovery/token/JWKS work over the internal
+  HTTPS). **Remove this once real DNS + Let's Encrypt TLS land.**
+- `.env` has `OIDC_ISSUER`, `OIDC_CLIENT_ID=aigov-console`, `OIDC_REDIRECT_URI`,
+  `OIDC_CLIENT_SECRET`, `OIDC_STEWARD_GROUP=steward`. `/auth/oidc/login` 302-redirects
+  to the Keycloak login page; discovery issuer matches; the steward token still works.
 
+**The only step left is yours** (account creation + access control — never the agent's):
+create Ken's and Bob's user accounts and put them in the `steward` group. Easiest via
+the admin console `https://198.199.121.180/admin/` (log in `admin` / your
+`KEYCLOAK_ADMIN_PASSWORD`) → Users → Add user → set password → Groups → join `steward`.
+Or with kcadm:
 ```bash
-cd /opt/aigovops/deploy
-# 1) set in .env:  KEYCLOAK_ADMIN_PASSWORD=<strong>  POSTGRES_USER/PASSWORD  KC_HOSTNAME=198.199.121.180
-# 2) one-time: create the keycloak DB
-docker compose exec postgres createdb -U "$POSTGRES_USER" keycloak
-# 3) bring Keycloak up in prod mode
-docker compose -f docker-compose.yml -f docker-compose.keycloak-prod.yml up -d keycloak
-# 4) import the realm + rotate the aigov-console client secret → 1Password
-KC_URL=http://127.0.0.1:8080 KC_ADMIN_PW="$KEYCLOAK_ADMIN_PASSWORD" bash provision/3-keycloak.sh
-# 5) point the core at it — set in .env, then recreate core:
-#    OIDC_ISSUER=https://198.199.121.180/realms/aigovops   (via Caddy)
-#    OIDC_CLIENT_ID=aigov-console
-#    OIDC_CLIENT_SECRET=op://AiGovOps/oidc/client-secret
-#    OIDC_REDIRECT_URI=https://198.199.121.180/auth/oidc/callback
-docker compose up -d --force-recreate core
-# 6) add Ken + Bob to the 'steward' group in the Keycloak admin console
+KCID=$(docker ps --filter ancestor=quay.io/keycloak/keycloak:24.0 --format '{{.ID}}'|head -1)
+KC="docker exec -i $KCID /opt/keycloak/bin/kcadm.sh"
+$KC config credentials --server http://127.0.0.1:8080 --realm master --user admin --password "$KEYCLOAK_ADMIN_PASSWORD"
+$KC create users -r aigovops -s username=bob -s enabled=true -s email=bob@aigovops.org
+$KC set-password -r aigovops --username bob --new-password '<bob picks this>'    # YOUR credential
+GID=$($KC get groups -r aigovops | grep -B1 '"name" : "steward"' | grep id | sed 's/.*: "//;s/".*//')
+$KC update users/$($KC get users -r aigovops -q username=bob --fields id --format csv|tr -d '"') /groups/$GID -r aigovops -n   # join steward
 ```
 Then members sign in at `/console` via OIDC instead of the steward token. Until
 then, the steward token remains the admin escape hatch.
