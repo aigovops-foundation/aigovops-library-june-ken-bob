@@ -34,6 +34,8 @@ import { createRateLimiter } from './core/ratelimit.js';
 import { createQuota } from './core/quota.js';
 import { searchCorpus } from './core/search.js';
 import { createCheckpoint, verifyFromCheckpoint } from './core/checkpoints.js';
+import { Orgs } from './core/orgs.js';
+import { Workflows } from './core/workflow.js';
 
 // Boot: any backend credential supplied as an op:// reference is resolved from
 // 1Password (service-account token / `op signin`). Literals pass through
@@ -60,6 +62,8 @@ const caps = new Caps();
 const memberCaps = createMemberCaps({ caps });
 // The governed loop, exposed to the local console (Ticket A2 over HTTP).
 const gov = createGovernedCore({ caps });
+// #4: orgs/teams + delegated RBAC, steward-managed.
+const orgs = new Orgs();
 
 // Hermes — the governed messenger (dashboard always-on; email/sms/voice/telegram
 // when NOTIFY_CHANNELS + broker creds are set). The brain (what to send) is here
@@ -83,10 +87,12 @@ const safeEqual = (a, b) => { const x = Buffer.from(String(a)), y = Buffer.from(
 let stateStore = new MemoryStore();
 let rateLimiter = createRateLimiter(stateStore, { max: Number(process.env.RATE_MAX || 60) });
 let quota = createQuota(stateStore);   // #6: per-identity, cluster-wide via the same store
+let workflows = new Workflows({ store: stateStore });   // #2: durable, resumable, store-backed
 async function initState() {
   stateStore = await createStateStore();
   rateLimiter = createRateLimiter(stateStore, { max: Number(process.env.RATE_MAX || 60) });
   quota = createQuota(stateStore);
+  workflows = new Workflows({ store: stateStore });   // rebind to the resolved (possibly Redis) store
   // #1: bind the shared store to the governed loop and keep the global kill switch
   // in sync across replicas (a kill on any instance halts this one within the poll
   // interval; the originating instance is instant). MemoryStore = same-process, no-op.
@@ -347,7 +353,17 @@ const server = http.createServer(async (req, res) => {
   }
   if (url.pathname === '/api/gov/pending' && req.method === 'GET') {
     if (needAuth('steward')) return;   // the approval queue is a steward view
-    return send(res, 200, { pending: gov.pending() });
+    // #3: routing/SLA filters — ?assignee=<id>&overdue=1, sorted soonest-due first.
+    const assignee = url.searchParams.get('assignee');
+    const overdue = url.searchParams.get('overdue') === '1';
+    return send(res, 200, { pending: gov.pending({ assignee: assignee ?? undefined, overdue }) });
+  }
+  // #3: assign a pending proposal to a reviewer (steward).
+  if (url.pathname === '/api/gov/assign' && req.method === 'POST') {
+    if (needAuth('steward')) return;
+    const { pendingId, assignee } = await readBody(req);
+    try { return send(res, 200, gov.assign(pendingId, assignee)); }
+    catch (e) { return send(res, 400, { error: e.message }); }
   }
   if (url.pathname === '/api/gov/decide' && req.method === 'POST') {
     if (needAuth('steward')) return;   // the human gate is a steward's call
@@ -369,6 +385,76 @@ const server = http.createServer(async (req, res) => {
     if (needAuth('member')) return;
     const { token, tool, input } = await readBody(req);
     try { return send(res, 200, await gov.runRegisteredTool({ token, tool, input })); }
+    catch (e) { return send(res, 400, { error: e.message }); }
+  }
+
+  // --- ORGS / TEAMS (#4 — RBAC hierarchy, steward-managed) ---------------
+  if (url.pathname === '/api/orgs' && req.method === 'GET') {
+    if (needAuth('steward')) return;
+    return send(res, 200, { orgs: orgs.list() });
+  }
+  if (url.pathname === '/api/orgs' && req.method === 'POST') {
+    if (needAuth('steward')) return;
+    const { id: orgId, name, steward } = await readBody(req);
+    try { return send(res, 200, orgs.createOrg(orgId, name, { steward })); }
+    catch (e) { return send(res, 400, { error: e.message }); }
+  }
+  if (url.pathname === '/api/orgs/view' && req.method === 'GET') {
+    if (needAuth('steward')) return;
+    try { return send(res, 200, orgs.get(url.searchParams.get('id'))); }
+    catch (e) { return send(res, 404, { error: e.message }); }
+  }
+  if (url.pathname === '/api/orgs/member' && req.method === 'POST') {
+    if (needAuth('steward')) return;
+    const { orgId, memberId, roles } = await readBody(req);
+    try { return send(res, 200, orgs.setMember(orgId, memberId, { roles })); }
+    catch (e) { return send(res, 400, { error: e.message }); }
+  }
+  if (url.pathname === '/api/orgs/team' && req.method === 'POST') {
+    if (needAuth('steward')) return;
+    const { orgId, teamId, name, lead } = await readBody(req);
+    try { return send(res, 200, orgs.createTeam(orgId, teamId, name, { lead })); }
+    catch (e) { return send(res, 400, { error: e.message }); }
+  }
+
+  // --- WORKFLOWS (#2 — durable multi-step, SLA + escalation, resumable) ---
+  if (url.pathname === '/api/workflows/define' && req.method === 'POST') {
+    if (needAuth('steward')) return;            // defining a workflow is a steward act
+    const { defId, steps } = await readBody(req);
+    try { return send(res, 200, await workflows.define(defId, steps)); }
+    catch (e) { return send(res, 400, { error: e.message }); }
+  }
+  if (url.pathname === '/api/workflows/start' && req.method === 'POST') {
+    if (needAuth('member')) return;             // a member can start an instance
+    const { defId, data } = await readBody(req);
+    try { return send(res, 200, await workflows.start(defId, { actor: id.id, data })); }
+    catch (e) { return send(res, 400, { error: e.message }); }
+  }
+  if (url.pathname === '/api/workflows' && req.method === 'GET') {
+    if (needAuth('steward')) return;
+    return send(res, 200, { workflows: await workflows.list({ state: url.searchParams.get('state') || undefined, overdue: url.searchParams.get('overdue') === '1' }) });
+  }
+  if (url.pathname === '/api/workflows/view' && req.method === 'GET') {
+    if (needAuth('steward')) return;
+    try { return send(res, 200, await workflows.get(url.searchParams.get('id'))); }
+    catch (e) { return send(res, 404, { error: e.message }); }
+  }
+  if (url.pathname === '/api/workflows/advance' && req.method === 'POST') {
+    if (needAuth('steward')) return;            // advancing past an approval step is the human gate
+    const { id: wfId, decision, note } = await readBody(req);
+    try { return send(res, 200, await workflows.advance(wfId, { decision, note, actor: id.id })); }
+    catch (e) { return send(res, 400, { error: e.message }); }
+  }
+  if (url.pathname === '/api/workflows/assign' && req.method === 'POST') {
+    if (needAuth('steward')) return;
+    const { id: wfId, stepId, assignee } = await readBody(req);
+    try { return send(res, 200, await workflows.assign(wfId, stepId, assignee)); }
+    catch (e) { return send(res, 400, { error: e.message }); }
+  }
+  if (url.pathname === '/api/workflows/escalate' && req.method === 'POST') {
+    if (needAuth('steward')) return;
+    const { id: wfId, to } = await readBody(req);
+    try { return send(res, 200, await workflows.escalate(wfId, { to, actor: id.id })); }
     catch (e) { return send(res, 400, { error: e.message }); }
   }
 

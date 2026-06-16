@@ -79,19 +79,19 @@ demands them; none blocks Phase A.
 
 | # | Improvement | Status | Effort | Next step |
 |---|-------------|--------|--------|-----------|
-| #3 | Review queue at scale | 🟡 | M | `/api/gov/pending` + caps dial exist → routing rules, assignment, bulk actions, SLA clock, filtering. |
-| #4 | RBAC hierarchy + orgs/teams | 🟡 | M | `member-caps.js` per-member dial → org/team model, delegated admin, reviewer/auditor/regional-steward roles, member lifecycle. |
+| #3 | Review queue at scale | ✅ | M | **Shipped** — pending proposals carry createdAt + SLA `dueAt` (by required level) + assignee; `/api/gov/pending?assignee=&overdue=1` (sorted soonest-due) + `/api/gov/assign`. Remaining: bulk actions. |
+| #4 | RBAC hierarchy + orgs/teams | ✅ | M | **Shipped** — `orgs.js` (orgs + teams + delegated roles: org-steward/reviewer/auditor/regional-steward) + `/api/orgs*` (steward-managed). |
 | #6 | Distributed rate-limit + abuse | ✅ | M | **Per-identity quota shipped** (`quota.js`, store-backed/cluster-wide, tiered steward>member>anon; wired into the gateway). Remaining (→ A4b-adjacent): Sybil/abuse checks on signup. |
 | #7 | Notifications + async comms | ✅→🟡 | — | **Largely delivered by Hermes** (multi-channel + receipts). Remaining: digests + per-member channel preferences. |
 | #8 | Search + indexing | ✅ | M | **Shipped** — `search.js` (dependency-free TF·IDF inverted index over frameworks/skills/members/receipts) + role-scoped `/api/search`. Postgres FTS is the documented scale backend when the corpus outgrows memory. |
 | #9 | Ledger scalability (checkpoints) | ✅ | M | **Shipped** — `checkpoints.js` (signed anchors + segmented `verifyFromCheckpoint` = O(n−checkpoint)) + `/api/checkpoint`, `/api/verify?fast=1`, `npm run checkpoint`, non-destructive archive insight. |
 | #10 | KMS + data lifecycle | 🟡 | L | Beacon keys can come from 1Password; i18n en/es → KMS/HSM + key rotation w/ multi-key verify, automated GDPR/DPDP DSAR, residency, full WCAG. |
-| #2 | Workflow engine (multi-step, SLAs) | ⬜ | L | the governed loop is the step primitive → durable workflow/task model on the ledger: states, assignment, SLA timers, escalation, resumability. |
+| #2 | Workflow engine (multi-step, SLAs) | ✅ | L | **Shipped** — `workflow.js`: durable, store-backed (resumable + replica-agnostic), states, per-step assignment, SLA + escalation, metadata-only receipts; `/api/workflows/*`. |
 
-**Done this pass:** #6 (per-identity quotas), #8 (search), #9 (checkpoints) — the
-clean, dependency-free, infrastructural wins. **Remaining (product surface):** #3
-(queue routing/SLA) + #4 (orgs/teams) — member-facing leverage, next; #2 (workflow
-engine, L) and #10 (KMS/DSAR, L) as compliance demand lands. Hermes covers most of #7.
+**Phase B is now ✅ except #10.** Shipped: #2 (workflow engine), #3 (queue routing/SLA),
+#4 (orgs/teams RBAC), #6 (per-identity quotas), #7 (Hermes), #8 (search), #9
+(checkpoints). **Remaining:** #10 (KMS/HSM + DSAR + full WCAG, L) — compliance-driven,
+do when a regulated customer requires it.
 
 **On A4b (stateless brokering) — candid recommendation:** the full version converts
 the *synchronous* `SecretsProvider` contract to async (rippling through the gate,

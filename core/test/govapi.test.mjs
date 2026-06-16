@@ -92,6 +92,25 @@ test('kill switch halts new work', () => {
   assert.equal(core.propose('read the docs').requiresHumanGate, false);
 });
 
+test('#3 review queue: SLA deadline, assignee, overdue filtering, sorted by due', () => {
+  let clock = 1_000_000;
+  const core = createGovernedCore({ secrets: new FileProvider({ storePath: store() }), now: () => clock, slaMs: { read: 100, propose: 100, act: 100, auto: 100 } });
+  const a = core.propose('publish the quarterly report', { actor: 'agent:maker' });
+  core.propose('read the docs', { actor: 'agent:maker' });
+
+  let q = core.pending();
+  assert.equal(q.length, 2);
+  assert.ok(q.every((r) => typeof r.dueAt === 'number' && r.overdue === false));
+
+  core.assign(a.pendingId, 'reviewer:ken');
+  assert.equal(core.pending({ assignee: 'reviewer:ken' }).length, 1);
+  assert.equal(core.pending({ assignee: 'reviewer:ken' })[0].pendingId, a.pendingId);
+
+  clock += 200;                                              // past the 100ms SLA
+  assert.equal(core.pending({ overdue: true }).length, 2);
+  assert.throws(() => core.assign('prop_nope', 'x'), /unknown or already-decided/);
+});
+
 test('#1 the kill switch is GLOBAL across replicas via the shared store', async () => {
   const { MemoryStore } = await import('../src/core/statestore.js');
   const shared = new MemoryStore();   // one store = one cluster (Redis in prod)

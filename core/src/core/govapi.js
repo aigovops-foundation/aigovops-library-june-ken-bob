@@ -66,6 +66,12 @@ export function createGovernedCore(opts = {}) {
   let store = opts.store || null;
   const HALT_KEY = 'gov:halted';
   const persistHalt = (v) => { if (store) Promise.resolve(store.set(HALT_KEY, v)).catch(() => {}); };
+  const now = opts.now || (() => Date.now());
+
+  // #3 (review queue at scale): each pending proposal carries a creation time, an
+  // SLA deadline (by required level — riskier work is due sooner), and an optional
+  // assignee, so the steward queue can route, filter, and surface overdue items.
+  const SLA_MS = opts.slaMs || { read: 24 * 3600e3, propose: 8 * 3600e3, act: 2 * 3600e3, auto: 3600e3 };
 
   const ensureLive = () => { if (halted) throw new Error('halted: the kill switch is armed'); };
   const doHalt = () => { halted = true; persistHalt(true); return emit({ kind: 'gate', actor: 'steward', action: 'kill-switch', detail: { armed: true } }); };
@@ -79,8 +85,10 @@ export function createGovernedCore(opts = {}) {
     proposal.requiredLevel = d.requiredLevel;
     proposal.policyReasons = d.reasons;
     const pendingId = 'prop_' + crypto.randomBytes(8).toString('hex');
-    pending.set(pendingId, { proposal, actor, requiredLevel: d.requiredLevel });
-    return { pendingId, proposal, requiresHumanGate: proposal.requiresHumanGate };
+    const createdAt = now();
+    const dueAt = createdAt + (SLA_MS[d.requiredLevel] ?? SLA_MS.propose);
+    pending.set(pendingId, { proposal, actor, requiredLevel: d.requiredLevel, createdAt, dueAt, assignee: null });
+    return { pendingId, proposal, requiresHumanGate: proposal.requiresHumanGate, dueAt };
   };
 
   return {
@@ -106,9 +114,26 @@ export function createGovernedCore(opts = {}) {
     },
 
     // The approval queue — proposals awaiting a human decision (steward view).
-    pending() {
-      return [...pending.entries()].map(([pendingId, { proposal, actor }]) =>
-        ({ pendingId, actor, summary: proposal.summary, requiresHumanGate: proposal.requiresHumanGate }));
+    // #3: routing/SLA — filter by assignee/overdue, sorted soonest-due first, each
+    // row carrying its createdAt, dueAt, assignee, and a computed `overdue` flag.
+    pending({ assignee, overdue } = {}) {
+      const t = now();
+      let rows = [...pending.entries()].map(([pendingId, p]) => ({
+        pendingId, actor: p.actor, summary: p.proposal.summary, requiresHumanGate: p.proposal.requiresHumanGate,
+        requiredLevel: p.requiredLevel, createdAt: p.createdAt, dueAt: p.dueAt, assignee: p.assignee, overdue: t > p.dueAt,
+      }));
+      if (assignee != null) rows = rows.filter((r) => r.assignee === assignee);
+      if (overdue) rows = rows.filter((r) => r.overdue);
+      return rows.sort((a, b) => a.dueAt - b.dueAt);
+    },
+
+    // #3: assign a pending proposal to a reviewer (steward action). Fails closed on
+    // an unknown/decided id, like decide().
+    assign(pendingId, assignee) {
+      const p = pending.get(pendingId);
+      if (!p) throw new Error('unknown or already-decided pendingId');
+      p.assignee = assignee || null;
+      return { pendingId, assignee: p.assignee };
     },
 
     // 2) decide — the HUMAN approves or denies. On approve (and within caps) the

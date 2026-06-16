@@ -51,6 +51,21 @@ test('HTTP: search + checkpoint + fast verify', async () => {
     assert.equal(v.status, 200);
     assert.equal(v.body.valid, true);
     assert.ok('verifiedFrom' in v.body, 'fast verify reports the anchor it verified from');
+
+    // #4 orgs/teams — steward-gated
+    assert.equal((await J('POST', '/api/orgs', { id: 'acme', name: 'Acme' })).status, 401);
+    assert.equal((await J('POST', '/api/orgs', { id: 'acme', name: 'Acme', steward: 'oidc:ken' }, TOKEN)).status, 200);
+    assert.ok((await J('GET', '/api/orgs/view?id=acme', null, TOKEN)).body.members.some((m) => m.id === 'oidc:ken'));
+
+    // #2 workflow — define → start → advance → completed
+    assert.equal((await J('POST', '/api/workflows/define', { defId: 'rev', steps: [{ id: 's1', requiresApproval: false }, { id: 's2' }] }, TOKEN)).status, 200);
+    const started = await J('POST', '/api/workflows/start', { defId: 'rev' }, TOKEN);
+    assert.equal(started.body.state, 'running');
+    const wfId = started.body.id;
+    await J('POST', '/api/workflows/advance', { id: wfId, decision: 'approve' }, TOKEN);
+    const done = await J('POST', '/api/workflows/advance', { id: wfId, decision: 'approve' }, TOKEN);
+    assert.equal(done.body.state, 'completed');
+    assert.ok((await J('GET', '/api/workflows', null, TOKEN)).body.workflows.some((w) => w.id === wfId));
   } finally {
     child.kill('SIGKILL');
   }
