@@ -91,3 +91,23 @@ test('kill switch halts new work', () => {
   core.resume();
   assert.equal(core.propose('read the docs').requiresHumanGate, false);
 });
+
+test('#1 the kill switch is GLOBAL across replicas via the shared store', async () => {
+  const { MemoryStore } = await import('../src/core/statestore.js');
+  const shared = new MemoryStore();   // one store = one cluster (Redis in prod)
+  const a = createGovernedCore({ secrets: new FileProvider({ storePath: store() }), store: shared });
+  const b = createGovernedCore({ secrets: new FileProvider({ storePath: store() }), store: shared });
+  assert.equal(a.isHalted(), false); assert.equal(b.isHalted(), false);
+
+  a.oversight({ role: 'steward', id: 'steward:bob' }).kill();   // steward kills on replica A
+  assert.equal(a.isHalted(), true, 'A halts immediately (it originated the kill)');
+  assert.equal(b.isHalted(), false, 'B has not polled yet (local cache)');
+
+  await b.syncHalt();                                            // B refreshes from the shared store
+  assert.equal(b.isHalted(), true, 'B halts after syncing the global state');
+  assert.throws(() => b.propose('act on something'), /halted/);  // B fails closed cluster-wide
+
+  a.resume();                                                    // lift on A
+  await b.syncHalt();
+  assert.equal(b.isHalted(), false, 'B resumes after syncing');
+});

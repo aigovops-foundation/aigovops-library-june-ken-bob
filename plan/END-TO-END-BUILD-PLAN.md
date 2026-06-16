@@ -62,11 +62,13 @@ backbone. **Do this first.**
 |---|------|--------|--------|------|----------------------------|
 | A1 | **Vault out of dev-mode** | 🟡 | M | **High** | `VaultProvider` + seam shipped; the live box runs Vault in dev (in-memory, auto-unseal, root token). → file/raft storage, real unseal keys in 1Password, no root-token runtime. |
 | A2 | **Keycloak out of dev-mode** | 🟡 | M | Med | OIDC wired + verified; box runs Keycloak dev. → persistent DB (can share Postgres), real admin creds, TLS, the `aigovops` realm + `aigov-console` client as durable config. |
-| A3 | **Postgres durability + backups** | 🟡 | S | **High** | Durable-ledger code (N2) ships; the live core fell back to in-memory (no `DATABASE_URL` wired, `redis` pkg absent). → wire managed Postgres, nightly `pg_dump` offsite (the signed ledger is the whole value prop). |
-| A4 | **Finish improvement #1 — externalize state** | 🟡 | M | Med | `statestore.js`/`ratelimit.js` seam shipped; Redis is up but idle (`npm i redis` skipped by the dependency-free default). → move `govapi` pending/grants, `caps` usage, and the `halted` kill-switch Maps to the shared store. **This unblocks A5.** |
-| A5 | **Run N core replicas behind Caddy** | ⬜ | S | Low (after A4) | Caddy LB already fronts the core. → once A4 lands, run multiple `core` containers; true horizontal scale. Blocked on A4 (two replicas diverge today). |
+| A3 | **Postgres durability + backups** | 🟡 | S | **High** | Durable-ledger code (N2) ships; **`deploy/backup-postgres.sh` (pg_dump + rotation + integrity check) + runbook now added**. → operator wires managed Postgres (`DATABASE_URL`) + the cron. |
+| A4 | **Global kill switch across replicas** | ✅ | M | Med | **Done + tested.** `govapi` keeps a local `halted` cache written through to the shared store (`gov:halted`); the server polls `syncHalt()` so a kill on ANY replica halts all within `GOV_HALT_SYNC_MS`. Unblocks A5. |
+| A4b | **Stateless brokering (pending/grants/caps + secrets-provider grants)** | ⬜ | L | Med | The remaining per-process state. Until done, a member's propose→decide→runTool must stay on one replica (A5 sticky sessions). Scoped out of A4 to avoid overclaiming. |
+| A5 | **Run N core replicas behind Caddy (sticky)** | 🟡 | S | Low | **Config + runbook added** (`deploy/scale-and-backup.md`: `--scale core=N` + Caddy `lb_policy cookie` + `/readyz` health). The live multi-replica swap is the operator's step. |
 
-**Exit:** state durable + backed up; identity/secrets in real services; core scales out.
+**Exit:** state durable + backed up; identity/secrets in real services; the kill switch is
+global; the core scales out with session affinity. (Fully stateless brokering = A4b.)
 
 ---
 

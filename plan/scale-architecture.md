@@ -27,7 +27,7 @@ needs Bob's irreversible credential/ops steps.
 
 | # | Improvement | Status | What's in the repo |
 |---|-------------|--------|--------------------|
-| 1 | Horizontal scale (externalize state) | 🟡 **foundation shipped** | `statestore.js` + `ratelimit.js` make the rate limiter multi-instance; durable ledger is N2 (Postgres). **Next:** migrate `govapi` pending/grants + `caps` usage + `halted` from per-process Maps to the store (interfaces ready). |
+| 1 | Horizontal scale (externalize state) | 🟡 **foundation + global kill switch shipped** | `statestore.js` + `ratelimit.js` make the rate limiter multi-instance; durable ledger is N2 (Postgres). **The `halted` kill switch is now cluster-wide** (`gov:halted` in the shared store, polled per replica). **Next (A4b):** migrate `govapi` pending/grants + `caps` usage + the secrets-provider grant store so brokering is fully stateless across replicas (until then: sticky sessions). |
 | 2 | Workflow engine (multi-step, SLAs) | ⬜ **next build** | The governed loop (propose→decide→run) is the step primitive. **Next:** a durable workflow/task model on the ledger with states, assignment, SLA timers, escalation, resumability. |
 | 3 | Review queue at scale (routing/bulk) | 🟡 **partial** | `/api/gov/pending` queue + the caps dial exist. **Next:** routing rules, assignment, bulk actions, SLA clock, search-backed filtering. |
 | 4 | RBAC hierarchy + orgs/teams | 🟡 **partial** | `member-caps.js` is the per-member dial; `identity.js` roles. **Next:** org/team model, delegated admin, reviewer/auditor/regional-steward roles, member lifecycle. |
@@ -50,8 +50,17 @@ client ─ LB ─┬─ core (N replicas, stateless) ──┬─ Postgres   (le
             │                                    └─ OPA        (rego policy, T7)
 ```
 Stateless `core` replicas are the unlock — they require improvement **#1** (move
-the in-memory loop state to the shared store). The seam is shipped; the migration
-is the first follow-up.
+the in-memory loop state to the shared store). The seam is shipped.
+
+**Cross-replica state (current boundary).** The one piece of state that *must* be
+global for safety — the **kill switch** — is: a steward halting on any replica
+writes `gov:halted` to the shared store and every replica picks it up within
+`GOV_HALT_SYNC_MS` (default 2 s), failing closed. Everything else (pending
+proposals, brokered grants, caps usage) — and crucially the **secrets-provider
+grant store** — is still per-process, so a member's whole propose→decide→runTool
+loop must land on one replica. That is enforced by **sticky sessions** (Caddy
+`lb_policy cookie`; see `deploy/scale-and-backup.md`). Making brokering fully
+stateless across replicas is follow-up **A4b** — deliberately not claimed yet.
 
 ## What needs Bob (irreversible — left for a human)
 

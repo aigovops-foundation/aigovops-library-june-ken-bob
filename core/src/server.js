@@ -82,7 +82,14 @@ let rateLimiter = createRateLimiter(stateStore, { max: Number(process.env.RATE_M
 async function initState() {
   stateStore = await createStateStore();
   rateLimiter = createRateLimiter(stateStore, { max: Number(process.env.RATE_MAX || 60) });
-  if (process.env.REDIS_URL) console.log('[state] shared state store: redis (multi-instance)');
+  // #1: bind the shared store to the governed loop and keep the global kill switch
+  // in sync across replicas (a kill on any instance halts this one within the poll
+  // interval; the originating instance is instant). MemoryStore = same-process, no-op.
+  gov.useStore(stateStore);
+  await gov.syncHalt();
+  const haltPoll = setInterval(() => { gov.syncHalt().catch(() => {}); }, Number(process.env.GOV_HALT_SYNC_MS || 2000));
+  haltPoll.unref();
+  if (process.env.REDIS_URL) console.log('[state] shared state store: redis (multi-instance); kill switch is cluster-wide');
 }
 
 function cors(origin, res) {

@@ -56,9 +56,19 @@ export function createGovernedCore(opts = {}) {
   const pending = new Map();   // pendingId -> { proposal, actor }
   const grants = new Map();    // token     -> { scope, grantId, proposalId, actor }
   let halted = false;
+  // #1 (horizontal scale): the kill switch is the ONE piece of state that must be
+  // global — a steward halting on one replica has to stop them ALL. It lives in the
+  // shared store (injected post-boot via useStore); `halted` here is a local cache
+  // the server refreshes on a short interval (syncHalt), so isHalted()/ensureLive()
+  // stay synchronous and nothing else changes. Pending/grants/caps remain per-process
+  // and rely on sticky sessions (the broker grant store is per-process too) — see
+  // plan/scale-architecture.md "Cross-replica state".
+  let store = opts.store || null;
+  const HALT_KEY = 'gov:halted';
+  const persistHalt = (v) => { if (store) Promise.resolve(store.set(HALT_KEY, v)).catch(() => {}); };
 
   const ensureLive = () => { if (halted) throw new Error('halted: the kill switch is armed'); };
-  const doHalt = () => { halted = true; return emit({ kind: 'gate', actor: 'steward', action: 'kill-switch', detail: { armed: true } }); };
+  const doHalt = () => { halted = true; persistHalt(true); return emit({ kind: 'gate', actor: 'steward', action: 'kill-switch', detail: { armed: true } }); };
 
   // Classify an intent through the runtime policy engine and queue it for a human
   // decision. Shared by propose() and plan().
@@ -213,7 +223,14 @@ export function createGovernedCore(opts = {}) {
 
     // Low-level halt hook (the kill switch the oversight console drives).
     halt: doHalt,
-    resume() { halted = false; },
+    resume() { halted = false; persistHalt(false); },
     isHalted() { return halted; },
+
+    // #1: late-bind the shared store + refresh the global kill state. The server
+    // wires the resolved store after boot and polls syncHalt(), so a kill on ANY
+    // replica halts this one within the poll interval. With the default MemoryStore
+    // (single node) this is just a same-process read — behaviour unchanged.
+    useStore(s) { store = s; },
+    async syncHalt() { if (store) { try { halted = !!(await store.get(HALT_KEY)); } catch { /* keep last known */ } } return halted; },
   };
 }
