@@ -26,9 +26,12 @@ the exact spot where that one action takes ten seconds.
 
 1. **Drive the deterministic backbone.** Run `bash deploy/dead-simple.sh` (and
    `--from <phase>` / `--only <phase>` / `--status`). It chains every automatable
-   step — render secrets from 1Password, bring the stack up, init Vault, import the
-   Keycloak realm, verify health — and stops at each `ACTION REQUIRED` checkpoint.
-   Read its output; that tells you the next human action precisely.
+   step — render secrets from 1Password, bring the stack up, wire durable shared
+   state (Redis, via the dependency-free RESP client — no `npm i redis`), init
+   Vault, import the Keycloak realm, verify health — and stops at each
+   `ACTION REQUIRED` checkpoint. Read its output; that tells you the next human
+   action precisely. The `durability` phase (`deploy/wire-durability.sh`) makes
+   workflows/quotas/the kill switch survive restarts and go multi-replica.
 
 2. **At each ACTION REQUIRED, make the human's part trivial.** Pick the best tool:
    - **A dedicated MCP** for the app if one is connected (e.g. 1Password) — fastest.

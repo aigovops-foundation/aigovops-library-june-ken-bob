@@ -42,8 +42,16 @@ export class RedisStore {
 }
 
 // Pick a store: Redis when REDIS_URL is set, else in-process memory.
+//   • opts.client — an injected node-redis-style client → RedisStore (tests).
+//   • REDIS_URL (or opts.socket) → RespStore, our DEPENDENCY-FREE RESP client
+//     (statestore.resp.js) so durable cluster-wide state needs NO npm package and
+//     the "zero third-party runtime components" guarantee holds.
+//   • otherwise → MemoryStore (single-node default).
 export async function createStateStore(opts = {}) {
   if (opts.client) return new RedisStore(opts.client);
-  if (process.env.REDIS_URL) return RedisStore.connect();
+  if (opts.socket || process.env.REDIS_URL) {
+    const { RespStore } = await import('./statestore.resp.js');
+    return RespStore.connect(process.env.REDIS_URL, { socket: opts.socket });
+  }
   return new MemoryStore();
 }

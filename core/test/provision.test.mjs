@@ -48,12 +48,21 @@ test('the dead-simple orchestrator is valid bash and chains the phases', () => {
   const f = path.join(ROOT, 'deploy/dead-simple.sh');
   execFileSync('bash', ['-n', f]);                       // valid syntax
   const sh = read('deploy/dead-simple.sh');
-  for (const phase of ['preflight', 'onepassword', 'host', 'stack', 'vault', 'keycloak', 'dns', 'verify']) {
+  for (const phase of ['preflight', 'onepassword', 'host', 'stack', 'durability', 'vault', 'keycloak', 'dns', 'verify']) {
     assert.ok(sh.includes(`phase_${phase}`), `orchestrator defines phase_${phase}`);
   }
   assert.match(sh, /ACTION REQUIRED/, 'pauses at human checkpoints');
   assert.match(sh, /bootstrap\.sh/);
   assert.match(sh, /provision\/3-vault\.sh/);
+  assert.match(sh, /wire-durability\.sh/, 'durability phase drives the wire-durability script');
+});
+
+test('the durability wire-up script is valid bash and stays dependency-free', () => {
+  const f = path.join(ROOT, 'deploy/wire-durability.sh');
+  execFileSync('bash', ['-n', f]);                       // valid syntax
+  const sh = read('deploy/wire-durability.sh');
+  assert.match(sh, /REDIS_URL/);
+  assert.ok(!/npm i(nstall)? +redis/.test(sh), 'must NOT add the redis npm package (native RESP client)');
 });
 
 test('the dead-simple agent is defined with the right name + boundary', () => {

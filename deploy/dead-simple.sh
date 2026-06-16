@@ -16,13 +16,13 @@ set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$HERE/.." && pwd)"
 STATE="$HERE/.dead-simple.state"
-PHASES=(preflight onepassword host stack vault keycloak dns verify)
+PHASES=(preflight onepassword host stack durability vault keycloak dns verify)
 YES=0; FROM=""; ONLY=""
 
 for a in "$@"; do case "$a" in
   --yes) YES=1 ;; --from) FROM="__next__" ;; --only) ONLY="__next__" ;;
   --status) [ -f "$STATE" ] && cat "$STATE" || echo "no phases completed yet"; exit 0 ;;
-  preflight|onepassword|host|stack|vault|keycloak|dns|verify)
+  preflight|onepassword|host|stack|durability|vault|keycloak|dns|verify)
      [ "$FROM" = "__next__" ] && FROM="$a"; [ "$ONLY" = "__next__" ] && ONLY="$a" ;;
 esac; done
 
@@ -87,6 +87,15 @@ phase_stack() {
   log "waiting for /readyz…"
   for _ in $(seq 1 30); do curl -fsS http://localhost:8787/readyz >/dev/null 2>&1 && { ok "core is ready"; return 0; }; sleep 2; done
   warn "core did not report ready — check: docker compose -f $HERE/docker-compose.yml logs core"; return 1
+}
+
+# DURABILITY — make the governed state survive restarts + go multi-replica by
+# pointing the core at the running Redis. Dependency-free: the core ships a native
+# RESP client (no `npm i redis`). Reversible + idempotent — drives wire-durability.sh.
+phase_durability() {
+  log "durability — Redis-backed shared state (workflows, quotas, kill switch survive restart + scale out)"
+  bash "$HERE/wire-durability.sh" || { warn "durability not active — see the message above (core is on the in-memory store; state is lost on restart)."; return 1; }
+  ok "shared state is durable + cluster-wide"
 }
 
 phase_vault() {
