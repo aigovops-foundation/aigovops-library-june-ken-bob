@@ -148,11 +148,91 @@ The pipe earns the word "reliable" by being boring:
   fronted by Caddy; broker item `notify-ntfy`.
 - `core/test/notify.*.test.mjs` — provider contract + metadata-only + fail-closed.
 
+## Two-way conversations for the founders
+
+The sections above are Hermes *outbound* — the courier pushing alerts and reports.
+Ken and Bob also want to talk *to* the Foundation, two-way, from their phones. The
+key realisation: **two-way already exists, governed, today** — the conversational
+console (`/console`, OIDC steward login, over Caddy TLS) is exactly that. What is
+missing is **reach**: it is a browser tab, not the chat app in a pocket. So the
+two-way feature is not "add a brain"; it is "add a transport to the brain we have."
+
+### The shape: a bridge, not a second agent
+
+```
+Founder (phone) ──▶ chat app ──▶ Hermes bridge (relay) ──▶ core /api/ask ──▶ reply back
+                                        │
+                                effects → proposal → the gate (a human approves)
+```
+
+The **bridge is a dumb relay** — message in, reply out — holding no autonomy, no
+model, no tools. It is the inbound twin of the outbound `Notifier`: the same
+"transport, not agent" rule. It reuses the **one brain** (the governed core's
+existing conversational endpoint), so there is nothing to keep in sync and nothing
+ungoverned at the centre. This is why it is *more reliable* than a clawbot/OpenClaw
+front-end: a relay has nowhere to wander.
+
+### Recommendation: a Telegram bridge, founder-locked
+
+For exactly two trusted, highest-privilege people, Telegram is the fastest path to
+reliable mobile two-way: mature bot API, excellent phone clients, free, no infra.
+
+- **Identity binding is the whole security model.** A static allow-list maps
+  `telegram_user_id → steward identity` (Ken, Bob). Any other sender is rejected
+  before a single token is spent — no open bot, ever. The mapping lives in config /
+  the broker, not in the chat.
+- **Effects stay gated.** The bridge may *surface* "a proposal is waiting — approve?"
+  but the irreversible click remains a human move (in-app confirm that calls the
+  gate, or a deep link to `/console`). The bot **cannot approve or act on its own** —
+  the same boundary the whole project is built on.
+- **Metadata-only ledger, unchanged.** A receipt records *a steward conversed via the
+  telegram bridge, content sha256 = …* — never the message body.
+- **Reuses the console brain.** Inbound text → `POST /api/ask` (steward-scoped) →
+  reply. No second model, no divergent memory.
+
+### The tradeoff that flips the choice: privacy
+
+Telegram bot chats transit Telegram's cloud (not end-to-end). For ops chatter that
+is fine, and the sensitive *approvals* never live in the chat anyway — they happen
+at the gate. But if founder conversations themselves must be **E2E private** (true
+to "humans hold the keys"), run the **same bridge over Signal** (`signal-cli` + a
+dedicated number — heavier ops, full E2E). A third option, **self-hosted Mattermost**
+(DO 1-click or a compose container), owns the whole chat server on your box at the
+cost of running it. The bridge design is identical across all three; only the
+transport adapter changes — the same swap-the-backend discipline as everywhere else.
+
+### Not the brain: OpenClaw / Nous "Hermes Agent"
+
+These give chat reach in one click, but as a *second, autonomous, tool-executing
+agent* — two brains, the ungoverned one bypassing the gate. For a governance
+company that is a credibility problem, and for two people it buys almost nothing a
+relay does not. Govern one behind the gate only if you later want agentic
+convenience; never as the path to plain two-way chat.
+
+### Where the bridge touches the code (when greenlit — not now)
+
+- `core/src/core/bridge.factory.js` + `bridge.telegram.js` (`bridge.signal.js` later)
+  — the inbound transport seam; verifies sender against the founder allow-list,
+  forwards to `/api/ask` as that steward, returns the reply.
+- `core/src/server.js` — a webhook receiver (Telegram) or poller, steward-scoped;
+  wires "proposal pending" deep links back to `/console`.
+- broker item `bridge-telegram/credential` (the bot token) — never in a file.
+- `core/test/bridge.*.test.mjs` — sender allow-list (reject unknown), effects-gated
+  (no auto-approve), metadata-only receipts.
+
+> Irreversible, founder-owned step at build time: **creating the bot token** (Telegram
+> BotFather / a Signal number). Everything up to that line is code we prepare.
+
 ## Open decisions to settle before building
 
-1. **Backend:** A (ntfy on-box), B (Slack/Telegram webhook), or C (govern OpenClaw)?
-2. **Auto-send vs gated, per notification kind** — which narrow internal class, if
+1. **Backend (outbound):** A (ntfy on-box), B (Slack/Telegram webhook), or C
+   (govern OpenClaw)?
+2. **Two-way transport:** Telegram (fast, reliable, cloud-transit), Signal (E2E,
+   heavier), or self-hosted Mattermost (own the server)?
+3. **Auto-send vs gated, per notification kind** — which narrow internal class, if
    any, may Hermes send without a steward click?
-3. **Audiences** — stewards-only first, or member-facing from day one (changes the
+4. **Audiences** — stewards-only first, or member-facing from day one (changes the
    gating and the i18n surface)?
-4. **ntfy auth** (if A) — access-token topic vs. open topic behind Caddy basic-auth.
+5. **ntfy auth** (if A) — access-token topic vs. open topic behind Caddy basic-auth.
+6. **Founder identity binding** — confirm the `telegram_user_id → steward` map for
+   Ken and Bob, and where it is stored (broker vs config).
