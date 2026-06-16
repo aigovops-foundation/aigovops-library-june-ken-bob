@@ -1,6 +1,8 @@
 # Hermes — the governed messenger
 
-> Status: **design / spec** (not built). Decision pending: which delivery backend.
+> Status: **BUILT** (2026-06-15) — dependency-free, 23 tests green. Live channels:
+> dashboard (always-on) + email · sms · voice · telegram (config + broker creds),
+> a two-way Telegram founder bridge, and a management UI at `/messaging`.
 > "Agents do the bureaucracy; humans hold the meaning — and humans hold the keys."
 
 Hermes is the courier the rest of the staff have lacked: the piece that *delivers*
@@ -223,7 +225,46 @@ convenience; never as the path to plain two-way chat.
 > Irreversible, founder-owned step at build time: **creating the bot token** (Telegram
 > BotFather / a Signal number). Everything up to that line is code we prepare.
 
-## Open decisions to settle before building
+## As built (2026-06-15)
+
+The brain/pipe split shipped exactly as designed, dependency-free (Node `https`
+only), with 23 tests green.
+
+**Modules** (`core/src/core/`): `notify.shared.js` (contract), `httpclient.js`
+(egress-allow-listed `https`), `notify.dashboard.js`, `notify.email.js` (Postmark-
+shape), `notify.sms.js` + `notify.voice.js` (Twilio), `notify.telegram.js`,
+`notify.factory.js` (channel selection + posture + the auto-vs-gate policy),
+`notify.js` (the orchestrator), `bridge.telegram.js` (inbound founder relay).
+`hermes` is in the agent roster.
+
+**HTTP surface** (`server.js`): `POST /api/notify` (gated), `GET /api/notify/channels`
+(steward posture + health + dead-letters), `GET /api/notify/feed` + `/stream`
+(role-scoped), `POST /api/notify/test`, `POST /api/bridge/telegram` (founder-gated
+webhook). `/status` now carries a secret-free `notify` posture. Management UI at
+**`/messaging`**.
+
+**Governance, enforced + tested:** receipts are metadata-only (a test asserts the
+summary/body never appear in the ledger); member/external-facing sends gate while
+steward-audience operational kinds auto-send; the inbound bridge has no gov/tool
+handle, so it cannot execute an effect; every outbound host is on the egress
+allow-list or the send fails closed; channel tokens come from the broker.
+
+**Reliability, tested:** idempotency-key dedupe, bounded retry → dead-letter (with
+a no-retry fast-path for deterministic config errors), `health()` per channel.
+
+### Operating it (config-only)
+
+1. Enable channels: `NOTIFY_CHANNELS=dashboard,telegram,email,sms,voice`.
+2. Put each channel's credential in the broker (`op://AiGovOps/notify-*`); see
+   `deploy/.env.1password.tmpl` / `core/.env.example` for the exact keys.
+3. Two-way: set `NOTIFY_TELEGRAM_FOUNDERS=<tg_id>:bob,<tg_id>:ken`, point the bot
+   webhook at `/api/bridge/telegram` (with `NOTIFY_TELEGRAM_WEBHOOK_SECRET`).
+4. Verify wiring from `/messaging` → "Send test notification" per channel.
+
+> The one founder-owned, irreversible step remains **creating the bot token / Twilio
+> + email accounts**. Everything else is code, in the broker, and one toggle.
+
+## Still the human's call (config, not build)
 
 1. **Backend (outbound):** A (ntfy on-box), B (Slack/Telegram webhook), or C
    (govern OpenClaw)?

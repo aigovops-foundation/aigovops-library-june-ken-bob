@@ -21,6 +21,7 @@ export const AGENTS = {
   herald:    { title: 'Herald · Reporting',       skill: 'status-report',            match: /status|report|what shipped|update|weekly|leadership/i },
   sentinel:  { title: 'Sentinel · Monitoring',    skill: 'monitor-and-alert',        match: /monitor|alert|health|breach|incident|observ/i },
   beacon:    { title: 'Beacon · Evidence',        skill: 'beacon-sign-evidence',     match: /sign|receipt|evidence|verifiable|ledger/i },
+  hermes:    { title: 'Hermes · Messenger',       skill: null,                       match: /notify|message|deliver|send (an? )?(alert|update|report|ping|sms|text|email|call)|courier|telegram/i },   // delivery via /api/notify (gated)
   concierge: { title: 'Concierge · Front Desk',   skill: null,                       match: /.*/ },   // default
 };
 

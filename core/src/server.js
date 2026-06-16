@@ -7,6 +7,7 @@
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 import * as beacon from './core/beacon.js';
@@ -24,6 +25,9 @@ import { negotiate, t } from './core/i18n.js';
 import { routeDesk } from './api/desks.js';
 import { resolveSecret, isOpRef } from './core/op.js';
 import { secretsPosture } from './core/secrets.factory.js';
+import { createHermes } from './core/notify.js';
+import { notifyPosture, notifyDecision, autosendKinds } from './core/notify.factory.js';
+import { createTelegramBridge } from './core/bridge.telegram.js';
 import * as metrics from './core/metrics.js';
 import { MemoryStore, createStateStore } from './core/statestore.js';
 import { createRateLimiter } from './core/ratelimit.js';
@@ -32,7 +36,8 @@ import { createRateLimiter } from './core/ratelimit.js';
 // 1Password (service-account token / `op signin`). Literals pass through
 // untouched; a failed resolution unsets the var (fail closed) rather than leaking
 // the reference string. This is how "every credential lives in 1Password" holds.
-for (const k of ['SESSION_SECRET', 'STEWARD_TOKEN', 'OIDC_CLIENT_SECRET', 'GITHUB_CLIENT_SECRET', 'DATABASE_URL', 'VAULT_TOKEN', 'LLM_CLOUD_KEY', 'REDIS_URL', 'OP_SERVICE_ACCOUNT_TOKEN']) {
+for (const k of ['SESSION_SECRET', 'STEWARD_TOKEN', 'OIDC_CLIENT_SECRET', 'GITHUB_CLIENT_SECRET', 'DATABASE_URL', 'VAULT_TOKEN', 'LLM_CLOUD_KEY', 'REDIS_URL', 'OP_SERVICE_ACCOUNT_TOKEN',
+  'NOTIFY_TELEGRAM_TOKEN', 'NOTIFY_TWILIO_TOKEN', 'NOTIFY_EMAIL_TOKEN', 'NOTIFY_TELEGRAM_WEBHOOK_SECRET']) {
   if (isOpRef(process.env[k])) {
     try { process.env[k] = resolveSecret(process.env[k]); }
     catch (e) { console.error(`[op] could not resolve ${k} from 1Password: ${e.message}`); delete process.env[k]; }
@@ -52,6 +57,21 @@ const caps = new Caps();
 const memberCaps = createMemberCaps({ caps });
 // The governed loop, exposed to the local console (Ticket A2 over HTTP).
 const gov = createGovernedCore({ caps });
+
+// Hermes — the governed messenger (dashboard always-on; email/sms/voice/telegram
+// when NOTIFY_CHANNELS + broker creds are set). The brain (what to send) is here
+// and the gate; the channels are dumb pipes. The inbound Telegram bridge relays
+// founder messages to the same conversational brain (effects stay at the gate).
+const hermes = createHermes();
+const tgBridge = createTelegramBridge();
+// Fire-and-forget internal notification (steward-audience operational kinds are
+// auto-class by policy). Never throws into a request path.
+const fireNotify = (msg) => { hermes.send(msg).catch((e) => console.error('[hermes] notify failed:', e.message)); };
+if (process.env.NOTIFY_TELEGRAM_FOUNDERS && !process.env.NOTIFY_TELEGRAM_WEBHOOK_SECRET) {
+  console.warn('[hermes] telegram bridge has founders but no NOTIFY_TELEGRAM_WEBHOOK_SECRET — the webhook is identity-gated only (set the secret in prod).');
+}
+// Constant-time secret compare (matches auth.js discipline).
+const safeEqual = (a, b) => { const x = Buffer.from(String(a)), y = Buffer.from(String(b)); return x.length === y.length && crypto.timingSafeEqual(x, y); };
 
 // --- rate limiter — store-backed so it works ACROSS instances (#1/#6) -------
 // MemoryStore by default (single-node, unchanged); RedisStore when REDIS_URL is
@@ -117,7 +137,12 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain; version=0.0.4; charset=utf-8' }); return res.end(out);
   }
 
-  if (!(await rateLimiter.hit(ip))) return send(res, 429, { error: 'rate-limited' });
+  // The Telegram webhook is exempt from the IP limiter: all its calls arrive from
+  // a few Telegram egress IPs, so one shared bucket would 429 legitimate deliveries
+  // and trigger the very retry-storm the 200-always handler avoids. It is protected
+  // instead by the shared secret + the founder allow-list (unknown senders never
+  // reach the model). Probes are likewise exempt above.
+  if (url.pathname !== '/api/bridge/telegram' && !(await rateLimiter.hit(ip))) return send(res, 429, { error: 'rate-limited' });
 
   // Who is calling? (null if unauthenticated) — write endpoints check this.
   const id = auth.identityFromReq(req);
@@ -182,6 +207,7 @@ const server = http.createServer(async (req, res) => {
       kid: beacon.loadOrCreateKeys().kid,
       cloud: ALLOW_CLOUD ? 'opt-in available' : 'local-only',
       secrets: secretsPosture(),
+      notify: notifyPosture({ channels: hermes.channels }),
       model: modelPosture(),
       frameworks: frameworks().length
     });
@@ -260,7 +286,11 @@ const server = http.createServer(async (req, res) => {
     try {
       const out = await agentDispatch(intent);
       // Propose-only: an effectful proposal is queued for a steward to approve.
-      if (out.proposal && out.proposal.requiresHumanGate) out.pendingId = gov.propose(intent, { actor: id.id }).pendingId;
+      if (out.proposal && out.proposal.requiresHumanGate) {
+        out.pendingId = gov.propose(intent, { actor: id.id }).pendingId;
+        // Hermes nudges the stewards that a proposal is waiting (auto-class).
+        fireNotify({ kind: 'gate-pending', severity: 'warn', audience: 'stewards', summary: `Proposal pending approval (${out.pendingId})`, body: out.proposal.summary });
+      }
       return send(res, 200, out);
     } catch (e) { return send(res, 400, { error: e.message }); }
   }
@@ -331,7 +361,7 @@ const server = http.createServer(async (req, res) => {
   // authenticated identity — never a client-supplied role.
   if (url.pathname === '/api/oversight/kill' && req.method === 'POST') {
     if (needAuth('steward')) return;
-    try { gov.oversight(id).kill(); return send(res, 200, { halted: true }); }
+    try { gov.oversight(id).kill(); fireNotify({ kind: 'system', severity: 'critical', audience: 'stewards', summary: 'Global kill switch ENGAGED — governed loop halted', body: `by ${id.id}` }); return send(res, 200, { halted: true }); }
     catch (e) { return send(res, 403, { error: e.message }); }
   }
   if (url.pathname === '/api/oversight/resume' && req.method === 'POST') {
@@ -358,6 +388,72 @@ const server = http.createServer(async (req, res) => {
     const iv = setInterval(tick, 2000);
     req.on('close', () => clearInterval(iv));
     return; // keep the connection open
+  }
+
+  // --- HERMES MESSENGER (Phase 7 — governed multi-channel delivery) ------
+  // Request a notification. A steward sending IS the approval; auto-class kinds
+  // (steward-audience operational) send directly; member/external-facing goes to
+  // the gate. The body is delivered, never logged — receipts are metadata-only.
+  if (url.pathname === '/api/notify' && req.method === 'POST') {
+    if (needAuth('member')) return;
+    const { kind = 'message', severity = 'info', summary = '', body = '', to = '', audience = 'stewards', channels } = await readBody(req);
+    try {
+      const decision = notifyDecision({ kind, audience });
+      if (auth.hasRole(id, 'steward') || decision === 'auto') {
+        const r = await hermes.send({ kind, severity, summary, body, to, audience }, { channels: Array.isArray(channels) ? channels : null, actor: id.id });
+        return send(res, 200, { sent: !r.deduped, ...r });
+      }
+      const p = gov.propose(`notify[${kind}/${audience}]: ${summary}`.slice(0, 200), { actor: id.id });
+      fireNotify({ kind: 'gate-pending', severity: 'warn', audience: 'stewards', summary: `Notification pending approval: ${summary}`.slice(0, 180) });
+      return send(res, 200, { gated: true, pendingId: p.pendingId });
+    } catch (e) { return send(res, 400, { error: e.message }); }
+  }
+  // Channel posture + health + dead-letters (steward management view).
+  if (url.pathname === '/api/notify/channels' && req.method === 'GET') {
+    if (needAuth('steward')) return;
+    return send(res, 200, { channels: notifyPosture({ channels: hermes.channels }), health: await hermes.health(), deadLetters: hermes.deadLetters(), policy: { autosend: autosendKinds() }, bridge: { telegram: tgBridge.configured(), founders: tgBridge.founders.size } });
+  }
+  // Recent notifications (metadata + summary), role-scoped like oversight.
+  if (url.pathname === '/api/notify/feed' && req.method === 'GET') {
+    const who = id || { role: 'member', id: 'member:anon' };
+    const all = hermes.feed({ limit: 100 });
+    const scoped = who.role === 'steward' ? all : all.filter((e) => e.audience === 'members' || e.audience === who.id);
+    return send(res, 200, { role: who.role, feed: scoped });
+  }
+  // Live notification stream (SSE), role-scoped.
+  if (url.pathname === '/api/notify/stream') {
+    const who = id || { role: 'member', id: 'member:anon' };
+    const canSee = (e) => who.role === 'steward' || e.audience === 'members' || e.audience === who.id;
+    res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', Connection: 'keep-alive' });
+    res.write(`event: hello\ndata: ${JSON.stringify({ role: who.role })}\n\n`);
+    const unsub = hermes.subscribe((entry) => { if (canSee(entry)) res.write(`event: notify\ndata: ${JSON.stringify(entry)}\n\n`); });
+    const hb = setInterval(() => res.write(': hb\n\n'), 25000);
+    req.on('close', () => { unsub(); clearInterval(hb); });
+    return;
+  }
+  // Steward: send a test notification through chosen channels to verify wiring.
+  if (url.pathname === '/api/notify/test' && req.method === 'POST') {
+    if (needAuth('steward')) return;
+    const { channels, to } = await readBody(req);
+    try {
+      const r = await hermes.send({ kind: 'system', severity: 'info', audience: 'stewards', summary: 'Hermes test notification', body: 'If you received this, the channel is wired.', to }, { channels: Array.isArray(channels) ? channels : null, actor: id.id });
+      return send(res, 200, { test: true, ...r });
+    } catch (e) { return send(res, 400, { error: e.message }); }
+  }
+  // Inbound founder bridge (Telegram webhook). Public endpoint; security is the
+  // founder allow-list inside the bridge + an optional shared webhook secret.
+  // Always answers 200 so Telegram does not retry-storm on a handled rejection.
+  if (url.pathname === '/api/bridge/telegram' && req.method === 'POST') {
+    const secret = process.env.NOTIFY_TELEGRAM_WEBHOOK_SECRET;
+    if (secret && !safeEqual(req.headers['x-telegram-bot-api-secret-token'] || '', secret)) return send(res, 403, { error: 'bad-webhook-secret' });
+    const update = await readBody(req);
+    try { return send(res, 200, { ok: true, ...(await tgBridge.handleUpdate(update)) }); }
+    catch (e) { return send(res, 200, { ok: false, error: e.message }); }
+  }
+  // Management page for the messenger.
+  if (url.pathname === '/messaging' || url.pathname === '/messaging.html') {
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+    return res.end(fs.readFileSync(path.join(here, '..', 'public', 'messaging.html'), 'utf8'));
   }
 
   // --- CONSOLE (interactive local control room) --------------------------

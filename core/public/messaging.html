@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AiGovOps — Hermes Messenger</title>
+<style>
+  :root{--paper:#0c1430;--ink:#dce6f5;--ink2:#8da3c8;--line:rgba(120,160,210,.22);--card:rgba(255,255,255,.04);--teal:#3fd0c8;--green:#36e08a;--gold:#e8c25a;--red:#f08a8a}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font:15px/1.55 ui-sans-serif,system-ui,sans-serif;color:var(--ink);background:var(--paper);padding:28px 20px 80px}
+  .wrap{max-width:1000px;margin:0 auto}
+  a{color:var(--teal)}
+  h1{font-size:26px;color:#fff;margin-bottom:2px}
+  h2{font-size:16px;color:#fff;margin:0 0 10px;letter-spacing:.02em}
+  .sub{color:var(--ink2);margin-bottom:22px;font-size:13.5px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:760px){.grid{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line);border-radius:14px;background:var(--card);padding:16px}
+  label{display:block;font-size:12px;color:var(--ink2);margin:8px 0 4px}
+  input,select,textarea{width:100%;background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:9px;color:#fff;font:inherit;font-size:14px;padding:9px 11px;outline:none}
+  textarea{font-family:ui-monospace,monospace;font-size:12.5px;min-height:56px}
+  button{background:var(--green);color:#06241a;font-weight:700;border:none;border-radius:9px;padding:9px 14px;cursor:pointer;font:inherit;font-size:14px;margin-top:10px}
+  button.alt{background:transparent;color:var(--teal);border:1px solid var(--line)}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .chk{display:inline-flex;align-items:center;gap:5px;font-size:13px;color:var(--ink);width:auto;margin:4px 10px 0 0}
+  .chk input{width:auto}
+  pre{background:rgba(0,0,0,.32);border:1px solid var(--line);border-radius:9px;padding:10px;margin-top:10px;font-size:12px;overflow:auto;max-height:240px;color:#cfe}
+  .pill{display:inline-block;font-family:ui-monospace,monospace;font-size:11px;color:var(--ink2);border:1px solid var(--line);border-radius:99px;padding:2px 9px;margin:2px 4px 2px 0}
+  .ok{color:var(--green)} .bad{color:var(--red)} .muted{color:var(--ink2)} .warn{color:var(--gold)}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px}
+  td,th{text-align:left;padding:5px 6px;border-bottom:1px solid var(--line);font-family:ui-monospace,monospace}
+  th{color:var(--ink2);font-weight:500}
+  .full{grid-column:1/-1}
+  .feed div{font-family:ui-monospace,monospace;font-size:12px;padding:4px 0;border-bottom:1px solid var(--line)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Hermes — Messenger <span id="health" class="pill">checking…</span></h1>
+  <div class="sub">The governed courier. Hermes decides <em>what</em> to send (propose-only, metadata-only receipts); dumb channels deliver. <a href="/console">← Control Room</a></div>
+
+  <div class="card full">
+    <label>Steward token (optional — for the IP deployment; stays in this tab only)</label>
+    <div class="row"><input id="tok" placeholder="paste STEWARD_TOKEN to manage channels" style="flex:1"/><button class="alt" onclick="saveTok()">Use token</button></div>
+  </div>
+
+  <div class="grid" style="margin-top:16px">
+    <div class="card">
+      <h2>📡 Channels <span class="muted" style="font-size:12px">— posture + health</span></h2>
+      <div id="channels" class="muted">load with a steward token…</div>
+      <h2 style="margin-top:14px;font-size:14px">↪ Founder bridge</h2>
+      <div id="bridge" class="muted">—</div>
+      <h2 style="margin-top:14px;font-size:14px">⚰ Dead-letters</h2>
+      <div id="dead" class="muted">—</div>
+    </div>
+
+    <div class="card">
+      <h2>🧪 Test a channel</h2>
+      <div id="testChans" class="row"></div>
+      <label>Optional recipient (phone / chat id / email — overrides defaults)</label>
+      <input id="testTo" placeholder="leave blank to use channel default"/>
+      <button onclick="sendTest()">Send test notification</button>
+      <pre id="testOut" class="muted">Pick channels and send a test — verifies wiring end to end. Metadata-only receipt.</pre>
+    </div>
+
+    <div class="card full">
+      <h2>✉️ Send a notification</h2>
+      <div class="row">
+        <div style="flex:1"><label>Kind</label><select id="kind"><option>message</option><option>alert</option><option>report</option><option>system</option><option>health</option><option>gate-pending</option></select></div>
+        <div style="flex:1"><label>Severity</label><select id="sev"><option>info</option><option>debug</option><option>warn</option><option>critical</option></select></div>
+        <div style="flex:1"><label>Audience</label><select id="aud"><option>stewards</option><option>members</option></select></div>
+      </div>
+      <label>Summary (delivered, never logged)</label>
+      <input id="summary" value="A test message from the Foundation"/>
+      <label>Body (optional)</label>
+      <textarea id="body"></textarea>
+      <div id="sendChans" class="row"></div>
+      <button onclick="sendNotify()">Send</button>
+      <pre id="sendOut" class="muted">Stewards send directly (your send is the approval). Member/external-facing sends queue at the gate.</pre>
+    </div>
+
+    <div class="card full">
+      <h2>🔔 Live feed <span class="muted" style="font-size:12px">— metadata + summary, role-scoped, polling</span></h2>
+      <div id="feed" class="feed muted">waiting…</div>
+    </div>
+  </div>
+</div>
+<script>
+const $ = (id) => document.getElementById(id);
+let TOK = sessionStorage.getItem('aigov_tok') || '';
+if (TOK) $('tok').value = TOK;
+const H = () => TOK ? { authorization: 'Bearer ' + TOK } : {};
+const J = async (m, u, b) => {
+  const headers = { ...H() }; if (b) headers['content-type'] = 'application/json';
+  const r = await fetch(u, { method: m, headers, body: b ? JSON.stringify(b) : undefined });
+  return { status: r.status, body: r.headers.get('content-type')?.includes('json') ? await r.json() : await r.text() };
+};
+function saveTok(){ TOK = $('tok').value.trim(); sessionStorage.setItem('aigov_tok', TOK); loadChannels(); }
+
+const CH = ['dashboard','email','sms','voice','telegram'];
+function checkboxes(host, name){ $(host).innerHTML = CH.map((c,i)=>`<label class="chk"><input type="checkbox" id="${name}_${c}" ${c==='dashboard'?'checked':''}/>${c}</label>`).join(''); }
+function picked(name){ return CH.filter(c=>$(`${name}_${c}`)?.checked); }
+checkboxes('testChans','t'); checkboxes('sendChans','s');
+
+async function health(){ try{ const s=await J('GET','/status'); $('health').textContent = s.body.ok? 'core healthy' : 'unhealthy'; $('health').className='pill '+(s.body.ok?'ok':'bad'); }catch{ $('health').textContent='offline'; } }
+
+async function loadChannels(){
+  const r = await J('GET','/api/notify/channels');
+  if (r.status !== 200){ $('channels').innerHTML = '<span class="bad">'+(r.body.error||r.status)+'</span> — need a steward token.'; return; }
+  const b = r.body;
+  const hmap = Object.fromEntries((b.health||[]).map(h=>[h.channel,h]));
+  $('channels').innerHTML = '<table><tr><th>channel</th><th>configured</th><th>health</th><th>egress</th></tr>'+
+    b.channels.map(c=>`<tr><td>${c.channel}</td><td class="${c.configured?'ok':'muted'}">${c.configured?'yes':'no'}</td><td class="${hmap[c.channel]?.ok?'ok':'warn'}">${hmap[c.channel]?.detail||'—'}</td><td class="muted">${(c.egress||[]).join(' ')||'—'}</td></tr>`).join('')+'</table>'+
+    `<div class="muted" style="margin-top:6px;font-size:12px">auto-send kinds: ${(b.policy?.autosend||[]).join(', ')}</div>`;
+  $('bridge').innerHTML = `Telegram bridge: <span class="${b.bridge?.telegram?'ok':'muted'}">${b.bridge?.telegram?'configured':'not configured'}</span> · founders bound: <b>${b.bridge?.founders??0}</b>`;
+  $('dead').innerHTML = (b.deadLetters&&b.deadLetters.length)
+    ? '<table><tr><th>channel</th><th>kind</th><th>reason</th><th>ts</th></tr>'+b.deadLetters.slice(-8).map(d=>`<tr><td>${d.channel}</td><td>${d.kind}</td><td class="bad">${d.reason}</td><td class="muted">${(d.ts||'').slice(11,19)}</td></tr>`).join('')+'</table>'
+    : '<span class="ok">none — nothing failed delivery</span>';
+}
+
+async function sendTest(){ const r = await J('POST','/api/notify/test',{ channels: picked('t'), to: $('testTo').value.trim()||undefined }); $('testOut').textContent = JSON.stringify(r.body,null,2); loadChannels(); }
+async function sendNotify(){
+  const r = await J('POST','/api/notify',{ kind:$('kind').value, severity:$('sev').value, audience:$('aud').value, summary:$('summary').value, body:$('body').value, channels: picked('s') });
+  $('sendOut').textContent = JSON.stringify(r.body,null,2);
+}
+
+let lastSeq = 0;
+async function pollFeed(){
+  try{
+    const r = await J('GET','/api/notify/feed');
+    if (r.status===200 && r.body.feed){
+      const rows = r.body.feed;
+      $('feed').innerHTML = rows.length ? rows.slice(-25).reverse().map(e=>`<div><span class="muted">${(e.ts||'').slice(11,19)}</span> <span class="pill">${e.kind}</span> <span class="${e.severity==='critical'?'bad':e.severity==='warn'?'warn':'muted'}">${e.severity}</span> → ${e.audience} · ${e.summary}</div>`).join('') : '<span class="muted">no notifications yet</span>';
+    }
+  }catch{}
+}
+health(); loadChannels(); pollFeed();
+setInterval(pollFeed, 3000); setInterval(health, 15000);
+</script>
+</body>
+</html>
