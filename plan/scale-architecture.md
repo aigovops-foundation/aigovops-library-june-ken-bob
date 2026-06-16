@@ -36,7 +36,7 @@ needs Bob's irreversible credential/ops steps.
 | 7 | Notifications + async comms | ✅ **shipped (Hermes)** | `notify.*` multi-channel messenger (dashboard/email/sms/voice/telegram) + two-way bridge + metadata-only receipts. **Next:** digests + per-member channel preferences. |
 | 8 | Search + indexing | ✅ **shipped** | `search.js` (dependency-free TF·IDF inverted index over frameworks/skills/members/receipts) + role-scoped `/api/search`. **Scale backend:** Postgres FTS / OpenSearch when the corpus outgrows memory. |
 | 9 | Ledger scalability (checkpoints) | ✅ **shipped** | `checkpoints.js` — signed anchors over the chain head + segmented `verifyFromCheckpoint()` (O(n−checkpoint)); `/api/checkpoint`, `/api/verify?fast=1`, `npm run checkpoint`. **Next:** automated archival of anchored segments. |
-| 10 | KMS + data lifecycle (DSAR, i18n, a11y) | 🟡 **partial** | Beacon keys can come from 1Password (`BEACON_*_PEM` as `op://`); i18n `en`/`es`. **Next:** KMS/HSM + key rotation with multi-key verify, automated GDPR/DPDP DSAR, residency, full WCAG. |
+| 10 | KMS + data lifecycle (DSAR, i18n, a11y) | 🟡 **partial** | **Key rotation + multi-key verify** (`beacon.rotateKeys()`/keyring — old receipts still verify) + **signed DSAR** (`dsar.js`, `/api/dsar`) shipped; i18n `en`/`es`; keys from 1Password. **Next:** KMS/HSM custody, residency, full WCAG. |
 
 ## How a request scales (target topology)
 

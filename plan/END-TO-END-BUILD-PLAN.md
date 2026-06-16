@@ -85,7 +85,7 @@ demands them; none blocks Phase A.
 | #7 | Notifications + async comms | ✅→🟡 | — | **Largely delivered by Hermes** (multi-channel + receipts). Remaining: digests + per-member channel preferences. |
 | #8 | Search + indexing | ✅ | M | **Shipped** — `search.js` (dependency-free TF·IDF inverted index over frameworks/skills/members/receipts) + role-scoped `/api/search`. Postgres FTS is the documented scale backend when the corpus outgrows memory. |
 | #9 | Ledger scalability (checkpoints) | ✅ | M | **Shipped** — `checkpoints.js` (signed anchors + segmented `verifyFromCheckpoint` = O(n−checkpoint)) + `/api/checkpoint`, `/api/verify?fast=1`, `npm run checkpoint`, non-destructive archive insight. |
-| #10 | KMS + data lifecycle | 🟡 | L | Beacon keys can come from 1Password; i18n en/es → KMS/HSM + key rotation w/ multi-key verify, automated GDPR/DPDP DSAR, residency, full WCAG. |
+| #10 | KMS + data lifecycle | 🟡 | L | **Key rotation + multi-key verify shipped** (`beacon.rotateKeys()`/keyring; old receipts still verify; `/api/keys/rotate`, `npm run rotate-keys`). **Signed DSAR shipped** (`dsar.js`, `/api/dsar` self-service + steward). **Next:** KMS/HSM custody, residency, full WCAG. |
 | #2 | Workflow engine (multi-step, SLAs) | ✅ | L | **Shipped** — `workflow.js`: durable, store-backed (resumable + replica-agnostic), states, per-step assignment, SLA + escalation, metadata-only receipts; `/api/workflows/*`. |
 
 **Phase B is now ✅ except #10.** Shipped: #2 (workflow engine), #3 (queue routing/SLA),
@@ -124,11 +124,13 @@ Linux-only; this and the live Vault/opa/IdP can only be exercised there).
 
 ## 5. Phase D — Govern itself (the credibility flywheel)
 
-Automation so the build is held to its own gate. Not started.
+Automation so the build is held to its own gate.
 
-- **Governance-gate CI** — an agent-authored PR must carry a valid Beacon receipt or CI fails.
-- **Prose skills → real tools as CI** — `accessibility-audit` → axe/pa11y; `security-privacy-review` → a real scanner.
-- **Build-ledger pulse** — extend `pulse.html` into a public ledger of tickets agents built, with receipts.
+- **Governance-gate CI** — ✅ **shipped** (`scripts/governance-gate.mjs`, `npm run gate`):
+  verifies the ledger signatures + prev-hash chain + checkpoint anchor and exits
+  non-zero on any tampering (a forged signature fails the build — tested).
+- **Prose skills → real tools as CI** — ⬜ `accessibility-audit` → axe/pa11y; `security-privacy-review` → a real scanner.
+- **Build-ledger pulse** — ⬜ extend `pulse.html` into a public ledger of tickets agents built, with receipts.
 
 ---
 

@@ -60,6 +60,11 @@ const PRIV_PEM = process.env.BEACON_PRIVATE_KEY_PEM || null; // optional: inline
 const PUB_PEM = process.env.BEACON_PUBLIC_KEY_PEM || null;
 
 let _priv = null, _pub = null, _kid = null;
+// #10: verification keyring (kid -> publicKey). Holds the CURRENT key plus any
+// RETIRED keys (public-<kid>.pem) so receipts signed before a rotation still
+// verify. A single-key ledger has exactly one entry — behaviour is unchanged.
+let _keyring = new Map();
+const kidOf = (pub) => sha256(pub.export({ type: 'spki', format: 'der' }).toString('hex')).slice(0, 16);
 
 export function loadOrCreateKeys() {
   if (_priv && _pub) return { kid: _kid };
@@ -82,9 +87,35 @@ export function loadOrCreateKeys() {
     console.log('[beacon] generated a new dev Ed25519 keypair in', KEYS_DIR);
   }
   // key id = short hash of the public key (so a verifier can match kid → pubkey)
-  const pubDer = _pub.export({ type: 'spki', format: 'der' });
-  _kid = sha256(pubDer.toString('hex')).slice(0, 16);
+  _kid = kidOf(_pub);
+  // Build the verification keyring: current key + any retired public-<kid>.pem.
+  _keyring = new Map([[_kid, _pub]]);
+  try {
+    for (const f of fs.readdirSync(KEYS_DIR)) {
+      if (/^public-.+\.pem$/.test(f)) { const p = crypto.createPublicKey(fs.readFileSync(path.join(KEYS_DIR, f))); _keyring.set(kidOf(p), p); }
+    }
+  } catch { /* env-injected keys: no KEYS_DIR to scan */ }
   return { kid: _kid };
+}
+
+// The verification keyring — current kid + all retired kids (for /status, audit).
+export function keyring() { loadOrCreateKeys(); return { current: _kid, all: [..._keyring.keys()] }; }
+
+// Rotate the signing key: archive the current public key (so old receipts keep
+// verifying), mint a new current keypair, and emit a signed rotation receipt
+// (signed by the NEW key). File-based custody only — env/KMS keys rotate in the KMS.
+export function rotateKeys() {
+  if (PRIV_PEM && PUB_PEM) throw new Error('rotateKeys: keys are env-injected (BEACON_*_PEM) — rotate in your KMS, not on disk');
+  loadOrCreateKeys();
+  const retiredKid = _kid;
+  fs.writeFileSync(path.join(KEYS_DIR, `public-${retiredKid}.pem`), _pub.export({ type: 'spki', format: 'pem' }));
+  const { privateKey, publicKey } = crypto.generateKeyPairSync('ed25519');
+  fs.writeFileSync(path.join(KEYS_DIR, 'private.pem'), privateKey.export({ type: 'pkcs8', format: 'pem' }), { mode: 0o600 });
+  fs.writeFileSync(path.join(KEYS_DIR, 'public.pem'), publicKey.export({ type: 'spki', format: 'pem' }));
+  _priv = null; _pub = null; _kid = null;                 // force a reload (new current + keyring)
+  loadOrCreateKeys();
+  const receipt = emit({ kind: 'gate', actor: 'steward', action: 'key-rotation', detail: { retiredKid, newKid: _kid } });
+  return { retiredKid, newKid: _kid, receipt: { kid: receipt.kid, ts: receipt.record.ts } };
 }
 
 export function publicKeyPem() {
@@ -153,10 +184,14 @@ export function emit(meta) {
   return withLock(ledgerFile() + '.lock', () => append(sign(buildReceipt(meta))));
 }
 
-export function verifySigned(signed, publicKey = _pub) {
+export function verifySigned(signed, publicKey = null) {
   loadOrCreateKeys();
+  // Explicit key wins (callers/tests may pass one); otherwise pick the key whose
+  // kid signed this receipt (keyring), falling back to the current key. This is
+  // what lets a rotated ledger verify end-to-end: each receipt against its signer.
+  const pub = publicKey || _keyring.get(signed.kid) || _pub;
   const msg = Buffer.from(canonicalize(signed.record), 'utf8');
-  return crypto.verify(null, msg, publicKey, Buffer.from(signed.sig, 'base64'));
+  return crypto.verify(null, msg, pub, Buffer.from(signed.sig, 'base64'));
 }
 
 // Stable content id of a receipt: the hash of its canonical record (the same

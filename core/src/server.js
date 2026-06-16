@@ -36,6 +36,7 @@ import { searchCorpus } from './core/search.js';
 import { createCheckpoint, verifyFromCheckpoint } from './core/checkpoints.js';
 import { Orgs } from './core/orgs.js';
 import { Workflows } from './core/workflow.js';
+import { buildDsar } from './core/dsar.js';
 
 // Boot: any backend credential supplied as an op:// reference is resolved from
 // 1Password (service-account token / `op signin`). Literals pass through
@@ -226,6 +227,7 @@ const server = http.createServer(async (req, res) => {
       message: t(locale, 'status.ok'),
       ledger: { entries: led.entries, valid: led.valid },
       kid: beacon.loadOrCreateKeys().kid,
+      keys: beacon.keyring(),                 // #10: current + retired signing keys
       cloud: ALLOW_CLOUD ? 'opt-in available' : 'local-only',
       secrets: secretsPosture(),
       notify: notifyPosture({ channels: hermes.channels }),
@@ -285,6 +287,20 @@ const server = http.createServer(async (req, res) => {
   if (url.pathname === '/api/checkpoint' && req.method === 'POST') {
     if (needAuth('steward')) return;
     return send(res, 200, createCheckpoint());
+  }
+  // --- DSAR (#10 — data-subject access; signed, metadata-only) ------------
+  // A member gets their OWN record (self-service); a steward may request any
+  // subject via ?subject=. The bundle is Beacon-signed so it's verifiable offline.
+  if (url.pathname === '/api/dsar' && req.method === 'GET') {
+    if (needAuth('member')) return;
+    const subject = (auth.hasRole(id, 'steward') && url.searchParams.get('subject')) || id.id;
+    return send(res, 200, buildDsar(subject));
+  }
+  // --- KEY ROTATION (#10 — steward rotates the Beacon signing key) --------
+  if (url.pathname === '/api/keys/rotate' && req.method === 'POST') {
+    if (needAuth('steward')) return;
+    try { return send(res, 200, beacon.rotateKeys()); }
+    catch (e) { return send(res, 400, { error: e.message }); }
   }
   // --- SEARCH (#8 — role-scoped index over frameworks/skills/members/receipts) ---
   if (url.pathname === '/api/search' && req.method === 'GET') {
