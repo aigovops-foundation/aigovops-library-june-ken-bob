@@ -198,10 +198,14 @@ const server = http.createServer(async (req, res) => {
       const nonce = (await import('./core/oidc.js')).newNonce();
       const location = await auth.oidcLoginRedirect({ state, nonce, codeChallenge: challenge });
       const cookieOpts = 'HttpOnly; Path=/; SameSite=Lax; Max-Age=600; Secure';
+      // Optional post-login return path — must be a LOCAL path (no open redirect).
+      const ret = url.searchParams.get('return');
+      const dest = (typeof ret === 'string' && /^\/[^/]/.test(ret)) ? ret : '/console';
       res.writeHead(302, { Location: location, 'Set-Cookie': [
         `aigov_oidc_state=${state}; ${cookieOpts}`,
         `aigov_oidc_nonce=${nonce}; ${cookieOpts}`,
         `aigov_oidc_verifier=${verifier}; ${cookieOpts}`,
+        `aigov_oidc_return=${encodeURIComponent(dest)}; ${cookieOpts}`,
       ] });
       return res.end();
     } catch (e) { return send(res, 502, { error: 'oidc-discovery-failed', detail: e.message }); }
@@ -212,7 +216,9 @@ const server = http.createServer(async (req, res) => {
     if (!code || !state || cookies.aigov_oidc_state !== state) return send(res, 400, { error: 'bad-oidc-state' });
     try {
       const { token } = await auth.completeOidcLogin(code, { codeVerifier: cookies.aigov_oidc_verifier, nonce: cookies.aigov_oidc_nonce });
-      res.writeHead(302, { 'Set-Cookie': auth.sessionCookie(token), Location: '/console' });
+      const ret = decodeURIComponent(cookies.aigov_oidc_return || '');
+      const dest = /^\/[^/]/.test(ret) ? ret : '/console';   // local path only
+      res.writeHead(302, { 'Set-Cookie': auth.sessionCookie(token), Location: dest });
       return res.end();
     } catch (e) { return send(res, 401, { error: e.message }); }
   }

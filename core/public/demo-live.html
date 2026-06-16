@@ -37,12 +37,20 @@
   <div class="quote">“Agents do the bureaucracy; humans hold the meaning — and humans hold the keys.”</div>
 
   <div class="card">
-    <label>Steward token (the human who holds the keys)</label>
-    <div class="row">
-      <input id="tok" placeholder="paste STEWARD_TOKEN" style="flex:1;min-width:240px"/>
-      <button id="run" onclick="runDemo()">▶ Run the governed loop, live</button>
+    <label>The human who holds the keys</label>
+    <div class="row" id="signedout">
+      <a id="signin" href="/auth/oidc/login?return=/demo" style="display:inline-block;background:var(--teal);color:#06241a;font-weight:700;text-decoration:none;border-radius:9px;padding:9px 15px">🔐 Sign in with Keycloak</a>
+      <span class="receipt">— or paste a steward token:</span>
+      <input id="tok" placeholder="STEWARD_TOKEN" style="flex:1;min-width:180px"/>
     </div>
-    <div id="hint" class="receipt" style="margin-top:8px">Health: <span id="health">…</span> · the steward token gates the human-approval steps.</div>
+    <div class="row" id="signedin" style="display:none">
+      <span class="badge" style="color:var(--green)">✓ signed in as <b id="who">…</b></span>
+      <button class="alt" onclick="logout()">sign out</button>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <button id="run" onclick="runDemo()">▶ Run the governed loop, live</button>
+      <span id="hint" class="receipt">Health: <span id="health">…</span> · a real human authenticates as a steward; the gate holds every effect.</span>
+    </div>
   </div>
 
   <div id="steps"></div>
@@ -58,11 +66,26 @@
 <script>
 const $ = (id) => document.getElementById(id);
 let TOK = sessionStorage.getItem('aigov_tok') || ''; if (TOK) $('tok').value = TOK;
-const H = () => TOK ? { authorization: 'Bearer ' + TOK } : {};
-const J = async (m, u, b) => { const h = { ...H() }; if (b) h['content-type'] = 'application/json'; const r = await fetch(u, { method: m, headers: h, body: b ? JSON.stringify(b) : undefined }); const ct = r.headers.get('content-type') || ''; return { status: r.status, body: ct.includes('json') ? await r.json() : await r.text() }; };
+let SIGNED = false;   // true once an OIDC session cookie is present
+const H = () => (TOK && !SIGNED) ? { authorization: 'Bearer ' + TOK } : {};
+// credentials:include so the OIDC session cookie rides along (same-origin).
+const J = async (m, u, b) => { const h = { ...H() }; if (b) h['content-type'] = 'application/json'; const r = await fetch(u, { method: m, headers: h, credentials: 'include', body: b ? JSON.stringify(b) : undefined }); const ct = r.headers.get('content-type') || ''; return { status: r.status, body: ct.includes('json') ? await r.json() : await r.text() }; };
 
 async function health(){ try{ const s = await J('GET','/status'); $('health').textContent = s.body.ok ? 'healthy ✓' : 'unhealthy'; }catch{ $('health').textContent='offline'; } }
-health();
+// Detect a real signed-in session (OIDC) and reflect it in the UI.
+async function whoami(){
+  try {
+    const me = await J('GET','/auth/me');
+    if (me.body && me.body.authenticated) {
+      SIGNED = true;
+      $('who').textContent = me.body.login + ' · ' + me.body.role;
+      $('signedout').style.display = 'none'; $('signedin').style.display = 'flex';
+      if (me.body.role !== 'steward') $('who').textContent += '  (needs steward role to approve)';
+    } else { SIGNED = false; $('signedin').style.display = 'none'; $('signedout').style.display = 'flex'; }
+  } catch {}
+}
+async function logout(){ await fetch('/auth/logout',{ method:'POST', credentials:'include' }); SIGNED=false; location.reload(); }
+health(); whoami();
 
 const SCENES = [
   { ico:'📝', h:'A risky ask, proposed', p:'An agent asks to publish. The Yes-Gate classifies it as irreversible and PAUSES — no effect yet.',
@@ -89,7 +112,7 @@ const SCENES = [
 
 async function runDemo(){
   TOK = $('tok').value.trim(); sessionStorage.setItem('aigov_tok', TOK);
-  if (!TOK) { alert('Paste the steward token first — the human holds the keys.'); return; }
+  if (!SIGNED && !TOK) { alert('Sign in with Keycloak (or paste a steward token) first — the human holds the keys.'); return; }
   $('run').disabled = true; $('finale').style.display='none'; $('receipts').innerHTML='';
   $('steps').innerHTML = SCENES.map((s,i)=>`<div class="step pending" id="s${i}"><div class="ico">${s.ico}</div><div style="flex:1"><h3>${s.h}</h3><p>${s.p}</p><div class="out" id="o${i}">…</div></div></div>`).join('');
   const ctx = {};
