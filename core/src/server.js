@@ -625,6 +625,11 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
     return res.end(fs.readFileSync(path.join(here, '..', 'public', 'messaging.html'), 'utf8'));
   }
+  // Management page for workflows (#2).
+  if (url.pathname === '/workflows' || url.pathname === '/workflows.html') {
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+    return res.end(fs.readFileSync(path.join(here, '..', 'public', 'workflows.html'), 'utf8'));
+  }
 
   // --- CONSOLE (interactive local control room) --------------------------
   if (url.pathname === '/console') {

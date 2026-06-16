@@ -28,15 +28,15 @@ needs Bob's irreversible credential/ops steps.
 | # | Improvement | Status | What's in the repo |
 |---|-------------|--------|--------------------|
 | 1 | Horizontal scale (externalize state) | 🟡 **durable + cluster-wide shared state shipped** | Shared state runs on Redis via a **dependency-free native RESP client** (`statestore.resp.js` — no `redis` npm package, SBOM intact). Workflows, quotas, and the global kill switch are now **durable across restarts + cluster-wide** (verified live: a workflow survived a core restart). Rate limiter multi-instance; ledger durable (N2). **Next (A4b):** the secrets-provider grant store + `govapi` grants so *brokering* is fully stateless across replicas (until then: sticky sessions). |
-| 2 | Workflow engine (multi-step, SLAs) | ✅ **shipped** | `workflow.js` — durable, store-backed (resumable + replica-agnostic) multi-step model: states, per-step assignment, SLA + escalation, metadata-only receipts; `/api/workflows/*`. **Next:** a UI surface. |
-| 3 | Review queue at scale (routing/bulk) | ✅ **shipped** | pending proposals carry SLA `dueAt` + assignee; `/api/gov/pending?assignee=&overdue=1` (soonest-due) + `/api/gov/assign`. **Next:** bulk actions. |
+| 2 | Workflow engine (multi-step, SLAs) | ✅ **shipped** | `workflow.js` — durable, store-backed (resumable + replica-agnostic) multi-step model: states, per-step assignment, SLA + escalation, metadata-only receipts; `/api/workflows/*` + a management UI at `/workflows`. |
+| 3 | Review queue at scale (routing/bulk) | ✅ **shipped** | pending proposals carry SLA `dueAt` + assignee; `/api/gov/pending?assignee=&overdue=1` (soonest-due) + `/api/gov/assign`. **Bulk assign/deny shipped** (`/api/gov/bulk`). |
 | 4 | RBAC hierarchy + orgs/teams | ✅ **shipped** | `orgs.js` — orgs/teams + delegated roles (org-steward/reviewer/auditor/regional-steward); `/api/orgs*`. **Next:** member lifecycle automation. |
 | 5 | Observability + SLOs | ✅ **shipped** | `/metrics` + `/livez` + `/readyz`; Prometheus + Grafana in the stack. **Next:** alert rules + dashboards JSON + tracing. |
 | 6 | Distributed rate-limit + abuse | ✅ **shipped** | `ratelimit.js` (IP) + `quota.js` (per-identity, store-backed/cluster-wide, tiered steward>member>anon) wired into the gateway. **Next:** Sybil/abuse checks on signup. |
 | 7 | Notifications + async comms | ✅ **shipped (Hermes)** | `notify.*` multi-channel messenger (dashboard/email/sms/voice/telegram) + two-way bridge + metadata-only receipts. **Next:** digests + per-member channel preferences. |
 | 8 | Search + indexing | ✅ **shipped** | `search.js` (dependency-free TF·IDF inverted index over frameworks/skills/members/receipts) + role-scoped `/api/search`. **Scale backend:** Postgres FTS / OpenSearch when the corpus outgrows memory. |
 | 9 | Ledger scalability (checkpoints) | ✅ **shipped** | `checkpoints.js` — signed anchors over the chain head + segmented `verifyFromCheckpoint()` (O(n−checkpoint)); `/api/checkpoint`, `/api/verify?fast=1`, `npm run checkpoint`. **Next:** automated archival of anchored segments. |
-| 10 | KMS + data lifecycle (DSAR, i18n, a11y) | 🟡 **partial** | **Key rotation + multi-key verify** (`beacon.rotateKeys()`/keyring — old receipts still verify) + **signed DSAR** (`dsar.js`, `/api/dsar`) shipped; i18n `en`/`es`; keys from 1Password. **Next:** KMS/HSM custody, residency, full WCAG. |
+| 10 | KMS + data lifecycle (DSAR, i18n, a11y) | 🟡 **partial** | **Key rotation + multi-key verify** (`beacon.rotateKeys()`/keyring — old receipts still verify) + **signed DSAR** (`dsar.js`, `/api/dsar`) shipped; i18n `en`/`es`; keys from 1Password. residency tag shipped. **Next:** KMS/HSM custody, full WCAG. |
 
 ## How a request scales (target topology)
 

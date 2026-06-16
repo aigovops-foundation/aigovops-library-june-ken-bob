@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AiGovOps — Workflows</title>
+<style>
+  :root{--paper:#0c1430;--ink:#dce6f5;--ink2:#8da3c8;--line:rgba(120,160,210,.22);--card:rgba(255,255,255,.04);--teal:#3fd0c8;--green:#36e08a;--gold:#e8c25a;--red:#f08a8a}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font:15px/1.55 ui-sans-serif,system-ui,sans-serif;color:var(--ink);background:var(--paper);padding:28px 20px 80px}
+  .wrap{max-width:1000px;margin:0 auto} a{color:var(--teal)}
+  h1{font-size:26px;color:#fff;margin-bottom:2px} h2{font-size:16px;color:#fff;margin:0 0 10px}
+  .sub{color:var(--ink2);margin-bottom:22px;font-size:13.5px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:760px){.grid{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line);border-radius:14px;background:var(--card);padding:16px}
+  label{display:block;font-size:12px;color:var(--ink2);margin:8px 0 4px}
+  input,select{width:100%;background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:9px;color:#fff;font:inherit;font-size:14px;padding:9px 11px;outline:none}
+  button{background:var(--green);color:#06241a;font-weight:700;border:none;border-radius:9px;padding:8px 13px;cursor:pointer;font:inherit;font-size:13.5px;margin-top:8px}
+  button.alt{background:transparent;color:var(--teal);border:1px solid var(--line)}
+  button.sm{padding:4px 9px;font-size:12px;margin:0 4px 0 0}
+  button.danger{background:transparent;color:var(--red);border:1px solid var(--line)}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .pill{display:inline-block;font-family:ui-monospace,monospace;font-size:11px;border:1px solid var(--line);border-radius:99px;padding:2px 9px;margin:0 4px 0 0}
+  .ok{color:var(--green)} .bad{color:var(--red)} .muted{color:var(--ink2)} .warn{color:var(--gold)}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px}
+  td,th{text-align:left;padding:6px 6px;border-bottom:1px solid var(--line);font-family:ui-monospace,monospace;vertical-align:top}
+  th{color:var(--ink2);font-weight:500} .full{grid-column:1/-1}
+  pre{background:rgba(0,0,0,.32);border:1px solid var(--line);border-radius:9px;padding:10px;margin-top:8px;font-size:12px;color:#cfe;max-height:160px;overflow:auto}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Workflows <span id="health" class="pill">…</span></h1>
+  <div class="sub">Durable multi-step governance workflows — states, SLA, assignment, escalation. Resumable + cluster-wide (state in the shared store). <a href="/messaging">Messenger</a> · <a href="/console">Control Room</a></div>
+
+  <div class="card full">
+    <label>Steward token (this tab only)</label>
+    <div class="row"><input id="tok" placeholder="paste STEWARD_TOKEN" style="flex:1"/><button class="alt" onclick="saveTok()">Use token</button></div>
+  </div>
+
+  <div class="grid" style="margin-top:16px">
+    <div class="card">
+      <h2>➕ Define</h2>
+      <label>Definition id</label><input id="defId" value="quarterly-review"/>
+      <label>Steps (comma-separated)</label><input id="steps" value="draft, legal-review, steward-approve"/>
+      <button onclick="define()">Define workflow</button>
+      <pre id="defOut" class="muted">A definition is a named ordered list of steps. Each step is an approval gate by default.</pre>
+    </div>
+    <div class="card">
+      <h2>▶ Start an instance</h2>
+      <label>Definition id</label><input id="startId" value="quarterly-review"/>
+      <button onclick="start()">Start</button>
+      <pre id="startOut" class="muted">Starts a running instance at step 1. Advance it below.</pre>
+    </div>
+  </div>
+
+  <div class="card full" style="margin-top:16px">
+    <h2>🔁 Live instances <span class="muted" style="font-size:12px">— polling</span></h2>
+    <div id="list" class="muted">load with a steward token…</div>
+  </div>
+</div>
+<script>
+const $ = (id) => document.getElementById(id);
+let TOK = sessionStorage.getItem('aigov_tok') || ''; if (TOK) $('tok').value = TOK;
+const H = () => TOK ? { authorization: 'Bearer ' + TOK } : {};
+const J = async (m, u, b) => { const h = { ...H() }; if (b) h['content-type'] = 'application/json'; const r = await fetch(u, { method: m, headers: h, body: b ? JSON.stringify(b) : undefined }); return { status: r.status, body: r.headers.get('content-type')?.includes('json') ? await r.json() : await r.text() }; };
+function saveTok(){ TOK = $('tok').value.trim(); sessionStorage.setItem('aigov_tok', TOK); list(); }
+
+async function health(){ try{ const s = await J('GET','/status'); $('health').textContent = s.body.ok?'core healthy':'unhealthy'; $('health').className='pill '+(s.body.ok?'ok':'bad'); }catch{ $('health').textContent='offline'; } }
+async function define(){ const steps = $('steps').value.split(',').map(s=>({id:s.trim()})).filter(s=>s.id); const r = await J('POST','/api/workflows/define',{defId:$('defId').value.trim(),steps}); $('defOut').textContent = JSON.stringify(r.body,null,2); }
+async function start(){ const r = await J('POST','/api/workflows/start',{defId:$('startId').value.trim()}); $('startOut').textContent = JSON.stringify(r.body,null,2); list(); }
+async function advance(id,decision){ await J('POST','/api/workflows/advance',{id,decision}); list(); }
+async function assign(id){ const a = prompt('assignee (e.g. reviewer:ken):'); if(a!==null){ await J('POST','/api/workflows/assign',{id,stepId:(await J('GET','/api/workflows/view?id='+id)).body.steps.find(s=>s.status==='active')?.id,assignee:a}); list(); } }
+async function escalate(id){ await J('POST','/api/workflows/escalate',{id}); list(); }
+
+async function list(){
+  const r = await J('GET','/api/workflows');
+  if (r.status!==200){ $('list').innerHTML = '<span class="bad">'+(r.body.error||r.status)+'</span> — need a steward token.'; return; }
+  const rows = r.body.workflows||[];
+  $('list').innerHTML = rows.length ? '<table><tr><th>id</th><th>def</th><th>state</th><th>step</th><th>assignee</th><th>flags</th><th>actions</th></tr>'+
+    rows.map(w=>`<tr>
+      <td>${w.id.slice(0,10)}</td><td>${w.defId}</td>
+      <td class="${w.state==='completed'?'ok':w.state==='rejected'?'bad':'warn'}">${w.state}</td>
+      <td>${w.step||'—'}</td><td class="muted">${w.assignee||'—'}</td>
+      <td>${w.overdue?'<span class="pill bad">overdue</span>':''}${w.escalated?'<span class="pill warn">escalated</span>':''}</td>
+      <td>${w.state==='running'?`<button class="sm" onclick="advance('${w.id}','approve')">approve</button><button class="sm danger" onclick="advance('${w.id}','reject')">reject</button><button class="sm alt" onclick="assign('${w.id}')">assign</button><button class="sm alt" onclick="escalate('${w.id}')">escalate</button>`:'<span class="muted">—</span>'}</td>
+    </tr>`).join('')+'</table>' : '<span class="muted">no instances yet</span>';
+}
+health(); list(); setInterval(list, 3000); setInterval(health, 15000);
+</script>
+</body>
+</html>

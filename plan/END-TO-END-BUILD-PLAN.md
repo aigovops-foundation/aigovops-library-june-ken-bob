@@ -79,13 +79,13 @@ demands them; none blocks Phase A.
 
 | # | Improvement | Status | Effort | Next step |
 |---|-------------|--------|--------|-----------|
-| #3 | Review queue at scale | ✅ | M | **Shipped** — pending proposals carry createdAt + SLA `dueAt` (by required level) + assignee; `/api/gov/pending?assignee=&overdue=1` (sorted soonest-due) + `/api/gov/assign`. Remaining: bulk actions. |
+| #3 | Review queue at scale | ✅ | M | **Shipped** — pending proposals carry createdAt + SLA `dueAt` (by required level) + assignee; `/api/gov/pending?assignee=&overdue=1` (sorted soonest-due) + `/api/gov/assign`.. **Bulk assign/deny shipped** (`/api/gov/bulk`). |
 | #4 | RBAC hierarchy + orgs/teams | ✅ | M | **Shipped** — `orgs.js` (orgs + teams + delegated roles: org-steward/reviewer/auditor/regional-steward) + `/api/orgs*` (steward-managed). |
 | #6 | Distributed rate-limit + abuse | ✅ | M | **Per-identity quota shipped** (`quota.js`, store-backed/cluster-wide, tiered steward>member>anon; wired into the gateway). Remaining (→ A4b-adjacent): Sybil/abuse checks on signup. |
-| #7 | Notifications + async comms | ✅→🟡 | — | **Largely delivered by Hermes** (multi-channel + receipts). Remaining: digests + per-member channel preferences. |
+| #7 | Notifications + async comms | ✅→🟡 | — | **Hermes** (multi-channel + receipts) + **per-member channel preferences** (`notify.prefs.js`, `/api/notify/prefs`). Remaining: digest batching. |
 | #8 | Search + indexing | ✅ | M | **Shipped** — `search.js` (dependency-free TF·IDF inverted index over frameworks/skills/members/receipts) + role-scoped `/api/search`. Postgres FTS is the documented scale backend when the corpus outgrows memory. |
 | #9 | Ledger scalability (checkpoints) | ✅ | M | **Shipped** — `checkpoints.js` (signed anchors + segmented `verifyFromCheckpoint` = O(n−checkpoint)) + `/api/checkpoint`, `/api/verify?fast=1`, `npm run checkpoint`, non-destructive archive insight. |
-| #10 | KMS + data lifecycle | 🟡 | L | **Key rotation + multi-key verify shipped** (`beacon.rotateKeys()`/keyring; old receipts still verify; `/api/keys/rotate`, `npm run rotate-keys`). **Signed DSAR shipped** (`dsar.js`, `/api/dsar` self-service + steward). **Next:** KMS/HSM custody, residency, full WCAG. |
+| #10 | KMS + data lifecycle | 🟡 | L | **Key rotation + multi-key verify shipped** (`beacon.rotateKeys()`/keyring; old receipts still verify; `/api/keys/rotate`, `npm run rotate-keys`). **Signed DSAR shipped** (`dsar.js`, `/api/dsar` self-service + steward). Data-residency tag shipped (`DATA_RESIDENCY`, in /status + DSAR). **Next:** KMS/HSM custody, full WCAG. |
 | #2 | Workflow engine (multi-step, SLAs) | ✅ | L | **Shipped** — `workflow.js`: durable, store-backed (resumable + replica-agnostic), states, per-step assignment, SLA + escalation, metadata-only receipts; `/api/workflows/*`. |
 
 **Phase B is now ✅ except #10.** Shipped: #2 (workflow engine), #3 (queue routing/SLA),
