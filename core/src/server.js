@@ -37,6 +37,8 @@ import { createCheckpoint, verifyFromCheckpoint } from './core/checkpoints.js';
 import { Orgs } from './core/orgs.js';
 import { Workflows } from './core/workflow.js';
 import { buildDsar } from './core/dsar.js';
+import { residencyTag } from './core/residency.js';
+import { createNotifyPrefs } from './core/notify.prefs.js';
 
 // Boot: any backend credential supplied as an op:// reference is resolved from
 // 1Password (service-account token / `op signin`). Literals pass through
@@ -89,11 +91,13 @@ let stateStore = new MemoryStore();
 let rateLimiter = createRateLimiter(stateStore, { max: Number(process.env.RATE_MAX || 60) });
 let quota = createQuota(stateStore);   // #6: per-identity, cluster-wide via the same store
 let workflows = new Workflows({ store: stateStore });   // #2: durable, resumable, store-backed
+let notifyPrefs = createNotifyPrefs(stateStore);        // #7: per-member channel prefs (store-backed)
 async function initState() {
   stateStore = await createStateStore();
   rateLimiter = createRateLimiter(stateStore, { max: Number(process.env.RATE_MAX || 60) });
   quota = createQuota(stateStore);
   workflows = new Workflows({ store: stateStore });   // rebind to the resolved (possibly Redis) store
+  notifyPrefs = createNotifyPrefs(stateStore);
   // #1: bind the shared store to the governed loop and keep the global kill switch
   // in sync across replicas (a kill on any instance halts this one within the poll
   // interval; the originating instance is instant). MemoryStore = same-process, no-op.
@@ -228,6 +232,7 @@ const server = http.createServer(async (req, res) => {
       ledger: { entries: led.entries, valid: led.valid },
       kid: beacon.loadOrCreateKeys().kid,
       keys: beacon.keyring(),                 // #10: current + retired signing keys
+      residency: residencyTag(),              // #10: declared data-residency region
       cloud: ALLOW_CLOUD ? 'opt-in available' : 'local-only',
       secrets: secretsPosture(),
       notify: notifyPosture({ channels: hermes.channels }),
@@ -380,6 +385,21 @@ const server = http.createServer(async (req, res) => {
     const { pendingId, assignee } = await readBody(req);
     try { return send(res, 200, gov.assign(pendingId, assignee)); }
     catch (e) { return send(res, 400, { error: e.message }); }
+  }
+  // #3: BULK queue actions — assign many, or deny many (deny brokers nothing, so
+  // it's safe in bulk; approve stays per-item because each needs its own scope).
+  if (url.pathname === '/api/gov/bulk' && req.method === 'POST') {
+    if (needAuth('steward')) return;
+    const { action, pendingIds = [], assignee } = await readBody(req);
+    if (!['assign', 'deny'].includes(action)) return send(res, 400, { error: "bulk action must be 'assign' or 'deny'" });
+    const results = [];
+    for (const pid of pendingIds) {
+      try {
+        if (action === 'assign') { gov.assign(pid, assignee); results.push({ pendingId: pid, ok: true }); }
+        else { gov.decide(pid, 'deny', { decidedBy: id.id }); results.push({ pendingId: pid, ok: true }); }
+      } catch (e) { results.push({ pendingId: pid, ok: false, error: e.message }); }
+    }
+    return send(res, 200, { action, results, ok: results.filter((r) => r.ok).length, failed: results.filter((r) => !r.ok).length });
   }
   if (url.pathname === '/api/gov/decide' && req.method === 'POST') {
     if (needAuth('steward')) return;   // the human gate is a steward's call
@@ -568,6 +588,18 @@ const server = http.createServer(async (req, res) => {
     const hb = setInterval(() => res.write(': hb\n\n'), 25000);
     req.on('close', () => { unsub(); clearInterval(hb); });
     return;
+  }
+  // #7: per-member channel preferences (self-service). Honored when Hermes sends
+  // to a specific member (channel filtering + muted kinds).
+  if (url.pathname === '/api/notify/prefs' && req.method === 'GET') {
+    if (needAuth('member')) return;
+    return send(res, 200, await notifyPrefs.get(id.id));
+  }
+  if (url.pathname === '/api/notify/prefs' && req.method === 'POST') {
+    if (needAuth('member')) return;
+    const { channels, mutedKinds, digest } = await readBody(req);
+    try { return send(res, 200, await notifyPrefs.set(id.id, { channels, mutedKinds, digest })); }
+    catch (e) { return send(res, 400, { error: e.message }); }
   }
   // Steward: send a test notification through chosen channels to verify wiring.
   if (url.pathname === '/api/notify/test' && req.method === 'POST') {

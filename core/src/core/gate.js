@@ -47,9 +47,9 @@ export function decide({ proposal, decision, scope, ttlSeconds, requestedBy = 'g
     gate: { id: 'human-gate', act: 'get', decision: approved ? 'yes' : 'no' },
     detail: {
       op: 'proposal',
-      summary: proposal && proposal.summary,
+      summary: (proposal && proposal.summary) ?? null,
       requiresHumanGate: !!(proposal && proposal.requiresHumanGate),
-      scope,
+      scope: scope ?? null,                 // deny needs no scope — JCS rejects undefined, so coalesce
       decision: approved ? 'approve' : 'deny'
     }
   });

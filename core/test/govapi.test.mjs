@@ -63,6 +63,14 @@ test('deny fails closed: no token, no tool run', async () => {
   await assert.rejects(() => core.runTool({ code: 'export default () => 1;' }), /token is required/);
 });
 
+test('deny WITHOUT a scope is safe (regression: JCS undefined in the deny receipt)', () => {
+  const core = createGovernedCore({ secrets: new FileProvider({ storePath: store() }) });
+  const { pendingId } = core.propose('publish something', { actor: 'agent:maker' });
+  const decided = core.decide(pendingId, 'deny');          // no scope — must not throw
+  assert.equal(decided.approved, false);
+  assert.equal(core.verify().valid, true, 'the deny receipt is well-formed + the chain verifies');
+});
+
 test('over-cap pauses with a breach receipt, no grant', () => {
   const caps = new Caps();
   caps.setProfile('agent:maker', { level: 'act', maxSpend: 0 });

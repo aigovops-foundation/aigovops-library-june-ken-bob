@@ -66,6 +66,19 @@ test('HTTP: search + checkpoint + fast verify', async () => {
     const done = await J('POST', '/api/workflows/advance', { id: wfId, decision: 'approve' }, TOKEN);
     assert.equal(done.body.state, 'completed');
     assert.ok((await J('GET', '/api/workflows', null, TOKEN)).body.workflows.some((w) => w.id === wfId));
+
+    // #3 bulk queue actions — propose two, bulk-deny both
+    const p1 = (await J('POST', '/api/gov/propose', { intent: 'publish A' }, TOKEN)).body.pendingId;
+    const p2 = (await J('POST', '/api/gov/propose', { intent: 'publish B' }, TOKEN)).body.pendingId;
+    const bulk = await J('POST', '/api/gov/bulk', { action: 'deny', pendingIds: [p1, p2] }, TOKEN);
+    assert.equal(bulk.body.ok, 2, 'bulk denied both');
+
+    // #7 per-member channel preferences
+    assert.equal((await J('POST', '/api/notify/prefs', { mutedKinds: ['report'] }, TOKEN)).body.mutedKinds[0], 'report');
+    assert.deepStrictEqual((await J('GET', '/api/notify/prefs', null, TOKEN)).body.mutedKinds, ['report']);
+
+    // #10 residency in /status
+    assert.ok((await J('GET', '/status')).body.residency, '/status carries a residency tag');
   } finally {
     child.kill('SIGKILL');
   }

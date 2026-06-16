@@ -7,6 +7,7 @@
 
 import fs from 'node:fs';
 import * as beacon from './beacon.js';
+import { residencyTag } from './residency.js';
 
 function allRecords() {
   const f = beacon.ledgerFile();
@@ -23,6 +24,7 @@ export function buildDsar(subject, { now } = {}) {
     profile: 'aigovops-dsar.v1',
     subject,
     generatedAt,
+    residency: residencyTag(),
     count: records.length,
     receipts: records.map((r) => ({
       ts: r.ts, kind: r.kind, action: r.action,
