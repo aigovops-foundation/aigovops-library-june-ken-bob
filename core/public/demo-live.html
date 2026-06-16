@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AiGovOps — run the demo live</title>
+<style>
+  :root{--paper:#0c1430;--ink:#dce6f5;--ink2:#8da3c8;--line:rgba(120,160,210,.22);--card:rgba(255,255,255,.04);--teal:#3fd0c8;--green:#36e08a;--gold:#e8c25a;--red:#f08a8a}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font:16px/1.6 ui-sans-serif,system-ui,sans-serif;color:var(--ink);background:var(--paper);padding:34px 20px 90px}
+  .wrap{max-width:840px;margin:0 auto} a{color:var(--teal)}
+  h1{font-size:27px;color:#fff;margin-bottom:4px} .sub{color:var(--ink2);font-size:14.5px;margin-bottom:20px}
+  .quote{color:var(--gold);font-style:italic;margin:0 0 22px}
+  .card{border:1px solid var(--line);border-radius:14px;background:var(--card);padding:16px;margin-bottom:16px}
+  label{display:block;font-size:12px;color:var(--ink2);margin-bottom:5px}
+  input{width:100%;background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:9px;color:#fff;font:inherit;font-size:14px;padding:9px 11px;outline:none}
+  button{background:var(--green);color:#06241a;font-weight:700;border:none;border-radius:10px;padding:11px 18px;cursor:pointer;font:inherit;font-size:15px;margin-top:12px}
+  button:disabled{opacity:.5;cursor:default}
+  button.alt{background:transparent;color:var(--teal);border:1px solid var(--line);font-size:13px;padding:7px 12px}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .step{border-top:1px solid var(--line);padding:14px 0;display:flex;gap:14px}
+  .ico{min-width:26px;font-size:18px}
+  .step h3{font-size:15.5px;color:#fff;margin-bottom:3px}
+  .step p{color:var(--ink2);font-size:13.5px;margin-bottom:6px}
+  .out{font-family:ui-monospace,monospace;font-size:12.5px;color:#bfe;background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:8px;padding:8px 10px;white-space:pre-wrap;word-break:break-word}
+  .receipt{margin-top:6px;font-size:11.5px;color:var(--ink2)} .receipt code{color:var(--green)}
+  .pending{opacity:.45} .ok .ico{color:var(--green)} .bad .ico{color:var(--red)}
+  .badge{display:inline-block;font-family:ui-monospace,monospace;font-size:12px;border:1px solid var(--line);border-radius:99px;padding:3px 11px;margin-right:6px}
+  .verify{font-size:18px;color:#fff;margin-top:8px} .verify b{color:var(--green)}
+  table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px} td,th{text-align:left;padding:4px 6px;border-bottom:1px solid var(--line);font-family:ui-monospace,monospace} th{color:var(--ink2);font-weight:500}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Run the demo — live</h1>
+  <div class="sub">This drives the <b>real</b> governed core on this host, end to end. Every step is an actual API call; every action leaves a signed receipt you can verify. (Safe operations only — no key rotation against the production ledger.)</div>
+  <div class="quote">“Agents do the bureaucracy; humans hold the meaning — and humans hold the keys.”</div>
+
+  <div class="card">
+    <label>Steward token (the human who holds the keys)</label>
+    <div class="row">
+      <input id="tok" placeholder="paste STEWARD_TOKEN" style="flex:1;min-width:240px"/>
+      <button id="run" onclick="runDemo()">▶ Run the governed loop, live</button>
+    </div>
+    <div id="hint" class="receipt" style="margin-top:8px">Health: <span id="health">…</span> · the steward token gates the human-approval steps.</div>
+  </div>
+
+  <div id="steps"></div>
+
+  <div id="finale" class="card" style="display:none">
+    <div class="verify">The whole trail verifies: <b id="vresult">…</b></div>
+    <div class="receipt" style="margin-top:6px">Fresh signed receipts from this run (role-scoped oversight view):</div>
+    <div id="receipts"></div>
+    <div class="receipt" style="margin-top:10px">Verify it yourself — every receipt is Ed25519-signed; the public key is at <a href="/beacon/pubkey">/beacon/pubkey</a>, and the chain checks offline.</div>
+    <a class="alt" href="/demo-run.html" style="display:inline-block;margin-top:12px">↗ the pre-rendered story (with key rotation + DSAR)</a>
+  </div>
+</div>
+<script>
+const $ = (id) => document.getElementById(id);
+let TOK = sessionStorage.getItem('aigov_tok') || ''; if (TOK) $('tok').value = TOK;
+const H = () => TOK ? { authorization: 'Bearer ' + TOK } : {};
+const J = async (m, u, b) => { const h = { ...H() }; if (b) h['content-type'] = 'application/json'; const r = await fetch(u, { method: m, headers: h, body: b ? JSON.stringify(b) : undefined }); const ct = r.headers.get('content-type') || ''; return { status: r.status, body: ct.includes('json') ? await r.json() : await r.text() }; };
+
+async function health(){ try{ const s = await J('GET','/status'); $('health').textContent = s.body.ok ? 'healthy ✓' : 'unhealthy'; }catch{ $('health').textContent='offline'; } }
+health();
+
+const SCENES = [
+  { ico:'📝', h:'A risky ask, proposed', p:'An agent asks to publish. The Yes-Gate classifies it as irreversible and PAUSES — no effect yet.',
+    run: async (ctx) => { const r = await J('POST','/api/gov/propose',{intent:'publish our Q3 governance report'}); ctx.pendingId = r.body.pendingId; return { ok: !!r.body.pendingId, out: `gated: requiresHumanGate=${r.body.requiresHumanGate}\npendingId: ${r.body.pendingId}` }; } },
+  { ico:'⏳', h:'Waiting for a human', p:'It sits in the steward’s approval queue until a person decides.',
+    run: async (ctx) => { const r = await J('GET','/api/gov/pending'); const here = (r.body.pending||[]).some(x=>x.pendingId===ctx.pendingId); return { ok: here, out: `${(r.body.pending||[]).length} pending; this proposal is queued: ${here}` }; } },
+  { ico:'✅', h:'The steward approves', p:'A human says yes. The broker mints a scoped token that expires in 60s — never the master secret.',
+    run: async (ctx) => { const r = await J('POST','/api/gov/decide',{pendingId:ctx.pendingId,decision:'approve',scope:'github-deploy',ttlSeconds:60,requiredLevel:'act'}); ctx.token = r.body.grant && r.body.grant.token; return { ok: !!ctx.token, out: `approved: ${r.body.approved}\nbrokered token: ${(ctx.token||'').slice(0,14)}… (≠ master)` }; } },
+  { ico:'⚙️', h:'A tool runs, sandboxed', p:'Only with a valid brokered token does the sandboxed tool run.',
+    run: async (ctx) => { const r = await J('POST','/api/gov/run',{token:ctx.token,code:'export default async () => "published";'}); return { ok: r.body.ok===true, out: `sandboxed run → ok=${r.body.ok}, result="${r.body.result}"` }; } },
+  { ico:'⚖️', h:'What regulations apply', p:'Lantern maps a hard problem to the frameworks that bind it and the gates to pass.',
+    run: async () => { const r = await J('POST','/api/assess',{problem:'an AI tool that screens job candidates'}); const g=(r.body.gates||[]).map(x=>x.framework); return { ok: g.length>0, out: `frameworks: ${[...new Set(g)].slice(0,5).join(', ')||'—'}` }; } },
+  { ico:'🔁', h:'Multi-step work', p:'A durable, resumable workflow with per-step approval.',
+    run: async () => { await J('POST','/api/workflows/define',{defId:'demo-q3',steps:[{id:'draft',requiresApproval:false},{id:'approve'}]}); const s=await J('POST','/api/workflows/start',{defId:'demo-q3'}); const id=s.body.id; await J('POST','/api/workflows/advance',{id,decision:'approve'}); const f=await J('POST','/api/workflows/advance',{id,decision:'approve'}); return { ok: f.body.state==='completed', out: `workflow demo-q3 → ${f.body.state}` }; } },
+  { ico:'✉️', h:'The messenger, governed', p:'Hermes delivers — metadata-only, the body is never logged.',
+    run: async () => { const r = await J('POST','/api/notify/test',{channels:['dashboard']}); return { ok: !!r.body.delivered, out: `delivered via ${ (r.body.results||[]).map(x=>x.channel).join(', ') }` }; } },
+  { ico:'🔎', h:'Find anything', p:'Search the frameworks, skills, members, and receipts.',
+    run: async () => { const r = await J('GET','/api/search?q=ai%20act'); return { ok: (r.body.results||[]).length>=0, out: `"ai act" → ${(r.body.results||[]).length} hit(s): ${(r.body.results||[]).slice(0,2).map(x=>x.meta.name||x.id).join(', ')}` }; } },
+  { ico:'⚓', h:'Anchor the ledger', p:'A signed checkpoint keeps verification fast as the ledger grows.',
+    run: async () => { const r = await J('POST','/api/checkpoint'); return { ok: r.status===200, out: r.body.created ? `anchored through #${r.body.checkpoint.throughSeq}` : `already anchored (${r.body.reason||'ok'})` }; } },
+  { ico:'🪪', h:'Your data, on demand', p:'A signed, metadata-only data-subject export.',
+    run: async () => { const r = await J('GET','/api/dsar'); return { ok: !!r.body.subject, out: `DSAR for ${r.body.subject}: ${r.body.count} receipts, signed, residency=${(r.body.residency||{}).region}` }; } },
+];
+
+async function runDemo(){
+  TOK = $('tok').value.trim(); sessionStorage.setItem('aigov_tok', TOK);
+  if (!TOK) { alert('Paste the steward token first — the human holds the keys.'); return; }
+  $('run').disabled = true; $('finale').style.display='none'; $('receipts').innerHTML='';
+  $('steps').innerHTML = SCENES.map((s,i)=>`<div class="step pending" id="s${i}"><div class="ico">${s.ico}</div><div style="flex:1"><h3>${s.h}</h3><p>${s.p}</p><div class="out" id="o${i}">…</div></div></div>`).join('');
+  const ctx = {};
+  for (let i=0;i<SCENES.length;i++){
+    const el = $('s'+i);
+    try { const r = await SCENES[i].run(ctx); $('o'+i).textContent = r.out; el.classList.remove('pending'); el.classList.add(r.ok?'ok':'bad'); el.querySelector('.ico').textContent = r.ok ? '✓' : '✕'; }
+    catch (e) { $('o'+i).textContent = 'error: '+e.message; el.classList.remove('pending'); el.classList.add('bad'); el.querySelector('.ico').textContent='✕'; }
+    await new Promise(r=>setTimeout(r,250));
+  }
+  // finale — verify the whole chain + show the fresh receipts
+  const v = await J('GET','/api/verify');
+  const ov = await J('GET','/api/oversight');
+  $('vresult').textContent = `${v.body.entries} signed receipts · chain + signatures valid: ${v.body.valid}`;
+  const recs = (ov.body.receipts||[]).slice(-8).reverse();
+  $('receipts').innerHTML = recs.length ? '<table><tr><th>kind</th><th>action</th><th>actor</th><th>ts</th></tr>'+recs.map(r=>`<tr><td>${r.kind}</td><td>${r.action}</td><td>${r.actor}</td><td>${(r.ts||'').slice(11,19)}</td></tr>`).join('')+'</table>' : '<span class="receipt">(sign in as steward to see the full ledger view)</span>';
+  $('finale').style.display='block';
+  $('run').disabled = false;
+}
+</script>
+</body>
+</html>

@@ -153,7 +153,9 @@ h2{font-family:ui-sans-serif;font-size:19px;color:#fff;margin-bottom:8px}p{color
 .finale b{color:var(--green)}.meta{color:var(--ink2);font-size:13px;text-align:center;margin-top:26px}
 </style></head><body><div class="wrap">
 <div class="hdr"><h1>AiGovOps — the governed core, end to end</h1>
-<div class="sub">A live walk through the whole system. Every step below was actually executed to generate this page; each left a signed, metadata-only receipt.</div></div>
+<div class="sub">A live walk through the whole system. Every step below was actually executed to generate this page; each left a signed, metadata-only receipt.</div>
+<div style="margin:16px 0 4px"><a href="${process.env.DEMO_LIVE_URL || 'https://198.199.121.180/demo'}" style="display:inline-block;background:var(--green);color:#06241a;font-family:ui-sans-serif;font-weight:700;text-decoration:none;border-radius:10px;padding:11px 20px">▶ Run it yourself, live on the host →</a></div>
+<div class="sub" style="font-size:12.5px">(opens the running core; accept the self-signed cert, paste a steward token, and watch fresh receipts)</div></div>
 <div class="quote">“Agents do the bureaucracy; humans hold the meaning — and humans hold the keys.”</div>
 ${sceneHtml}
 <div class="finale">

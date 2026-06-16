@@ -630,6 +630,11 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
     return res.end(fs.readFileSync(path.join(here, '..', 'public', 'workflows.html'), 'utf8'));
   }
+  // Live end-to-end demo runner (drives the real governed loop on this host).
+  if (url.pathname === '/demo' || url.pathname === '/demo-live' || url.pathname === '/demo-live.html') {
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+    return res.end(fs.readFileSync(path.join(here, '..', 'public', 'demo-live.html'), 'utf8'));
+  }
 
   // --- CONSOLE (interactive local control room) --------------------------
   if (url.pathname === '/console') {
