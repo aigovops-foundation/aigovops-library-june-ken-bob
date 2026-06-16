@@ -48,9 +48,11 @@
       <button class="alt" onclick="logout()">sign out</button>
     </div>
     <div class="row" style="margin-top:12px">
-      <button id="run" onclick="runDemo()">▶ Run the governed loop, live</button>
-      <span id="hint" class="receipt">Health: <span id="health">…</span> · a real human authenticates as a steward; the gate holds every effect.</span>
+      <button id="run" onclick="runDemo()">▶ Run live (real ledger)</button>
+      <button id="auto" class="alt" onclick="autoDemo()" style="font-size:14px;padding:9px 14px">⚡ Auto-play (sandboxed, no sign-in)</button>
+      <span id="hint" class="receipt">Health: <span id="health">…</span></span>
     </div>
+    <div class="receipt" style="margin-top:8px">▶ <b>Run live</b> drives this host's real governed loop (needs a steward). ⚡ <b>Auto-play</b> runs the whole story in a throwaway sandbox — no sign-in, real signatures, nothing touches production.</div>
   </div>
 
   <div id="steps"></div>
@@ -86,6 +88,23 @@ async function whoami(){
 }
 async function logout(){ await fetch('/auth/logout',{ method:'POST', credentials:'include' }); SIGNED=false; location.reload(); }
 health(); whoami();
+
+// ⚡ Auto-play: no sign-in, no token. The server runs the WHOLE story in a
+// throwaway sandbox and returns real signed receipts; nothing touches production.
+async function autoDemo(){
+  $('run').disabled = true; $('auto').disabled = true; $('finale').style.display='none'; $('receipts').innerHTML='';
+  $('steps').innerHTML = '<div class="step"><div class="ico">⚡</div><div><h3>Running the whole governed story in a sandbox…</h3><p class="receipt">fresh ledger + keys, a synthetic steward — real signatures, zero production impact</p></div></div>';
+  try {
+    const r = await J('POST','/api/demo/run');
+    if (r.status !== 200) { $('steps').innerHTML = `<div class="step bad"><div class="ico">✕</div><div><h3>Auto-demo unavailable</h3><div class="out">${(r.body && r.body.hint) || (r.body && r.body.error) || r.status}</div></div></div>`; return; }
+    const d = r.body;
+    $('steps').innerHTML = d.scenes.map(s=>`<div class="step ok"><div class="ico">✓</div><div style="flex:1"><h3>${s.title}</h3><p>${s.prose}</p><div class="out">${s.detail}</div>${s.receipt?`<div class="receipt"><span class="badge">signed</span> <code>${s.receipt.kind}/${s.receipt.action}</code> · kid <code>${s.receipt.kid}</code> · sig <code>${s.receipt.sig}</code> · ${s.receipt.ts}</div>`:''}</div></div>`).join('');
+    $('vresult').textContent = `${d.entries} signed receipts · chain + signatures valid: ${d.valid} · governance gate: ${d.gate?'PASS':'FAIL'} (sandbox)`;
+    $('receipts').innerHTML = '<span class="receipt">This was a throwaway sandbox run — to see it on THIS host\'s real ledger, sign in and press “Run live”.</span>';
+    $('finale').style.display='block';
+  } catch(e){ $('steps').innerHTML = `<div class="step bad"><div class="ico">✕</div><div><h3>error</h3><div class="out">${e.message}</div></div></div>`; }
+  finally { $('run').disabled = false; $('auto').disabled = false; }
+}
 
 const SCENES = [
   { ico:'📝', h:'A risky ask, proposed', p:'An agent asks to publish. The Yes-Gate classifies it as irreversible and PAUSES — no effect yet.',

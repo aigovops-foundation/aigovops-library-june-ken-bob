@@ -92,6 +92,7 @@ let rateLimiter = createRateLimiter(stateStore, { max: Number(process.env.RATE_M
 let quota = createQuota(stateStore);   // #6: per-identity, cluster-wide via the same store
 let workflows = new Workflows({ store: stateStore });   // #2: durable, resumable, store-backed
 let notifyPrefs = createNotifyPrefs(stateStore);        // #7: per-member channel prefs (store-backed)
+let demoRunning = false;                                // single-flight guard for the sandboxed auto-demo
 async function initState() {
   stateStore = await createStateStore();
   rateLimiter = createRateLimiter(stateStore, { max: Number(process.env.RATE_MAX || 60) });
@@ -635,6 +636,23 @@ const server = http.createServer(async (req, res) => {
   if (url.pathname === '/workflows' || url.pathname === '/workflows.html') {
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
     return res.end(fs.readFileSync(path.join(here, '..', 'public', 'workflows.html'), 'utf8'));
+  }
+  // --- AUTO-DEMO (sandboxed, NO auth) ------------------------------------
+  // Runs the whole governed story in a THROWAWAY core (temp ledger/keys, a
+  // synthetic steward) in a subprocess, and returns real signed receipts. It
+  // touches NO production state. Open + rate-limited (IP limiter) + single-flight.
+  if (url.pathname === '/api/demo/run' && (req.method === 'POST' || req.method === 'GET')) {
+    if (demoRunning) return send(res, 429, { error: 'demo-busy', hint: 'an auto-demo is already running — try again in a moment' });
+    demoRunning = true;
+    const { execFile } = await import('node:child_process');
+    execFile(process.execPath, [path.join(here, '..', 'scripts', 'demo.mjs')],
+      { cwd: path.join(here, '..'), env: { ...process.env, DEMO_JSON: '1' }, timeout: 20000, maxBuffer: 4_000_000 },
+      (err, stdout) => {
+        demoRunning = false;
+        if (err && !stdout) { try { send(res, 500, { error: 'demo-failed', detail: String((err && err.message) || err).slice(0, 200) }); } catch { /* sent */ } return; }
+        try { res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' }); res.end(stdout); } catch { /* sent */ }
+      });
+    return;
   }
   // Live end-to-end demo runner (drives the real governed loop on this host).
   if (url.pathname === '/demo' || url.pathname === '/demo-live' || url.pathname === '/demo-live.html') {

@@ -39,6 +39,8 @@ const OUT = process.env.DEMO_OUT || path.join(DOCS, 'demo-run.html');
 const SECRETS = path.join(TMP, 'secrets.json');
 fs.writeFileSync(SECRETS, JSON.stringify({ owner: 'foundation', scopes: { 'github-deploy': 'DEMO-MASTER-NEVER-LEAVES', 'self-host': 'DEMO' }, rotated: { 'github-deploy': '2026-06-06' } }));
 
+const JSON_MODE = !!process.env.DEMO_JSON;   // emit machine-readable scenes (for /api/demo/run)
+if (JSON_MODE) console.log = () => {};       // keep stdout pure JSON (silence beacon/keygen logs)
 const scenes = [];
 function lastReceipt() {
   const f = beacon.ledgerFile();
@@ -51,6 +53,7 @@ function lastReceipt() {
 function scene(n, title, prose, detail, explicitReceipt) {
   const receipt = explicitReceipt || lastReceipt();
   scenes.push({ n, title, prose, detail, receipt });
+  if (JSON_MODE) return;
   console.log(`\n${n}. ${title}\n   ${detail}`);
   if (receipt) console.log(`   ⮑ signed receipt: ${receipt.kind}/${receipt.action}  kid=${receipt.kid}  ${receipt.ts}`);
 }
@@ -121,6 +124,14 @@ scene(8, 'Your data, on demand', 'A data-subject access request returns the comp
 // ── Finale — the whole trail verifies ───────────────────────────────────────
 const v = beacon.verifyLedger();
 const gate = governanceGate();
+
+// JSON mode: emit the scenes + finale to stdout (no HTML, no narration) so the
+// live runner's "Auto-play" can render a sandboxed run with real signatures.
+if (JSON_MODE) {
+  process.stdout.write(JSON.stringify({ scenes, entries: v.entries, valid: v.valid, gate: gate.ok }));
+  process.exit(v.valid && gate.ok ? 0 : 1);
+}
+
 console.log(`\n✅ ${v.entries} signed receipts; chain + signatures valid: ${v.valid}; governance gate: ${gate.ok ? 'PASS' : 'FAIL'}`);
 
 // ── Render the reviewable report ────────────────────────────────────────────

@@ -79,6 +79,13 @@ test('HTTP: search + checkpoint + fast verify', async () => {
 
     // #10 residency in /status
     assert.ok((await J('GET', '/status')).body.residency, '/status carries a residency tag');
+
+    // auto-demo: sandboxed, no auth — runs the whole story in a subprocess + returns signed scenes
+    const demo = await J('POST', '/api/demo/run');
+    assert.equal(demo.status, 200);
+    assert.ok(Array.isArray(demo.body.scenes) && demo.body.scenes.length >= 8, 'auto-demo returns the scenes');
+    assert.equal(demo.body.valid, true, 'auto-demo ledger verifies');
+    assert.equal(demo.body.gate, true, 'auto-demo governance gate passes');
   } finally {
     child.kill('SIGKILL');
   }
