@@ -13,7 +13,7 @@ const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'aigov-secrets-factory-'));
 process.env.KEYS_DIR = path.join(TMP, 'keys');
 process.env.LEDGER_DIR = path.join(TMP, 'ledger');
 
-const { createSecretsProvider, resolveProfile } = await import('../src/core/secrets.factory.js');
+const { createSecretsProvider, resolveProfile, secretsPosture } = await import('../src/core/secrets.factory.js');
 const { FileProvider } = await import('../src/core/secrets.fileprovider.js');
 const { VaultProvider } = await import('../src/core/secrets.vaultprovider.js');
 const gate = await import('../src/core/gate.js');
@@ -42,6 +42,23 @@ test('community/enclave profile yields a VaultProvider', () => {
 
 test('unknown profile fails loudly', () => {
   assert.throws(() => createSecretsProvider({ profile: 'martian' }), /unknown secrets profile/);
+});
+
+test('secretsPosture reports profile + backend, and is secret-free', () => {
+  const lab = secretsPosture({ profile: 'lab' });
+  assert.deepStrictEqual(lab, { profile: 'lab', backend: 'file' });
+
+  const vault = secretsPosture({ profile: 'enclave' });
+  assert.strictEqual(vault.backend, 'vault');
+  assert.ok('addr' in vault && !('authConfigured' in vault));
+
+  const op = secretsPosture({ profile: '1password' });
+  assert.strictEqual(op.backend, '1password');
+  assert.strictEqual(op.vault, 'AiGovOps');
+  assert.strictEqual(typeof op.opInstalled, 'boolean');
+  assert.strictEqual(op.authConfigured, false);   // no token set in this test process
+  // the token itself must never appear in the posture
+  assert.ok(!JSON.stringify(op).includes('ops_'));
 });
 
 test('the gate brokers through a factory-built provider with no code change', () => {

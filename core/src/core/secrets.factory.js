@@ -14,6 +14,7 @@
 import { FileProvider } from './secrets.fileprovider.js';
 import { VaultProvider } from './secrets.vaultprovider.js';
 import { OnePasswordProvider } from './secrets.onepassword.js';
+import { opAvailable } from './op.js';
 
 export const PROFILES = {
   lab: FileProvider,
@@ -26,8 +27,41 @@ export const PROFILES = {
   op: OnePasswordProvider,
 };
 
+// The broker backend behind each profile — for at-a-glance reporting (/status).
+const BACKEND = {
+  lab: 'file', file: 'file',
+  community: 'vault', enclave: 'vault', vault: 'vault',
+  '1password': '1password', onepassword: '1password', op: '1password',
+};
+
 export function resolveProfile(opts = {}) {
   return String(opts.profile || process.env.SECRETS_PROFILE || process.env.PROFILE || 'lab').toLowerCase();
+}
+
+// Whether the `op` binary is installed. Static for the process lifetime, so we
+// cache it — /status must never shell out a subprocess per request.
+let _opInstalled;
+function opInstalledCached() {
+  if (_opInstalled === undefined) _opInstalled = opAvailable();
+  return _opInstalled;
+}
+
+// A safe, secret-free summary of the active broker — surfaced in /status so the
+// lab→prod cutover is visible without SSH. Reports the profile and backend, and
+// for remote backends whether the runtime is wired (binary present, auth set) —
+// never a token, address-only for Vault.
+export function secretsPosture(opts = {}) {
+  const profile = resolveProfile(opts);
+  const backend = BACKEND[profile] || 'unknown';
+  const out = { profile, backend };
+  if (backend === '1password') {
+    out.vault = process.env.OP_VAULT || 'AiGovOps';
+    out.opInstalled = opInstalledCached();
+    out.authConfigured = !!process.env.OP_SERVICE_ACCOUNT_TOKEN;   // token presence only
+  } else if (backend === 'vault') {
+    out.addr = process.env.VAULT_ADDR || 'http://127.0.0.1:8200';
+  }
+  return out;
 }
 
 export function createSecretsProvider(opts = {}) {

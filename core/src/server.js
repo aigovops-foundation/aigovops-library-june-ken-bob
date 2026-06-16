@@ -23,6 +23,7 @@ import * as auth from './core/auth.js';
 import { negotiate, t } from './core/i18n.js';
 import { routeDesk } from './api/desks.js';
 import { resolveSecret, isOpRef } from './core/op.js';
+import { secretsPosture } from './core/secrets.factory.js';
 import * as metrics from './core/metrics.js';
 import { MemoryStore, createStateStore } from './core/statestore.js';
 import { createRateLimiter } from './core/ratelimit.js';
@@ -180,6 +181,7 @@ const server = http.createServer(async (req, res) => {
       ledger: { entries: led.entries, valid: led.valid },
       kid: beacon.loadOrCreateKeys().kid,
       cloud: ALLOW_CLOUD ? 'opt-in available' : 'local-only',
+      secrets: secretsPosture(),
       model: modelPosture(),
       frameworks: frameworks().length
     });
