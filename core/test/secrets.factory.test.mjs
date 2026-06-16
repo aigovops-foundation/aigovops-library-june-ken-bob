@@ -25,26 +25,26 @@ function writeStore() {
   return p;
 }
 
-test('profile resolution: explicit > SECRETS_PROFILE > PROFILE > lab', () => {
+test('profile resolution: explicit > SECRETS_PROFILE > PROFILE > lab', async () => {
   assert.strictEqual(resolveProfile({ profile: 'enclave' }), 'enclave');
   assert.strictEqual(resolveProfile({}), 'lab'); // nothing set in this process
 });
 
-test('lab profile yields a FileProvider', () => {
+test('lab profile yields a FileProvider', async () => {
   const p = createSecretsProvider({ profile: 'lab', storePath: writeStore() });
   assert.ok(p instanceof FileProvider);
 });
 
-test('community/enclave profile yields a VaultProvider', () => {
+test('community/enclave profile yields a VaultProvider', async () => {
   assert.ok(createSecretsProvider({ profile: 'community', request: () => ({ status: 404, json: {} }) }) instanceof VaultProvider);
   assert.ok(createSecretsProvider({ profile: 'enclave', request: () => ({ status: 404, json: {} }) }) instanceof VaultProvider);
 });
 
-test('unknown profile fails loudly', () => {
+test('unknown profile fails loudly', async () => {
   assert.throws(() => createSecretsProvider({ profile: 'martian' }), /unknown secrets profile/);
 });
 
-test('secretsPosture reports profile + backend, and is secret-free', () => {
+test('secretsPosture reports profile + backend, and is secret-free', async () => {
   const lab = secretsPosture({ profile: 'lab' });
   assert.deepStrictEqual(lab, { profile: 'lab', backend: 'file' });
 
@@ -61,9 +61,9 @@ test('secretsPosture reports profile + backend, and is secret-free', () => {
   assert.ok(!JSON.stringify(op).includes('ops_'));
 });
 
-test('the gate brokers through a factory-built provider with no code change', () => {
+test('the gate brokers through a factory-built provider with no code change', async () => {
   const secrets = createSecretsProvider({ profile: 'lab', storePath: writeStore() });
-  const res = gate.decide({
+  const res = await gate.decide({
     proposal: { summary: 'deploy', requiresHumanGate: true },
     decision: 'approve', scope: SCOPE, ttlSeconds: 60, requestedBy: 'gate', secrets
   });

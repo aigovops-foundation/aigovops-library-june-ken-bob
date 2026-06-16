@@ -35,42 +35,42 @@ function clock(startMs) { let t = startMs; return { now: () => t, advance: (ms) 
 const noEmit = () => {}; // for tests that don't assert on receipts
 
 // 1 — token is not the master secret
-test('issued token is not the master secret', () => {
+test('issued token is not the master secret', async () => {
   const p = new FileProvider({ storePath: writeStore(), emit: noEmit });
-  const g = p.issue(SCOPE, 60, 'gate');
+  const g = await p.issue(SCOPE, 60, 'gate');
   assert.notStrictEqual(g.token, MASTER);
   assert.ok(g.token.length >= 16, 'token should be a long opaque id');
   assert.strictEqual(g.ref, 'secret:github-deploy');
 });
 
 // 2 — a token used after expiresAt fails closed
-test('a token used after expiry fails closed', () => {
+test('a token used after expiry fails closed', async () => {
   const c = clock(1_000_000);
   const p = new FileProvider({ storePath: writeStore(), now: c.now, emit: noEmit });
-  const g = p.issue(SCOPE, 1, 'gate'); // ttl 1s
-  assert.strictEqual(p.redeem(g.token).ok, true);     // valid right now
+  const g = await p.issue(SCOPE, 1, 'gate'); // ttl 1s
+  assert.strictEqual((await p.redeem(g.token)).ok, true);     // valid right now
   c.advance(1_500);                                    // move past expiresAt
-  assert.throws(() => p.redeem(g.token), (e) => e instanceof SecretsError && e.reason === 'expired');
+  await assert.rejects(async () => p.redeem(g.token), (e) => e instanceof SecretsError && e.reason === 'expired');
 });
 
 // 3 — revoke makes the token fail closed immediately
-test('revoke makes the token fail closed immediately', () => {
+test('revoke makes the token fail closed immediately', async () => {
   const p = new FileProvider({ storePath: writeStore(), emit: noEmit });
-  const g = p.issue(SCOPE, 600, 'gate');
-  assert.strictEqual(p.redeem(g.token).ok, true);
-  assert.deepStrictEqual(p.revoke(g.grantId), { revoked: true });
-  assert.throws(() => p.redeem(g.token), (e) => e instanceof SecretsError && e.reason === 'revoked');
+  const g = await p.issue(SCOPE, 600, 'gate');
+  assert.strictEqual((await p.redeem(g.token)).ok, true);
+  assert.deepStrictEqual(await p.revoke(g.grantId), { revoked: true });
+  await assert.rejects(async () => p.redeem(g.token), (e) => e instanceof SecretsError && e.reason === 'revoked');
 });
 
 // 4 — each op emits exactly one signed ledger receipt; no secret in the ledger
-test('each op emits exactly one signed receipt, with no secret material', () => {
+test('each op emits exactly one signed receipt, with no secret material', async () => {
   const p = new FileProvider({ storePath: writeStore() }); // default emit -> real Beacon ledger (temp)
   const before = beacon.ledgerCount();
-  const g = p.issue(SCOPE, 60, 'gate');
+  const g = await p.issue(SCOPE, 60, 'gate');
   assert.strictEqual(beacon.ledgerCount(), before + 1, 'issue emits exactly one');
-  p.renew(g.grantId, 120);
+  await p.renew(g.grantId, 120);
   assert.strictEqual(beacon.ledgerCount(), before + 2, 'renew emits exactly one');
-  p.revoke(g.grantId);
+  await p.revoke(g.grantId);
   assert.strictEqual(beacon.ledgerCount(), before + 3, 'revoke emits exactly one');
 
   const v = beacon.verifyLedger();
@@ -85,10 +85,10 @@ test('each op emits exactly one signed receipt, with no secret material', () => 
 });
 
 // 5 — describe() returns metadata only, no secret
-test('describe() returns owner/scope/rotation metadata and no secret', () => {
+test('describe() returns owner/scope/rotation metadata and no secret', async () => {
   const p = new FileProvider({ storePath: writeStore(), emit: noEmit });
-  p.issue(SCOPE, 600, 'gate');
-  const rec = p.describe('secret:' + SCOPE);
+  await p.issue(SCOPE, 600, 'gate');
+  const rec = await p.describe('secret:' + SCOPE);
   assert.strictEqual(rec.scope, SCOPE);
   assert.strictEqual(rec.owner, 'lab');
   assert.strictEqual(rec.ref, 'secret:github-deploy');

@@ -35,7 +35,7 @@ import { SecretsError } from './secrets.shared.js';
  * @param {Object}  [args.cost]        what this action costs: { requiredLevel, spend, blastRadius }
  * @returns {{ approved: boolean, proposalId: string, grant: ?Object, reason: ?string, capped: ?boolean }}
  */
-export function decide({ proposal, decision, scope, ttlSeconds, requestedBy = 'gate', secrets, emit = beacon.emit, caps = null, cost = {} }) {
+export async function decide({ proposal, decision, scope, ttlSeconds, requestedBy = 'gate', secrets, emit = beacon.emit, caps = null, cost = {} }) {
   const approved = decision === 'approve';
 
   // 1) Record the human decision itself as a signed proposal receipt — the deny
@@ -84,7 +84,7 @@ export function decide({ proposal, decision, scope, ttlSeconds, requestedBy = 'g
 
   // 4) Approve path: broker a scoped, expiring grant whose secret receipt links
   //    back to this proposal.
-  const grant = secrets.issue(scope, ttlSeconds, requestedBy, { parent: proposalId });
+  const grant = await secrets.issue(scope, ttlSeconds, requestedBy, { parent: proposalId });
 
   // 5) Record the usage so the next check reflects this action's cost.
   if (caps) {
@@ -98,7 +98,7 @@ export function decide({ proposal, decision, scope, ttlSeconds, requestedBy = 'g
  * Convenience: take a raw intent, run it through propose(), and only reach the
  * gate if the action actually needs one. Reversible actions need no credential.
  */
-export function proposeAndDecide({ intent, decision, scope, ttlSeconds, requestedBy = 'gate', secrets, emit = beacon.emit, caps = null, cost = {}, policy = null }) {
+export async function proposeAndDecide({ intent, decision, scope, ttlSeconds, requestedBy = 'gate', secrets, emit = beacon.emit, caps = null, cost = {}, policy = null }) {
   const proposal = propose(intent);
   // Ticket 7: when a PolicyEngine is supplied, the gate's human-gate / required-
   // level decision comes from the (reviewable, signable) policy — not hard-coded
@@ -114,7 +114,7 @@ export function proposeAndDecide({ intent, decision, scope, ttlSeconds, requeste
     // Reversible: no human gate, no secret needed.
     return { approved: true, proposalId: null, grant: null, reason: 'reversible', proposal };
   }
-  return { ...decide({ proposal, decision, scope, ttlSeconds, requestedBy, secrets, emit, caps, cost }), proposal };
+  return { ...(await decide({ proposal, decision, scope, ttlSeconds, requestedBy, secrets, emit, caps, cost })), proposal };
 }
 
 export { SecretsError };

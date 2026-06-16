@@ -350,7 +350,7 @@ const server = http.createServer(async (req, res) => {
       const out = await agentDispatch(intent);
       // Propose-only: an effectful proposal is queued for a steward to approve.
       if (out.proposal && out.proposal.requiresHumanGate) {
-        out.pendingId = gov.propose(intent, { actor: id.id }).pendingId;
+        out.pendingId = (await gov.propose(intent, { actor: id.id })).pendingId;
         // Hermes nudges the stewards that a proposal is waiting (auto-class).
         fireNotify({ kind: 'gate-pending', severity: 'warn', audience: 'stewards', summary: `Proposal pending approval (${out.pendingId})`, body: out.proposal.summary });
       }
@@ -362,7 +362,7 @@ const server = http.createServer(async (req, res) => {
   if (url.pathname === '/api/gov/propose' && req.method === 'POST') {
     if (needAuth('member')) return;
     const { intent = '' } = await readBody(req);
-    try { return send(res, 200, gov.propose(intent, { actor: id.id })); }
+    try { return send(res, 200, await gov.propose(intent, { actor: id.id })); }
     catch (e) { return send(res, 400, { error: e.message }); }   // e.g. fails closed while halted
   }
   // Conversational/agentic plan (#6): the model drafts a plan + queues a proposal.
@@ -377,13 +377,13 @@ const server = http.createServer(async (req, res) => {
     // #3: routing/SLA filters — ?assignee=<id>&overdue=1, sorted soonest-due first.
     const assignee = url.searchParams.get('assignee');
     const overdue = url.searchParams.get('overdue') === '1';
-    return send(res, 200, { pending: gov.pending({ assignee: assignee ?? undefined, overdue }) });
+    return send(res, 200, { pending: await gov.pending({ assignee: assignee ?? undefined, overdue }) });
   }
   // #3: assign a pending proposal to a reviewer (steward).
   if (url.pathname === '/api/gov/assign' && req.method === 'POST') {
     if (needAuth('steward')) return;
     const { pendingId, assignee } = await readBody(req);
-    try { return send(res, 200, gov.assign(pendingId, assignee)); }
+    try { return send(res, 200, await gov.assign(pendingId, assignee)); }
     catch (e) { return send(res, 400, { error: e.message }); }
   }
   // #3: BULK queue actions — assign many, or deny many (deny brokers nothing, so
@@ -395,8 +395,8 @@ const server = http.createServer(async (req, res) => {
     const results = [];
     for (const pid of pendingIds) {
       try {
-        if (action === 'assign') { gov.assign(pid, assignee); results.push({ pendingId: pid, ok: true }); }
-        else { gov.decide(pid, 'deny', { decidedBy: id.id }); results.push({ pendingId: pid, ok: true }); }
+        if (action === 'assign') { await gov.assign(pid, assignee); results.push({ pendingId: pid, ok: true }); }
+        else { await gov.decide(pid, 'deny', { decidedBy: id.id }); results.push({ pendingId: pid, ok: true }); }
       } catch (e) { results.push({ pendingId: pid, ok: false, error: e.message }); }
     }
     return send(res, 200, { action, results, ok: results.filter((r) => r.ok).length, failed: results.filter((r) => !r.ok).length });
@@ -404,7 +404,7 @@ const server = http.createServer(async (req, res) => {
   if (url.pathname === '/api/gov/decide' && req.method === 'POST') {
     if (needAuth('steward')) return;   // the human gate is a steward's call
     const { pendingId, decision, scope, ttlSeconds, requiredLevel, spend } = await readBody(req);
-    try { return send(res, 200, gov.decide(pendingId, decision, { scope, ttlSeconds, cost: { requiredLevel, spend }, decidedBy: id.id })); }
+    try { return send(res, 200, await gov.decide(pendingId, decision, { scope, ttlSeconds, cost: { requiredLevel, spend }, decidedBy: id.id })); }
     catch (e) { return send(res, 400, { error: e.message }); }
   }
   if (url.pathname === '/api/gov/run' && req.method === 'POST') {
@@ -561,7 +561,7 @@ const server = http.createServer(async (req, res) => {
         const r = await hermes.send({ kind, severity, summary, body, to, audience }, { channels: Array.isArray(channels) ? channels : null, actor: id.id });
         return send(res, 200, { sent: !r.deduped, ...r });
       }
-      const p = gov.propose(`notify[${kind}/${audience}]: ${summary}`.slice(0, 200), { actor: id.id });
+      const p = await gov.propose(`notify[${kind}/${audience}]: ${summary}`.slice(0, 200), { actor: id.id });
       fireNotify({ kind: 'gate-pending', severity: 'warn', audience: 'stewards', summary: `Notification pending approval: ${summary}`.slice(0, 180) });
       return send(res, 200, { gated: true, pendingId: p.pendingId });
     } catch (e) { return send(res, 400, { error: e.message }); }

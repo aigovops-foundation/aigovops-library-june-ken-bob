@@ -64,7 +64,7 @@ backbone. **Do this first.**
 | A2 | **Keycloak out of dev-mode** | 🟡 | M | Med | OIDC wired + verified; box runs Keycloak dev. → persistent DB (can share Postgres), real admin creds, TLS, the `aigovops` realm + `aigov-console` client as durable config. |
 | A3 | **Postgres durability + backups** | 🟡 | S | **High** | Durable-ledger code (N2) ships; **`deploy/backup-postgres.sh` (pg_dump + rotation + integrity check) + runbook now added**. → operator wires managed Postgres (`DATABASE_URL`) + the cron. |
 | A4 | **Global kill switch across replicas** | ✅ | M | Med | **Done + tested.** `govapi` keeps a local `halted` cache written through to the shared store (`gov:halted`); the server polls `syncHalt()` so a kill on ANY replica halts all within `GOV_HALT_SYNC_MS`. Unblocks A5. |
-| A4b | **Stateless brokering (pending/grants/caps + secrets-provider grants)** | ⬜ | L | Med | The remaining per-process state. Until done, a member's propose→decide→runTool must stay on one replica (A5 sticky sessions). Scoped out of A4 to avoid overclaiming. |
+| A4b | **Stateless brokering (pending/grants + secrets-provider grants)** | ✅ | L | Med | **Done + tested cross-instance.** Pending proposals, govapi grant metadata, and the `FileProvider` grant store all moved to the shared store (same opaque-token/expiry/revoke semantics); the gate/govapi/broker chain became async. propose-A → decide-B → runTool-C works. Caps stay per-process (conservative). Sticky sessions now optional, not required. |
 | A5 | **Run N core replicas behind Caddy (sticky)** | 🟡 | S | Low | **Config + runbook added** (`deploy/scale-and-backup.md`: `--scale core=N` + Caddy `lb_policy cookie` + `/readyz` health). The live multi-replica swap is the operator's step. |
 
 **Exit:** state durable + backed up; identity/secrets in real services; the kill switch is
@@ -93,13 +93,16 @@ demands them; none blocks Phase A.
 (checkpoints). **Remaining:** #10 (KMS/HSM + DSAR + full WCAG, L) — compliance-driven,
 do when a regulated customer requires it.
 
-**On A4b (stateless brokering) — candid recommendation:** the full version converts
-the *synchronous* `SecretsProvider` contract to async (rippling through the gate,
-govapi, caps, and every test) just to remove the sticky-session requirement. That is
-high blast radius for modest benefit — sticky sessions (A5) are a standard, sound
-pattern. **Recommend: keep sticky sessions; defer A4b** until a concrete need (e.g.
-mid-loop replica failover) justifies the surgery. The global kill switch (the one
-safety-critical piece) is already cluster-wide.
+**On A4b (stateless brokering) — DONE.** Originally deferred (it converts the
+synchronous broker chain to async — wide blast radius for the modest gain of
+dropping sticky sessions), but built on request and landed cleanly: the broker's
+grant store + govapi pending/grants moved to the shared store with the *same*
+security semantics (opaque token, expiry, revoke-by-flag, one receipt per op), the
+gate/govapi/broker chain is now `async`, and a cross-instance test proves
+propose-A → decide-B → runTool-C. The conversion preserved the contract (the
+provider contract test already awaited every method); ~20 files touched, all tests
+green. Caps stay per-process (a conservative safety net). Sticky sessions are now an
+optimization, not a correctness requirement.
 
 ---
 

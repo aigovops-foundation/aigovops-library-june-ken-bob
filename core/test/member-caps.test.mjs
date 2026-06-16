@@ -21,7 +21,7 @@ const { createGovernedCore } = await import('../src/core/govapi.js');
 const { FileProvider } = await import('../src/core/secrets.fileprovider.js');
 const { identify } = await import('../src/core/identity.js');
 
-test('onboarding assigns the default profile for the role (idempotent)', () => {
+test('onboarding assigns the default profile for the role (idempotent)', async () => {
   const mc = new MemberCaps();
   const m = mc.onboard(identify({ id: 'oidc:alice', role: 'member' }));
   assert.strictEqual(m.level, 'propose');
@@ -32,41 +32,41 @@ test('onboarding assigns the default profile for the role (idempotent)', () => {
   assert.strictEqual(mc.onboard(identify({ id: 'oidc:alice', role: 'member' })).level, 'act');
 });
 
-test('seed() pre-loads profiles from config without a live login', () => {
+test('seed() pre-loads profiles from config without a live login', async () => {
   const mc = new MemberCaps();
   mc.seed([{ id: 'oidc:bob', role: 'member', level: 'act' }, { id: 'oidc:sue', role: 'steward' }]);
   assert.strictEqual(mc.get('oidc:bob').level, 'act');
   assert.strictEqual(mc.get('oidc:sue').level, 'auto');
 });
 
-test('a member at propose is paused at an act action until a steward raises the dial', () => {
+test('a member at propose is paused at an act action until a steward raises the dial', async () => {
   const caps = new Caps();
   const mc = new MemberCaps({ caps });
   mc.onboard(identify({ id: 'oidc:maker', role: 'member' }));     // default: propose
   const core = createGovernedCore({ secrets: new FileProvider({ storePath: STORE }), caps });
 
   // an irreversible (act-level) action: the member is capped, no grant brokered
-  let { pendingId } = core.propose('deploy the site', { actor: 'oidc:maker' });
-  let res = core.decide(pendingId, 'approve', { scope: 'github-deploy' });   // requiredLevel 'act' from policy
+  let { pendingId } = await core.propose('deploy the site', { actor: 'oidc:maker' });
+  let res = await core.decide(pendingId, 'approve', { scope: 'github-deploy' });   // requiredLevel 'act' from policy
   assert.strictEqual(res.approved, false);
   assert.strictEqual(res.capped, true);
   assert.match(res.reason, /capped:level/);
 
   // a steward turns the dial up; next request goes through
   mc.setLevel('oidc:maker', 'act');
-  ({ pendingId } = core.propose('deploy the site', { actor: 'oidc:maker' }));
-  res = core.decide(pendingId, 'approve', { scope: 'github-deploy' });
+  ({ pendingId } = await core.propose('deploy the site', { actor: 'oidc:maker' }));
+  res = await core.decide(pendingId, 'approve', { scope: 'github-deploy' });
   assert.strictEqual(res.approved, true);
   assert.ok(res.grant && res.grant.token);
 
   // and the dial turns back down, effective immediately
   mc.setLevel('oidc:maker', 'read');
-  ({ pendingId } = core.propose('deploy the site', { actor: 'oidc:maker' }));
-  res = core.decide(pendingId, 'approve', { scope: 'github-deploy' });
+  ({ pendingId } = await core.propose('deploy the site', { actor: 'oidc:maker' }));
+  res = await core.decide(pendingId, 'approve', { scope: 'github-deploy' });
   assert.strictEqual(res.approved, false, 'dialing down takes effect on the next request');
 });
 
-test('default profiles are narrow by construction', () => {
+test('default profiles are narrow by construction', async () => {
   assert.strictEqual(PROFILES.member.level, 'propose');
   assert.ok(PROFILES.member.maxSpend < Infinity);
   assert.strictEqual(PROFILES.steward.level, 'auto');

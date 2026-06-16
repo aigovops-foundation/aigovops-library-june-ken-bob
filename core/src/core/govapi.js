@@ -26,6 +26,7 @@ import { createToolRegistry, buildToolCode, ToolError } from './tools.js';
 import { createPolicyEngine } from './policy-engine.js';
 import { WorktreeRunner } from './worktree.js';
 import { complete as defaultComplete } from './llm.js';
+import { MemoryStore } from './statestore.js';
 
 /**
  * Create a governed core. Dependencies are injectable for tests.
@@ -38,6 +39,9 @@ import { complete as defaultComplete } from './llm.js';
 export function createGovernedCore(opts = {}) {
   const secrets = opts.secrets || new FileProvider();
   const caps = opts.caps || null;
+  // A4b: share the state store with the broker so a grant issued on one replica
+  // redeems on another (the FileProvider's grant store moves to the shared store too).
+  if (opts.store && secrets.useStore) secrets.useStore(opts.store);
   const sandbox = opts.sandbox || new ProcessSandbox();
   const emit = opts.emit || beacon.emit;
   const tools = opts.tools || createToolRegistry();
@@ -53,32 +57,35 @@ export function createGovernedCore(opts = {}) {
   // gate still holds every effect). Injectable for tests.
   const model = opts.model || defaultComplete;
 
-  const pending = new Map();   // pendingId -> { proposal, actor }
-  const grants = new Map();    // token     -> { scope, grantId, proposalId, actor }
+  // A4b (stateless brokering): pending proposals + brokered-grant metadata live in
+  // the SHARED store (default a per-instance MemoryStore = single-node, unchanged)
+  // so the whole propose→decide→runTool loop works on ANY replica — no sticky
+  // sessions. The broker's own grant store is shared the same way (see secrets above).
+  // The kill switch also lives here; `halted` is a local cache the server polls
+  // (syncHalt) so isHalted()/ensureLive() stay synchronous.
+  let store = opts.store || new MemoryStore();
+  const PK = (id) => `gov:pending:${id}`;
+  const PIDX = 'gov:pending:idx';
+  const GK = (tok) => `gov:grant:${tok}`;
   let halted = false;
-  // #1 (horizontal scale): the kill switch is the ONE piece of state that must be
-  // global — a steward halting on one replica has to stop them ALL. It lives in the
-  // shared store (injected post-boot via useStore); `halted` here is a local cache
-  // the server refreshes on a short interval (syncHalt), so isHalted()/ensureLive()
-  // stay synchronous and nothing else changes. Pending/grants/caps remain per-process
-  // and rely on sticky sessions (the broker grant store is per-process too) — see
-  // plan/scale-architecture.md "Cross-replica state".
-  let store = opts.store || null;
   const HALT_KEY = 'gov:halted';
-  const persistHalt = (v) => { if (store) Promise.resolve(store.set(HALT_KEY, v)).catch(() => {}); };
+  const persistHalt = (v) => { Promise.resolve(store.set(HALT_KEY, v)).catch(() => {}); };
   const now = opts.now || (() => Date.now());
 
-  // #3 (review queue at scale): each pending proposal carries a creation time, an
-  // SLA deadline (by required level — riskier work is due sooner), and an optional
-  // assignee, so the steward queue can route, filter, and surface overdue items.
+  // #3 (review queue): SLA deadline by required level (riskier work due sooner).
   const SLA_MS = opts.slaMs || { read: 24 * 3600e3, propose: 8 * 3600e3, act: 2 * 3600e3, auto: 3600e3 };
 
   const ensureLive = () => { if (halted) throw new Error('halted: the kill switch is armed'); };
   const doHalt = () => { halted = true; persistHalt(true); return emit({ kind: 'gate', actor: 'steward', action: 'kill-switch', detail: { armed: true } }); };
 
+  // pending index helpers (the store lacks SCAN — keep a small id set).
+  const pidx = async () => (await store.get(PIDX)) || [];
+  const pidxAdd = async (id) => { const ix = await pidx(); if (!ix.includes(id)) { ix.push(id); await store.set(PIDX, ix); } };
+  const pidxDel = async (id) => { const ix = await pidx(); const n = ix.filter((x) => x !== id); if (n.length !== ix.length) await store.set(PIDX, n); };
+
   // Classify an intent through the runtime policy engine and queue it for a human
   // decision. Shared by propose() and plan().
-  const doPropose = (intent, actor) => {
+  const doPropose = async (intent, actor) => {
     const proposal = agentPropose(intent);
     const d = policy.evaluate({ intent });
     proposal.requiresHumanGate = d.requiresHumanGate;
@@ -87,14 +94,15 @@ export function createGovernedCore(opts = {}) {
     const pendingId = 'prop_' + crypto.randomBytes(8).toString('hex');
     const createdAt = now();
     const dueAt = createdAt + (SLA_MS[d.requiredLevel] ?? SLA_MS.propose);
-    pending.set(pendingId, { proposal, actor, requiredLevel: d.requiredLevel, createdAt, dueAt, assignee: null });
+    await store.set(PK(pendingId), { proposal, actor, requiredLevel: d.requiredLevel, createdAt, dueAt, assignee: null });
+    await pidxAdd(pendingId);
     return { pendingId, proposal, requiresHumanGate: proposal.requiresHumanGate, dueAt };
   };
 
   return {
     // 1) propose — the agent submits an intent. We classify it (reversible?) and
     //    hold it for a human decision. No receipt yet; the receipt IS the decision.
-    propose(intent, { actor = 'agent:anon' } = {}) {
+    async propose(intent, { actor = 'agent:anon' } = {}) {
       ensureLive();
       return doPropose(intent, actor);   // #5: classified by the runtime policy engine
     },
@@ -109,47 +117,52 @@ export function createGovernedCore(opts = {}) {
         prompt: `A member says: "${message}". Draft a short numbered plan (max 4 steps) to help them, ` +
           `then state plainly whether any step needs human approval. You only PROPOSE — never claim to have acted.`,
       });
-      const queued = doPropose(message, actor);
+      const queued = await doPropose(message, actor);
       return { plan: drafted.text, model: drafted.model, ...queued };
     },
 
     // The approval queue — proposals awaiting a human decision (steward view).
-    // #3: routing/SLA — filter by assignee/overdue, sorted soonest-due first, each
-    // row carrying its createdAt, dueAt, assignee, and a computed `overdue` flag.
-    pending({ assignee, overdue } = {}) {
+    // #3: routing/SLA — filter by assignee/overdue, sorted soonest-due first.
+    async pending({ assignee, overdue } = {}) {
       const t = now();
-      let rows = [...pending.entries()].map(([pendingId, p]) => ({
-        pendingId, actor: p.actor, summary: p.proposal.summary, requiresHumanGate: p.proposal.requiresHumanGate,
-        requiredLevel: p.requiredLevel, createdAt: p.createdAt, dueAt: p.dueAt, assignee: p.assignee, overdue: t > p.dueAt,
-      }));
-      if (assignee != null) rows = rows.filter((r) => r.assignee === assignee);
-      if (overdue) rows = rows.filter((r) => r.overdue);
-      return rows.sort((a, b) => a.dueAt - b.dueAt);
+      const ids = await pidx();
+      const rows = [];
+      for (const pendingId of ids) {
+        const p = await store.get(PK(pendingId));
+        if (!p) continue;                          // decided/expired — prune lazily
+        rows.push({ pendingId, actor: p.actor, summary: p.proposal.summary, requiresHumanGate: p.proposal.requiresHumanGate,
+          requiredLevel: p.requiredLevel, createdAt: p.createdAt, dueAt: p.dueAt, assignee: p.assignee, overdue: t > p.dueAt });
+      }
+      let out = rows;
+      if (assignee != null) out = out.filter((r) => r.assignee === assignee);
+      if (overdue) out = out.filter((r) => r.overdue);
+      return out.sort((a, b) => a.dueAt - b.dueAt);
     },
 
     // #3: assign a pending proposal to a reviewer (steward action). Fails closed on
     // an unknown/decided id, like decide().
-    assign(pendingId, assignee) {
-      const p = pending.get(pendingId);
+    async assign(pendingId, assignee) {
+      const p = await store.get(PK(pendingId));
       if (!p) throw new Error('unknown or already-decided pendingId');
       p.assignee = assignee || null;
+      await store.set(PK(pendingId), p);
       return { pendingId, assignee: p.assignee };
     },
 
     // 2) decide — the HUMAN approves or denies. On approve (and within caps) the
     //    gate brokers a scoped, expiring token; deny brokers nothing (fails closed).
-    decide(pendingId, decision, { scope, ttlSeconds = 60, cost = {}, decidedBy = 'human' } = {}) {
+    async decide(pendingId, decision, { scope, ttlSeconds = 60, cost = {}, decidedBy = 'human' } = {}) {
       ensureLive();
-      const p = pending.get(pendingId);
+      const p = await store.get(PK(pendingId));
       if (!p) throw new Error('unknown or already-decided pendingId');
-      pending.delete(pendingId);
-      const res = gateDecide({
+      await store.del(PK(pendingId)); await pidxDel(pendingId);
+      const res = await gateDecide({
         proposal: p.proposal, decision, scope, ttlSeconds,
         requestedBy: p.actor, secrets, emit, caps,
         cost: { requiredLevel: p.requiredLevel, ...cost },   // policy-derived level, caller may override
       });
       if (res.approved && res.grant) {
-        grants.set(res.grant.token, { scope: res.grant.scope, grantId: res.grant.grantId, proposalId: res.proposalId, actor: p.actor });
+        await store.set(GK(res.grant.token), { scope: res.grant.scope, grantId: res.grant.grantId, proposalId: res.proposalId, actor: p.actor }, (res.grant.expiresAt - now()) + 600_000);
       }
       return res;
     },
@@ -160,8 +173,8 @@ export function createGovernedCore(opts = {}) {
     async runTool({ token, code, allowedEgress = [], timeoutMs = 10_000 } = {}) {
       ensureLive();
       if (!token) throw new Error('runTool: a brokered token is required (fails closed)');
-      secrets.redeem(token); // throws SecretsError if the token is not valid
-      const meta = grants.get(token) || null;
+      await secrets.redeem(token); // throws SecretsError if the token is not valid
+      const meta = await store.get(GK(token)) || null;
       const result = await sandbox.run({ code }, { allowedEgress, timeoutMs });
       emit({
         kind: 'tool', actor: meta ? meta.actor : 'agent:anon', action: 'tool-run',
@@ -184,8 +197,8 @@ export function createGovernedCore(opts = {}) {
       if (!token) throw new Error('runRegisteredTool: a brokered token is required (fails closed)');
       const tool = tools.get(toolName);
       if (!tool) throw new ToolError('unknown-tool', `no registered tool '${toolName}'`);
-      secrets.redeem(token);                         // throws if the token is invalid
-      const meta = grants.get(token) || null;
+      await secrets.redeem(token);                         // throws if the token is invalid
+      const meta = await store.get(GK(token)) || null;
       const scope = meta ? meta.scope : null;
       if (scope !== tool.requiredScope) {
         throw new ToolError('scope-mismatch', `tool '${toolName}' needs scope '${tool.requiredScope}', token is for '${scope}'`);
@@ -209,12 +222,12 @@ export function createGovernedCore(opts = {}) {
     //     the worktree; NEVER commits — returns a reviewable diff + a signed
     //     receipt so a human can land it. Fails closed if no worktree runner is
     //     configured (no repoDir) or the token scope is wrong.
-    proposeFileChange({ token, relPath, content } = {}) {
+    async proposeFileChange({ token, relPath, content } = {}) {
       ensureLive();
       if (!worktree) throw new Error('proposeFileChange: no worktree runner (pass repoDir to createGovernedCore)');
       if (!token) throw new Error('proposeFileChange: a brokered token is required (fails closed)');
-      secrets.redeem(token);
-      const meta = grants.get(token) || null;
+      await secrets.redeem(token);
+      const meta = await store.get(GK(token)) || null;
       const scope = meta ? meta.scope : null;
       if (scope !== mutationScope) throw new Error(`proposeFileChange needs scope '${mutationScope}', token is for '${scope}'`);
       return worktree.proposeFileChange({ relPath, content, parent: meta ? meta.proposalId : null, actor: meta ? meta.actor : 'agent:self-host' });
@@ -255,7 +268,7 @@ export function createGovernedCore(opts = {}) {
     // wires the resolved store after boot and polls syncHalt(), so a kill on ANY
     // replica halts this one within the poll interval. With the default MemoryStore
     // (single node) this is just a same-process read — behaviour unchanged.
-    useStore(s) { store = s; },
+    useStore(s) { if (s) { store = s; if (secrets && secrets.useStore) secrets.useStore(s); } },
     async syncHalt() { if (store) { try { halted = !!(await store.get(HALT_KEY)); } catch { /* keep last known */ } } return halted; },
   };
 }

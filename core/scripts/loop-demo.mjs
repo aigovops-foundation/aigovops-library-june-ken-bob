@@ -38,9 +38,9 @@ export async function runDemo() {
   const core = createGovernedCore({ secrets: new FileProvider({ storePath }), caps });
 
   // 1) the agent proposes an irreversible build action
-  const { pendingId, requiresHumanGate } = core.propose('deploy the library site', { actor: 'agent:maker' });
+  const { pendingId, requiresHumanGate } = await core.propose('deploy the library site', { actor: 'agent:maker' });
   // 2) the human approves → caps pass → a scoped token is brokered
-  const decided = core.decide(pendingId, 'approve', { scope: SCOPE, ttlSeconds: 60, cost: { requiredLevel: 'act', spend: 1 } });
+  const decided = await core.decide(pendingId, 'approve', { scope: SCOPE, ttlSeconds: 60, cost: { requiredLevel: 'act', spend: 1 } });
   // 3) the tool runs sandboxed, presenting the brokered token (fails closed without one)
   const result = await core.runTool({ token: decided.grant.token, code: 'export default async () => "built the thing";' });
   // 4) verify the whole ledger

@@ -20,7 +20,7 @@ const { policyDiff } = await import('../src/core/policy-diff.js');
 const { createGovernedCore } = await import('../src/core/govapi.js');
 const { FileProvider } = await import('../src/core/secrets.fileprovider.js');
 
-test('removing a verb loosens — the decision-diff flags the disappearing gate', () => {
+test('removing a verb loosens — the decision-diff flags the disappearing gate', async () => {
   const baseline = new JsPolicyEngine();
   const candidate = new JsPolicyEngine({ verbs: IRREVERSIBLE_VERBS.filter((v) => v !== 'deploy') });
   const diff = policyDiff({ baseline, candidate, intents: ['deploy the site', 'summarize the doc', 'delete the row'] });
@@ -32,7 +32,7 @@ test('removing a verb loosens — the decision-diff flags the disappearing gate'
   assert.strictEqual(diff.flips[0].to.requiresHumanGate, false);
 });
 
-test('adding a verb tightens — a new gate appears', () => {
+test('adding a verb tightens — a new gate appears', async () => {
   const baseline = new JsPolicyEngine();
   const candidate = new JsPolicyEngine({ verbs: IRREVERSIBLE_VERBS.concat(['email']) });
   const diff = policyDiff({ baseline, candidate, intents: ['email the team', 'read the file'] });
@@ -40,15 +40,15 @@ test('adding a verb tightens — a new gate appears', () => {
   assert.strictEqual(diff.loosened, 0);
 });
 
-test('identical policy yields a zero diff', () => {
+test('identical policy yields a zero diff', async () => {
   const diff = policyDiff({ baseline: new JsPolicyEngine(), candidate: new JsPolicyEngine() });
   assert.strictEqual(diff.flipped, 0);
 });
 
-test('the governed loop classifies through the runtime policy engine', () => {
+test('the governed loop classifies through the runtime policy engine', async () => {
   // inject a custom policy: only "launch" is irreversible
   const policy = new JsPolicyEngine({ verbs: ['launch'] });
   const core = createGovernedCore({ secrets: new FileProvider({ storePath: STORE }), policy });
-  assert.strictEqual(core.propose('deploy the site').requiresHumanGate, false, 'deploy is not gated under this policy');
-  assert.strictEqual(core.propose('launch the rocket').requiresHumanGate, true, 'launch is gated under this policy');
+  assert.strictEqual((await core.propose('deploy the site')).requiresHumanGate, false, 'deploy is not gated under this policy');
+  assert.strictEqual((await core.propose('launch the rocket')).requiresHumanGate, true, 'launch is gated under this policy');
 });

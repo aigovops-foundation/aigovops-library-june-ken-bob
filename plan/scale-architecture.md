@@ -27,7 +27,7 @@ needs Bob's irreversible credential/ops steps.
 
 | # | Improvement | Status | What's in the repo |
 |---|-------------|--------|--------------------|
-| 1 | Horizontal scale (externalize state) | 🟡 **durable + cluster-wide shared state shipped** | Shared state runs on Redis via a **dependency-free native RESP client** (`statestore.resp.js` — no `redis` npm package, SBOM intact). Workflows, quotas, and the global kill switch are now **durable across restarts + cluster-wide** (verified live: a workflow survived a core restart). Rate limiter multi-instance; ledger durable (N2). **Next (A4b):** the secrets-provider grant store + `govapi` grants so *brokering* is fully stateless across replicas (until then: sticky sessions). |
+| 1 | Horizontal scale (externalize state) | 🟡 **durable + cluster-wide shared state shipped** | Shared state runs on Redis via a **dependency-free native RESP client** (`statestore.resp.js` — no `redis` npm package, SBOM intact). Workflows, quotas, and the global kill switch are now **durable across restarts + cluster-wide** (verified live: a workflow survived a core restart). Rate limiter multi-instance; ledger durable (N2). **A4b done:** the broker grant store + govapi pending/grants moved to the shared store too, so the whole propose→decide→runTool loop is replica-agnostic — no sticky sessions needed (tested cross-instance). |
 | 2 | Workflow engine (multi-step, SLAs) | ✅ **shipped** | `workflow.js` — durable, store-backed (resumable + replica-agnostic) multi-step model: states, per-step assignment, SLA + escalation, metadata-only receipts; `/api/workflows/*` + a management UI at `/workflows`. |
 | 3 | Review queue at scale (routing/bulk) | ✅ **shipped** | pending proposals carry SLA `dueAt` + assignee; `/api/gov/pending?assignee=&overdue=1` (soonest-due) + `/api/gov/assign`. **Bulk assign/deny shipped** (`/api/gov/bulk`). |
 | 4 | RBAC hierarchy + orgs/teams | ✅ **shipped** | `orgs.js` — orgs/teams + delegated roles (org-steward/reviewer/auditor/regional-steward); `/api/orgs*`. **Next:** member lifecycle automation. |
@@ -52,15 +52,17 @@ client ─ LB ─┬─ core (N replicas, stateless) ──┬─ Postgres   (le
 Stateless `core` replicas are the unlock — they require improvement **#1** (move
 the in-memory loop state to the shared store). The seam is shipped.
 
-**Cross-replica state (current boundary).** The one piece of state that *must* be
-global for safety — the **kill switch** — is: a steward halting on any replica
-writes `gov:halted` to the shared store and every replica picks it up within
-`GOV_HALT_SYNC_MS` (default 2 s), failing closed. Everything else (pending
-proposals, brokered grants, caps usage) — and crucially the **secrets-provider
-grant store** — is still per-process, so a member's whole propose→decide→runTool
-loop must land on one replica. That is enforced by **sticky sessions** (Caddy
-`lb_policy cookie`; see `deploy/scale-and-backup.md`). Making brokering fully
-stateless across replicas is follow-up **A4b** — deliberately not claimed yet.
+**Cross-replica state (A4b — done).** The whole governed loop is now
+replica-agnostic. The **kill switch** is global (a steward halting on any replica
+writes `gov:halted`; every replica picks it up within `GOV_HALT_SYNC_MS`, failing
+closed). And **A4b** moved the rest to the shared store too: pending proposals,
+govapi grant metadata, and — crucially — the **broker's own grant store**
+(`FileProvider` now keeps grants in the shared store, same opaque-token/expiry/
+revoke semantics, just relocated). So a member can **propose on replica A, have a
+steward decide on B, and run the brokered tool on C** — tested cross-instance. The
+gate/govapi/broker chain became `async`; caps remain per-process (a conservative
+safety net, documented). **Sticky sessions are therefore no longer required** —
+they're now an optimization, not a correctness requirement.
 
 ## What needs Bob (irreversible — left for a human)
 

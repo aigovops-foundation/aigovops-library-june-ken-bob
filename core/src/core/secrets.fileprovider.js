@@ -20,6 +20,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import * as beacon from './beacon.js';
+import { MemoryStore } from './statestore.js';
 import { SecretsProvider, SecretsError, refFor, denyReason, isExpired, receiptDetail } from './secrets.shared.js';
 
 export class FileProvider extends SecretsProvider {
@@ -36,10 +37,23 @@ export class FileProvider extends SecretsProvider {
     this.now = opts.now || (() => Date.now());
     this.randomId = opts.randomId || (() => crypto.randomBytes(18).toString('hex'));
     this.emit = opts.emit || ((meta) => beacon.emit(meta));
-    this._grants = new Map();   // grantId -> internal grant (incl. revoked flag)
-    this._byToken = new Map();  // token   -> grantId
+    // A4b: brokered grants live in the SHARED state store (default a per-instance
+    // MemoryStore = single-node, unchanged) so a token issued on one replica can be
+    // redeemed on another — the broker is no longer per-process. Same security
+    // semantics (opaque token, expiry, revoke-by-flag, one receipt per op); only
+    // the backing store moved. useStore() late-binds the cluster store at boot.
+    this.gstore = opts.store || new MemoryStore();
+    this._active = new Map();   // scope -> count, metadata only (describe's activeGrants)
     this._store = this._loadStore();
   }
+
+  useStore(store) { if (store) this.gstore = store; }
+
+  // Grant keys + a generous TTL so denyReason (using the injectable clock) governs
+  // expiry, while the store still cleans up eventually.
+  _gKey(grantId) { return `grant:g:${grantId}`; }
+  _tKey(token) { return `grant:t:${token}`; }
+  _ttlMs(expiresAt) { return Math.max(1000, (expiresAt - this.now())) + 600_000; }
 
   // --- backing store (never committed) --------------------------------------
   _loadStore() {
@@ -61,16 +75,23 @@ export class FileProvider extends SecretsProvider {
     return { grantId: g.grantId, scope: g.scope, token: g.token, issuedAt: g.issuedAt, expiresAt: g.expiresAt, ref: g.ref };
   }
 
-  // --- contract -------------------------------------------------------------
-  issue(scope, ttlSeconds, requestedBy, opts = {}) {
+  async _putGrant(g) {
+    const ttl = this._ttlMs(g.expiresAt);
+    await this.gstore.set(this._gKey(g.grantId), g, ttl);
+    await this.gstore.set(this._tKey(g.token), g.grantId, ttl);
+  }
+  async _getByToken(token) { const id = await this.gstore.get(this._tKey(token)); return id ? this.gstore.get(this._gKey(id)) : null; }
+
+  // --- contract (async: grants live in the shared store) --------------------
+  async issue(scope, ttlSeconds, requestedBy, opts = {}) {
     this._masterFor(scope); // fail closed if the scope has no secret
     if (!(ttlSeconds > 0)) throw new SecretsError('bad-ttl', 'ttlSeconds must be > 0');
     const issuedAt = this.now();
     const expiresAt = issuedAt + ttlSeconds * 1000;
     const ref = refFor(scope);
     const g = { grantId: this.randomId(), scope, token: this.randomId(), issuedAt, expiresAt, ref, revoked: false, requestedBy };
-    this._grants.set(g.grantId, g);
-    this._byToken.set(g.token, g.grantId);
+    await this._putGrant(g);
+    this._active.set(scope, (this._active.get(scope) || 0) + 1);
     this.emit({
       kind: 'secret', actor: requestedBy || 'gate', action: 'issue',
       detail: receiptDetail({ op: 'issue', scope, ttlSeconds, expiresAt, ref, requestedBy, decision: 'allow', parent: opts.parent || null })
@@ -78,11 +99,12 @@ export class FileProvider extends SecretsProvider {
     return this._publicGrant(g);
   }
 
-  renew(grantId, ttlSeconds) {
-    const g = this._grants.get(grantId);
+  async renew(grantId, ttlSeconds) {
+    const g = await this.gstore.get(this._gKey(grantId));
     if (!g || g.revoked) throw new SecretsError('not-renewable', 'unknown or revoked grant'); // fail closed
     if (!(ttlSeconds > 0)) throw new SecretsError('bad-ttl', 'ttlSeconds must be > 0');
     g.expiresAt = this.now() + ttlSeconds * 1000;
+    await this._putGrant(g);
     this.emit({
       kind: 'secret', actor: g.requestedBy || 'gate', action: 'renew',
       detail: receiptDetail({ op: 'renew', scope: g.scope, ttlSeconds, expiresAt: g.expiresAt, ref: g.ref, requestedBy: g.requestedBy, decision: 'allow' })
@@ -90,10 +112,12 @@ export class FileProvider extends SecretsProvider {
     return this._publicGrant(g);
   }
 
-  revoke(grantId) {
-    const g = this._grants.get(grantId);
+  async revoke(grantId) {
+    const g = await this.gstore.get(this._gKey(grantId));
     if (!g) throw new SecretsError('unknown-grant', 'unknown grant');
     g.revoked = true;
+    await this._putGrant(g);                          // keep the revoked flag until natural expiry
+    this._active.set(g.scope, Math.max(0, (this._active.get(g.scope) || 0) - 1));
     this.emit({
       kind: 'secret', actor: g.requestedBy || 'gate', action: 'revoke',
       detail: receiptDetail({ op: 'revoke', scope: g.scope, ttlSeconds: 0, expiresAt: g.expiresAt, ref: g.ref, requestedBy: g.requestedBy, decision: 'revoke' })
@@ -101,35 +125,27 @@ export class FileProvider extends SecretsProvider {
     return { revoked: true };
   }
 
-  describe(ref) {
+  async describe(ref) {
     // accept either a ref ('secret:scope') or a bare scope
     const scope = ref && ref.startsWith('secret:') ? ref.slice('secret:'.length) : ref;
     this._masterFor(scope); // throws unknown-scope if absent — NO secret returned
-    const now = this.now();
-    let activeGrants = 0;
-    for (const g of this._grants.values()) {
-      if (g.scope === scope && !g.revoked && !isExpired(g, now)) activeGrants++;
-    }
     return {
       ref: refFor(scope),
       owner: this._store.owner,
       scope,
       lastRotated: this._store.rotated[scope] || null,
-      activeGrants
+      activeGrants: this._active.get(scope) || 0,        // per-process metadata (not security-critical)
     };
   }
 
   // --- the "use" path (gate/tool presents the token back) -------------------
   // Fails closed on unknown/expired/revoked. Returns success metadata only; the
   // master secret is used internally and never handed to the caller.
-  redeem(token) {
-    const grantId = this._byToken.get(token);
-    const g = grantId ? this._grants.get(grantId) : null;
+  async redeem(token) {
+    const g = await this._getByToken(token);
     const reason = denyReason(g, this.now());
     if (reason) throw new SecretsError(reason, `token denied: ${reason}`); // FAIL CLOSED
-    // In production the provider would act against the target with the secret.
-    // Here we confirm validity without returning master material.
-    void this._masterFor(g.scope);
+    void this._masterFor(g.scope);                     // confirm validity; never returns master material
     return { ok: true, scope: g.scope, ref: g.ref };
   }
 }

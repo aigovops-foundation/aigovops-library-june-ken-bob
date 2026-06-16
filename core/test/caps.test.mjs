@@ -36,12 +36,12 @@ function ledgerRecords() {
 }
 
 // 1 — under cap: approve succeeds and grants a token
-test('under cap: approve succeeds and grants a token', () => {
+test('under cap: approve succeeds and grants a token', async () => {
   const secrets = new FileProvider({ storePath: store() });
   const caps = new Caps();
   caps.setProfile('agent:deploy', { level: 'act', maxSpend: 100 });
 
-  const r = gate.decide({
+  const r = await gate.decide({
     proposal: proposal(), decision: 'approve', scope: SCOPE,
     ttlSeconds: 60, requestedBy: 'agent:deploy', secrets, caps,
     cost: { spend: 10 }
@@ -51,13 +51,13 @@ test('under cap: approve succeeds and grants a token', () => {
 });
 
 // 2 — at spend cap: halts (no grant) + breach receipt
-test('at spend cap: halts instead of proceeding and emits a breach receipt', () => {
+test('at spend cap: halts instead of proceeding and emits a breach receipt', async () => {
   const secrets = new FileProvider({ storePath: store() });
   const caps = new Caps();
   caps.setProfile('agent:deploy', { level: 'act', maxSpend: 10 });
 
   // first request: spends 10 (hits the cap)
-  const r1 = gate.decide({
+  const r1 = await gate.decide({
     proposal: proposal(), decision: 'approve', scope: SCOPE,
     ttlSeconds: 60, requestedBy: 'agent:deploy', secrets, caps,
     cost: { spend: 10 }
@@ -66,7 +66,7 @@ test('at spend cap: halts instead of proceeding and emits a breach receipt', () 
 
   // second request: would exceed cap → halts
   const before = beacon.ledgerCount();
-  const r2 = gate.decide({
+  const r2 = await gate.decide({
     proposal: proposal(), decision: 'approve', scope: SCOPE,
     ttlSeconds: 60, requestedBy: 'agent:deploy', secrets, caps,
     cost: { spend: 1 }
@@ -85,20 +85,20 @@ test('at spend cap: halts instead of proceeding and emits a breach receipt', () 
 });
 
 // 3 — at rate cap: halts
-test('at rate cap: halts instead of proceeding', () => {
+test('at rate cap: halts instead of proceeding', async () => {
   const secrets = new FileProvider({ storePath: store() });
   const caps = new Caps();
   caps.setProfile('agent:deploy', { level: 'act', maxRate: 1, windowMs: 60_000 });
 
   // first request: within rate
-  const r1 = gate.decide({
+  const r1 = await gate.decide({
     proposal: proposal(), decision: 'approve', scope: SCOPE,
     ttlSeconds: 60, requestedBy: 'agent:deploy', secrets, caps
   });
   assert.strictEqual(r1.approved, true);
 
   // second request: exceeds rate cap
-  const r2 = gate.decide({
+  const r2 = await gate.decide({
     proposal: proposal(), decision: 'approve', scope: SCOPE,
     ttlSeconds: 60, requestedBy: 'agent:deploy', secrets, caps
   });
@@ -107,13 +107,13 @@ test('at rate cap: halts instead of proceeding', () => {
 });
 
 // 4 — turning the dial down takes effect on the next request
-test('turning the dial down takes effect on the next request', () => {
+test('turning the dial down takes effect on the next request', async () => {
   const secrets = new FileProvider({ storePath: store() });
   const caps = new Caps();
   caps.setProfile('agent:deploy', { level: 'act', maxSpend: 1000 });
 
   // at level 'act': approve succeeds
-  const r1 = gate.decide({
+  const r1 = await gate.decide({
     proposal: proposal(), decision: 'approve', scope: SCOPE,
     ttlSeconds: 60, requestedBy: 'agent:deploy', secrets, caps,
     cost: { requiredLevel: 'act' }
@@ -124,7 +124,7 @@ test('turning the dial down takes effect on the next request', () => {
   caps.setLevel('agent:deploy', 'read');
 
   // the very next request at 'act' level is denied
-  const r2 = gate.decide({
+  const r2 = await gate.decide({
     proposal: proposal(), decision: 'approve', scope: SCOPE,
     ttlSeconds: 60, requestedBy: 'agent:deploy', secrets, caps,
     cost: { requiredLevel: 'act' }
@@ -134,7 +134,7 @@ test('turning the dial down takes effect on the next request', () => {
 
   // turn the dial back UP to 'act' — next request succeeds again
   caps.setLevel('agent:deploy', 'act');
-  const r3 = gate.decide({
+  const r3 = await gate.decide({
     proposal: proposal(), decision: 'approve', scope: SCOPE,
     ttlSeconds: 60, requestedBy: 'agent:deploy', secrets, caps,
     cost: { requiredLevel: 'act' }
@@ -143,19 +143,19 @@ test('turning the dial down takes effect on the next request', () => {
 });
 
 // 5 — blast radius cap enforced
-test('blast radius cap enforced', () => {
+test('blast radius cap enforced', async () => {
   const secrets = new FileProvider({ storePath: store() });
   const caps = new Caps();
   caps.setProfile('agent:deploy', { level: 'act', maxBlastRadius: 5 });
 
-  const r1 = gate.decide({
+  const r1 = await gate.decide({
     proposal: proposal(), decision: 'approve', scope: SCOPE,
     ttlSeconds: 60, requestedBy: 'agent:deploy', secrets, caps,
     cost: { blastRadius: 5 }
   });
   assert.strictEqual(r1.approved, true);
 
-  const r2 = gate.decide({
+  const r2 = await gate.decide({
     proposal: proposal(), decision: 'approve', scope: SCOPE,
     ttlSeconds: 60, requestedBy: 'agent:deploy', secrets, caps,
     cost: { blastRadius: 1 }
@@ -165,9 +165,9 @@ test('blast radius cap enforced', () => {
 });
 
 // 6 — without caps, gate behaves exactly as Ticket 1 (backward compat)
-test('without caps parameter, gate behaves as before (backward compat)', () => {
+test('without caps parameter, gate behaves as before (backward compat)', async () => {
   const secrets = new FileProvider({ storePath: store() });
-  const r = gate.decide({
+  const r = await gate.decide({
     proposal: proposal(), decision: 'approve', scope: SCOPE,
     ttlSeconds: 60, secrets
   });

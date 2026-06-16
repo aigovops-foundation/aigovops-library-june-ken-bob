@@ -36,10 +36,10 @@ function proposal(intent = 'deploy the site') {
 }
 
 // 1 — approve: token + two paired receipts, secret linked to the proposal
-test('approved proposal brokers a token with paired, linked receipts', () => {
+test('approved proposal brokers a token with paired, linked receipts', async () => {
   const secrets = new FileProvider({ storePath: store() }); // default emit -> temp ledger
   const before = beacon.ledgerCount();
-  const r = gate.decide({ proposal: proposal(), decision: 'approve', scope: SCOPE, ttlSeconds: 60, requestedBy: 'gate', secrets });
+  const r = await gate.decide({ proposal: proposal(), decision: 'approve', scope: SCOPE, ttlSeconds: 60, requestedBy: 'gate', secrets });
 
   assert.strictEqual(r.approved, true);
   assert.ok(r.grant && r.grant.token, 'a token was issued');
@@ -61,10 +61,10 @@ test('approved proposal brokers a token with paired, linked receipts', () => {
 });
 
 // 2 — deny: issues nothing, fails closed (no token, no secret receipt)
-test('denied proposal issues nothing and fails closed', () => {
+test('denied proposal issues nothing and fails closed', async () => {
   const secrets = new FileProvider({ storePath: store() });
   const before = beacon.ledgerCount();
-  const r = gate.decide({ proposal: proposal(), decision: 'deny', scope: SCOPE, ttlSeconds: 60, secrets });
+  const r = await gate.decide({ proposal: proposal(), decision: 'deny', scope: SCOPE, ttlSeconds: 60, secrets });
 
   assert.strictEqual(r.approved, false);
   assert.strictEqual(r.grant, null, 'no token on deny');
@@ -75,11 +75,11 @@ test('denied proposal issues nothing and fails closed', () => {
 });
 
 // 3 — approve of a scope with no secret fails closed (no token, no secret receipt)
-test('approving a scope with no secret fails closed', () => {
+test('approving a scope with no secret fails closed', async () => {
   const secrets = new FileProvider({ storePath: store() });
   const before = beacon.ledgerCount();
-  assert.throws(
-    () => gate.decide({ proposal: proposal(), decision: 'approve', scope: 'no-such-scope', ttlSeconds: 60, secrets }),
+  await assert.rejects(
+    async () => gate.decide({ proposal: proposal(), decision: "approve", scope: "no-such-scope", ttlSeconds: 60, secrets }),
     (e) => e instanceof SecretsError && e.reason === 'unknown-scope'
   );
   // the approve decision is still auditable, but NO secret receipt was emitted
@@ -88,23 +88,23 @@ test('approving a scope with no secret fails closed', () => {
 });
 
 // 4 — a reversible intent needs no gate and no credential
-test('a reversible intent needs no gate and no credential', () => {
+test('a reversible intent needs no gate and no credential', async () => {
   const secrets = new FileProvider({ storePath: store() });
   const before = beacon.ledgerCount();
-  const r = gate.proposeAndDecide({ intent: 'summarize the document', decision: 'approve', scope: SCOPE, ttlSeconds: 60, secrets });
+  const r = await gate.proposeAndDecide({ intent: 'summarize the document', decision: 'approve', scope: SCOPE, ttlSeconds: 60, secrets });
   assert.strictEqual(r.grant, null);
   assert.strictEqual(r.reason, 'reversible');
   assert.strictEqual(beacon.ledgerCount(), before, 'nothing emitted for a reversible action');
 });
 
 // 5 — end-to-end: an irreversible intent, approved, brokers a linked token
-test('proposeAndDecide brokers a linked token for an approved irreversible intent', () => {
+test('proposeAndDecide brokers a linked token for an approved irreversible intent', async () => {
   const secrets = new FileProvider({ storePath: store() });
-  const r = gate.proposeAndDecide({ intent: 'deploy the site', decision: 'approve', scope: SCOPE, ttlSeconds: 60, secrets });
+  const r = await gate.proposeAndDecide({ intent: 'deploy the site', decision: 'approve', scope: SCOPE, ttlSeconds: 60, secrets });
   assert.strictEqual(r.approved, true);
   assert.ok(r.grant && r.grant.token);
   // the live token is usable now and traces to the approving proposal
-  assert.strictEqual(secrets.redeem(r.grant.token).ok, true);
+  assert.strictEqual((await secrets.redeem(r.grant.token)).ok, true);
   const secretRec = ledgerRecords().slice(-1)[0].record;
   assert.strictEqual(secretRec.detail.parent, r.proposalId);
 });
@@ -116,11 +116,11 @@ test('proposeAndDecide consults a PolicyEngine for the human-gate decision', asy
   const policy = new JsPolicyEngine();
   const secrets = new FileProvider({ storePath: store() });
   // reversible under policy -> no gate, no credential
-  const rev = gate.proposeAndDecide({ intent: 'summarize the document', decision: 'approve', scope: SCOPE, ttlSeconds: 60, secrets, policy });
+  const rev = await gate.proposeAndDecide({ intent: 'summarize the document', decision: 'approve', scope: SCOPE, ttlSeconds: 60, secrets, policy });
   assert.strictEqual(rev.reason, 'reversible');
   assert.deepStrictEqual(rev.proposal.policyReasons, []);
   // irreversible under policy -> gated, brokers on approve
-  const irr = gate.proposeAndDecide({ intent: 'deploy the site', decision: 'approve', scope: SCOPE, ttlSeconds: 60, secrets, policy });
+  const irr = await gate.proposeAndDecide({ intent: 'deploy the site', decision: 'approve', scope: SCOPE, ttlSeconds: 60, secrets, policy });
   assert.strictEqual(irr.approved, true);
   assert.ok(irr.grant && irr.grant.token);
   assert.ok(irr.proposal.policyReasons.includes('matched irreversible verb: deploy'));

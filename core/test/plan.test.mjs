@@ -33,7 +33,7 @@ test('plan() drafts a plan and queues a gated proposal for an irreversible ask',
   assert.ok(r.pendingId, 'a proposal was queued');
   assert.strictEqual(r.requiresHumanGate, true, 'publish is gated');
   // it is queued (not executed) — appears in the approval queue
-  assert.ok(c.pending().some((p) => p.pendingId === r.pendingId));
+  assert.ok((await c.pending()).some((p) => p.pendingId === r.pendingId));
 });
 
 test('plan() for a reversible ask needs no gate, and approving it brokers a token', async () => {
@@ -42,7 +42,7 @@ test('plan() for a reversible ask needs no gate, and approving it brokers a toke
   assert.strictEqual(r.requiresHumanGate, false, 'summarize is reversible');
   // the human can still decide it; an irreversible one brokers on approve
   const r2 = await c.plan('deploy the updated site', { actor: 'member:alice' });
-  const decided = c.decide(r2.pendingId, 'approve', { scope: 'github-deploy' });
+  const decided = await c.decide(r2.pendingId, 'approve', { scope: 'github-deploy' });
   assert.ok(decided.grant && decided.grant.token, 'approving the planned action brokers a scoped token');
 });
 

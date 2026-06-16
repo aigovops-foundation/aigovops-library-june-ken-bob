@@ -34,11 +34,11 @@ test('end-to-end: propose -> approve -> runTool, with linked receipts', async ()
   caps.setProfile('agent:maker', { level: 'act' });
   const core = createGovernedCore({ secrets: new FileProvider({ storePath: store() }), caps });
 
-  const { pendingId, requiresHumanGate } = core.propose('deploy the library site', { actor: 'agent:maker' });
+  const { pendingId, requiresHumanGate } = await core.propose('deploy the library site', { actor: 'agent:maker' });
   assert.equal(requiresHumanGate, true, 'an irreversible intent needs a human gate');
 
   const before = beacon.ledgerCount();
-  const decided = core.decide(pendingId, 'approve', { scope: SCOPE, ttlSeconds: 60, cost: { requiredLevel: 'act' } });
+  const decided = await core.decide(pendingId, 'approve', { scope: SCOPE, ttlSeconds: 60, cost: { requiredLevel: 'act' } });
   assert.equal(decided.approved, true);
   assert.ok(decided.grant && decided.grant.token, 'approval brokers a scoped token');
   assert.notEqual(decided.grant.token, 'MASTER-DO-NOT-LEAK', 'token is never the master secret');
@@ -56,28 +56,28 @@ test('end-to-end: propose -> approve -> runTool, with linked receipts', async ()
 
 test('deny fails closed: no token, no tool run', async () => {
   const core = createGovernedCore({ secrets: new FileProvider({ storePath: store() }) });
-  const { pendingId } = core.propose('delete the production ledger', { actor: 'agent:maker' });
-  const decided = core.decide(pendingId, 'deny', { scope: SCOPE });
+  const { pendingId } = await core.propose('delete the production ledger', { actor: 'agent:maker' });
+  const decided = await core.decide(pendingId, 'deny', { scope: SCOPE });
   assert.equal(decided.approved, false);
   assert.equal(decided.grant, null, 'deny brokers nothing');
   await assert.rejects(() => core.runTool({ code: 'export default () => 1;' }), /token is required/);
 });
 
-test('deny WITHOUT a scope is safe (regression: JCS undefined in the deny receipt)', () => {
+test('deny WITHOUT a scope is safe (regression: JCS undefined in the deny receipt)', async () => {
   const core = createGovernedCore({ secrets: new FileProvider({ storePath: store() }) });
-  const { pendingId } = core.propose('publish something', { actor: 'agent:maker' });
-  const decided = core.decide(pendingId, 'deny');          // no scope — must not throw
+  const { pendingId } = await core.propose('publish something', { actor: 'agent:maker' });
+  const decided = await core.decide(pendingId, 'deny');          // no scope — must not throw
   assert.equal(decided.approved, false);
   assert.equal(core.verify().valid, true, 'the deny receipt is well-formed + the chain verifies');
 });
 
-test('over-cap pauses with a breach receipt, no grant', () => {
+test('over-cap pauses with a breach receipt, no grant', async () => {
   const caps = new Caps();
   caps.setProfile('agent:maker', { level: 'act', maxSpend: 0 });
   const core = createGovernedCore({ secrets: new FileProvider({ storePath: store() }), caps });
-  const { pendingId } = core.propose('deploy something costly', { actor: 'agent:maker' });
+  const { pendingId } = await core.propose('deploy something costly', { actor: 'agent:maker' });
   const before = beacon.ledgerCount();
-  const decided = core.decide(pendingId, 'approve', { scope: SCOPE, cost: { requiredLevel: 'act', spend: 5 } });
+  const decided = await core.decide(pendingId, 'approve', { scope: SCOPE, cost: { requiredLevel: 'act', spend: 5 } });
   assert.equal(decided.approved, false);
   assert.equal(decided.capped, true);
   assert.match(decided.reason, /capped:spend-cap/);
@@ -91,32 +91,53 @@ test('skills.list/run flow through the same gate+ledger', () => {
   assert.ok(res.result.gates.length > 0);
 });
 
-test('kill switch halts new work', () => {
+test('kill switch halts new work', async () => {
   const core = createGovernedCore({ secrets: new FileProvider({ storePath: store() }) });
   core.halt();
   assert.equal(core.isHalted(), true);
-  assert.throws(() => core.propose('anything'), /halted/);
+  await assert.rejects(() => core.propose("anything"), /halted/);
   core.resume();
-  assert.equal(core.propose('read the docs').requiresHumanGate, false);
+  assert.equal((await core.propose("read the docs")).requiresHumanGate, false);
 });
 
-test('#3 review queue: SLA deadline, assignee, overdue filtering, sorted by due', () => {
+test('#3 review queue: SLA deadline, assignee, overdue filtering, sorted by due', async () => {
   let clock = 1_000_000;
   const core = createGovernedCore({ secrets: new FileProvider({ storePath: store() }), now: () => clock, slaMs: { read: 100, propose: 100, act: 100, auto: 100 } });
-  const a = core.propose('publish the quarterly report', { actor: 'agent:maker' });
-  core.propose('read the docs', { actor: 'agent:maker' });
+  const a = await core.propose('publish the quarterly report', { actor: 'agent:maker' });
+  await core.propose('read the docs', { actor: 'agent:maker' });
 
-  let q = core.pending();
+  let q = await core.pending();
   assert.equal(q.length, 2);
   assert.ok(q.every((r) => typeof r.dueAt === 'number' && r.overdue === false));
 
-  core.assign(a.pendingId, 'reviewer:ken');
-  assert.equal(core.pending({ assignee: 'reviewer:ken' }).length, 1);
-  assert.equal(core.pending({ assignee: 'reviewer:ken' })[0].pendingId, a.pendingId);
+  await core.assign(a.pendingId, 'reviewer:ken');
+  assert.equal((await core.pending({ assignee: "reviewer:ken" })).length, 1);
+  assert.equal((await core.pending({ assignee: "reviewer:ken" }))[0].pendingId, a.pendingId);
 
   clock += 200;                                              // past the 100ms SLA
-  assert.equal(core.pending({ overdue: true }).length, 2);
-  assert.throws(() => core.assign('prop_nope', 'x'), /unknown or already-decided/);
+  assert.equal((await core.pending({ overdue: true })).length, 2);
+  await assert.rejects(() => core.assign("prop_nope", "x"), /unknown or already-decided/);
+});
+
+test('A4b: the whole propose→decide→runTool loop works ACROSS replicas (no sticky sessions)', async () => {
+  const { MemoryStore } = await import('../src/core/statestore.js');
+  const shared = new MemoryStore();   // one store = one cluster (Redis in prod)
+  const replica = () => createGovernedCore({ secrets: new FileProvider({ storePath: store(), store: shared }), store: shared });
+  const A = replica(), B = replica(), C = replica();
+
+  // propose on replica A …
+  const { pendingId } = await A.propose('deploy the library site', { actor: 'agent:maker' });
+  // … decide on replica B (it brokers a scoped token into the shared store) …
+  const decided = await B.decide(pendingId, 'approve', { scope: SCOPE, ttlSeconds: 60, cost: { requiredLevel: 'act' } });
+  assert.ok(decided.approved && decided.grant && decided.grant.token, 'B brokered a token for A’s proposal');
+  // … and redeem + run on replica C (a third instance that never saw issue/decide).
+  const result = await C.runTool({ token: decided.grant.token, code: 'export default async () => "built";' });
+  assert.equal(result.ok, true);
+  assert.equal(result.result, 'built');
+
+  // B consumed the pending item cluster-wide — A no longer lists it.
+  assert.equal((await A.pending()).some((p) => p.pendingId === pendingId), false);
+  assert.equal(C.verify().valid, true);
 });
 
 test('#1 the kill switch is GLOBAL across replicas via the shared store', async () => {
@@ -132,7 +153,7 @@ test('#1 the kill switch is GLOBAL across replicas via the shared store', async 
 
   await b.syncHalt();                                            // B refreshes from the shared store
   assert.equal(b.isHalted(), true, 'B halts after syncing the global state');
-  assert.throws(() => b.propose('act on something'), /halted/);  // B fails closed cluster-wide
+  await assert.rejects(() => b.propose("act on something"), /halted/);  // B fails closed cluster-wide
 
   a.resume();                                                    // lift on A
   await b.syncHalt();
