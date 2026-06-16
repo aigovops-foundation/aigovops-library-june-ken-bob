@@ -132,8 +132,8 @@ Automation so the build is held to its own gate.
 - **Governance-gate CI** — ✅ **shipped** (`scripts/governance-gate.mjs`, `npm run gate`):
   verifies the ledger signatures + prev-hash chain + checkpoint anchor and exits
   non-zero on any tampering (a forged signature fails the build — tested).
-- **Prose skills → real tools as CI** — ⬜ `accessibility-audit` → axe/pa11y; `security-privacy-review` → a real scanner.
-- **Build-ledger pulse** — ⬜ extend `pulse.html` into a public ledger of tickets agents built, with receipts.
+- **Prose skills → real tools as CI** — ✅ **shipped** (`scripts/scan.mjs`, `npm run scan`, wired into `ci.yml`): `accessibility-audit` (a11y.js) audits every shipped HTML page and `security-privacy-review` (scanners.js) scans configs/docs for secrets — both as blocking build gates, dependency-free, tested. (Deeper axe/pa11y + browser-based checks are a future deepening.)
+- **Build-ledger pulse** — ⬜ extend `pulse.html` into a public ledger of tickets agents built, with receipts (a docs artifact — deliberately deferred).
 
 ---
 

@@ -14,6 +14,7 @@
     "checkpoint": "node scripts/checkpoint.mjs",
     "rotate-keys": "node scripts/rotate-keys.mjs",
     "gate": "node scripts/governance-gate.mjs",
+    "scan": "node scripts/scan.mjs",
     "test": "node --test",
     "pulse": "node scripts/pulse.mjs",
     "export:evidence": "node scripts/export-evidence.mjs",

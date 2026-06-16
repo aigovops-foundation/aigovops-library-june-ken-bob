@@ -12,3 +12,6 @@ jobs:
       # Phase D — govern the build with its own gate: the signed audit trail must
       # verify (tamper-detection itself is covered by test/govgate.test.mjs).
       - run: npm run gate
+      # Phase D — the prose governance skills as executable gates: accessibility-
+      # audit on shipped pages + security-privacy-review (secret scan) on configs.
+      - run: npm run scan
