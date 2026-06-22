@@ -26,8 +26,9 @@ Two specific collisions:
 
 Keep the **13-agent cast as the canonical, human-facing vocabulary** (it's the story we tell
 on the sites and in the docs). Treat each **deployed Omni agent as an implementation** that
-maps to one cast role. Add a `role:` field to each entry in `agents.yaml` naming its archetype,
-so the deployment is self-documenting and the map can't silently drift again.
+maps to one cast role. Add an `archetype:` field to each entry in `agents.yaml` naming its cast
+role (`role:` is already used there for a functional descriptor, e.g. `gate-brain`), so the
+deployment is self-documenting and the map can't silently drift again.
 
 Resolve the Beacon/Lantern collision by **scoping**: "Beacon" and "Lantern" name **products**
 in public/product contexts (Foundation site), and name **internal agent roles** only inside the
@@ -75,7 +76,7 @@ agents beyond the seven-room governance model.
 
 ## Recommended next steps (each its own small change, on approval)
 
-1. Add a `role:` archetype field to every agent in `agents.yaml` (purely additive, documents the map).
-2. Add the six missing real capabilities above to the library skill catalog so it reflects what's deployed.
-3. Add a one-line note to `plan/agents.md` pointing here, so the cast and the deployment stay linked.
+1. ✅ **Done (2026-06-21).** Added an `archetype:` field to every agent in `agents.yaml` (additive; `role:` was taken). Commit `214fbb9` on `bobrapp/Omni-Rapp-June-2026`.
+2. ✅ **Done (2026-06-21).** Added the six missing capabilities to the library skill catalog (`plan/skills.md`, "Community skills").
+3. ✅ **Done (2026-06-21).** Pointer added to `plan/agents.md`.
 4. Leave the deployed agent *names* alone (renaming a live fleet is high-cost, low-value).

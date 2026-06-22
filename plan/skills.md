@@ -24,6 +24,17 @@ extend coverage to every discipline.
 - `status-report` — compose a report from signed evidence only.
 - `security-privacy-review` — secret + PII scan, threat-model check, sign/block.
 
+## Community skills (deployed in Omni; folded in from the 2026-06 sync review)
+These run live in the membership community (`bobrapp/Omni-Rapp-June-2026`) as effectors;
+listed here so the catalog reflects what's actually deployed. See
+`plan/ecosystem-agent-skill-map.md` for the full skill ↔ effector map.
+- `publish-course` — draft → review → sign → publish a learning path (curriculum agent; reversible/unpublishable).
+- `publish-poll` — publish a community poll for members to vote on.
+- `research-brief` — generate a cited research brief (Sonar) for the community.
+- `contribution-link` — create / refund a contribution link; draft thanks (treasurer).
+- `newsletter-send` — draft → send a newsletter issue to subscribers.
+- `social-post` — draft → publish / broadcast a post across social platforms.
+
 ## How a skill ships
 Skills are durable in the plan repo. To make one auto-load in a Claude environment,
 copy it to the runtime user-skills path (e.g. `/mnt/skills/user/<name>/SKILL.md`);

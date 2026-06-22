@@ -20,6 +20,11 @@ human it answers to. Agents propose; humans approve anything irreversible
 | **Host** | Coffee Shop | Member introductions over global tables | links-for-events | the members |
 | **Deploy** | CI/CD | Branch → test → PR → merge → publish | aigovops-deploy-workflow, github-pages-publish | **Bob/Ken (irreversible click)** |
 
+> This is the canonical **cast** (the human-facing vocabulary). The deployed membership
+> community runs a larger implementation roster; each of those agents is tagged with its
+> cast `archetype:` in `agents.yaml`. Full mapping + the skill↔effector table:
+> [`plan/ecosystem-agent-skill-map.md`](ecosystem-agent-skill-map.md).
+
 ## Capability dial (every agent + member)
 `read → propose → auto-within-caps`. Defaults are narrow; trust widens the dial;
 one toggle narrows it again. Spend and blast-radius are hard-capped; agents
