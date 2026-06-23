@@ -52,71 +52,72 @@ const caps = new Caps();
 caps.setProfile('agent:deploy', { level: 'act', maxSpend: 50, maxRate: 5, windowMs: 60_000, maxBlastRadius: 10 });
 
 // T0: SecretsProvider — mint / scope / expire / revoke
-check('T0 · issue a scoped grant', () => {
-  const g = secrets.issue(SCOPE, 60, 'pulse-check');
+// (FileProvider methods are async — every secrets.* / gate.decide call must be awaited.)
+await checkAsync('T0 · issue a scoped grant', async () => {
+  const g = await secrets.issue(SCOPE, 60, 'pulse-check');
   if (g.token === MASTER) throw new Error('token === master!');
   return `grantId=${g.grantId.slice(0,8)}… token≠master ✓ ttl=60s`;
 });
 
-check('T0 · redeem the token (valid)', () => {
-  const g = secrets.issue(SCOPE, 60, 'pulse-check');
-  const r = secrets.redeem(g.token);
+await checkAsync('T0 · redeem the token (valid)', async () => {
+  const g = await secrets.issue(SCOPE, 60, 'pulse-check');
+  const r = await secrets.redeem(g.token);
   return `redeem ok=${r.ok} scope=${r.scope}`;
 });
 
-check('T0 · revoke → token fails closed', () => {
-  const g = secrets.issue(SCOPE, 60, 'pulse-check');
-  secrets.revoke(g.grantId);
-  try { secrets.redeem(g.token); return 'FAIL: should have thrown'; }
+await checkAsync('T0 · revoke → token fails closed', async () => {
+  const g = await secrets.issue(SCOPE, 60, 'pulse-check');
+  await secrets.revoke(g.grantId);
+  try { await secrets.redeem(g.token); return 'FAIL: should have thrown'; }
   catch (e) { return `revoked → ${e.reason} ✓`; }
 });
 
-check('T0 · describe() leaks no secret', () => {
-  const rec = secrets.describe(SCOPE);
+await checkAsync('T0 · describe() leaks no secret', async () => {
+  const rec = await secrets.describe(SCOPE);
   const json = JSON.stringify(rec);
   if (json.includes(MASTER)) throw new Error('describe leaked master!');
   return `owner=${rec.owner} scope=${rec.scope} activeGrants=${rec.activeGrants}`;
 });
 
 // T1: Gate — approve brokers linked token; deny fails closed
-check('T1 · approve → paired linked receipts', () => {
+await checkAsync('T1 · approve → paired linked receipts', async () => {
   const prop = { summary: 'deploy the site', requiresHumanGate: true };
-  const r = gate.decide({ proposal: prop, decision: 'approve', scope: SCOPE, ttlSeconds: 30, requestedBy: 'pulse-check', secrets });
+  const r = await gate.decide({ proposal: prop, decision: 'approve', scope: SCOPE, ttlSeconds: 30, requestedBy: 'pulse-check', secrets });
   if (!r.grant) throw new Error('no grant on approve');
   return `approved ✓ proposalId=${r.proposalId.slice(0,8)}… token=${r.grant.token.slice(0,8)}…`;
 });
 
-check('T1 · deny → no token, fails closed', () => {
+await checkAsync('T1 · deny → no token, fails closed', async () => {
   const prop = { summary: 'deploy the site', requiresHumanGate: true };
-  const r = gate.decide({ proposal: prop, decision: 'deny', scope: SCOPE, ttlSeconds: 30, secrets });
+  const r = await gate.decide({ proposal: prop, decision: 'deny', scope: SCOPE, ttlSeconds: 30, secrets });
   if (r.grant) throw new Error('got a grant on deny!');
   return `denied ✓ grant=null reason=${r.reason}`;
 });
 
 // T5: Caps — spend cap halts; dial-down immediate
-check('T5 · under cap → approved', () => {
+await checkAsync('T5 · under cap → approved', async () => {
   const prop = { summary: 'deploy the site', requiresHumanGate: true };
-  const r = gate.decide({ proposal: prop, decision: 'approve', scope: SCOPE, ttlSeconds: 30, requestedBy: 'agent:deploy', secrets, caps, cost: { spend: 10 } });
+  const r = await gate.decide({ proposal: prop, decision: 'approve', scope: SCOPE, ttlSeconds: 30, requestedBy: 'agent:deploy', secrets, caps, cost: { spend: 10 } });
   return `approved=${r.approved} ✓ spend recorded`;
 });
 
-check('T5 · at cap → halted + breach receipt', () => {
+await checkAsync('T5 · at cap → halted + breach receipt', async () => {
   // agent:deploy already spent 10; maxSpend=50, keep spending
   const prop = { summary: 'deploy', requiresHumanGate: true };
-  for (let i = 0; i < 4; i++) gate.decide({ proposal: prop, decision: 'approve', scope: SCOPE, ttlSeconds: 30, requestedBy: 'agent:deploy', secrets, caps, cost: { spend: 10 } });
+  for (let i = 0; i < 4; i++) await gate.decide({ proposal: prop, decision: 'approve', scope: SCOPE, ttlSeconds: 30, requestedBy: 'agent:deploy', secrets, caps, cost: { spend: 10 } });
   // now at 50/50 — next should halt
-  const r = gate.decide({ proposal: prop, decision: 'approve', scope: SCOPE, ttlSeconds: 30, requestedBy: 'agent:deploy', secrets, caps, cost: { spend: 1 } });
+  const r = await gate.decide({ proposal: prop, decision: 'approve', scope: SCOPE, ttlSeconds: 30, requestedBy: 'agent:deploy', secrets, caps, cost: { spend: 1 } });
   if (r.approved) throw new Error('should have halted at cap!');
   return `capped=${r.capped} ✓ reason=${r.reason}`;
 });
 
-check('T5 · dial-down takes effect immediately', () => {
+await checkAsync('T5 · dial-down takes effect immediately', async () => {
   caps.setProfile('agent:test-dial', { level: 'act', maxSpend: 1000 });
   const prop = { summary: 'deploy', requiresHumanGate: true };
-  const r1 = gate.decide({ proposal: prop, decision: 'approve', scope: SCOPE, ttlSeconds: 30, requestedBy: 'agent:test-dial', secrets, caps, cost: { requiredLevel: 'act' } });
+  const r1 = await gate.decide({ proposal: prop, decision: 'approve', scope: SCOPE, ttlSeconds: 30, requestedBy: 'agent:test-dial', secrets, caps, cost: { requiredLevel: 'act' } });
   if (!r1.approved) throw new Error('first should approve');
   caps.setLevel('agent:test-dial', 'read');
-  const r2 = gate.decide({ proposal: prop, decision: 'approve', scope: SCOPE, ttlSeconds: 30, requestedBy: 'agent:test-dial', secrets, caps, cost: { requiredLevel: 'act' } });
+  const r2 = await gate.decide({ proposal: prop, decision: 'approve', scope: SCOPE, ttlSeconds: 30, requestedBy: 'agent:test-dial', secrets, caps, cost: { requiredLevel: 'act' } });
   if (r2.approved) throw new Error('should deny after dial-down');
   return `act→approved ✓  dial→read  act→denied ✓`;
 });
