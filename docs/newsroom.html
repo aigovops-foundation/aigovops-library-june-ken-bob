@@ -44,4 +44,5 @@ function render(d){clr();
 function preview(id){fetch(CORE+"/api/newsroom?preview="+id).then(function(r){return r.json();}).then(render).catch(function(){$("title").textContent="offline";});}
 $("assemble").onclick=function(){fetch(CORE+"/api/newsroom?preview=assemble").then(function(r){return r.json();}).then(render);};
 $("bsbtn").onclick=function(){var t=encodeURIComponent($("topic").value||"AI governance");fetch(CORE+"/api/newsroom?preview=brainstorm&topic="+t).then(function(r){return r.json();}).then(render);};
-</script></body></html>
+</script>
+  <script src="https://www.aigovops-foundation.com/jeeves-widget.js" data-jeeves-site="library" defer></script></body></html>
