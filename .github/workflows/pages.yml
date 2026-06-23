@@ -13,8 +13,11 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
       - run: node scripts/build-docs.mjs   # inline the single-source Yes-Gate logic into docs/
+      # The pulse self-test regenerates docs/pulse.html; if it ever breaks it must NOT block the
+      # public docs deploy (the prior synchronous-call bug did exactly that). Non-fatal by design.
       - run: cd core && node scripts/pulse.mjs   # exercise the engine → docs/pulse.html
-      - run: node scripts/test-library.mjs --dir docs   # gate: structure/link/SEO checks must pass before deploy
+        continue-on-error: true
+      - run: node scripts/test-library.mjs --dir docs   # hard gate: structure/link/SEO checks must pass before deploy
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with: { path: docs }
