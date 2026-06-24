@@ -101,7 +101,10 @@ export function verifyIdToken(idToken, { jwks, issuer, audience, nonce = null, n
   const header = b64uJson(parts[0]);
   const claims = b64uJson(parts[1]);
   const keys = (jwks && jwks.keys) || [];
-  const key = keys.find((k) => k.kid === header.kid) || (keys.length === 1 ? keys[0] : null);
+  // When the token carries a kid it MUST match a JWKS key — only fall back to a lone key when the
+  // token has no kid at all (some IdPs omit it with a single-key set). Don't silently accept a
+  // mismatched kid against the one key.
+  const key = keys.find((k) => k.kid === header.kid) || ((!header.kid && keys.length === 1) ? keys[0] : null);
   if (!key) throw new OidcError('no-key', 'no JWKS key matches the id_token kid');
   if (!verifySignature(parts[0] + '.' + parts[1], parts[2], key, header.alg)) throw new OidcError('bad-signature', 'id_token signature is invalid');
 

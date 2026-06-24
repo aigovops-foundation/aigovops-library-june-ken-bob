@@ -20,7 +20,15 @@ import * as oidc from './oidc.js';
 
 const b64u = (b) => Buffer.from(b).toString('base64url');
 const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
-if (!process.env.SESSION_SECRET) console.warn('[auth] SESSION_SECRET unset — using a random per-boot key (sessions drop on restart).');
+if (!process.env.SESSION_SECRET) {
+  // In production, refuse to boot rather than silently serving auth with a random per-boot key — a
+  // misconfigured prod deploy should fail closed, not keep running. Dev/test (no NODE_ENV=production)
+  // keep the warn-and-continue behavior.
+  if (process.env.NODE_ENV === 'production' && process.env.AUTH_DISABLED !== 'true') {
+    throw new Error('[auth] SESSION_SECRET must be set in production — refusing to boot with a random per-boot key.');
+  }
+  console.warn('[auth] SESSION_SECRET unset — using a random per-boot key (sessions drop on restart).');
+}
 
 const STEWARDS = (process.env.STEWARDS || '').split(',').map((s) => s.trim().toLowerCase()).filter(Boolean);
 const COOKIE = 'aigov_session';
