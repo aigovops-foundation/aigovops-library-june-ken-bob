@@ -61,7 +61,11 @@ function parseCookies(req) {
 export function identityFromReq(req) {
   // 1) ops bearer token (optional admin escape hatch)
   const auth = req.headers.authorization || '';
-  if (process.env.STEWARD_TOKEN && auth === `Bearer ${process.env.STEWARD_TOKEN}`) {
+  // Constant-time compare — this bearer is the full-steward escape hatch (kill switch, key
+  // rotation, decide), so never leak its length/prefix through a short-circuiting `===`.
+  const expectedBearer = process.env.STEWARD_TOKEN ? `Bearer ${process.env.STEWARD_TOKEN}` : '';
+  if (expectedBearer && auth.length === expectedBearer.length
+      && crypto.timingSafeEqual(Buffer.from(auth), Buffer.from(expectedBearer))) {
     return identify({ id: 'ops:token', role: 'steward' });
   }
   // 2) local-dev override (must be explicit; logs loudly)

@@ -13,7 +13,7 @@ The principle: **define the safety contract once at the interface; enforce it wi
 strongest backend each environment allows; scope every view by identity.**
 
 - **Secrets: tiered, behind one interface.** A single `SecretsProvider` contract —
-  `getToken(scope, ttl)` · `rotate()` · `revoke()` — with two adapters: FileProvider
+  `issue(scope, ttl, requestedBy)` · `renew(grantId, ttl)` · `revoke(grantId)` · `describe(ref)` — with two adapters: FileProvider
   (lab: keychain/`.env`) and VaultProvider (community + enclave: Vault / cloud KMS).
   One call site. Identical broker semantics everywhere — even the lab adapter mints a
   short-lived, scoped, revocable, logged token; an agent never gets a raw secret.

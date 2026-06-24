@@ -108,6 +108,11 @@ export function verifyIdToken(idToken, { jwks, issuer, audience, nonce = null, n
   if (issuer && claims.iss !== issuer) throw new OidcError('bad-issuer', `unexpected iss ${claims.iss}`);
   const auds = Array.isArray(claims.aud) ? claims.aud : [claims.aud];
   if (audience && !auds.includes(audience)) throw new OidcError('bad-audience', 'aud does not include this client');
+  // OIDC §3.1.3.7: if aud has multiple values, azp MUST be present and equal this client; and when
+  // azp is present at all it MUST equal this client. Without this, a token minted for another relying
+  // party in the same IdP that merely lists us in `aud` would validate (cross-client token reuse).
+  if (audience && (auds.length > 1 || claims.azp !== undefined) && claims.azp !== audience)
+    throw new OidcError('bad-azp', 'azp is missing or not this client (multi-aud or azp-present token)');
   const skew = clockSkewSec * 1000;
   if (claims.exp && now > claims.exp * 1000 + skew) throw new OidcError('expired', 'id_token is expired');
   if (claims.nbf && now < claims.nbf * 1000 - skew) throw new OidcError('not-yet-valid', 'id_token nbf is in the future');

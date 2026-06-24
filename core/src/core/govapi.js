@@ -159,7 +159,10 @@ export function createGovernedCore(opts = {}) {
       const res = await gateDecide({
         proposal: p.proposal, decision, scope, ttlSeconds,
         requestedBy: p.actor, secrets, emit, caps,
-        cost: { requiredLevel: p.requiredLevel, ...cost },   // policy-derived level, caller may override
+        // Policy-derived level is AUTHORITATIVE — spread caller cost first, then pin requiredLevel so a
+        // request body can't lower an `act` action to `read` and dodge the cap. Caller may still supply
+        // the real spend/blastRadius facts.
+        cost: { ...cost, requiredLevel: p.requiredLevel },
       });
       if (res.approved && res.grant) {
         await store.set(GK(res.grant.token), { scope: res.grant.scope, grantId: res.grant.grantId, proposalId: res.proposalId, actor: p.actor }, (res.grant.expiresAt - now()) + 600_000);
@@ -170,12 +173,15 @@ export function createGovernedCore(opts = {}) {
     // 3) runTool — runs ONLY when presented a valid brokered token. redeem() fails
     //    closed on unknown/expired/revoked. The tool runs sandboxed; a tool-run
     //    receipt links back to the proposal that approved the grant.
-    async runTool({ token, code, allowedEgress = [], timeoutMs = 10_000 } = {}) {
+    async runTool({ token, code, timeoutMs = 10_000 } = {}) {
       ensureLive();
       if (!token) throw new Error('runTool: a brokered token is required (fails closed)');
       await secrets.redeem(token); // throws SecretsError if the token is not valid
       const meta = await store.get(GK(token)) || null;
-      const result = await sandbox.run({ code }, { allowedEgress, timeoutMs });
+      // Free-form code runs OFFLINE — the caller does not get to declare its own egress allow-list
+      // (that was an exfiltration/SSRF hole: any-scope token + allowedEgress:['*']). Networked work
+      // must go through a vetted, scope-bound tool via runRegisteredTool, whose egress is declared.
+      const result = await sandbox.run({ code }, { allowedEgress: [], timeoutMs });
       emit({
         kind: 'tool', actor: meta ? meta.actor : 'agent:anon', action: 'tool-run',
         detail: {

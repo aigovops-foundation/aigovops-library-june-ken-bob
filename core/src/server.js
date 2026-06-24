@@ -416,8 +416,8 @@ const server = http.createServer(async (req, res) => {
   }
   if (url.pathname === '/api/gov/run' && req.method === 'POST') {
     if (needAuth('member')) return;
-    const { token, code, allowedEgress } = await readBody(req);
-    try { return send(res, 200, await gov.runTool({ token, code, allowedEgress })); }
+    const { token, code } = await readBody(req);   // egress is NOT caller-supplied — free-form code runs offline
+    try { return send(res, 200, await gov.runTool({ token, code })); }
     catch (e) { return send(res, 400, { error: e.message }); }
   }
   // Vetted tool registry (#3)

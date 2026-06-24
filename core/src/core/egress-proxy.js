@@ -19,9 +19,17 @@ import net from 'node:net';
 import * as beacon from './beacon.js';
 
 export function createEgressProxy({ allow = [], emit = (m) => beacon.emit(m), actor = 'sandbox:egress' } = {}) {
-  const allowSet = new Set(allow);
+  // Normalize host:port before matching so case ("API.GitHub.com:443") and a trailing FQDN dot
+  // ("api.github.com.:443") can't slip a request past the exact-string allow-list.
+  const norm = (hp) => {
+    const s = String(hp).toLowerCase();
+    const i = s.lastIndexOf(':');
+    const host = (i > 0 ? s.slice(0, i) : s).replace(/\.+$/, '');
+    return i > 0 ? host + s.slice(i) : host;
+  };
+  const allowSet = new Set(allow.map(norm));
   const blocked = [];
-  const isAllowed = (hostport) => allowSet.has(hostport) || allowSet.has('*');
+  const isAllowed = (hostport) => allowSet.has(norm(hostport)) || allowSet.has('*');
 
   const block = (hostport, proto) => {
     blocked.push({ destination: hostport, proto });

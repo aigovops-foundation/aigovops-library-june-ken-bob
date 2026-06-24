@@ -514,6 +514,33 @@ once.)
   gVisor run, real rego, live OIDC, mutation tools) green at once. Not started — needs Bob's
   credential/ops steps.
 
+---
+
+## 100k — Scale & operations
+
+The foundations for running this as a workflow + management system for the global community — every
+secret in 1Password, deploy as code. Full map: `plan/scale-architecture.md`. (Mirrors the "100k" section
+of `docs/build-tickets.html`.)
+
+- **1Password secret storage** — M — [SEC] — **✅ shipped.** Every backend credential lives in a
+  1Password vault, referenced as `op://` and resolved at boot; API keys are brokered as short-lived
+  scoped tokens (`SECRETS_PROFILE=1password`) — an agent never sees a raw key. *Done: proven against a
+  fake `op` runner; real `op` auth is the operator step.*
+- **Deploy stack as code** — M — [OPS] — **✅ shipped.** One command brings up the full backend — core,
+  Postgres, Redis, Vault, Keycloak, OPA, Prometheus, Grafana — with secrets rendered from 1Password and
+  CI validation. *Done: docker-compose + bootstrap.sh + runbook; the live `up` on a host is Bob's step.*
+- **Observability** — M — [OPS] — **✅ shipped.** Dependency-free `/metrics` (Prometheus), `/livez`,
+  `/readyz`, wired to Prometheus + Grafana. *Done: request/response counters, ledger + halted gauges.*
+- **Horizontal-scale seam** — M — [CORE] — **✅ foundation.** A shared state store (Memory default,
+  Redis opt-in) and a distributed rate limiter enforced across instances. *Done: the seam; migrating the
+  loop's in-memory state to it is the first follow-up.*
+- **The full 100k roadmap** — mapped + staged. Workflow engine, review-queue routing, org/team RBAC,
+  notifications, search, ledger checkpointing, and KMS/DSAR are mapped to shipped / partial / next in
+  `plan/scale-architecture.md`, each with its interface. *The one blocker that needs a human: standing
+  up the enclave host (accounts, Vault, IdP, DNS).*
+
+---
+
 - **First brokered action** — T0 + T1: an agent does one real, scoped, expiring,
   fully-receipted thing.
 - **First sandboxed useful agent** — + T3 + T5: a tool runs isolated, under caps, with a
