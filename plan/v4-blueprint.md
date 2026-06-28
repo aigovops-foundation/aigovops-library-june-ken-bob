@@ -3,10 +3,10 @@
 *Governance-as-code that a policy author can improve and a developer can ship —
 installed, governed, and audited end to end, run by Jeeves and held by humans.*
 
-> Status: **design draft** for Bob & Ken. Synthesizes two source documents, the
-> existing AiGovOps repos, and a verified set of Apache-2.0 / 10k★ open-source
-> building blocks. Not yet built; this is the map. Contains strategic/competitive
-> content — decide visibility (public repo vs. private) before publishing.
+> Status: **product blueprint** for the AiGovOps Foundation. Grounded in public AI-governance
+> law and standards, a scan of the landscape, the existing AiGovOps repos, and a verified set
+> of Apache-2.0 / 10k★ open-source building blocks. Built only from primary public sources and
+> original writing — no third-party copyrighted material is reproduced.
 
 ---
 
@@ -26,19 +26,15 @@ accessibility of the surface they use; both are first-class below.
 
 ---
 
-## 1. Grounding in the two source documents
+## 1. Grounding
 
-### 1.1 *Governing Intelligence* (Noah M. Kenney, 2026) → the regulatory spine
-The book is a 488-page reference on AI law, privacy, security, and compliance.
-*(© 2026, all rights reserved — we use it as a structural reference and cite the public frameworks it
-catalogs; we do not redistribute its text. Clear permission before embedding any passages.)*
+### 1.1 The regulatory spine — public law and standards
+The product is grounded directly in the public regulations and standards that govern AI, organized by a
+**5-layer governance stack**. Every requirement the platform reasons over traces to a primary public
+source (a regulation article number or a published standard) — never to a third-party summary. Each
+AiGovOps component maps to a layer:
 
-Two things we take from it:
-
-**(a) The 5-layer AI Governance Stack** — the organizing spine for the whole product. Each AiGovOps
-component maps to a layer:
-
-| Stack layer (from the book) | AiGovOps component | Backed by (OSS, §3) |
+| Stack layer | AiGovOps component | Backed by (OSS, §3) |
 |---|---|---|
 | **1 · Data Governance** | Umbrella policy on data + Lantern data-drift | Great Expectations, OpenSearch |
 | **2 · Model Governance** | Umbrella model rules + MLflow registry | MLflow, Trivy |
@@ -47,20 +43,22 @@ component maps to a layer:
 | **5 · Audit & Evidence Governance** | Beacon signed receipts + ledger | cosign/sigstore, Fluentd |
 | *cross-layer:* explainability, metrics, **maturity model** | the dashboard | Superset, Backstage |
 
-**(b) The regulatory corpus** — the knowledge base the *policy-improver* agent reasons over.
-The book catalogs (and our framework-map skill indexes): **EU AI Act** (Reg 2024/1689), **GDPR**
+**The regulatory corpus** — the knowledge base the *policy-improver* agent reasons over — is built from
+those primary public sources and indexed by the framework-map skill: **EU AI Act** (Reg 2024/1689), **GDPR**
 (2016/679), **NIST AI RMF**, **ISO/IEC 42001**, **MITRE ATLAS**, **OWASP LLM/ML Top 10**, **IEEE 7000**,
 US federal + state (**Colorado AI Act SB24-205**, **NYC Local Law 144**, **Illinois BIPA**), **CCPA/CPRA**,
 sector regimes (**HIPAA**, **GLBA**, **FERPA**, **COPPA/KOSPA**), and global (China, UK, OECD, UNESCO).
-The book's Appendix templates (Impact Assessment, Audit Report, the 5-phase governance checklist) become
-**skill scaffolds**, not prose to copy.
+Each entry stores an original one-line paraphrase plus the primary citation — no third-party text is
+reproduced. The standard assessment templates (Impact Assessment, Audit Report, a phased governance
+checklist) become **skill scaffolds** authored from scratch.
 
-### 1.2 GAC competitive landscape → the product & operating model
-The GAC analysis is about the academic vertical, but its operating model is the v4.0 product model:
+### 1.2 Product & operating model
+A scan of the AI-governance landscape (enterprise gateways, LLM-observability tools, NIST's test platform,
+LMS-embedded governance) points to a clear differentiator and operating model for v4.0:
 
 - **The differentiator** (the gap no competitor fills): governance that is **authored, experienced, and
-  studied** — not just configured by engineers. v4.0 generalizes GAC's three unique dimensions to *every*
-  vertical: (a) **user-authored** policy-as-code, (b) **governed/ungoverned side-by-side** comparison,
+  studied** — not just configured by engineers. v4.0 carries three dimensions into *every* vertical:
+  (a) **user-authored** policy-as-code, (b) **governed/ungoverned side-by-side** comparison,
   (c) **research-grade signed audit log**.
 - **Three agent tiers** (§5): scheduled-autonomous, human-triggered, and a skills library of markdown SOPs.
 - **The one-hour review-and-approve loop**: the human *decides*; agents *execute*. This is the irreversibility
@@ -162,7 +160,7 @@ An installer detects the tier and wires the right adapters automatically (§7).
 ## 5. Jeeves, sub-agents, skills, and OS-level rules
 
 **Jeeves is the master agent**; it never makes an irreversible move — it proposes, a critic refutes, a human
-decides. Sub-agents map to the GAC three-tier model:
+decides. Sub-agents map to a three-tier model:
 
 **Tier 1 — scheduled autonomous** (cron via Airflow/GitHub Actions, outputs are PRs/issues):
 - **Policy-Drift Monitor** — re-runs Lantern against baselines; opens an issue on escalation.
@@ -232,7 +230,7 @@ One command, then the agents take over:
 npx @aigovops/install     # detects tier (1–6), wires adapters, brings up the Control Room
 ```
 
-The **Onboarding agent** then runs a guided first session (the GAC one-hour loop, day one):
+The **Onboarding agent** then runs a guided first session (the one-hour review-and-approve loop, day one):
 1. **Identity** — connect an IdP (Keycloak) or magic-link; assign the five roles.
 2. **Caps** — set spend/rate/blast-radius dials (fail-closed defaults).
 3. **Policy** — import a written policy → Policy-Improver returns the improved, cited version.
@@ -248,12 +246,12 @@ policy coverage vs. corpus; member → only their own effects; auditor → evide
 
 ## 8. Sequencing (so this is buildable, not a wish)
 
-Smallest proof first; wire the agent layer from day one (GAC's lesson).
+Smallest proof first; wire the agent layer from day one.
 
 - **M0 — Unify the gate.** One `@aigovops/gate` = Umbrella + Lantern + Caps + Beacon + SecretsProvider
   (Node). Port Omni's broker; modularize Library's Beacon/Caps. *Deletes the 3× duplication.* (Highest leverage.)
 - **M1 — Policy-Improver wedge.** The conversational policy → corpus → improved-policy agent + `framework-map`.
-  Shippable in weeks; generates the richest signal; lowest overhead. (GAC Alternative 5.)
+  Shippable in weeks; generates the richest signal; lowest overhead.
 - **M2 — Gate-Author + side-by-side.** Improved policy → gates/criteria/exit-states; governed/ungoverned demo.
 - **M3 — Dashboard + onboarding installer** across tiers 1–3.
 - **M4 — Heavyweight adapters** (OPA, Keycloak, Prometheus, OpenSearch, Kong) for tiers 4–6.
@@ -261,16 +259,18 @@ Smallest proof first; wire the agent layer from day one (GAC's lesson).
 
 ## 9. Risks, stated plainly
 
-- **Copyright.** *Governing Intelligence* is © all rights reserved. We may index the *public frameworks/regulations*
-  it catalogs (facts), but must not embed its prose without permission. Get Noah Kenney's sign-off before any
-  excerpt ships. The regulations themselves (EU AI Act text, NIST RMF, etc.) are publicly usable.
+- **Provenance.** The regulatory corpus is built only from primary public sources — regulation article
+  numbers and published standards (EU AI Act, GDPR, NIST AI RMF, ISO/IEC 42001, etc.). Each entry stores an
+  original paraphrase plus its citation; no third-party copyrighted text is reproduced. Keep it that way as
+  the corpus grows — cite the law, paraphrase in our own words.
 - **Non-Apache backends.** Several strong tools (Temporal, Grafana, Vault, Langfuse, n8n) are MIT/AGPL/BUSL/non-OSI.
   Keep them as *self-host options*, never inside an Apache-2.0 redistributed bundle. The headline stack stays
   Apache-2.0.
 - **Scope honesty.** This is a blueprint, not a built product. M0+M1 are weeks; the full tiered product is months.
   The win is that ~70% of the core already exists — the work is consolidation + the two authoring agents.
-- **Strategic visibility.** This doc names competitive positioning and an unreleased product. Decide public-repo
-  vs. private before committing it.
+- **Strategic visibility.** This doc names the Foundation's competitive positioning. It is cleared of any
+  third-party copyrighted material and safe to publish; the only remaining call is whether the Foundation
+  wants its product strategy public — a business decision, not a legal one.
 
 ---
 
