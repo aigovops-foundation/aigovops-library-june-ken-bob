@@ -79,15 +79,15 @@ A repo audit found the governed core is **already real** — just spread across 
 
 | Capability | Where the good version lives | Verdict |
 |---|---|---|
-| **Beacon** — Ed25519 signed receipts, RFC-8785 canonical JSON, hash-chained NDJSON ledger, key rotation | Library `core/src/core/beacon.js` | **Canonical.** Modularize as `@aigovops/beacon`; V4's simpler `sign.mjs` re-exports it. |
-| **Caps** — capability dial (read→propose→act→auto) + hard caps on spend/rate/blast-radius, fail-closed | Library `core/src/core/caps.js` | **Canonical.** Adopt directly. |
-| **Secrets broker** — one `SecretsProvider` interface, Env→Keychain→1Password→Vault backends; agents never hold creds | Omni-v4 `core/secrets.py` | **Canonical interface.** Port to Node; one broker for all. |
+| **Beacon** — Ed25519 signed receipts, RFC-8785 canonical JSON, hash-chained NDJSON ledger, key rotation | the Library governed core | **Canonical.** Modularize as `@aigovops/beacon`; V4's simpler `sign.mjs` re-exports it. |
+| **Caps** — capability dial (read→propose→act→auto) + hard caps on spend/rate/blast-radius, fail-closed | the Library governed core | **Canonical.** Adopt directly. |
+| **Secrets broker** — one `SecretsProvider` interface, Env→Keychain→1Password→Vault backends; agents never hold creds | the Omni reference implementation | **Canonical interface.** Port to Node; one broker for all. |
 | **Umbrella** — declarative policy compiler (8 ops) + named profiles | V4 `packages/umbrella/src/compile.mjs` | **Canonical.** |
 | **Lantern** — structural + numeric drift, tolerance, escalation | V4 `packages/lantern/src/index.mjs` | **Canonical.** |
 | **Jeeves** — Umbrella→Lantern→Beacon pipeline | V4 `jeeves/src/index.mjs` | **Canonical shape;** wire broker + caps + auth around it. |
-| **Corpus-traceable gate law** — each rule links to a corpus entry | Omni-v4 `core/gate_law.json` | **Reuse** as Umbrella policy source + citations. |
-| **Auth** — GitHub/OIDC + HMAC sessions, steward allow-list | Library `core/src/core/auth.js` | **Canonical** (cloud); magic-link (Omni) as offline opt-in. |
-| **Oversight + DSAR** — role-scoped ledger views, kill switch, signed DSAR bundle | Library `core/src/core/{oversight,dsar}.js` | **Canonical.** Extend with Omni's holds queue + channels. |
+| **Corpus-traceable gate law** — each rule links to a corpus entry | the Omni reference implementation | **Reuse** as Umbrella policy source + citations. |
+| **Auth** — GitHub/OIDC + HMAC sessions, steward allow-list | the Library governed core | **Canonical** (cloud); magic-link (Omni) as offline opt-in. |
+| **Oversight + DSAR** — role-scoped ledger views, kill switch, signed DSAR bundle | the Library governed core | **Canonical.** Extend with Omni's holds queue + channels. |
 
 **The one big simplification — unify the gate.** Collapse the three implementations into a single canonical
 module, the core export of the monorepo:
