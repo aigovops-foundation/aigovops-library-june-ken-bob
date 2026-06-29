@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Board — one place for everything · AiGovOps</title>
+<meta name="description" content="One simple board for the whole AiGovOps estate: every task drafted, reviewed, approved or held, and done — agents do the work, you approve anything irreversible."/>
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="The Board — one place for everything"/>
+<meta property="og:description" content="One simple board for the whole AiGovOps estate: every task drafted, reviewed, approved or held, and done — agents do the work, you approve anything irreversible."/>
+<meta property="og:url" content="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/board.html"/>
+<link rel="canonical" href="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/board.html"/>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/board.html","url":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/board.html","name":"The Board — one place for everything","isPartOf":{"@id":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/#site"},"publisher":{"@id":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/#org"},"description":"One simple board for the whole AiGovOps estate: every task drafted, reviewed, approved or held, and done."}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --bg:#f5f7fa;--surface:#ffffff;--ink:#1a2733;--ink2:#5b6b7a;--ink3:#8c98a4;--line:#e6ebf0;
+    --teal:#0f8a76;--teal-wash:#e6f6f1;--green:#1aa45a;--green-wash:#e7f6ec;
+    --amber:#c77d12;--amber-wash:#fdf3e2;--red:#c23b4b;--navy:#0c1430;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+  a{color:var(--teal);text-decoration:none}
+  a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--teal);outline-offset:2px;border-radius:6px}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+  /* top bar */
+  .top{background:var(--navy);color:#fff;padding:14px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .top .logo{display:flex;align-items:center;gap:9px}
+  .top .mark{width:26px;height:26px}
+  .top h1{font-size:17px;font-weight:700;letter-spacing:-.01em}
+  .top .sub{font-size:12.5px;color:#9fb6c9}
+  .top .right{margin-left:auto;display:flex;gap:10px;align-items:center}
+  .top a.lnk{color:#bfe9dd;font-size:13px;font-weight:600}
+  .needpill{background:var(--amber);color:#fff;font-weight:700;font-size:12px;border-radius:999px;padding:4px 11px;font-family:'DM Mono',monospace}
+
+  /* ask bar */
+  .ask{background:var(--surface);border-bottom:1px solid var(--line);padding:14px 22px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .ask .jv{width:30px;height:30px;border-radius:50%;flex:none;background:var(--navy);display:grid;place-items:center}
+  .ask input{flex:1;min-width:240px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font:inherit;font-size:14.5px;background:#fbfcfd}
+  .ask input:focus{border-color:var(--teal);background:#fff}
+  .ask button{background:var(--teal);color:#fff;border:none;border-radius:10px;padding:12px 18px;font:inherit;font-weight:600;font-size:14px;cursor:pointer}
+  .ask button:hover{background:#0c7464}
+  .ask .hint{font-size:12px;color:var(--ink3);width:100%}
+
+  /* board */
+  .board{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:18px 22px 40px;align-items:start}
+  @media(max-width:980px){.board{grid-template-columns:1fr 1fr}}
+  @media(max-width:620px){.board{grid-template-columns:1fr}}
+  .col{background:transparent}
+  .col-head{display:flex;align-items:center;gap:8px;padding:4px 6px 12px}
+  .col-head .dot{width:9px;height:9px;border-radius:50%}
+  .col-head h2{font-size:13px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:var(--ink2)}
+  .col-head .ct{margin-left:auto;font-family:'DM Mono',monospace;font-size:12px;color:var(--ink3);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:1px 9px}
+  .col.draft .dot{background:var(--ink3)} .col.review .dot{background:var(--teal)}
+  .col.held .dot{background:var(--amber)} .col.done .dot{background:var(--green)}
+  .stack{display:flex;flex-direction:column;gap:11px;min-height:30px}
+
+  /* card */
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 15px;box-shadow:0 1px 2px rgba(20,40,60,.04)}
+  .card.held{border-left:3px solid var(--amber)}
+  .card .chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:9px}
+  .chip{font-family:'DM Mono',monospace;font-size:10.5px;font-weight:500;padding:3px 8px;border-radius:6px;letter-spacing:.02em}
+  .chip.owner{background:#eef2f6;color:#52606d} .chip.site{background:var(--teal-wash);color:var(--teal)}
+  .chip.rev{background:var(--green-wash);color:var(--green)} .chip.irr{background:var(--amber-wash);color:var(--amber)}
+  .card h3{font-size:15px;font-weight:700;line-height:1.3;margin-bottom:5px;letter-spacing:-.01em}
+  .card .outcome{font-size:12.5px;color:var(--ink2);margin-bottom:10px} .card .outcome b{color:var(--teal);font-weight:600}
+  .card .preview{font-size:12.5px;color:var(--ink2);background:#fafbfc;border:1px dashed var(--line);border-radius:9px;padding:9px 11px;margin-bottom:11px;line-height:1.5;max-height:78px;overflow:hidden}
+  .card .acts{display:flex;gap:7px;flex-wrap:wrap}
+  .btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;padding:8px 12px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;transition:.12s}
+  .btn:hover{border-color:var(--teal);color:var(--teal)}
+  .btn.primary{background:var(--teal);border-color:var(--teal);color:#fff} .btn.primary:hover{background:#0c7464;color:#fff}
+  .btn.gate{background:var(--amber);border-color:var(--amber);color:#fff} .btn.gate:hover{background:#a8680c;color:#fff}
+  .btn.ghost{color:var(--ink3)}
+  .done-tag{font-size:12.5px;color:var(--green);font-weight:600;display:flex;align-items:center;gap:6px}
+  .by{font-size:11px;color:var(--ink3);margin-top:9px;font-family:'DM Mono',monospace}
+
+  /* jeeves rail (mobile: below) */
+  .rail{position:fixed;right:0;top:0;bottom:0;width:300px;background:var(--surface);border-left:1px solid var(--line);padding:20px 18px;overflow:auto;display:none}
+  @media(min-width:1280px){.rail{display:block} body{padding-right:300px}}
+  .rail .jvhead{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .rail .jvhead .av{width:34px;height:34px;border-radius:50%;background:var(--navy);display:grid;place-items:center;flex:none}
+  .rail .jvhead b{font-size:14px} .rail .jvhead span{font-size:11.5px;color:var(--ink3);display:block}
+  .rail .gmsg{background:var(--teal-wash);border-radius:12px;border-top-left-radius:3px;padding:11px 13px;font-size:13px;color:#0d5a4d;margin-bottom:12px;line-height:1.5}
+  .rail .gmsg b{color:var(--teal)}
+  .rail .stepttl{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);margin:14px 0 8px}
+  .rail .step{display:flex;gap:9px;font-size:13px;color:var(--ink2);padding:7px 0;border-top:1px solid var(--line)}
+  .rail .step .n{font-family:'DM Mono',monospace;color:var(--teal);font-weight:600}
+  .rail .tg{margin-top:16px;font-size:12px;color:var(--ink2);background:#fbfcfd;border:1px solid var(--line);border-radius:10px;padding:11px 12px;line-height:1.5}
+  .rail .tg b{color:var(--amber)}
+  .footnote{padding:0 22px 30px;color:var(--ink3);font-size:12.5px}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><symbol id="mk" viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#0c1430"/><circle cx="16" cy="16" r="15" fill="none" stroke="#1aa45a" stroke-width="1.4"/><path d="M11 21 L16 9 L21 21 Z" fill="#0f8a76"/><circle cx="22" cy="9" r="2.4" fill="#5dcaa5"/></symbol></svg>
+
+<header class="top">
+  <div class="logo"><svg class="mark"><use href="#mk"/></svg><div><h1>The Board</h1></div></div>
+  <span class="sub">Every task across the estate — one place.</span>
+  <div class="right"><span class="needpill" id="needpill">0 need you</span><a class="lnk" href="./index.html">← Library</a></div>
+</header>
+
+<div class="ask">
+  <span class="jv"><svg width="18" height="18"><use href="#mk"/></svg></span>
+  <input id="askbox" placeholder="Tell Jeeves an outcome —  e.g. “announce OVERT 1.0”,  “refresh the agents page”,  “this week's digest”…"/>
+  <button id="askbtn" type="button">Start it</button>
+  <div class="hint">Jeeves drafts it and walks it to done. Anything reversible runs itself; anything irreversible stops for your yes.</div>
+</div>
+
+<main class="board" id="board"></main>
+<p class="footnote">This is the same board Jeeves keeps in Telegram — every card here is one tap there (<b style="font-family:'DM Mono',monospace;color:var(--amber)">/queue</b>, Approve / Hold). One board, two doors.</p>
+
+<aside class="rail">
+  <div class="jvhead"><span class="av"><svg width="20" height="20"><use href="#mk"/></svg></span><div><b>Jeeves</b><span>guiding to finished outcomes</span></div></div>
+  <div class="gmsg" id="gmsg"></div>
+  <div class="stepttl">What I need from you</div>
+  <div id="needsteps"></div>
+  <div class="tg">Away from your desk? The same approvals are waiting in <b>Telegram</b> — reply <b>Approve</b> or <b>Hold</b> and the outcome moves.</div>
+</aside>
+
+<script>
+// ─── Tasks across the estate. state: draft → review → held(irreversible) → done ───
+let TASKS = [
+ {id:1, title:"Announce OVERT 1.0", outcome:"Get the OVERT 1.0 release in front of the community", owner:"Scribe", site:"foundation", rev:false, state:"held",
+  preview:"OVERT 1.0 turns AI governance into a verifiable pipeline: compile 40+ frameworks into controls, sign the evidence, read it back as a report…"},
+ {id:2, title:"Refresh the agents page", outcome:"Keep the Library's agents page current", owner:"Librarian", site:"library", rev:false, state:"review",
+  preview:"diff: + 2 new skills (policy-diff, attestation); updated the fleet count to 38; fixed the Beacon link."},
+ {id:3, title:"This week's community digest", outcome:"Keep members in the loop", owner:"Gardener", site:"community", rev:true, state:"draft",
+  preview:"This week in the garden: 3 new members welcomed, 2 courses opened, the gates held 13 actions for review…"},
+ {id:4, title:"Classroom AI guidelines (this term)", outcome:"Give NCW teachers clear, signed guidance", owner:"Counselor", site:"ncw", rev:false, state:"held",
+  preview:"Three rules for the term: disclose AI use, keep a human in every grade, no student data into public models…"},
+ {id:5, title:"Map frameworks for the hiring tool", outcome:"Know exactly which rules bind the hiring screener", owner:"framework-map", site:"skill", rev:true, state:"review",
+  preview:"9 frameworks apply — incl. EU AI Act (high-risk: employment), NYC LL144, GDPR Art.30. Human gate required before any effect."},
+ {id:6, title:"Sign this week's evidence", outcome:"A verifiable record an auditor can check offline", owner:"beacon-sign", site:"skill", rev:true, state:"draft",
+  preview:"42 receipts this week → one signed bundle (Ed25519), chain intact, exportable with verify.sh."},
+ {id:7, title:"Weekly restore drill", outcome:"Prove we can recover the community in minutes", owner:"resilience runbook", site:"community", rev:true, state:"done",
+  preview:"Pulled A's backup back from B, verified the ledger chain, restored the PG dump into a throwaway DB — green."},
+ {id:8, title:"Migrate the 6 secrets to 1Password", outcome:"Every credential brokered, none in .env", owner:"credentials runbook", site:"community", rev:false, state:"held",
+  preview:"Ready to write anthropic, digitalocean, graph, telegram, spaces-key, spaces-secret → op://AiGovOps/… (needs the vault write grant)."},
+];
+let nextId = 100;
+
+const COLS = [
+  {key:"draft", label:"Drafting", cls:"draft", blurb:"Agents are writing"},
+  {key:"review", label:"In review", cls:"review", blurb:"Ready for a look"},
+  {key:"held", label:"Needs your yes", cls:"held", blurb:"Irreversible — held for you"},
+  {key:"done", label:"Done", cls:"done", blurb:"Published / ran"},
+];
+const SITE = {foundation:"Foundation", library:"Library", community:"Community", ncw:"NCW", skill:"Skill"};
+const $ = s => document.querySelector(s);
+
+function card(t){
+  const irr = !t.rev;
+  const chips = `<div class="chips">
+    <span class="chip owner">${t.owner}</span>
+    <span class="chip site">${SITE[t.site]||t.site}</span>
+    <span class="chip ${t.rev?'rev':'irr'}">${t.rev?'reversible':'irreversible'}</span></div>`;
+  let acts = '';
+  if(t.state==='draft') acts = `<button class="btn primary" data-act="toreview" data-id="${t.id}">Open the draft →</button>`;
+  else if(t.state==='review') acts = `<button class="btn" data-act="edit" data-id="${t.id}">Edit</button>`
+      + `<button class="btn primary" data-act="approve" data-id="${t.id}">${t.rev?'Looks good — publish':'Looks good →'}</button>`;
+  else if(t.state==='held') acts = `<button class="btn gate" data-act="publish" data-id="${t.id}">✓ Approve &amp; publish</button>`
+      + `<button class="btn ghost" data-act="hold" data-id="${t.id}">Hold</button>`;
+  else acts = `<span class="done-tag">✓ ${t.rev?'ran — signed into the ledger':'published — your approval signed'}</span>`;
+  const by = t.state==='done' ? '' : `<div class="by">${t.rev?'Jeeves can finish this':'finishes with your yes'}</div>`;
+  return `<div class="card ${t.state==='held'?'held':''}">${chips}
+    <h3>${t.title}</h3>
+    <div class="outcome">Outcome: <b>${t.outcome}</b></div>
+    <div class="preview">${t.preview}</div>
+    <div class="acts">${acts}</div>${by}</div>`;
+}
+
+function render(){
+  const board = $('#board'); board.innerHTML = '';
+  COLS.forEach(c=>{
+    const items = TASKS.filter(t=>t.state===c.key);
+    const col = document.createElement('div'); col.className = `col ${c.cls}`;
+    col.innerHTML = `<div class="col-head"><span class="dot"></span><h2>${c.label}</h2><span class="ct">${items.length}</span></div>
+      <div class="stack">${items.map(card).join('') || `<div style="font-size:12px;color:var(--ink3);padding:8px 6px">${c.blurb}…</div>`}</div>`;
+    board.appendChild(col);
+  });
+  // Jeeves rail + need pill
+  const held = TASKS.filter(t=>t.state==='held');
+  $('#needpill').textContent = `${held.length} need you`;
+  $('#needpill').style.display = held.length? 'inline-block':'none';
+  $('#gmsg').innerHTML = held.length
+    ? `Here's where things stand. <b>${held.length} ${held.length===1?'thing needs':'things need'} your yes</b> — everything irreversible. The rest I'm carrying to done myself.`
+    : `All clear — nothing's waiting on you. I'm drafting and running the reversible work; I'll raise my hand the moment something needs your yes.`;
+  $('#needsteps').innerHTML = held.length
+    ? held.map((t,i)=>`<div class="step"><span class="n">${i+1}</span><span>Approve to finish: <b style="color:var(--ink)">${t.outcome}</b></span></div>`).join('')
+    : `<div class="step" style="color:var(--ink3)">Nothing right now.</div>`;
+}
+
+// actions — the governance gate is enforced here
+function act(a, id){
+  const t = TASKS.find(x=>x.id===id); if(!t) return;
+  if(a==='toreview') t.state='review';
+  else if(a==='edit'){ const v = prompt('Edit the draft — Jeeves will re-draft from your note:', t.preview); if(v!=null && v.trim()) t.preview = v.trim(); }
+  else if(a==='approve'){ t.state = t.rev ? 'done' : 'held'; }   // reversible publishes; irreversible holds for a human
+  else if(a==='publish') t.state='done';                          // the human yes
+  else if(a==='hold') t.state='held';
+  render();
+}
+$('#board').addEventListener('click', e=>{ const b=e.target.closest('[data-act]'); if(b) act(b.dataset.act, +b.dataset.id); });
+
+// "Tell Jeeves an outcome" → create a task, Jeeves drafts it
+function startTask(text){
+  const irr = /publish|merge|email|send|post|delete|deploy|launch|invite/i.test(text);
+  TASKS.unshift({id:++nextId, title:text.charAt(0).toUpperCase()+text.slice(1), outcome:text, owner:"Jeeves", site:"library",
+    rev:!irr, state:"draft", preview:"Jeeves is drafting this now…"});
+  render();
+}
+$('#askbtn').addEventListener('click', ()=>{ const v=$('#askbox').value.trim(); if(v){ startTask(v); $('#askbox').value=''; } });
+$('#askbox').addEventListener('keydown', e=>{ if(e.key==='Enter') $('#askbtn').click(); });
+
+render();
+</script>
+</body>
+</html>
