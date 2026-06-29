@@ -5,28 +5,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>System Pulse — AiGovOps Library</title>
 <meta name="description" content="Live system pulse for the AiGovOps Library: the governed core is exercised on every deploy, emitting a receipt from each Yes-Gate decision."/>
-<link rel="canonical" href="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/pulse.html"/>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  "@id": "https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/pulse.html",
-  "url": "https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/pulse.html",
-  "name": "System Pulse — AiGovOps Library",
-  "isPartOf": {
-    "@id": "https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/#site"
-  },
-  "publisher": {
-    "@id": "https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/#org"
-  },
-  "description": "Live system pulse for the AiGovOps Library: the governed core is exercised on every deploy, emitting a receipt from each Yes-Gate decision."
-}
-</script>
-
 <meta property="og:type" content="website"/>
 <meta property="og:title" content="System Pulse — AiGovOps Library"/>
 <meta property="og:description" content="Live system pulse for the AiGovOps Library: the governed core is exercised on every deploy, emitting a receipt from each Yes-Gate decision."/>
 <meta property="og:url" content="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/pulse.html"/>
+<link rel="canonical" href="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/pulse.html"/>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/pulse.html","url":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/pulse.html","name":"System Pulse — AiGovOps Library","isPartOf":{"@id":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/#site"},"publisher":{"@id":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/#org"},"description":"Live system pulse for the AiGovOps Library: the governed core is exercised on every deploy, emitting a receipt from each Yes-Gate decision."}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 :root{--bg:#0c1430;--teal:#01696f;--green:#2ecc71;--green2:#6fe6a3;--gold:#e8c25a;--ink:#e7f3f1;--ink2:#9fc0bd;--red:#e74c3c;--line:rgba(120,200,190,.18);--card:rgba(255,255,255,.04)}
@@ -67,26 +53,14 @@ h2{font:600 22px/1.3 'Cinzel',serif;color:#fff;margin:36px 0 14px;border-bottom:
 .miles .tickets{font:400 12px 'IBM Plex Mono',monospace;color:var(--ink2);margin-left:8px}
 footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font:400 12px 'IBM Plex Mono',monospace;color:var(--ink2)}
 </style>
-<style id="a11y-universal">
-/* a11y-universal: keyboard focus + reduced motion (additive, non-breaking) */
-@media (prefers-reduced-motion: reduce){
-  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
-}
-a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
-  outline:2px solid currentColor;outline-offset:2px;border-radius:2px
-}
-.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--green,#2ecc71);color:#04181a;padding:10px 16px;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
-.skip-link:focus{left:0}
-</style>
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
-<div class="wrap" id="main" role="main">
+<div class="wrap">
 <a class="back" href="./index.html">← back to the library</a>
 <h1>System Pulse</h1>
 <div class="meta">
-  <span>Generated 2026-06-23 10:51:01 UTC</span>
-  <span>commit 5705797</span>
+  <span>Generated 2026-06-29 15:36:04 UTC</span>
+  <span>commit b47f15c</span>
 </div>
 
 <div class="score">
@@ -106,11 +80,11 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visibl
 
 <h2>Engine Exercise</h2>
 <ul class="checks">
-  <li><span class="icon ok">●</span><span class="name">T0 · issue a scoped grant</span><span class="detail">grantId=f440c684… token≠master ✓ ttl=60s</span></li>
+  <li><span class="icon ok">●</span><span class="name">T0 · issue a scoped grant</span><span class="detail">grantId=e0a9a458… token≠master ✓ ttl=60s</span></li>
   <li><span class="icon ok">●</span><span class="name">T0 · redeem the token (valid)</span><span class="detail">redeem ok=true scope=github-deploy</span></li>
   <li><span class="icon ok">●</span><span class="name">T0 · revoke → token fails closed</span><span class="detail">revoked → revoked ✓</span></li>
   <li><span class="icon ok">●</span><span class="name">T0 · describe() leaks no secret</span><span class="detail">owner=lab scope=github-deploy activeGrants=2</span></li>
-  <li><span class="icon ok">●</span><span class="name">T1 · approve → paired linked receipts</span><span class="detail">approved ✓ proposalId=3c4b1385… token=5ec1d3cb…</span></li>
+  <li><span class="icon ok">●</span><span class="name">T1 · approve → paired linked receipts</span><span class="detail">approved ✓ proposalId=24610d6b… token=d6d8fc2f…</span></li>
   <li><span class="icon ok">●</span><span class="name">T1 · deny → no token, fails closed</span><span class="detail">denied ✓ grant=null reason=denied</span></li>
   <li><span class="icon ok">●</span><span class="name">T5 · under cap → approved</span><span class="detail">approved=true ✓ spend recorded</span></li>
   <li><span class="icon ok">●</span><span class="name">T5 · at cap → halted + breach receipt</span><span class="detail">capped=true ✓ reason=capped:spend-cap</span></li>
@@ -125,6 +99,5 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visibl
   Generated by <code>core/scripts/pulse.mjs</code> · exercises run in an isolated temp ledger · no secrets or PII in this report.
 </footer>
 </div>
-  <script src="./start-here.js" data-estate-id="library" defer></script>
 </body>
 </html>

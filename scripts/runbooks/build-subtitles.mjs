@@ -24,13 +24,27 @@ const ts = (sec, sep) => {
   return `${p(h)}:${p(m)}:${p(s)}${sep}${p(ms, 3)}`;
 };
 
+// EXACT timing when the scene MP3 + ffprobe are present (cues match Bella's audio);
+// otherwise estimate from word count. Either way, one cue per sentence.
+import { existsSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+let probe = null;
+try { execFileSync('ffprobe', ['-version'], { stdio: 'ignore' }); probe = (f) => parseFloat(execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'default=noprint_wrappers=1:nokey=1', f], { encoding: 'utf8' }).trim()); } catch { /* estimate */ }
+
 const cues = [];
-let t = 0;
+let t = 0, exact = false;
 for (const sc of manifest) {
-  for (const sent of sentences(sc.vo)) {
-    const d = dur(sent);
-    cues.push({ start: t, end: t + d, text: sent });
-    t += d + GAP;
+  const ss = sentences(sc.vo);
+  const mp3 = `${DIR}/${sc.file}`;
+  const realD = (probe && existsSync(mp3)) ? probe(mp3) : null;
+  if (realD != null) {
+    exact = true;
+    const wc = ss.map((s) => s.split(/\s+/).length), tot = wc.reduce((a, b) => a + b, 0) || 1;
+    let st = t;
+    ss.forEach((s, j) => { const cd = realD * (wc[j] / tot); cues.push({ start: st, end: st + cd, text: s }); st += cd; });
+    t += realD;
+  } else {
+    for (const s of ss) { const d = dur(s); cues.push({ start: t, end: t + d, text: s }); t += d + GAP; }
   }
 }
 
@@ -41,4 +55,4 @@ const vtt = 'WEBVTT\n\n' + cues.map((c) =>
 
 writeFileSync(`${DIR}/onboarding.en.srt`, srt);
 writeFileSync(`${DIR}/onboarding.en.vtt`, vtt);
-console.log(`subtitles: ${cues.length} cues, ~${Math.round(t / 60)} min (estimated) — wrote onboarding.en.srt + .vtt`);
+console.log(`subtitles: ${cues.length} cues, ~${Math.round(t / 60)} min (${exact ? 'exact — from audio' : 'estimated'}) — wrote onboarding.en.srt + .vtt`);

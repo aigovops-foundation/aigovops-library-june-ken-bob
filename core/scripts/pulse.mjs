@@ -176,6 +176,10 @@ const html = `<!DOCTYPE html>
 <meta property="og:title" content="System Pulse — AiGovOps Library"/>
 <meta property="og:description" content="Live system pulse for the AiGovOps Library: the governed core is exercised on every deploy, emitting a receipt from each Yes-Gate decision."/>
 <meta property="og:url" content="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/pulse.html"/>
+<link rel="canonical" href="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/pulse.html"/>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/pulse.html","url":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/pulse.html","name":"System Pulse — AiGovOps Library","isPartOf":{"@id":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/#site"},"publisher":{"@id":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/#org"},"description":"Live system pulse for the AiGovOps Library: the governed core is exercised on every deploy, emitting a receipt from each Yes-Gate decision."}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 :root{--bg:#0c1430;--teal:#01696f;--green:#2ecc71;--green2:#6fe6a3;--gold:#e8c25a;--ink:#e7f3f1;--ink2:#9fc0bd;--red:#e74c3c;--line:rgba(120,200,190,.18);--card:rgba(255,255,255,.04)}
