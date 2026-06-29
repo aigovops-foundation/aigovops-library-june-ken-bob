@@ -22,6 +22,8 @@
   a{color:var(--teal);text-decoration:none}
   a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--teal);outline-offset:2px;border-radius:6px}
   @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  .skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--teal);color:#fff;padding:10px 16px;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
+  .skip-link:focus{left:0}
   .top{background:var(--navy);color:#fff;padding:14px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
   .top .logo{display:flex;align-items:center;gap:9px} .top .mark{width:26px;height:26px}
   .top h1{font-size:17px;font-weight:700;letter-spacing:-.01em} .top .sub{font-size:12.5px;color:#9fb6c9}
@@ -88,6 +90,7 @@
 <body>
 <svg width="0" height="0" style="position:absolute"><symbol id="mk" viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#0c1430"/><circle cx="16" cy="16" r="15" fill="none" stroke="#1aa45a" stroke-width="1.4"/><path d="M11 21 L16 9 L21 21 Z" fill="#0f8a76"/><circle cx="22" cy="9" r="2.4" fill="#5dcaa5"/></symbol></svg>
 
+<a class="skip-link" href="#board">Skip to content</a>
 <header class="top">
   <div class="logo"><svg class="mark"><use href="#mk"/></svg><h1>The Board</h1></div>
   <span class="sub">Every task across the estate — one place, start to finish.</span>
@@ -97,7 +100,7 @@
 <div class="ask">
   <div class="row">
     <span class="jv"><svg width="18" height="18"><use href="#mk"/></svg></span>
-    <input id="askbox" placeholder="Tell Jeeves an outcome — Jeeves builds the steps and walks it to done…"/>
+    <input id="askbox" aria-label="Tell Jeeves an outcome to start a flow" placeholder="Tell Jeeves an outcome — Jeeves builds the steps and walks it to done…"/>
     <button class="go" id="askbtn" type="button">Start it</button>
   </div>
   <div class="templates" id="templates">

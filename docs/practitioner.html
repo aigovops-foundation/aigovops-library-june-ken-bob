@@ -236,7 +236,7 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visibl
         const right = picked === truth;
         return `<div class="row">
           <span class="mark ${right ? "right" : "wrong"}">${right ? "✓" : "✗"}</span>
-          <span style="flex:1"><a href="./failfest.html?id=${c.id}" target="_blank">${c.id} — ${c.org}</a></span>
+          <span style="flex:1"><a href="./failfest.html?id=${c.id}" target="_blank" rel="noopener">${c.id} — ${c.org}</a></span>
           <span style="color:var(--fg-faint);font-family:var(--mono);font-size:12px">picked ${picked} · truth ${truth}</span>
         </div>`;
       }).join("");
