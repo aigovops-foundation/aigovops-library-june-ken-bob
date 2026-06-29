@@ -195,7 +195,7 @@ async function main() {
     for (const s of srcs(pg.html)) {
       if (s.startsWith("http://")) { mixed++; failC("No mixed content", `${s} on ${rel(pg.key)}`); }
       if (isExternal(s) || (MODE === "dir" && isHttp(s))) { extAssets++; continue; }
-      const name = MODE === "dir" ? localName(s) : (resolveHttp(pg.url || pg.key, s) || s);
+      const name = MODE === "dir" ? s.replace(/^\.\//, "").split(/[?#]/)[0] : (resolveHttp(pg.url || pg.key, s) || s);
       if (assetSeen.has(name)) continue; assetSeen.add(name); assetN++;
       const exists = MODE === "dir" ? fs.existsSync(path.join(path.resolve(DIR), name)) : await reachable(name) === 200;
       assert(exists, `Asset present: ${MODE === "dir" ? name : name.slice(0, 70)}`, "missing");
