@@ -9,6 +9,32 @@
 <meta property="og:title" content="The AiGovOps Library — the whole set"/>
 <meta property="og:description" content="One connected set: the vision, the feel, the build, the way it runs, and the running core of the AiGovOps Library."/>
 <meta property="og:url" content="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/"/>
+<link rel="canonical" href="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/"/>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/#org",
+      "name": "AiGovOps Foundation",
+      "description": "A governed core for AI agents: agents do the bureaucracy; humans hold the meaning — and humans hold the keys.",
+      "founder": [
+        { "@type": "Person", "name": "Bob Rapp" },
+        { "@type": "Person", "name": "Ken Johnston" }
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/#site",
+      "url": "https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/",
+      "name": "The AiGovOps Library",
+      "description": "One connected set: the vision, the feel, the build, the way it runs, and the running core of the AiGovOps Library.",
+      "publisher": { "@id": "https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/#org" }
+    }
+  ]
+}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet"/>
 <style>
   :root{--teal:#01696f;--green:#2ecc71;--green2:#6fe6a3;--ink:#e7f3f1;--ink2:#9fc0bd;--gold:#e8c25a;--line:rgba(120,200,190,.18);--card:rgba(255,255,255,.04)}
@@ -44,11 +70,23 @@
   .fcreed{font-family:'DM Mono',monospace;letter-spacing:.2em;font-size:10.5px;color:var(--green2);margin-top:8px}
   .tagline{font-family:'Fraunces',serif;font-style:italic;font-size:17px}
 </style>
+<style id="a11y-universal">
+/* a11y-universal: keyboard focus + reduced motion (additive, non-breaking) */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+}
+a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:2px solid currentColor;outline-offset:2px;border-radius:2px
+}
+.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--green,#2ecc71);color:#04181a;padding:10px 16px;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
+.skip-link:focus{left:0}
+</style>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 <div id="jeeves-hero"></div>
 <script src="https://www.aigovops-foundation.com/jeeves-hero.js" data-jeeves-site="library" defer></script>
-<div class="wrap">
+<main id="main" class="wrap">
   <div class="eyebrow">AiGovOps Foundation · The Library</div>
   <h1>One library, six ways<br/>to see the same <span class="y">Yes</span>.</h1>
   <p class="thesis">The vision, the feel, the build, the way it runs, the running core — and how it governs itself. One connected set. Start anywhere; they all point to each other.</p>
@@ -324,7 +362,7 @@
     <div class="tagline">One governed library, run by agents, held by humans, warm in every language.</div>
     <div class="fcreed">AGENTS DO THE BUREAUCRACY · HUMANS HOLD THE MEANING</div>
   </footer>
-</div>
+</main>
 
   <script src="https://www.aigovops-foundation.com/jeeves-widget.js" data-jeeves-site="library" defer></script>
 </body>

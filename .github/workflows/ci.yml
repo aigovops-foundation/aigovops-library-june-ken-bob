@@ -15,3 +15,13 @@ jobs:
       # Phase D — the prose governance skills as executable gates: accessibility-
       # audit on shipped pages + security-privacy-review (secret scan) on configs.
       - run: npm run scan
+
+  # Discoverability gate — keep the published site's SEO invariants from regressing
+  # (canonical, JSON-LD, og:url, internal links, sitemap coverage). Runs from repo root.
+  site-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: node scripts/runbooks/seo-drift-check.mjs

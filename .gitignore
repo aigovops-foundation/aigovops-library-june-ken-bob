@@ -20,3 +20,6 @@ deploy/.dead-simple.state
 
 # stray nested runtime ledger artifact (runtime data, not source)
 core/core/
+
+# local dev-server config (machine-specific absolute paths)
+.claude/launch.json

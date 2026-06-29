@@ -4,6 +4,25 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>AiGovOps Library — Durability Plan</title>
 <meta name="description" content="How the AiGovOps Library stays up — the end-to-end design, why the core was sleeping, and the tiered plan to make it durable.">
+<meta property="og:url" content="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/durability-plan.html"/>
+<link rel="canonical" href="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/durability-plan.html"/>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/durability-plan.html",
+  "url": "https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/durability-plan.html",
+  "name": "AiGovOps Library — Durability Plan",
+  "isPartOf": {
+    "@id": "https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/#site"
+  },
+  "publisher": {
+    "@id": "https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/#org"
+  },
+  "description": "How the AiGovOps Library stays up — the end-to-end design, why the core was sleeping, and the tiered plan to make it durable."
+}
+</script>
+
 <meta property="og:title" content="The Library — Durability Plan">
 <meta property="og:description" content="Tier 1 ends the sleep. Tier 3 moves the ledger to Postgres. Tier 2 follows. Plus uptime monitor + backup keys.">
 <style>
@@ -22,10 +41,22 @@
   strong{color:#f3c977}
   em{color:#cdbf9f}
   hr{border:none;border-top:1px solid #4a3c22;margin:28px 0}
-</style></head>
+</style><style id="a11y-universal">
+/* a11y-universal: keyboard focus + reduced motion (additive, non-breaking) */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+}
+a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:2px solid currentColor;outline-offset:2px;border-radius:2px
+}
+.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--green,#2ecc71);color:#04181a;padding:10px 16px;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
+.skip-link:focus{left:0}
+</style>
+</head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 <a class="back" href="./index.html" data-home>&larr; the Library</a>
-<div class="wrap">
+<div class="wrap" id="main" role="main">
 <h1>The Library — Durability Plan</h1>
 <p><em>How the system stays up, what makes it sleep, and the proper end-to-end shape.</em></p>
 <blockquote>The Library lives in two layers. <strong>The hub</strong> (this site, on GitHub Pages) is served by a CDN and is effectively always-up. <strong>The core</strong> (the API, the agents, the Beacon-signed ledger) runs on Fly.io and is the layer that's behaved like it "goes down." It hasn't been crashing — it's been <strong>sleeping on idle</strong>, by default. This plan ends that and lays out the durable shape we want next.</blockquote>

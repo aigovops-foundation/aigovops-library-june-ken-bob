@@ -5,6 +5,25 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>The AiGovOps Library — A Guided Tour</title>
   <meta name="description" content="A guided tour of the AiGovOps Library: the six pieces, the running core, and how the Yes-Gate keeps humans holding the keys.">
+<meta property="og:url" content="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/tour.html"/>
+<link rel="canonical" href="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/tour.html"/>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/tour.html",
+  "url": "https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/tour.html",
+  "name": "The AiGovOps Library — A Guided Tour",
+  "isPartOf": {
+    "@id": "https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/#site"
+  },
+  "publisher": {
+    "@id": "https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/#org"
+  },
+  "description": "A guided tour of the AiGovOps Library: the six pieces, the running core, and how the Yes-Gate keeps humans holding the keys."
+}
+</script>
+
   <meta property="og:title" content="The AiGovOps Library — A Guided Tour">
   <meta property="og:description" content="A guided tour of the AiGovOps Library: the six pieces, the running core, and how the Yes-Gate keeps humans holding the keys.">
   <meta property="og:type" content="website">
@@ -113,10 +132,22 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:70;opa
 .tourbar button.ghost{background:rgba(255,255,255,.2);color:#fff}
 .sound{position:absolute;left:16px;bottom:18px;z-index:15;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(20,12,4,.42);color:#fff;cursor:pointer;font-size:17px;backdrop-filter:blur(6px)}
 </style>
+<style id="a11y-universal">
+/* a11y-universal: keyboard focus + reduced motion (additive, non-breaking) */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+}
+a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:2px solid currentColor;outline-offset:2px;border-radius:2px
+}
+.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--green,#2ecc71);color:#04181a;padding:10px 16px;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
+.skip-link:focus{left:0}
+</style>
 </head>
 <body>
+<a class="skip-link" href="#stage">Skip to content</a>
 <a href="./index.html" data-home style="position:fixed;top:12px;left:14px;z-index:9999;font:500 13px system-ui,sans-serif;color:#caa24a;background:rgba(20,12,4,.6);border:1px solid rgba(199,154,60,.5);border-radius:999px;padding:7px 13px;text-decoration:none;backdrop-filter:blur(6px)">← the Library</a>
-<div id="stage">
+<div id="stage" role="main">
   <div id="map">
     <div class="map-title">
       <h1>The AiGovOps Library</h1>
