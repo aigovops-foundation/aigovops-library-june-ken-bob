@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The AiGovOps Library — Guided Onboarding</title>
+<meta name="description" content="A self-playing guided tour of the whole AiGovOps Library: every page, what you can do at each stop, and how to run it all through Jeeves and the governed agents."/>
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="The AiGovOps Library — Guided Onboarding"/>
+<meta property="og:description" content="A self-playing guided tour of the whole AiGovOps Library: every page, what you can do at each stop, and how to run it all through Jeeves and the governed agents."/>
+<meta property="og:url" content="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/onboarding.html"/>
+<link rel="canonical" href="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/onboarding.html"/>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  "name": "The AiGovOps Library — Guided Onboarding",
+  "description": "A self-playing guided tour of the whole AiGovOps Library: every page, what you can do at each stop, and how to run it all through Jeeves and the governed agents.",
+  "uploadDate": "2026-06-29",
+  "publisher": { "@type": "Organization", "name": "AiGovOps Foundation" }
+}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet"/>
+<style>
+  :root{--teal:#01696f;--green:#2ecc71;--green2:#6fe6a3;--ink:#e7f3f1;--ink2:#9fc0bd;--gold:#e8c25a;--line:rgba(120,200,190,.18);--card:rgba(255,255,255,.04);--bg:#03100f}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:radial-gradient(120% 90% at 80% -10%,#0a3034,#04181a 55%,#03100f);min-height:100vh;display:flex;flex-direction:column}
+  a{color:var(--green2)}
+  .skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--green);color:#04181a;padding:10px 16px;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
+  .skip-link:focus{left:0}
+  a:focus-visible,button:focus-visible,[tabindex]:focus-visible{outline:2px solid currentColor;outline-offset:2px;border-radius:2px}
+  @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+
+  header.top{display:flex;align-items:center;gap:14px;padding:12px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .brand{font-family:'DM Mono',monospace;letter-spacing:.22em;font-size:11px;color:var(--green2);text-transform:uppercase}
+  header.top h1{font-family:'Fraunces',serif;font-weight:600;font-size:19px;color:#fff;margin-right:auto}
+  header.top h1 .y{color:var(--green)}
+  .toplink{font-family:'DM Mono',monospace;font-size:12px;text-decoration:none;color:var(--ink2);border:1px solid var(--line);padding:6px 11px;border-radius:8px}
+  .toplink:hover{border-color:var(--green);color:var(--green2)}
+
+  .layout{flex:1;display:grid;grid-template-columns:300px 1fr;min-height:0}
+  @media(max-width:880px){.layout{grid-template-columns:1fr}}
+
+  /* sidebar / chapters */
+  nav.toc{border-right:1px solid var(--line);overflow:auto;padding:14px 10px 40px}
+  @media(max-width:880px){nav.toc{display:none}}
+  .chap{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin:16px 8px 6px}
+  .scene-btn{display:block;width:100%;text-align:left;background:none;border:none;color:var(--ink2);font:inherit;font-size:13.5px;padding:7px 10px;border-radius:8px;cursor:pointer;border-left:2px solid transparent}
+  .scene-btn:hover{background:var(--card);color:var(--ink)}
+  .scene-btn.active{background:rgba(46,204,113,.1);color:#fff;border-left-color:var(--green)}
+  .scene-btn .n{font-family:'DM Mono',monospace;font-size:10.5px;color:var(--green2);margin-right:7px}
+
+  /* stage */
+  main.stage{position:relative;min-height:0;display:flex;flex-direction:column}
+  .frame-wrap{position:relative;flex:1;min-height:340px;background:#02100e;overflow:hidden}
+  iframe{width:100%;height:100%;border:0;background:#fff;display:none}
+  iframe.show{display:block}
+  .panel{position:absolute;inset:0;overflow:auto;padding:34px 30px 120px;display:none}
+  .panel.show{display:block}
+  /* Beacon persona — the on-screen narrator */
+  .persona{position:absolute;top:14px;right:16px;z-index:6;width:76px;height:76px;border-radius:50%;border:2px solid var(--green2);box-shadow:0 2px 16px rgba(0,0,0,.5);transition:.3s}
+  .persona img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
+  .persona-label{position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;color:#04181a;background:var(--green2);padding:1px 8px;border-radius:999px;text-transform:uppercase;white-space:nowrap}
+  .persona.speaking{box-shadow:0 2px 16px rgba(0,0,0,.5),0 0 24px 5px rgba(46,204,113,.6);animation:personaPulse 1.7s ease-in-out infinite}
+  @keyframes personaPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+  /* per-scene animated start: icon pops in + a ring sweeps out */
+  .persona-ring{position:absolute;inset:-5px;border-radius:50%;border:2px solid var(--green2);opacity:0;pointer-events:none}
+  .persona.intro .persona-ring{animation:ringSweep 1s ease-out}
+  .persona.intro img{animation:iconPop .6s cubic-bezier(.3,1.4,.5,1)}
+  @keyframes ringSweep{0%{transform:scale(.85);opacity:.9}100%{transform:scale(1.85);opacity:0}}
+  @keyframes iconPop{0%{transform:scale(.55);opacity:.25}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+  @media(max-width:560px){.persona{width:56px;height:56px;top:10px;right:10px}}
+  .panel .kicker{font-family:'DM Mono',monospace;letter-spacing:.2em;font-size:11px;color:var(--green2);text-transform:uppercase}
+  .panel h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(24px,4vw,38px);color:#fff;margin:10px 0 14px;line-height:1.08}
+  .panel p{color:var(--ink2);max-width:720px;line-height:1.6;margin-bottom:14px;font-size:15.5px}
+  .panel .creed{font-family:'Fraunces',serif;font-style:italic;color:var(--green2);border-left:2px solid var(--green);padding-left:16px;margin:18px 0;font-size:18px}
+  .loopgrid{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0;max-width:760px}
+  .loopstep{flex:1;min-width:120px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+  .loopstep .s{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:.12em}
+  .loopstep h4{font-family:'Fraunces',serif;color:#fff;font-size:16px;margin:6px 0 4px}
+  .loopstep p{font-size:12.5px;margin:0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 0}
+  .chip{font-family:'DM Mono',monospace;font-size:12px;color:#cdeee4;background:rgba(46,204,113,.08);border:1px solid var(--line);border-radius:999px;padding:6px 12px}
+
+  /* caption overlay */
+  .caption{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(to top,rgba(2,12,11,.96) 60%,rgba(2,12,11,0));padding:20px 24px 18px;pointer-events:none}
+  .caption .meta{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+  .caption .vo{color:#fff;font-size:16px;line-height:1.45;max-width:900px;text-shadow:0 1px 8px rgba(0,0,0,.6)}
+  .caption .do{margin-top:10px;display:flex;flex-wrap:wrap;gap:7px;pointer-events:auto}
+  .caption .do b{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--green2);text-transform:uppercase;align-self:center;margin-right:2px}
+  .pill{font-size:12.5px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+  .pill.jeeves{color:#04181a;background:var(--gold);border-color:var(--gold);font-weight:600}
+  .pill.jeeves::before{content:"⌘ ";font-family:'DM Mono',monospace}
+  .openlink{pointer-events:auto;display:inline-block;margin-top:10px;font-family:'DM Mono',monospace;font-size:12px;color:var(--green2);text-decoration:none;border-bottom:1px dotted var(--green2)}
+
+  /* controls */
+  .controls{display:flex;align-items:center;gap:10px;padding:11px 16px;border-top:1px solid var(--line);background:rgba(2,12,11,.7);flex-wrap:wrap}
+  .ctrlbtn{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:8px 12px;font:inherit;font-size:13px;cursor:pointer;display:inline-flex;gap:7px;align-items:center}
+  .ctrlbtn:hover{border-color:var(--green);color:#fff}
+  .ctrlbtn.play{background:var(--green);color:#04181a;border-color:var(--green);font-weight:600;min-width:104px;justify-content:center}
+  .counter{font-family:'DM Mono',monospace;font-size:12px;color:var(--ink2)}
+  .bar{flex:1;min-width:120px;height:6px;background:rgba(255,255,255,.08);border-radius:6px;overflow:hidden}
+  .bar > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--green));transition:width .4s}
+  .toggle{font-family:'DM Mono',monospace;font-size:12px;color:var(--ink2);display:inline-flex;gap:6px;align-items:center;cursor:pointer;user-select:none}
+  .toggle input{accent-color:var(--green)}
+
+  /* script modal */
+  .scrim{position:fixed;inset:0;background:rgba(2,8,8,.8);display:none;z-index:50;padding:30px;overflow:auto}
+  .scrim.show{display:block}
+  .sheet{max-width:820px;margin:0 auto;background:#06201d;border:1px solid var(--line);border-radius:16px;padding:28px 30px}
+  .sheet h3{font-family:'Fraunces',serif;color:#fff;font-size:24px;margin-bottom:4px}
+  .sheet .sub{color:var(--ink2);font-size:13px;margin-bottom:18px}
+  .sheet .row{padding:12px 0;border-top:1px solid var(--line)}
+  .sheet .row .h{font-family:'DM Mono',monospace;font-size:11px;color:var(--green2);letter-spacing:.1em}
+  .sheet .row p{color:var(--ink);font-size:14.5px;line-height:1.5;margin-top:4px}
+  .closex{float:right;background:none;border:1px solid var(--line);color:var(--ink2);border-radius:8px;padding:5px 10px;cursor:pointer}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="top">
+  <span class="brand">AiGovOps · The Library</span>
+  <h1>Guided <span class="y">Onboarding</span></h1>
+  <button class="toplink" id="scriptBtn" type="button">▤ Full script</button>
+  <a class="toplink" href="./index.html">← Library home</a>
+</header>
+
+<div class="layout">
+  <nav class="toc" id="toc" aria-label="Tutorial chapters"></nav>
+
+  <main class="stage" id="main">
+    <div class="frame-wrap">
+      <iframe id="frame" title="Live page preview" loading="lazy" referrerpolicy="no-referrer"></iframe>
+      <div class="panel" id="panel"></div>
+      <div class="persona" id="persona" aria-hidden="true">
+        <span class="persona-ring"></span>
+        <img src="./audio/onboarding/assets/beacon-persona.jpg" alt="The Beacon persona, narrator of this tour"/>
+        <span class="persona-label">Beacon</span>
+      </div>
+      <div class="caption">
+        <div class="meta" id="capMeta"></div>
+        <div class="vo" id="capVo" aria-live="polite"></div>
+        <div class="do" id="capDo"></div>
+        <a class="openlink" id="openLink" target="_blank" rel="noopener" hidden>Open this page in a new tab ↗</a>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="ctrlbtn" id="prevBtn" type="button" aria-label="Previous">‹ Prev</button>
+      <button class="ctrlbtn play" id="playBtn" type="button">▶ Play</button>
+      <button class="ctrlbtn" id="nextBtn" type="button" aria-label="Next">Next ›</button>
+      <span class="counter" id="counter">1 / 1</span>
+      <div class="bar"><i id="barFill"></i></div>
+      <label class="toggle"><input type="checkbox" id="narrateChk" checked/> 🔊 Narrate</label>
+      <span class="counter" id="voiceBadge" style="opacity:.85"></span>
+    </div>
+  </main>
+</div>
+
+<div class="scrim" id="scrim">
+  <div class="sheet">
+    <button class="closex" id="closeScript" type="button">Close ✕</button>
+    <h3>Narration script</h3>
+    <div class="sub">The voice-over for a recorded video — one block per scene, in order. Read top to bottom.</div>
+    <div id="scriptBody"></div>
+  </div>
+</div>
+
+<script>
+// ——— The tour. Each scene shows a live page (src) or an inline concept panel. ———
+const SCENES = [
+  {ch:"Start here", title:"Welcome to the Library",
+   panel:`<div class="kicker">Onboarding · 00</div><h2>One library. Six ways to see the same <span style="color:var(--green)">Yes</span>.</h2>
+   <p>The AiGovOps Library is a governed core for AI agents — and a connected set of pages that explain it, show it run, and let you operate it. This guided tour walks every page, what you can do at each stop, and how to drive the whole thing through <b>Jeeves</b> and the governed agents.</p>
+   <div class="creed">"Agents do the bureaucracy; humans hold the meaning — and humans hold the keys."</div>
+   <p>Press <b>Play</b> to let the tour narrate and advance itself, or use Prev / Next and the chapter list to move at your own pace. Every stop links to the real page.</p>`,
+   vo:"Welcome to the AiGovOps Library. It's a governed core for AI agents, wrapped in a connected set of pages that explain it, show it running, and let you operate it. This tour walks every page, tells you what you can do at each stop, and shows how to run the whole thing through Jeeves and the governed agents. Press play to let it narrate itself, or move at your own pace.",
+   doLabel:"Remember", do:["Agents do the bureaucracy","Humans hold the keys"]},
+
+  {ch:"Start here", title:"The Hub — the six pieces", src:"index.html",
+   vo:"This is the home page — the hub. It frames the Library as six pieces: the vision, the feel, the build, the way it runs, the running core, and how it governs itself. Start anywhere; they all point to each other. Notice Jeeves waiting at the top — an agent you can ask to do real work from any page.",
+   doLabel:"Here you can", do:["Jump to any of the six pieces","Ask Jeeves to act"], jeeves:["Show me the latest signed receipts"]},
+
+  {ch:"The six pieces", title:"WHY — The Demo", src:"demo.html",
+   vo:"Piece one: the Demo. This is the story end to end — one loop, two pillars, and a spine called Yes. Everyone walks in free, the shelves fill themselves, and when software isn't enough you can borrow a human. It's the two-minute why behind everything else.",
+   doLabel:"Here you can", do:["Read the end-to-end story","See the loop and the pillars"], jeeves:["Explain the Yes-Gate in one sentence"]},
+
+  {ch:"The six pieces", title:"FEEL — The Design Book", src:"design-book.html",
+   vo:"Piece two: the Design Book — the experience and visual language. The Rooms rendered, each reference mapped to a room, and the principles behind how the governed core looks and feels. This is the voice and the look you'll see across the whole Library.",
+   doLabel:"Here you can", do:["Study the rooms and references","Learn the design language"]},
+
+  {ch:"The six pieces", title:"WALK — The Rooms", src:"rooms.html",
+   vo:"Piece three: the Rooms. Six interactive rooms — Reception, Reading Room, Makerspace, Commons, Human Library, and the Coffee Shop — running live on the governed core. Walking the rooms is the friendliest way to feel how the system works.",
+   doLabel:"Here you can", do:["Walk six live rooms","Meet the agents in each"]},
+
+  {ch:"The six pieces", title:"BUILD — The Blueprint", src:"blueprint.html",
+   vo:"Piece four: the Blueprint — the deployable architecture, section by section. The principles, the one-core-many-surfaces shape, deployment topologies, the backend, the rooms, the agent-first design, the request lifecycle, and safety. This is the engineering source of truth.",
+   doLabel:"Here you can", do:["Read the architecture","See deployment topologies"], jeeves:["What frameworks apply to my model?"]},
+
+  {ch:"The six pieces", title:"OPERATE — The Plan", src:"plan.html",
+   vo:"Piece five: the Plan — how agents, skills, and humans actually run the Library. The cast of library staff, the skills they wield, the repeatable evidence-producing processes, and the garden of human delight. This is the operating manual.",
+   doLabel:"Here you can", do:["Meet the agent cast","See the skills and processes"], jeeves:["Draft a PR to update the agents page"]},
+
+  {ch:"The six pieces", title:"GOVERN — The Control Plane", src:"control-plane.html",
+   vo:"Piece six: the Control Plane — security, control, and deployment. Secrets in tiers, the single sandbox chokepoint, egress allow-lists, and role-scoped oversight, plus the Rev 2026.06 decisions. This is how the core stays safe by construction.",
+   doLabel:"Here you can", do:["Review the safety contract","Read the in-force decisions"]},
+
+  {ch:"See it run", title:"End-to-End Demo", src:"demo-e2e.html",
+   vo:"Now watch it run. The end-to-end demo: a day in the Library across six rooms and nine agents, the human-gated loop, and spend, rate, and blast-radius controls — all on the live ledger.",
+   doLabel:"Here you can", do:["Follow the full loop","See the caps in action"]},
+
+  {ch:"See it run", title:"The Demo, Run — every step signed", src:"demo-run.html",
+   vo:"This is the demo actually executed — not described, run. A risky ask is governed, the right regulations are mapped, an agent earns its dial instead of flipping a switch, and every step leaves a signed, metadata-only receipt. This is the proof.",
+   doLabel:"Here you can", do:["See a real governed run","Inspect signed receipts"], jeeves:["Run the gate self-test"]},
+
+  {ch:"See it run", title:"The Gates, Live", src:"gates.html",
+   vo:"The Gates, live: a real council, real questions, a real Beacon-signed ledger, and a real human gate. Watch verdicts get signed into the ledger as they happen.",
+   doLabel:"Here you can", do:["Watch live gate verdicts","Read the Beacon ledger"]},
+
+  {ch:"See it run", title:"The Gates, Recorded", src:"watch-gates.html",
+   vo:"Prefer it slower? The recorded walkthrough takes the gates at half speed — nine rooms, their agents, and every Yes, No, or Maybe verdict signed into the ledger, so you can follow each decision.",
+   doLabel:"Here you can", do:["Watch at half speed","Trace each verdict"]},
+
+  {ch:"See it run", title:"A Day in the Library", src:"demo-foundation.html",
+   vo:"A narrated day in the Library: the governed core handling real requests, each step gated and left as a signed, metadata-only receipt. A calm, story-shaped view of the same machinery.",
+   doLabel:"Here you can", do:["Follow a narrated day","See gating in context"]},
+
+  {ch:"See it run", title:"The Guided Tour", src:"tour.html",
+   vo:"The guided tour is an interactive map of the Library — the six pieces, the running core, and how the Yes-Gate keeps humans holding the keys. Take the docent's tour, or wander freely.",
+   doLabel:"Here you can", do:["Take the docent tour","Wander the map"]},
+
+  {ch:"See it run", title:"System Pulse", src:"pulse.html",
+   vo:"System Pulse is the heartbeat. The governed core is exercised on every deploy, emitting a receipt from each Yes-Gate decision — so the milestones and the live engine status are always honest.",
+   doLabel:"Here you can", do:["Check live engine status","See milestone progress"], jeeves:["Give me a status report"]},
+
+  {ch:"The deep docs", title:"Build Tickets", src:"build-tickets.html",
+   vo:"The Build Tickets are the backlog made legible: Ticket 0 — the first safe slice — then the next ten big items, the agent-feature integrations, the scale roadmap, and the milestones. This is what's done, what's next, and why.",
+   doLabel:"Here you can", do:["Read the ordered backlog","See what's shipped vs next"]},
+
+  {ch:"The deep docs", title:"Durability Plan", src:"durability-plan.html",
+   vo:"The Durability Plan is the honest operations story: the end-to-end design today, why the core was sleeping, the tiered plan to make it durable, and a recommendation in order. Candor over comfort.",
+   doLabel:"Here you can", do:["Understand uptime design","Read the honest recommendation"]},
+
+  {ch:"From the Foundation", title:"The Newsroom", src:"newsroom.html",
+   vo:"The Newsroom carries announcements, releases, and writing on governed AI from Bob Rapp and Ken Johnston. It's where the Foundation speaks.",
+   doLabel:"Here you can", do:["Read announcements","Follow the founders' writing"]},
+
+  {ch:"From the Foundation", title:"#F-AI-Friday — 100 harms", src:"f-ai-friday.html",
+   vo:"F-A-I-Friday is a hundred verified, source-cited AI-harm incidents — and crucially, each one carries the specific gate that would have caught it. It turns failure into a checklist.",
+   doLabel:"Here you can", do:["Browse 100 real harms","See the gate for each"]},
+
+  {ch:"From the Foundation", title:"#FridayFailFest", src:"failfest.html",
+   vo:"FailFest rotates daily through those hundred incidents — one a day, each paired with the gate that would have stopped it. A steady drip of learn-from-real-scars.",
+   doLabel:"Here you can", do:["Catch the daily case","Map harm to gate"]},
+
+  {ch:"From the Foundation", title:"Practitioner Test", src:"practitioner.html",
+   vo:"The Practitioner Test is a ten-question quiz drawn from real harms: read the case, pick the gate verdict, and see the answer. It's how you check whether the gate thinking has landed.",
+   doLabel:"Here you can", do:["Take the 10-question test","Check your gate instincts"]},
+
+  {ch:"Jeeves & the governed loop", title:"Meet Jeeves",
+   panel:`<div class="kicker">Jeeves · the concierge</div><h2>Ask for the outcome. Jeeves does the bureaucracy.</h2>
+   <p>Jeeves is the agent-first front of the Library — not a person, and not a he or a she. It's an agent. You ask for an outcome in plain language; Jeeves drafts the work, runs anything reversible, and <b>pauses anything irreversible for a human</b>. It never holds the keys.</p>
+   <p>Try these starters, straight from the home page:</p>
+   <div class="chips"><span class="chip">Draft a PR to update the agents page</span><span class="chip">What frameworks apply to my model?</span><span class="chip">Run the gate self-test</span><span class="chip">Show me the latest signed receipts</span></div>
+   <p style="margin-top:16px">Every Jeeves action is classified by the policy engine, scoped by your identity, and left as a signed receipt — so the convenience never costs you the audit trail.</p>`,
+   vo:"Meet Jeeves — the concierge at the top of every page. Jeeves is an agent, not a person, with no gender. You ask for an outcome in plain language, and Jeeves does the bureaucracy: it drafts the work, runs anything reversible, and pauses anything irreversible for a human to approve. It never holds the keys. Try asking Jeeves to draft a pull request, to check which frameworks apply to your model, to run the gate self-test, or to show the latest signed receipts.",
+   doLabel:"Ask Jeeves", jeeves:["Draft a PR to update the agents page","Run the gate self-test"]},
+
+  {ch:"Jeeves & the governed loop", title:"The Yes-Gate loop",
+   panel:`<div class="kicker">The governed loop</div><h2>Propose → human-decide → broker → run sandboxed → verify.</h2>
+   <p>Every effectful action an agent takes runs the same five-step loop. Reversible work flows straight through; anything irreversible stops at the human gate. Nothing reaches a real secret or a real system except through this path.</p>
+   <div class="loopgrid">
+     <div class="loopstep"><div class="s">01</div><h4>Propose</h4><p>The agent states the intent; the policy engine classifies it.</p></div>
+     <div class="loopstep"><div class="s">02</div><h4>Human-decide</h4><p>Irreversible? A human approves or denies — recorded as a signed receipt.</p></div>
+     <div class="loopstep"><div class="s">03</div><h4>Broker</h4><p>On approval, a short-lived, scoped token is minted. The agent never sees a master secret.</p></div>
+     <div class="loopstep"><div class="s">04</div><h4>Run sandboxed</h4><p>The tool runs isolated — no ambient network or filesystem; egress only where declared.</p></div>
+     <div class="loopstep"><div class="s">05</div><h4>Verify</h4><p>The effect is checked and chained into the signed ledger. Tamper shows.</p></div>
+   </div>
+   <p>This is the spine the whole Library is built to protect.</p>`,
+   vo:"Underneath Jeeves is one loop, run for every effectful action: propose, human-decide, broker, run sandboxed, and verify. The agent proposes an intent and the policy engine classifies it. If it's irreversible, a human approves or denies — and that decision is itself a signed receipt. On approval, a short-lived scoped token is brokered, so the agent never touches a master secret. The tool then runs sandboxed, with no ambient network or filesystem, and the result is verified and chained into the signed ledger. Reversible work flows straight through; the irreversible always waits for a human.",
+   doLabel:"The five steps", do:["Propose","Human-decide","Broker","Run sandboxed","Verify"]},
+
+  {ch:"Jeeves & the governed loop", title:"Govern Any Agent", src:"connect.html",
+   vo:"You can put your own agent inside this loop. Govern Any Agent is the connector: point any M-C-P client — Claude Code, Desktop, Cursor — at the governed core, and its effectful actions inherit the gate, the broker, the sandbox, and a signed receipt for each one. Zero dependencies to install.",
+   doLabel:"Here you can", do:["Connect any MCP agent","See the tools it exposes","Install in seconds"], jeeves:["List the tools the connector exposes"]},
+
+  {ch:"Manage it with agents", title:"The Control Room",
+   panel:`<div class="kicker">Operate · the console</div><h2>Watch everything. Hold the kill switch.</h2>
+   <p>The running core ships a Control Room (served at <span class="chip" style="padding:2px 8px">/console</span> on a live deployment). It's one role-scoped surface for operating the system:</p>
+   <div class="loopgrid">
+     <div class="loopstep"><div class="s">CHAT</div><h4>Agentic chat</h4><p>Type a request; the local model drafts a plan and queues it as a proposal you approve inline.</p></div>
+     <div class="loopstep"><div class="s">SEE</div><h4>Oversight ledger</h4><p>A live SSE tail of every receipt. Stewards see all; members see only their own effects.</p></div>
+     <div class="loopstep"><div class="s">STOP</div><h4>Kill switch</h4><p>A steward-only halt that stops in-flight work and signs its own receipt. Resume the same way.</p></div>
+     <div class="loopstep"><div class="s">DIAL</div><h4>Capability dial</h4><p>Per-member caps on level, spend, rate, and blast radius — turned up or down, effective next request.</p></div>
+   </div>
+   <p>Two roles, one codebase, correct scoping — the founders see all and hold the global kill switch; members see and pause only their own work.</p>`,
+   vo:"To manage it all, the running core ships a Control Room. It's one role-scoped surface: an agentic chat where you type a request and the local model drafts a plan you approve inline; a live oversight ledger tailing every signed receipt; a steward-only kill switch that halts in-flight work and signs its own receipt; and a capability dial that sets each member's limits on level, spend, rate, and blast radius. Founders see everything and hold the global kill switch; members see and pause only their own work.",
+   doLabel:"You can", do:["Chat to plan & approve","Tail the live ledger","Hit the kill switch","Turn the caps dial"]},
+
+  {ch:"Manage it with agents", title:"The skills & runbooks",
+   panel:`<div class="kicker">The agents' tools</div><h2>What the agents actually wield.</h2>
+   <p>The governed skills are the verbs an agent (or you, through Jeeves) can run — each one leaves exactly one signed, metadata-only receipt:</p>
+   <div class="chips">
+     <span class="chip">framework-map — what regulations apply</span>
+     <span class="chip">security-privacy-review</span>
+     <span class="chip">accessibility-audit</span>
+     <span class="chip">status-report</span>
+     <span class="chip">monitor-and-alert</span>
+     <span class="chip">beacon-sign-evidence</span>
+   </div>
+   <p style="margin-top:16px">Alongside them, read-only <b>runbooks</b> automate the reversible chores — an SEO drift check, a ledger-integrity probe, and a weekly anonymized insight digest — ready to schedule whenever you choose. And an <b>evidence bundle</b> can export the whole signed history for an auditor to verify offline.</p>`,
+   vo:"The agents wield a fixed set of governed skills: map which regulations apply, run a security-and-privacy review, audit accessibility, produce a status report, monitor and alert, and sign evidence into the Beacon ledger. Each leaves one signed, metadata-only receipt. Around them sit read-only runbooks that automate the reversible chores, and an evidence bundle you can export so an auditor verifies the whole history offline.",
+   doLabel:"Run via Jeeves", jeeves:["Map the frameworks for a hiring tool","Sign this evidence into the ledger"]},
+
+  {ch:"The estate map", title:"Jeeves runs the whole estate",
+   panel:`<div class="kicker">The quick map · the whole estate</div><h2>One agent. The whole estate. One gate.</h2>
+   <p>The Library is one property among many that Jeeves coordinates — a single agent across the whole AiGovOps estate, each governed by the same Yes-Gate, each carrying a <b>posture</b> that says how much Jeeves may do alone. We'll walk all of it.</p>
+   <div class="loopgrid">
+     <div class="loopstep"><div class="s">DEV</div><h4>Library · Foundation · NCW</h4><p>The governed core, the public hub, and the learning on-ramp.</p></div>
+     <div class="loopstep"><div class="s">COMMUNITY</div><h4>The Community</h4><p>The membership garden — a live app with a real agent.</p></div>
+     <div class="loopstep"><div class="s">EVIDENCE</div><h4>Beacon · Lantern</h4><p>Discover &amp; sign; read the signed bundles into a report.</p></div>
+     <div class="loopstep"><div class="s">COMPLIANCE</div><h4>Umbrella · Vendor RFI</h4><p>Compile frameworks into controls; govern vendor risk.</p></div>
+     <div class="loopstep"><div class="s">OPEN SOURCE</div><h4>v4 platform</h4><p>The whole stack, open source, packaged to run yourself.</p></div>
+   </div>
+   <p><b>Posture</b> is the leash: <span class="chip">auto-reversible</span> — Jeeves runs the reversible prep, a human approves the publish — vs <span class="chip">propose-only</span> — a steward initiates <i>and</i> approves every change (the brand and the tools). Same gate, different leash.</p>`,
+   vo:"The Library is one property among many that Jeeves coordinates — a single agent across the whole AiGovOps estate, each governed by the same Yes-Gate. There's the developer group: the Library, the public Foundation site, and the N C W learning camp. There's the Community garden, a live app with a real agent. There are the evidence and compliance tools — Beacon, Lantern, Umbrella, and Vendor R F I. And there's the open-source v4 platform that packages the whole stack to run yourself. Each property carries a posture — auto-reversible, where Jeeves runs the prep and a human approves, or propose-only, where a steward initiates and approves every change. We'll walk all of it.",
+   doLabel:"Departments", do:["Dev","Community","Evidence","Compliance","Open source"]},
+
+  {ch:"The Foundation site", title:"The public hub", src:"https://www.aigovops-foundation.com",
+   vo:"This is the Foundation site — the public front door. Its line is: AI governance that runs like engineering, from intentions to verifiable evidence. It's a brand surface, so its posture is propose-only: Jeeves drafts every change, but a steward initiates and approves it, and it ships through a pull request and a review gate, never straight to live.",
+   doLabel:"Here you can", do:["Meet the Foundation","See the public face"], jeeves:["Draft a Foundation update (propose-only)"]},
+
+  {ch:"The Foundation site", title:"The ecosystem map", src:"https://www.aigovops-foundation.com/ecosystem.html",
+   vo:"The ecosystem page is the Foundation's own map of everything — the governed Library, this hub, the membership community, the tools, and the learning camp, all at a glance. If this tour is the guided walk, the ecosystem page is the directory you can return to.",
+   doLabel:"Here you can", do:["See the estate at a glance","Jump to any property"]},
+
+  {ch:"The Foundation site", title:"Frameworks Explorer", src:"https://www.aigovops-foundation.com/frameworks.html",
+   vo:"The Frameworks Explorer answers the first question anyone governing AI asks: which rules apply to me? Choose your context and it surfaces the relevant frameworks — the E U A I Act, NIST's A I R M F, I S O forty-two thousand one, G D P R, and more. It's the human face of the same framework-map the gate runs.",
+   doLabel:"Here you can", do:["Find frameworks that apply","EU AI Act · NIST · ISO 42001"], jeeves:["What frameworks apply to my model?"]},
+
+  {ch:"The Foundation site", title:"Alpha — what's next", src:"https://www.aigovops-foundation.com/alpha.html",
+   vo:"Alpha is the lab — the ideation-stage projects the Foundation is building next, in the open. It's where you see where AiGovOps is heading before it ships.",
+   doLabel:"Here you can", do:["See what's in the lab","Follow what's next"]},
+
+  {ch:"The Foundation site", title:"Community & contributors", src:"https://www.aigovops-foundation.com/community.html",
+   vo:"The community page is about the people: contributors, sustainers, founding partners, and the open-source projects. It's the on-ramp for anyone who wants to help build governed AI, not just use it.",
+   doLabel:"Here you can", do:["Become a contributor","See founding partners"]},
+
+  {ch:"The Foundation site", title:"Blog & the founders", src:"https://www.aigovops-foundation.com/blog.html",
+   vo:"The blog carries practitioner writing on AI governance, operational compliance, and responsible deployment. And behind it all are two people: Bob Rapp and Ken Johnston, who between them have led A I and data work at Microsoft, I B M, G E, Ford, General Motors, Vodafone, and Autonomic. Their pages, and an events page for where to meet them, are a click away.",
+   doLabel:"Here you can", do:["Read the writing","Meet Bob & Ken","Find an event"]},
+
+  {ch:"The membership community", title:"The garden — sign in", src:"https://community.aigovops-foundation.com/signin.html",
+   vo:"The Community is the membership garden — and unlike the explainer pages, it's a live application with a real governed agent behind it. Members sign in with a magic link and start as applicants until a steward approves them. From there, every effect they ask for runs the same gate you've seen all tour.",
+   doLabel:"Here you can", do:["Join with a magic link","Become a member"], jeeves:["Show the approval queue"]},
+
+  {ch:"The membership community", title:"Jeeves-guided onboarding", src:"https://community.aigovops-foundation.com/start.html",
+   vo:"New arrivals get a Jeeves-guided start — three pathways, for a new visitor, a member, or a steward — so the first five minutes have a hand to hold. Behind the welcome is the live Control Room: one ask, one approval queue, one signed trail for the whole community.",
+   doLabel:"Here you can", do:["Pick your pathway","Meet the live concierge","See the steward queue"]},
+
+  {ch:"The governance tools", title:"Beacon — discover & sign", src:"https://aigovops-foundation.github.io/aigovops-beacon/",
+   vo:"Beacon is the evidence engine: it discovers governance-relevant activity and signs it into a verifiable, tamper-evident ledger. Every receipt you've seen in this tour traces back to a Beacon signature. Its posture is propose-only — the signing tool itself is too important to change without a steward.",
+   doLabel:"Here you can", do:["See how evidence is signed","Inspect the ledger model"]},
+
+  {ch:"The governance tools", title:"Umbrella — frameworks → controls", src:"https://aigovops-foundation.github.io/umbrella-govops/",
+   vo:"Umbrella is the governance compiler. Its line is: governance is a pipeline — make it verifiable. It compiles forty-plus of the world's A I laws into concrete, checkable controls and signs the evidence. When the gate asks what a regulation actually requires, Umbrella is the source.",
+   doLabel:"Here you can", do:["Compile 40+ frameworks","Map law to controls"], jeeves:["Compile the controls for the EU AI Act"]},
+
+  {ch:"The governance tools", title:"Lantern — read the evidence",
+   panel:`<div class="kicker">Evidence · a tool, not a page</div><h2>Lantern turns signed bundles into a human report.</h2>
+   <p>Lantern is the third evidence tool — a Python package rather than a web page. It reads Beacon's signed evidence bundles and renders them into a clear, human-readable report an auditor or a steward can actually use.</p>
+   <p>The trio tells one story: <b>Beacon</b> discovers and signs · <b>Umbrella</b> compiles frameworks into controls · <b>Lantern</b> reads the signed bundles back into a report. Discover, require, explain.</p>`,
+   vo:"Lantern is the third evidence tool — and it's a Python package, not a web page. It reads Beacon's signed bundles and turns them into a clear, human-readable report an auditor or steward can use. Together the trio tells one story: Beacon discovers and signs, Umbrella compiles frameworks into controls, and Lantern reads the signed evidence back into a report.",
+   doLabel:"The trio", do:["Beacon signs","Umbrella requires","Lantern explains"]},
+
+  {ch:"The governance tools", title:"Vendor RFI", src:"https://aigovops-foundation.github.io/aigovops-vendor-rfi/",
+   vo:"Vendor R F I helps you choose an A I-governance stack like engineering: fifty vendors across five categories, neutral and gap-aware, so you can run a governed request-for-information instead of trusting a sales deck. It's where governance reaches outward, to the people you buy from.",
+   doLabel:"Here you can", do:["Compare 50 vendors","Run a governed RFI"]},
+
+  {ch:"NCW AI Expo", title:"Cool Tools · Cool Schools · The Rules", src:"https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
+   vo:"The N C W AI Expo is the learning on-ramp — a deliberately distinct regional brand that brings governed AI to a wider audience. It's a one-day community gathering about how North Central Washington uses AI well: for its students, its schools, and its towns. Same governance underneath; a friendlier doorway in.",
+   doLabel:"Here you can", do:["Cool Tools","Cool Schools","The Rules"]},
+
+  {ch:"NCW AI Expo", title:"The Centerpiece — AI as partner", src:"https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/centerpiece.html",
+   vo:"The centerpiece is the plenary that sets the stakes — AI as a partner in education. It contrasts two students, Maria and Jake, walks the real wins and the real harms with citations, and shows a live demo. It's the emotional core of the day.",
+   doLabel:"Here you can", do:["See the stakes","Wins and harms, cited"]},
+
+  {ch:"NCW AI Expo", title:"The Plan — the day", src:"https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/plan.html",
+   vo:"The Plan lays out the day itself: four breakouts, one centerpiece plenary, and a room schedule grid — the Expo runs August eleventh. This is how a community actually convenes around governed AI.",
+   doLabel:"Here you can", do:["See the schedule","Four breakouts + plenary"]},
+
+  {ch:"NCW AI Expo", title:"Mini-Camps — hands on", src:"https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/mini-camps.html",
+   vo:"The mini-camps are hands-on: thirty-minute sessions built from five real North Central Washington scenarios, filterable by scenario and audience. This is where it stops being theory and people actually try it.",
+   doLabel:"Here you can", do:["Try a 30-min camp","Filter by scenario"]},
+
+  {ch:"NCW AI Expo", title:"Courses — keep going", src:"https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/courses.html",
+   vo:"Courses are how you keep going after the Expo — the AiGovOps community learning paths, including governed agents and the read-act loop. The single day becomes an ongoing practice.",
+   doLabel:"Here you can", do:["Follow a learning path","Keep learning"]},
+
+  {ch:"NCW AI Expo", title:"The Pledge", src:"https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/pledge.html",
+   vo:"And the Pledge ties it together: the N C W AI Partnership Pledge, version one point zero — seven commitments, signed by the citizens, educators, business owners, and community leaders of North Central Washington. Governance, made personal and public.",
+   doLabel:"Here you can", do:["Read the 7 commitments","Sign the pledge"]},
+
+  {ch:"Open source", title:"The v4 platform — run it yourself", src:"https://bobrapp.github.io/Aigovops-Foundation-Open-Source-V4-10k/",
+   vo:"Finally, the open-source v4 platform. This is the whole stack — Beacon, Lantern, and Umbrella, orchestrated by Jeeves — packaged to install and run yourself in one command. Its creed is the spine of everything you've seen: get to Yes, stay at Yes, recover to Yes. No maybes allowed.",
+   doLabel:"Here you can", do:["Install the whole stack","Run it yourself","Read the source"], jeeves:["Install AiGovOps with one command"]},
+
+  {ch:"Open source", title:"That's AiGovOps, end to end",
+   panel:`<div class="kicker">Onboarding · done</div><h2>You've walked the whole estate.</h2>
+   <p>You've seen the Library's six pieces, watched the governed core run with every step signed, met Jeeves, learned the Yes-Gate loop, connected your own agent, and seen how to operate it — chat, oversight, kill switch, caps, skills, runbooks. Then the whole estate: the Foundation site and its ecosystem map, frameworks explorer, alpha, community and founders; the membership garden; the tools — Beacon, Umbrella, Lantern, Vendor RFI; the NCW learning camp; and the open-source v4 platform you can run yourself.</p>
+   <div class="creed">"100% visibility of effects — not of thoughts. The convenience never costs the audit trail."</div>
+   <p>Good next stops: <a href="./demo-run.html">watch a real run</a>, <a href="./connect.html">connect your agent</a>, or just ask Jeeves on the <a href="./index.html">home page</a> to do something for you.</p>`,
+   vo:"That's AiGovOps, end to end. You've seen the Library's six pieces, watched the governed core run with every step signed, met Jeeves, learned the Yes-Gate loop, connected your own agent, and seen how to operate it. Then the whole estate: the Foundation site and all its pages, the membership garden, the tools — Beacon, Umbrella, Lantern, and Vendor R F I — the N C W learning camp, and the open-source v4 platform you can run yourself. One agent does the bureaucracy across all of it; a human always holds the keys. Good next stops: watch a real run, connect your agent, or just ask Jeeves to do something for you. Welcome to AiGovOps.",
+   doLabel:"Next", do:["Watch a real run","Connect your agent","Ask Jeeves anything"]}
+];
+
+// ——— Player ———
+const $=id=>document.getElementById(id);
+const frame=$('frame'), panel=$('panel'), toc=$('toc');
+let idx=0, playing=false, narrate=true, timer=null;
+
+// build chapter nav
+(function buildToc(){
+  let lastCh=null, html='';
+  SCENES.forEach((s,i)=>{
+    if(s.ch!==lastCh){ html+=`<div class="chap">${s.ch}</div>`; lastCh=s.ch; }
+    html+=`<button class="scene-btn" data-i="${i}" type="button"><span class="n">${String(i+1).padStart(2,'0')}</span>${s.title}</button>`;
+  });
+  toc.innerHTML=html;
+  toc.querySelectorAll('.scene-btn').forEach(b=>b.addEventListener('click',()=>go(+b.dataset.i)));
+})();
+
+function render(){
+  const s=SCENES[idx];
+  // stage
+  if(s.src){
+    const url = /^https?:\/\//.test(s.src) ? s.src : './'+s.src;
+    frame.classList.add('show'); panel.classList.remove('show');
+    if(frame.getAttribute('src')!==url) frame.setAttribute('src',url);
+    $('openLink').hidden=false; $('openLink').href=url;
+  } else {
+    frame.classList.remove('show'); panel.classList.add('show');
+    panel.innerHTML=s.panel||''; $('openLink').hidden=true;
+    frame.removeAttribute('src');
+  }
+  // caption
+  $('capMeta').textContent=`${s.ch}  ·  ${s.title}`;
+  $('capVo').textContent=s.vo;
+  let chips='';
+  if(s.do && s.do.length){ chips+=`<b>${s.doLabel||'Here you can'}:</b>`+s.do.map(d=>`<span class="pill">${d}</span>`).join(''); }
+  if(s.jeeves && s.jeeves.length){ chips+=s.jeeves.map(j=>`<span class="pill jeeves">"${j}"</span>`).join(''); }
+  $('capDo').innerHTML=chips;
+  // nav state
+  toc.querySelectorAll('.scene-btn').forEach(b=>b.classList.toggle('active',+b.dataset.i===idx));
+  const active=toc.querySelector('.scene-btn.active'); if(active) active.scrollIntoView({block:'nearest'});
+  $('counter').textContent=`${idx+1} / ${SCENES.length}`;
+  $('barFill').style.width=((idx)/(SCENES.length-1)*100)+'%';
+  // animated Beacon start for each scene (icon pop + ring sweep); restart by reflow
+  const pe=$('persona'); if(pe){ pe.classList.remove('intro'); void pe.offsetWidth; pe.classList.add('intro'); }
+}
+
+function speak(onEnd){
+  if(!('speechSynthesis' in window)){ return scheduleTimer(onEnd); }
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(SCENES[idx].vo);
+  u.rate=1.0; u.pitch=1.0;
+  u.onend=()=>{ if(playing) onEnd(); };
+  u.onerror=()=>{ if(playing) scheduleTimer(onEnd); };
+  speechSynthesis.speak(u);
+}
+function scheduleTimer(onEnd){
+  clearTimeout(timer);
+  const words=(SCENES[idx].vo||'').split(/\s+/).length;
+  const ms=Math.max(8000, words/2.6*1000);
+  timer=setTimeout(()=>{ if(playing) onEnd(); }, ms);
+}
+// Studio narration: play pre-generated ElevenLabs MP3s when present; fall back to the
+// browser voice automatically if a file is missing (so it works before audio is generated).
+const audioEl=new Audio();
+function setVoiceBadge(t){ const b=$('voiceBadge'); if(b) b.textContent = t==='studio'?'🎙 studio voice' : t==='browser'?'🔊 browser voice' : ''; }
+function stopAudio(){ try{ audioEl.pause(); audioEl.onended=null; audioEl.onerror=null; }catch(e){} if('speechSynthesis' in window) speechSynthesis.cancel(); const pe=$('persona'); if(pe) pe.classList.remove('speaking'); }
+function narrateScene(onEnd){
+  if(!narrate){ setVoiceBadge(''); return scheduleTimer(onEnd); }
+  { const pe=$('persona'); if(pe) pe.classList.add('speaking'); }
+  let fell=false;
+  const fallback=()=>{ if(fell) return; fell=true; setVoiceBadge('browser'); speak(onEnd); };
+  const n=String(idx+1).padStart(2,'0');
+  audioEl.src=`./audio/onboarding/scene-${n}.mp3`;
+  audioEl.onended=()=>{ if(playing) onEnd(); };
+  audioEl.onerror=fallback;
+  const p=audioEl.play();
+  if(p&&p.catch) p.catch(fallback);
+  setVoiceBadge('studio');
+}
+function advance(){ if(idx<SCENES.length-1){ idx++; render(); runScene(); } else { stop(); } }
+function runScene(){ clearTimeout(timer); stopAudio(); if(!playing) return; narrateScene(advance); }
+
+function play(){ playing=true; $('playBtn').innerHTML='❚❚ Pause'; runScene(); }
+function stop(){ playing=false; $('playBtn').innerHTML='▶ Play'; clearTimeout(timer); stopAudio(); }
+function go(i){ idx=Math.max(0,Math.min(SCENES.length-1,i)); render(); if(playing) runScene(); }
+
+$('playBtn').addEventListener('click',()=>playing?stop():play());
+$('nextBtn').addEventListener('click',()=>{ const was=playing; stop(); idx=Math.min(SCENES.length-1,idx+1); render(); if(was) play(); });
+$('prevBtn').addEventListener('click',()=>{ const was=playing; stop(); idx=Math.max(0,idx-1); render(); if(was) play(); });
+$('narrateChk').addEventListener('change',e=>{ narrate=e.target.checked; if(playing) runScene(); });
+document.addEventListener('keydown',e=>{
+  if(e.target.matches('input,textarea')) return;
+  if(e.key===' '){ e.preventDefault(); playing?stop():play(); }
+  if(e.key==='ArrowRight') $('nextBtn').click();
+  if(e.key==='ArrowLeft') $('prevBtn').click();
+});
+
+// script modal
+$('scriptBtn').addEventListener('click',()=>{
+  $('scriptBody').innerHTML=SCENES.map((s,i)=>`<div class="row"><div class="h">${String(i+1).padStart(2,'0')} · ${s.ch} — ${s.title}</div><p>${s.vo}</p></div>`).join('');
+  $('scrim').classList.add('show');
+});
+$('closeScript').addEventListener('click',()=>$('scrim').classList.remove('show'));
+$('scrim').addEventListener('click',e=>{ if(e.target===$('scrim')) $('scrim').classList.remove('show'); });
+
+// Deep-link: ?start=<estate-id|chapter-slug> opens the tour at that chapter; &play=1 auto-plays.
+// Estate properties pass their own id (e.g. start-here.js with data-estate-id="beacon").
+const START_ALIASES = {
+  library:'Start here', 'six-pieces':'The six pieces', 'see-it-run':'See it run',
+  jeeves:'Jeeves & the governed loop', manage:'Manage it with agents', estate:'The estate map',
+  foundation:'The Foundation site', community:'The membership community',
+  beacon:'The governance tools', umbrella:'The governance tools', lantern:'The governance tools',
+  'vendor-rfi':'The governance tools', tools:'The governance tools',
+  ncw:'NCW AI Expo', learning:'NCW AI Expo', v4:'Open source', 'open-source':'Open source'
+};
+(function(){
+  const q=new URLSearchParams(location.search);
+  let want=(q.get('start')||'').toLowerCase().trim();
+  if(!want && location.hash.startsWith('#start=')) want=decodeURIComponent(location.hash.slice(7)).toLowerCase().trim();
+  if(want){
+    const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+    const ch=START_ALIASES[want] || (SCENES.find(s=>slug(s.ch)===want)||{}).ch;
+    if(ch){ const i=SCENES.findIndex(s=>s.ch===ch); if(i>=0) idx=i; }
+  }
+  window.__startAutoplay = q.get('play')==='1' || q.get('autoplay')==='1';
+})();
+render();
+if(window.__startAutoplay) play();
+</script>
+</body>
+</html>

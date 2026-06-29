@@ -1,0 +1,551 @@
+1
+00:00:00,000 --> 00:00:01,573
+Welcome to the AiGovOps Library.
+
+2
+00:00:01,573 --> 00:00:09,438
+It's a governed core for AI agents, wrapped in a connected set of pages that explain it, show it running, and let you operate it.
+
+3
+00:00:09,438 --> 00:00:18,248
+This tour walks every page, tells you what you can do at each stop, and shows how to run the whole thing through Jeeves and the governed agents.
+
+4
+00:00:18,248 --> 00:00:22,338
+Press play to let it narrate itself, or move at your own pace.
+
+5
+00:00:22,338 --> 00:00:25,291
+This is the home page — the hub.
+
+6
+00:00:25,291 --> 00:00:34,521
+It frames the Library as six pieces: the vision, the feel, the build, the way it runs, the running core, and how it governs itself.
+
+7
+00:00:34,521 --> 00:00:37,475
+Start anywhere; they all point to each other.
+
+8
+00:00:37,475 --> 00:00:44,489
+Notice Jeeves waiting at the top — an agent you can ask to do real work from any page.
+
+9
+00:00:44,489 --> 00:00:45,980
+Piece one: the Demo.
+
+10
+00:00:45,980 --> 00:00:52,313
+This is the story end to end — one loop, two pillars, and a spine called Yes.
+
+11
+00:00:52,313 --> 00:00:59,018
+Everyone walks in free, the shelves fill themselves, and when software isn't enough you can borrow a human.
+
+12
+00:00:59,018 --> 00:01:01,626
+It's the two-minute why behind everything else.
+
+13
+00:01:01,626 --> 00:01:05,747
+Piece two: the Design Book — the experience and visual language.
+
+14
+00:01:05,747 --> 00:01:13,241
+The Rooms rendered, each reference mapped to a room, and the principles behind how the governed core looks and feels.
+
+15
+00:01:13,241 --> 00:01:18,112
+This is the voice and the look you'll see across the whole Library.
+
+16
+00:01:18,112 --> 00:01:19,841
+Piece three: the Rooms.
+
+17
+00:01:19,841 --> 00:01:29,350
+Six interactive rooms — Reception, Reading Room, Makerspace, Commons, Human Library, and the Coffee Shop — running live on the governed core.
+
+18
+00:01:29,350 --> 00:01:34,970
+Walking the rooms is the friendliest way to feel how the system works.
+
+19
+00:01:34,970 --> 00:01:40,962
+Piece four: the Blueprint — the deployable architecture, section by section.
+
+20
+00:01:40,962 --> 00:01:51,311
+The principles, the one-core-many-surfaces shape, deployment topologies, the backend, the rooms, the agent-first design, the request lifecycle, and safety.
+
+21
+00:01:51,311 --> 00:01:55,125
+This is the engineering source of truth.
+
+22
+00:01:55,125 --> 00:02:01,130
+Piece five: the Plan — how agents, skills, and humans actually run the Library.
+
+23
+00:02:01,130 --> 00:02:09,280
+The cast of library staff, the skills they wield, the repeatable evidence-producing processes, and the garden of human delight.
+
+24
+00:02:09,280 --> 00:02:11,425
+This is the operating manual.
+
+25
+00:02:11,425 --> 00:02:16,307
+Piece six: the Control Plane — security, control, and deployment.
+
+26
+00:02:16,307 --> 00:02:24,119
+Secrets in tiers, the single sandbox chokepoint, egress allow-lists, and role-scoped oversight, plus the Rev 2026.
+
+27
+00:02:24,119 --> 00:02:25,096
+06 decisions.
+
+28
+00:02:25,096 --> 00:02:29,490
+This is how the core stays safe by construction.
+
+29
+00:02:29,490 --> 00:02:31,066
+Now watch it run.
+
+30
+00:02:31,066 --> 00:02:42,493
+The end-to-end demo: a day in the Library across six rooms and nine agents, the human-gated loop, and spend, rate, and blast-radius controls — all on the live ledger.
+
+31
+00:02:42,493 --> 00:02:46,562
+This is the demo actually executed — not described, run.
+
+32
+00:02:46,562 --> 00:02:57,956
+A risky ask is governed, the right regulations are mapped, an agent earns its dial instead of flipping a switch, and every step leaves a signed, metadata-only receipt.
+
+33
+00:02:57,956 --> 00:02:59,583
+This is the proof.
+
+34
+00:02:59,583 --> 00:03:06,542
+The Gates, live: a real council, real questions, a real Beacon-signed ledger, and a real human gate.
+
+35
+00:03:06,542 --> 00:03:10,636
+Watch verdicts get signed into the ledger as they happen.
+
+36
+00:03:10,636 --> 00:03:11,689
+Prefer it slower?
+
+37
+00:03:11,689 --> 00:03:22,571
+The recorded walkthrough takes the gates at half speed — nine rooms, their agents, and every Yes, No, or Maybe verdict signed into the ledger, so you can follow each decision.
+
+38
+00:03:22,571 --> 00:03:31,630
+A narrated day in the Library: the governed core handling real requests, each step gated and left as a signed, metadata-only receipt.
+
+39
+00:03:31,630 --> 00:03:34,924
+A calm, story-shaped view of the same machinery.
+
+40
+00:03:34,924 --> 00:03:44,876
+The guided tour is an interactive map of the Library — the six pieces, the running core, and how the Yes-Gate keeps humans holding the keys.
+
+41
+00:03:44,876 --> 00:03:47,556
+Take the docent's tour, or wander freely.
+
+42
+00:03:47,556 --> 00:03:49,500
+System Pulse is the heartbeat.
+
+43
+00:03:49,500 --> 00:04:00,001
+The governed core is exercised on every deploy, emitting a receipt from each Yes-Gate decision — so the milestones and the live engine status are always honest.
+
+44
+00:04:00,001 --> 00:04:12,884
+The Build Tickets are the backlog made legible: Ticket 0 — the first safe slice — then the next ten big items, the agent-feature integrations, the scale roadmap, and the milestones.
+
+45
+00:04:12,884 --> 00:04:16,209
+This is what's done, what's next, and why.
+
+46
+00:04:16,209 --> 00:04:29,045
+The Durability Plan is the honest operations story: the end-to-end design today, why the core was sleeping, the tiered plan to make it durable, and a recommendation in order.
+
+47
+00:04:29,045 --> 00:04:30,373
+Candor over comfort.
+
+48
+00:04:30,373 --> 00:04:36,742
+The Newsroom carries announcements, releases, and writing on governed AI from Bob Rapp and Ken Johnston.
+
+49
+00:04:36,742 --> 00:04:38,732
+It's where the Foundation speaks.
+
+50
+00:04:38,732 --> 00:04:47,927
+F-A-I-Friday is a hundred verified, source-cited AI-harm incidents — and crucially, each one carries the specific gate that would have caught it.
+
+51
+00:04:47,927 --> 00:04:50,435
+It turns failure into a checklist.
+
+52
+00:04:50,435 --> 00:04:58,312
+FailFest rotates daily through those hundred incidents — one a day, each paired with the gate that would have stopped it.
+
+53
+00:04:58,312 --> 00:05:00,188
+A steady drip of learn-from-real-scars.
+
+54
+00:05:00,188 --> 00:05:07,978
+The Practitioner Test is a ten-question quiz drawn from real harms: read the case, pick the gate verdict, and see the answer.
+
+55
+00:05:07,978 --> 00:05:11,519
+It's how you check whether the gate thinking has landed.
+
+56
+00:05:11,519 --> 00:05:15,556
+Meet Jeeves — the concierge at the top of every page.
+
+57
+00:05:15,556 --> 00:05:19,227
+Jeeves is an agent, not a person, with no gender.
+
+58
+00:05:19,227 --> 00:05:29,871
+You ask for an outcome in plain language, and Jeeves does the bureaucracy: it drafts the work, runs anything reversible, and pauses anything irreversible for a human to approve.
+
+59
+00:05:29,871 --> 00:05:31,706
+It never holds the keys.
+
+60
+00:05:31,706 --> 00:05:41,983
+Try asking Jeeves to draft a pull request, to check which frameworks apply to your model, to run the gate self-test, or to show the latest signed receipts.
+
+61
+00:05:41,983 --> 00:05:49,554
+Underneath Jeeves is one loop, run for every effectful action: propose, human-decide, broker, run sandboxed, and verify.
+
+62
+00:05:49,554 --> 00:05:54,453
+The agent proposes an intent and the policy engine classifies it.
+
+63
+00:05:54,453 --> 00:06:02,024
+If it's irreversible, a human approves or denies — and that decision is itself a signed receipt.
+
+64
+00:06:02,024 --> 00:06:09,149
+On approval, a short-lived scoped token is brokered, so the agent never touches a master secret.
+
+65
+00:06:09,149 --> 00:06:18,946
+The tool then runs sandboxed, with no ambient network or filesystem, and the result is verified and chained into the signed ledger.
+
+66
+00:06:18,946 --> 00:06:24,290
+Reversible work flows straight through; the irreversible always waits for a human.
+
+67
+00:06:24,290 --> 00:06:28,060
+You can put your own agent inside this loop.
+
+68
+00:06:28,060 --> 00:06:43,977
+Govern Any Agent is the connector: point any M-C-P client — Claude Code, Desktop, Cursor — at the governed core, and its effectful actions inherit the gate, the broker, the sandbox, and a signed receipt for each one.
+
+69
+00:06:43,977 --> 00:06:45,653
+Zero dependencies to install.
+
+70
+00:06:45,653 --> 00:06:49,910
+To manage it all, the running core ships a Control Room.
+
+71
+00:06:49,910 --> 00:07:12,743
+It's one role-scoped surface: an agentic chat where you type a request and the local model drafts a plan you approve inline; a live oversight ledger tailing every signed receipt; a steward-only kill switch that halts in-flight work and signs its own receipt; and a capability dial that sets each member's limits on level, spend, rate, and blast radius.
+
+72
+00:07:12,743 --> 00:07:19,322
+Founders see everything and hold the global kill switch; members see and pause only their own work.
+
+73
+00:07:19,322 --> 00:07:33,785
+The agents wield a fixed set of governed skills: map which regulations apply, run a security-and-privacy review, audit accessibility, produce a status report, monitor and alert, and sign evidence into the Beacon ledger.
+
+74
+00:07:33,785 --> 00:07:36,414
+Each leaves one signed, metadata-only receipt.
+
+75
+00:07:36,414 --> 00:07:47,371
+Around them sit read-only runbooks that automate the reversible chores, and an evidence bundle you can export so an auditor verifies the whole history offline.
+
+76
+00:07:47,371 --> 00:07:57,209
+The Library is one property among many that Jeeves coordinates — a single agent across the whole AiGovOps estate, each governed by the same Yes-Gate.
+
+77
+00:07:57,209 --> 00:08:03,899
+There's the developer group: the Library, the public Foundation site, and the N C W learning camp.
+
+78
+00:08:03,899 --> 00:08:08,228
+There's the Community garden, a live app with a real agent.
+
+79
+00:08:08,228 --> 00:08:14,524
+There are the evidence and compliance tools — Beacon, Lantern, Umbrella, and Vendor R F I.
+
+80
+00:08:14,524 --> 00:08:20,033
+And there's the open-source v4 platform that packages the whole stack to run yourself.
+
+81
+00:08:20,033 --> 00:08:30,265
+Each property carries a posture — auto-reversible, where Jeeves runs the prep and a human approves, or propose-only, where a steward initiates and approves every change.
+
+82
+00:08:30,265 --> 00:08:32,232
+We'll walk all of it.
+
+83
+00:08:32,232 --> 00:08:36,184
+This is the Foundation site — the public front door.
+
+84
+00:08:36,184 --> 00:08:41,715
+Its line is: AI governance that runs like engineering, from intentions to verifiable evidence.
+
+85
+00:08:41,715 --> 00:08:55,545
+It's a brand surface, so its posture is propose-only: Jeeves drafts every change, but a steward initiates and approves it, and it ships through a pull request and a review gate, never straight to live.
+
+86
+00:08:55,545 --> 00:09:05,968
+The ecosystem page is the Foundation's own map of everything — the governed Library, this hub, the membership community, the tools, and the learning camp, all at a glance.
+
+87
+00:09:05,968 --> 00:09:12,078
+If this tour is the guided walk, the ecosystem page is the directory you can return to.
+
+88
+00:09:12,078 --> 00:09:17,851
+The Frameworks Explorer answers the first question anyone governing AI asks: which rules apply to me?
+
+89
+00:09:17,851 --> 00:09:30,121
+Choose your context and it surfaces the relevant frameworks — the E U A I Act, NIST's A I R M F, I S O forty-two thousand one, G D P R, and more.
+
+90
+00:09:30,121 --> 00:09:34,090
+It's the human face of the same framework-map the gate runs.
+
+91
+00:09:34,090 --> 00:09:39,814
+Alpha is the lab — the ideation-stage projects the Foundation is building next, in the open.
+
+92
+00:09:39,814 --> 00:09:43,750
+It's where you see where AiGovOps is heading before it ships.
+
+93
+00:09:43,750 --> 00:09:49,862
+The community page is about the people: contributors, sustainers, founding partners, and the open-source projects.
+
+94
+00:09:49,862 --> 00:09:56,381
+It's the on-ramp for anyone who wants to help build governed AI, not just use it.
+
+95
+00:09:56,381 --> 00:10:01,201
+The blog carries practitioner writing on AI governance, operational compliance, and responsible deployment.
+
+96
+00:10:01,201 --> 00:10:14,179
+And behind it all are two people: Bob Rapp and Ken Johnston, who between them have led A I and data work at Microsoft, I B M, G E, Ford, General Motors, Vodafone, and Autonomic.
+
+97
+00:10:14,179 --> 00:10:19,741
+Their pages, and an events page for where to meet them, are a click away.
+
+98
+00:10:19,741 --> 00:10:27,831
+The Community is the membership garden — and unlike the explainer pages, it's a live application with a real governed agent behind it.
+
+99
+00:10:27,831 --> 00:10:33,458
+Members sign in with a magic link and start as applicants until a steward approves them.
+
+100
+00:10:33,458 --> 00:10:38,735
+From there, every effect they ask for runs the same gate you've seen all tour.
+
+101
+00:10:38,735 --> 00:10:48,629
+New arrivals get a Jeeves-guided start — three pathways, for a new visitor, a member, or a steward — so the first five minutes have a hand to hold.
+
+102
+00:10:48,629 --> 00:10:55,453
+Behind the welcome is the live Control Room: one ask, one approval queue, one signed trail for the whole community.
+
+103
+00:10:55,453 --> 00:11:02,525
+Beacon is the evidence engine: it discovers governance-relevant activity and signs it into a verifiable, tamper-evident ledger.
+
+104
+00:11:02,525 --> 00:11:07,932
+Every receipt you've seen in this tour traces back to a Beacon signature.
+
+105
+00:11:07,932 --> 00:11:15,004
+Its posture is propose-only — the signing tool itself is too important to change without a steward.
+
+106
+00:11:15,004 --> 00:11:17,069
+Umbrella is the governance compiler.
+
+107
+00:11:17,069 --> 00:11:21,611
+Its line is: governance is a pipeline — make it verifiable.
+
+108
+00:11:21,611 --> 00:11:28,630
+It compiles forty-plus of the world's A I laws into concrete, checkable controls and signs the evidence.
+
+109
+00:11:28,630 --> 00:11:33,998
+When the gate asks what a regulation actually requires, Umbrella is the source.
+
+110
+00:11:33,998 --> 00:11:40,240
+Lantern is the third evidence tool — and it's a Python package, not a web page.
+
+111
+00:11:40,240 --> 00:11:47,651
+It reads Beacon's signed bundles and turns them into a clear, human-readable report an auditor or steward can use.
+
+112
+00:11:47,651 --> 00:11:57,404
+Together the trio tells one story: Beacon discovers and signs, Umbrella compiles frameworks into controls, and Lantern reads the signed evidence back into a report.
+
+113
+00:11:57,404 --> 00:12:10,527
+Vendor R F I helps you choose an A I-governance stack like engineering: fifty vendors across five categories, neutral and gap-aware, so you can run a governed request-for-information instead of trusting a sales deck.
+
+114
+00:12:10,527 --> 00:12:14,772
+It's where governance reaches outward, to the people you buy from.
+
+115
+00:12:14,772 --> 00:12:24,417
+The N C W AI Expo is the learning on-ramp — a deliberately distinct regional brand that brings governed AI to a wider audience.
+
+116
+00:12:24,417 --> 00:12:32,857
+It's a one-day community gathering about how North Central Washington uses AI well: for its students, its schools, and its towns.
+
+117
+00:12:32,857 --> 00:12:35,670
+Same governance underneath; a friendlier doorway in.
+
+118
+00:12:35,670 --> 00:12:41,548
+The centerpiece is the plenary that sets the stakes — AI as a partner in education.
+
+119
+00:12:41,548 --> 00:12:49,631
+It contrasts two students, Maria and Jake, walks the real wins and the real harms with citations, and shows a live demo.
+
+120
+00:12:49,631 --> 00:12:52,203
+It's the emotional core of the day.
+
+121
+00:12:52,203 --> 00:13:01,136
+The Plan lays out the day itself: four breakouts, one centerpiece plenary, and a room schedule grid — the Expo runs August eleventh.
+
+122
+00:13:01,136 --> 00:13:05,020
+This is how a community actually convenes around governed AI.
+
+123
+00:13:05,020 --> 00:13:13,275
+The mini-camps are hands-on: thirty-minute sessions built from five real North Central Washington scenarios, filterable by scenario and audience.
+
+124
+00:13:13,275 --> 00:13:18,488
+This is where it stops being theory and people actually try it.
+
+125
+00:13:18,488 --> 00:13:27,401
+Courses are how you keep going after the Expo — the AiGovOps community learning paths, including governed agents and the read-act loop.
+
+126
+00:13:27,401 --> 00:13:30,237
+The single day becomes an ongoing practice.
+
+127
+00:13:30,237 --> 00:13:46,027
+And the Pledge ties it together: the N C W AI Partnership Pledge, version one point zero — seven commitments, signed by the citizens, educators, business owners, and community leaders of North Central Washington.
+
+128
+00:13:46,027 --> 00:13:48,349
+Governance, made personal and public.
+
+129
+00:13:48,349 --> 00:13:50,448
+Finally, the open-source v4 platform.
+
+130
+00:13:50,448 --> 00:14:00,105
+This is the whole stack — Beacon, Lantern, and Umbrella, orchestrated by Jeeves — packaged to install and run yourself in one command.
+
+131
+00:14:00,105 --> 00:14:07,662
+Its creed is the spine of everything you've seen: get to Yes, stay at Yes, recover to Yes.
+
+132
+00:14:07,662 --> 00:14:08,922
+No maybes allowed.
+
+133
+00:14:08,922 --> 00:14:10,759
+That's AiGovOps, end to end.
+
+134
+00:14:10,759 --> 00:14:22,150
+You've seen the Library's six pieces, watched the governed core run with every step signed, met Jeeves, learned the Yes-Gate loop, connected your own agent, and seen how to operate it.
+
+135
+00:14:22,150 --> 00:14:37,215
+Then the whole estate: the Foundation site and all its pages, the membership garden, the tools — Beacon, Umbrella, Lantern, and Vendor R F I — the N C W learning camp, and the open-source v4 platform you can run yourself.
+
+136
+00:14:37,215 --> 00:14:42,727
+One agent does the bureaucracy across all of it; a human always holds the keys.
+
+137
+00:14:42,727 --> 00:14:49,708
+Good next stops: watch a real run, connect your agent, or just ask Jeeves to do something for you.
+
+138
+00:14:49,708 --> 00:14:50,810
+Welcome to AiGovOps.

@@ -23,3 +23,12 @@ core/core/
 
 # local dev-server config (machine-specific absolute paths)
 .claude/launch.json
+
+# voice-casting samples (not for deploy)
+docs/audio/onboarding/samples/
+
+# video render scratch (intermediate clips)
+docs/audio/onboarding/.build/
+
+# the rendered tour video — too large for git/Pages; host on YouTube/Vimeo
+docs/audio/onboarding/*.mp4

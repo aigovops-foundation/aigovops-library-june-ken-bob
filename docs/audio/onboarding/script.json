@@ -1,0 +1,331 @@
+[
+  {
+    "n": 1,
+    "file": "scene-01.mp3",
+    "ch": "Start here",
+    "title": "Welcome to the Library",
+    "vo": "Welcome to the AiGovOps Library. It's a governed core for AI agents, wrapped in a connected set of pages that explain it, show it running, and let you operate it. This tour walks every page, tells you what you can do at each stop, and shows how to run the whole thing through Jeeves and the governed agents. Press play to let it narrate itself, or move at your own pace."
+  },
+  {
+    "n": 2,
+    "file": "scene-02.mp3",
+    "ch": "Start here",
+    "title": "The Hub — the six pieces",
+    "vo": "This is the home page — the hub. It frames the Library as six pieces: the vision, the feel, the build, the way it runs, the running core, and how it governs itself. Start anywhere; they all point to each other. Notice Jeeves waiting at the top — an agent you can ask to do real work from any page."
+  },
+  {
+    "n": 3,
+    "file": "scene-03.mp3",
+    "ch": "The six pieces",
+    "title": "WHY — The Demo",
+    "vo": "Piece one: the Demo. This is the story end to end — one loop, two pillars, and a spine called Yes. Everyone walks in free, the shelves fill themselves, and when software isn't enough you can borrow a human. It's the two-minute why behind everything else."
+  },
+  {
+    "n": 4,
+    "file": "scene-04.mp3",
+    "ch": "The six pieces",
+    "title": "FEEL — The Design Book",
+    "vo": "Piece two: the Design Book — the experience and visual language. The Rooms rendered, each reference mapped to a room, and the principles behind how the governed core looks and feels. This is the voice and the look you'll see across the whole Library."
+  },
+  {
+    "n": 5,
+    "file": "scene-05.mp3",
+    "ch": "The six pieces",
+    "title": "WALK — The Rooms",
+    "vo": "Piece three: the Rooms. Six interactive rooms — Reception, Reading Room, Makerspace, Commons, Human Library, and the Coffee Shop — running live on the governed core. Walking the rooms is the friendliest way to feel how the system works."
+  },
+  {
+    "n": 6,
+    "file": "scene-06.mp3",
+    "ch": "The six pieces",
+    "title": "BUILD — The Blueprint",
+    "vo": "Piece four: the Blueprint — the deployable architecture, section by section. The principles, the one-core-many-surfaces shape, deployment topologies, the backend, the rooms, the agent-first design, the request lifecycle, and safety. This is the engineering source of truth."
+  },
+  {
+    "n": 7,
+    "file": "scene-07.mp3",
+    "ch": "The six pieces",
+    "title": "OPERATE — The Plan",
+    "vo": "Piece five: the Plan — how agents, skills, and humans actually run the Library. The cast of library staff, the skills they wield, the repeatable evidence-producing processes, and the garden of human delight. This is the operating manual."
+  },
+  {
+    "n": 8,
+    "file": "scene-08.mp3",
+    "ch": "The six pieces",
+    "title": "GOVERN — The Control Plane",
+    "vo": "Piece six: the Control Plane — security, control, and deployment. Secrets in tiers, the single sandbox chokepoint, egress allow-lists, and role-scoped oversight, plus the Rev 2026.06 decisions. This is how the core stays safe by construction."
+  },
+  {
+    "n": 9,
+    "file": "scene-09.mp3",
+    "ch": "See it run",
+    "title": "End-to-End Demo",
+    "vo": "Now watch it run. The end-to-end demo: a day in the Library across six rooms and nine agents, the human-gated loop, and spend, rate, and blast-radius controls — all on the live ledger."
+  },
+  {
+    "n": 10,
+    "file": "scene-10.mp3",
+    "ch": "See it run",
+    "title": "The Demo, Run — every step signed",
+    "vo": "This is the demo actually executed — not described, run. A risky ask is governed, the right regulations are mapped, an agent earns its dial instead of flipping a switch, and every step leaves a signed, metadata-only receipt. This is the proof."
+  },
+  {
+    "n": 11,
+    "file": "scene-11.mp3",
+    "ch": "See it run",
+    "title": "The Gates, Live",
+    "vo": "The Gates, live: a real council, real questions, a real Beacon-signed ledger, and a real human gate. Watch verdicts get signed into the ledger as they happen."
+  },
+  {
+    "n": 12,
+    "file": "scene-12.mp3",
+    "ch": "See it run",
+    "title": "The Gates, Recorded",
+    "vo": "Prefer it slower? The recorded walkthrough takes the gates at half speed — nine rooms, their agents, and every Yes, No, or Maybe verdict signed into the ledger, so you can follow each decision."
+  },
+  {
+    "n": 13,
+    "file": "scene-13.mp3",
+    "ch": "See it run",
+    "title": "A Day in the Library",
+    "vo": "A narrated day in the Library: the governed core handling real requests, each step gated and left as a signed, metadata-only receipt. A calm, story-shaped view of the same machinery."
+  },
+  {
+    "n": 14,
+    "file": "scene-14.mp3",
+    "ch": "See it run",
+    "title": "The Guided Tour",
+    "vo": "The guided tour is an interactive map of the Library — the six pieces, the running core, and how the Yes-Gate keeps humans holding the keys. Take the docent's tour, or wander freely."
+  },
+  {
+    "n": 15,
+    "file": "scene-15.mp3",
+    "ch": "See it run",
+    "title": "System Pulse",
+    "vo": "System Pulse is the heartbeat. The governed core is exercised on every deploy, emitting a receipt from each Yes-Gate decision — so the milestones and the live engine status are always honest."
+  },
+  {
+    "n": 16,
+    "file": "scene-16.mp3",
+    "ch": "The deep docs",
+    "title": "Build Tickets",
+    "vo": "The Build Tickets are the backlog made legible: Ticket 0 — the first safe slice — then the next ten big items, the agent-feature integrations, the scale roadmap, and the milestones. This is what's done, what's next, and why."
+  },
+  {
+    "n": 17,
+    "file": "scene-17.mp3",
+    "ch": "The deep docs",
+    "title": "Durability Plan",
+    "vo": "The Durability Plan is the honest operations story: the end-to-end design today, why the core was sleeping, the tiered plan to make it durable, and a recommendation in order. Candor over comfort."
+  },
+  {
+    "n": 18,
+    "file": "scene-18.mp3",
+    "ch": "From the Foundation",
+    "title": "The Newsroom",
+    "vo": "The Newsroom carries announcements, releases, and writing on governed AI from Bob Rapp and Ken Johnston. It's where the Foundation speaks."
+  },
+  {
+    "n": 19,
+    "file": "scene-19.mp3",
+    "ch": "From the Foundation",
+    "title": "#F-AI-Friday — 100 harms",
+    "vo": "F-A-I-Friday is a hundred verified, source-cited AI-harm incidents — and crucially, each one carries the specific gate that would have caught it. It turns failure into a checklist."
+  },
+  {
+    "n": 20,
+    "file": "scene-20.mp3",
+    "ch": "From the Foundation",
+    "title": "#FridayFailFest",
+    "vo": "FailFest rotates daily through those hundred incidents — one a day, each paired with the gate that would have stopped it. A steady drip of learn-from-real-scars."
+  },
+  {
+    "n": 21,
+    "file": "scene-21.mp3",
+    "ch": "From the Foundation",
+    "title": "Practitioner Test",
+    "vo": "The Practitioner Test is a ten-question quiz drawn from real harms: read the case, pick the gate verdict, and see the answer. It's how you check whether the gate thinking has landed."
+  },
+  {
+    "n": 22,
+    "file": "scene-22.mp3",
+    "ch": "Jeeves & the governed loop",
+    "title": "Meet Jeeves",
+    "vo": "Meet Jeeves — the concierge at the top of every page. Jeeves is an agent, not a person, with no gender. You ask for an outcome in plain language, and Jeeves does the bureaucracy: it drafts the work, runs anything reversible, and pauses anything irreversible for a human to approve. It never holds the keys. Try asking Jeeves to draft a pull request, to check which frameworks apply to your model, to run the gate self-test, or to show the latest signed receipts."
+  },
+  {
+    "n": 23,
+    "file": "scene-23.mp3",
+    "ch": "Jeeves & the governed loop",
+    "title": "The Yes-Gate loop",
+    "vo": "Underneath Jeeves is one loop, run for every effectful action: propose, human-decide, broker, run sandboxed, and verify. The agent proposes an intent and the policy engine classifies it. If it's irreversible, a human approves or denies — and that decision is itself a signed receipt. On approval, a short-lived scoped token is brokered, so the agent never touches a master secret. The tool then runs sandboxed, with no ambient network or filesystem, and the result is verified and chained into the signed ledger. Reversible work flows straight through; the irreversible always waits for a human."
+  },
+  {
+    "n": 24,
+    "file": "scene-24.mp3",
+    "ch": "Jeeves & the governed loop",
+    "title": "Govern Any Agent",
+    "vo": "You can put your own agent inside this loop. Govern Any Agent is the connector: point any M-C-P client — Claude Code, Desktop, Cursor — at the governed core, and its effectful actions inherit the gate, the broker, the sandbox, and a signed receipt for each one. Zero dependencies to install."
+  },
+  {
+    "n": 25,
+    "file": "scene-25.mp3",
+    "ch": "Manage it with agents",
+    "title": "The Control Room",
+    "vo": "To manage it all, the running core ships a Control Room. It's one role-scoped surface: an agentic chat where you type a request and the local model drafts a plan you approve inline; a live oversight ledger tailing every signed receipt; a steward-only kill switch that halts in-flight work and signs its own receipt; and a capability dial that sets each member's limits on level, spend, rate, and blast radius. Founders see everything and hold the global kill switch; members see and pause only their own work."
+  },
+  {
+    "n": 26,
+    "file": "scene-26.mp3",
+    "ch": "Manage it with agents",
+    "title": "The skills & runbooks",
+    "vo": "The agents wield a fixed set of governed skills: map which regulations apply, run a security-and-privacy review, audit accessibility, produce a status report, monitor and alert, and sign evidence into the Beacon ledger. Each leaves one signed, metadata-only receipt. Around them sit read-only runbooks that automate the reversible chores, and an evidence bundle you can export so an auditor verifies the whole history offline."
+  },
+  {
+    "n": 27,
+    "file": "scene-27.mp3",
+    "ch": "The estate map",
+    "title": "Jeeves runs the whole estate",
+    "vo": "The Library is one property among many that Jeeves coordinates — a single agent across the whole AiGovOps estate, each governed by the same Yes-Gate. There's the developer group: the Library, the public Foundation site, and the N C W learning camp. There's the Community garden, a live app with a real agent. There are the evidence and compliance tools — Beacon, Lantern, Umbrella, and Vendor R F I. And there's the open-source v4 platform that packages the whole stack to run yourself. Each property carries a posture — auto-reversible, where Jeeves runs the prep and a human approves, or propose-only, where a steward initiates and approves every change. We'll walk all of it."
+  },
+  {
+    "n": 28,
+    "file": "scene-28.mp3",
+    "ch": "The Foundation site",
+    "title": "The public hub",
+    "vo": "This is the Foundation site — the public front door. Its line is: AI governance that runs like engineering, from intentions to verifiable evidence. It's a brand surface, so its posture is propose-only: Jeeves drafts every change, but a steward initiates and approves it, and it ships through a pull request and a review gate, never straight to live."
+  },
+  {
+    "n": 29,
+    "file": "scene-29.mp3",
+    "ch": "The Foundation site",
+    "title": "The ecosystem map",
+    "vo": "The ecosystem page is the Foundation's own map of everything — the governed Library, this hub, the membership community, the tools, and the learning camp, all at a glance. If this tour is the guided walk, the ecosystem page is the directory you can return to."
+  },
+  {
+    "n": 30,
+    "file": "scene-30.mp3",
+    "ch": "The Foundation site",
+    "title": "Frameworks Explorer",
+    "vo": "The Frameworks Explorer answers the first question anyone governing AI asks: which rules apply to me? Choose your context and it surfaces the relevant frameworks — the E U A I Act, NIST's A I R M F, I S O forty-two thousand one, G D P R, and more. It's the human face of the same framework-map the gate runs."
+  },
+  {
+    "n": 31,
+    "file": "scene-31.mp3",
+    "ch": "The Foundation site",
+    "title": "Alpha — what's next",
+    "vo": "Alpha is the lab — the ideation-stage projects the Foundation is building next, in the open. It's where you see where AiGovOps is heading before it ships."
+  },
+  {
+    "n": 32,
+    "file": "scene-32.mp3",
+    "ch": "The Foundation site",
+    "title": "Community & contributors",
+    "vo": "The community page is about the people: contributors, sustainers, founding partners, and the open-source projects. It's the on-ramp for anyone who wants to help build governed AI, not just use it."
+  },
+  {
+    "n": 33,
+    "file": "scene-33.mp3",
+    "ch": "The Foundation site",
+    "title": "Blog & the founders",
+    "vo": "The blog carries practitioner writing on AI governance, operational compliance, and responsible deployment. And behind it all are two people: Bob Rapp and Ken Johnston, who between them have led A I and data work at Microsoft, I B M, G E, Ford, General Motors, Vodafone, and Autonomic. Their pages, and an events page for where to meet them, are a click away."
+  },
+  {
+    "n": 34,
+    "file": "scene-34.mp3",
+    "ch": "The membership community",
+    "title": "The garden — sign in",
+    "vo": "The Community is the membership garden — and unlike the explainer pages, it's a live application with a real governed agent behind it. Members sign in with a magic link and start as applicants until a steward approves them. From there, every effect they ask for runs the same gate you've seen all tour."
+  },
+  {
+    "n": 35,
+    "file": "scene-35.mp3",
+    "ch": "The membership community",
+    "title": "Jeeves-guided onboarding",
+    "vo": "New arrivals get a Jeeves-guided start — three pathways, for a new visitor, a member, or a steward — so the first five minutes have a hand to hold. Behind the welcome is the live Control Room: one ask, one approval queue, one signed trail for the whole community."
+  },
+  {
+    "n": 36,
+    "file": "scene-36.mp3",
+    "ch": "The governance tools",
+    "title": "Beacon — discover & sign",
+    "vo": "Beacon is the evidence engine: it discovers governance-relevant activity and signs it into a verifiable, tamper-evident ledger. Every receipt you've seen in this tour traces back to a Beacon signature. Its posture is propose-only — the signing tool itself is too important to change without a steward."
+  },
+  {
+    "n": 37,
+    "file": "scene-37.mp3",
+    "ch": "The governance tools",
+    "title": "Umbrella — frameworks → controls",
+    "vo": "Umbrella is the governance compiler. Its line is: governance is a pipeline — make it verifiable. It compiles forty-plus of the world's A I laws into concrete, checkable controls and signs the evidence. When the gate asks what a regulation actually requires, Umbrella is the source."
+  },
+  {
+    "n": 38,
+    "file": "scene-38.mp3",
+    "ch": "The governance tools",
+    "title": "Lantern — read the evidence",
+    "vo": "Lantern is the third evidence tool — and it's a Python package, not a web page. It reads Beacon's signed bundles and turns them into a clear, human-readable report an auditor or steward can use. Together the trio tells one story: Beacon discovers and signs, Umbrella compiles frameworks into controls, and Lantern reads the signed evidence back into a report."
+  },
+  {
+    "n": 39,
+    "file": "scene-39.mp3",
+    "ch": "The governance tools",
+    "title": "Vendor RFI",
+    "vo": "Vendor R F I helps you choose an A I-governance stack like engineering: fifty vendors across five categories, neutral and gap-aware, so you can run a governed request-for-information instead of trusting a sales deck. It's where governance reaches outward, to the people you buy from."
+  },
+  {
+    "n": 40,
+    "file": "scene-40.mp3",
+    "ch": "NCW AI Expo",
+    "title": "Cool Tools · Cool Schools · The Rules",
+    "vo": "The N C W AI Expo is the learning on-ramp — a deliberately distinct regional brand that brings governed AI to a wider audience. It's a one-day community gathering about how North Central Washington uses AI well: for its students, its schools, and its towns. Same governance underneath; a friendlier doorway in."
+  },
+  {
+    "n": 41,
+    "file": "scene-41.mp3",
+    "ch": "NCW AI Expo",
+    "title": "The Centerpiece — AI as partner",
+    "vo": "The centerpiece is the plenary that sets the stakes — AI as a partner in education. It contrasts two students, Maria and Jake, walks the real wins and the real harms with citations, and shows a live demo. It's the emotional core of the day."
+  },
+  {
+    "n": 42,
+    "file": "scene-42.mp3",
+    "ch": "NCW AI Expo",
+    "title": "The Plan — the day",
+    "vo": "The Plan lays out the day itself: four breakouts, one centerpiece plenary, and a room schedule grid — the Expo runs August eleventh. This is how a community actually convenes around governed AI."
+  },
+  {
+    "n": 43,
+    "file": "scene-43.mp3",
+    "ch": "NCW AI Expo",
+    "title": "Mini-Camps — hands on",
+    "vo": "The mini-camps are hands-on: thirty-minute sessions built from five real North Central Washington scenarios, filterable by scenario and audience. This is where it stops being theory and people actually try it."
+  },
+  {
+    "n": 44,
+    "file": "scene-44.mp3",
+    "ch": "NCW AI Expo",
+    "title": "Courses — keep going",
+    "vo": "Courses are how you keep going after the Expo — the AiGovOps community learning paths, including governed agents and the read-act loop. The single day becomes an ongoing practice."
+  },
+  {
+    "n": 45,
+    "file": "scene-45.mp3",
+    "ch": "NCW AI Expo",
+    "title": "The Pledge",
+    "vo": "And the Pledge ties it together: the N C W AI Partnership Pledge, version one point zero — seven commitments, signed by the citizens, educators, business owners, and community leaders of North Central Washington. Governance, made personal and public."
+  },
+  {
+    "n": 46,
+    "file": "scene-46.mp3",
+    "ch": "Open source",
+    "title": "The v4 platform — run it yourself",
+    "vo": "Finally, the open-source v4 platform. This is the whole stack — Beacon, Lantern, and Umbrella, orchestrated by Jeeves — packaged to install and run yourself in one command. Its creed is the spine of everything you've seen: get to Yes, stay at Yes, recover to Yes. No maybes allowed."
+  },
+  {
+    "n": 47,
+    "file": "scene-47.mp3",
+    "ch": "Open source",
+    "title": "That's AiGovOps, end to end",
+    "vo": "That's AiGovOps, end to end. You've seen the Library's six pieces, watched the governed core run with every step signed, met Jeeves, learned the Yes-Gate loop, connected your own agent, and seen how to operate it. Then the whole estate: the Foundation site and all its pages, the membership garden, the tools — Beacon, Umbrella, Lantern, and Vendor R F I — the N C W learning camp, and the open-source v4 platform you can run yourself. One agent does the bureaucracy across all of it; a human always holds the keys. Good next stops: watch a real run, connect your agent, or just ask Jeeves to do something for you. Welcome to AiGovOps."
+  }
+]
