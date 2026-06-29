@@ -4,71 +4,68 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>The Board — one place for everything · AiGovOps</title>
-<meta name="description" content="One simple board for the whole AiGovOps estate: every task drafted, reviewed, approved or held, and done — agents do the work, you approve anything irreversible."/>
+<meta name="description" content="One simple board for the whole AiGovOps estate: multi-step flows that Jeeves drafts, reviews, and finishes — anything irreversible stops for your yes. Start with LinkedIn, Substack, event email, and Luma."/>
 <meta property="og:type" content="website"/>
 <meta property="og:title" content="The Board — one place for everything"/>
-<meta property="og:description" content="One simple board for the whole AiGovOps estate: every task drafted, reviewed, approved or held, and done — agents do the work, you approve anything irreversible."/>
+<meta property="og:description" content="One simple board for the whole AiGovOps estate: multi-step flows Jeeves drafts and finishes — anything irreversible stops for your yes."/>
 <meta property="og:url" content="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/board.html"/>
 <link rel="canonical" href="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/board.html"/>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/board.html","url":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/board.html","name":"The Board — one place for everything","isPartOf":{"@id":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/#site"},"publisher":{"@id":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/#org"},"description":"One simple board for the whole AiGovOps estate: every task drafted, reviewed, approved or held, and done."}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/board.html","url":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/board.html","name":"The Board — one place for everything","isPartOf":{"@id":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/#site"},"publisher":{"@id":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/#org"},"description":"One simple board for the whole AiGovOps estate: multi-step flows Jeeves drafts and finishes."}
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
-  :root{
-    --bg:#f5f7fa;--surface:#ffffff;--ink:#1a2733;--ink2:#5b6b7a;--ink3:#8c98a4;--line:#e6ebf0;
-    --teal:#0f8a76;--teal-wash:#e6f6f1;--green:#1aa45a;--green-wash:#e7f6ec;
-    --amber:#c77d12;--amber-wash:#fdf3e2;--red:#c23b4b;--navy:#0c1430;
-  }
+  :root{--bg:#f5f7fa;--surface:#fff;--ink:#1a2733;--ink2:#5b6b7a;--ink3:#8c98a4;--line:#e6ebf0;
+    --teal:#0f8a76;--teal-wash:#e6f6f1;--green:#1aa45a;--green-wash:#e7f6ec;--amber:#c77d12;--amber-wash:#fdf3e2;--navy:#0c1430}
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
   a{color:var(--teal);text-decoration:none}
   a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--teal);outline-offset:2px;border-radius:6px}
   @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
-
-  /* top bar */
   .top{background:var(--navy);color:#fff;padding:14px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-  .top .logo{display:flex;align-items:center;gap:9px}
-  .top .mark{width:26px;height:26px}
-  .top h1{font-size:17px;font-weight:700;letter-spacing:-.01em}
-  .top .sub{font-size:12.5px;color:#9fb6c9}
-  .top .right{margin-left:auto;display:flex;gap:10px;align-items:center}
+  .top .logo{display:flex;align-items:center;gap:9px} .top .mark{width:26px;height:26px}
+  .top h1{font-size:17px;font-weight:700;letter-spacing:-.01em} .top .sub{font-size:12.5px;color:#9fb6c9}
+  .top .right{margin-left:auto;display:flex;gap:12px;align-items:center}
   .top a.lnk{color:#bfe9dd;font-size:13px;font-weight:600}
   .needpill{background:var(--amber);color:#fff;font-weight:700;font-size:12px;border-radius:999px;padding:4px 11px;font-family:'DM Mono',monospace}
-
-  /* ask bar */
-  .ask{background:var(--surface);border-bottom:1px solid var(--line);padding:14px 22px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .ask{background:var(--surface);border-bottom:1px solid var(--line);padding:14px 22px}
+  .ask .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
   .ask .jv{width:30px;height:30px;border-radius:50%;flex:none;background:var(--navy);display:grid;place-items:center}
   .ask input{flex:1;min-width:240px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font:inherit;font-size:14.5px;background:#fbfcfd}
   .ask input:focus{border-color:var(--teal);background:#fff}
-  .ask button{background:var(--teal);color:#fff;border:none;border-radius:10px;padding:12px 18px;font:inherit;font-weight:600;font-size:14px;cursor:pointer}
-  .ask button:hover{background:#0c7464}
-  .ask .hint{font-size:12px;color:var(--ink3);width:100%}
-
-  /* board */
+  .ask button.go{background:var(--teal);color:#fff;border:none;border-radius:10px;padding:12px 18px;font:inherit;font-weight:600;font-size:14px;cursor:pointer}
+  .ask button.go:hover{background:#0c7464}
+  .templates{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+  .tpl{font-size:12.5px;font-weight:600;border:1px solid var(--line);background:#fbfcfd;border-radius:999px;padding:6px 12px;cursor:pointer;color:var(--ink2)}
+  .tpl:hover{border-color:var(--teal);color:var(--teal)} .tpl b{font-family:'DM Mono',monospace;color:var(--ink3);font-weight:500}
   .board{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:18px 22px 40px;align-items:start}
   @media(max-width:980px){.board{grid-template-columns:1fr 1fr}}
   @media(max-width:620px){.board{grid-template-columns:1fr}}
-  .col{background:transparent}
   .col-head{display:flex;align-items:center;gap:8px;padding:4px 6px 12px}
   .col-head .dot{width:9px;height:9px;border-radius:50%}
   .col-head h2{font-size:13px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:var(--ink2)}
   .col-head .ct{margin-left:auto;font-family:'DM Mono',monospace;font-size:12px;color:var(--ink3);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:1px 9px}
-  .col.draft .dot{background:var(--ink3)} .col.review .dot{background:var(--teal)}
-  .col.held .dot{background:var(--amber)} .col.done .dot{background:var(--green)}
+  .col.draft .dot{background:var(--ink3)} .col.review .dot{background:var(--teal)} .col.held .dot{background:var(--amber)} .col.done .dot{background:var(--green)}
   .stack{display:flex;flex-direction:column;gap:11px;min-height:30px}
-
-  /* card */
   .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 15px;box-shadow:0 1px 2px rgba(20,40,60,.04)}
   .card.held{border-left:3px solid var(--amber)}
-  .card .chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:9px}
-  .chip{font-family:'DM Mono',monospace;font-size:10.5px;font-weight:500;padding:3px 8px;border-radius:6px;letter-spacing:.02em}
-  .chip.owner{background:#eef2f6;color:#52606d} .chip.site{background:var(--teal-wash);color:var(--teal)}
-  .chip.rev{background:var(--green-wash);color:var(--green)} .chip.irr{background:var(--amber-wash);color:var(--amber)}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:9px}
+  .chip{font-family:'DM Mono',monospace;font-size:10.5px;font-weight:500;padding:3px 8px;border-radius:6px}
+  .chip.owner{background:#eef2f6;color:#52606d} .chip.site{background:var(--teal-wash);color:var(--teal)} .chip.kind{background:#f0ecfb;color:#6b4fb0}
   .card h3{font-size:15px;font-weight:700;line-height:1.3;margin-bottom:5px;letter-spacing:-.01em}
   .card .outcome{font-size:12.5px;color:var(--ink2);margin-bottom:10px} .card .outcome b{color:var(--teal);font-weight:600}
-  .card .preview{font-size:12.5px;color:var(--ink2);background:#fafbfc;border:1px dashed var(--line);border-radius:9px;padding:9px 11px;margin-bottom:11px;line-height:1.5;max-height:78px;overflow:hidden}
-  .card .acts{display:flex;gap:7px;flex-wrap:wrap}
+  /* stepper */
+  .steps{list-style:none;margin:0 0 11px;padding:0;display:flex;flex-direction:column;gap:0}
+  .steps li{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;padding:4px 0;color:var(--ink3);position:relative}
+  .steps li .ic{width:18px;height:18px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:11px;font-weight:700;border:1.5px solid var(--line);background:#fff;color:var(--ink3);margin-top:1px}
+  .steps li.done{color:var(--ink2)} .steps li.done .ic{background:var(--green);border-color:var(--green);color:#fff}
+  .steps li.cur{color:var(--ink);font-weight:600} .steps li.cur .ic{border-color:var(--teal);color:var(--teal)}
+  .steps li.cur.gate .ic{border-color:var(--amber);color:var(--amber)}
+  .steps li .who{font-family:'DM Mono',monospace;font-size:10px;color:var(--ink3);font-weight:400}
+  .steps li::before{content:"";position:absolute;left:8.5px;top:22px;bottom:-4px;width:1.5px;background:var(--line)}
+  .steps li:last-child::before{display:none} .steps li.done::before{background:var(--green)}
+  .card .preview{font-size:12.5px;color:var(--ink2);background:#fafbfc;border:1px dashed var(--line);border-radius:9px;padding:9px 11px;margin-bottom:11px;line-height:1.5;max-height:74px;overflow:hidden}
+  .acts{display:flex;gap:7px;flex-wrap:wrap}
   .btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:8px;padding:8px 12px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;transition:.12s}
   .btn:hover{border-color:var(--teal);color:var(--teal)}
   .btn.primary{background:var(--teal);border-color:var(--teal);color:#fff} .btn.primary:hover{background:#0c7464;color:#fff}
@@ -76,20 +73,15 @@
   .btn.ghost{color:var(--ink3)}
   .done-tag{font-size:12.5px;color:var(--green);font-weight:600;display:flex;align-items:center;gap:6px}
   .by{font-size:11px;color:var(--ink3);margin-top:9px;font-family:'DM Mono',monospace}
-
-  /* jeeves rail (mobile: below) */
   .rail{position:fixed;right:0;top:0;bottom:0;width:300px;background:var(--surface);border-left:1px solid var(--line);padding:20px 18px;overflow:auto;display:none}
   @media(min-width:1280px){.rail{display:block} body{padding-right:300px}}
   .rail .jvhead{display:flex;align-items:center;gap:10px;margin-bottom:14px}
   .rail .jvhead .av{width:34px;height:34px;border-radius:50%;background:var(--navy);display:grid;place-items:center;flex:none}
   .rail .jvhead b{font-size:14px} .rail .jvhead span{font-size:11.5px;color:var(--ink3);display:block}
-  .rail .gmsg{background:var(--teal-wash);border-radius:12px;border-top-left-radius:3px;padding:11px 13px;font-size:13px;color:#0d5a4d;margin-bottom:12px;line-height:1.5}
-  .rail .gmsg b{color:var(--teal)}
+  .rail .gmsg{background:var(--teal-wash);border-radius:12px;border-top-left-radius:3px;padding:11px 13px;font-size:13px;color:#0d5a4d;margin-bottom:12px;line-height:1.5} .rail .gmsg b{color:var(--teal)}
   .rail .stepttl{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);margin:14px 0 8px}
-  .rail .step{display:flex;gap:9px;font-size:13px;color:var(--ink2);padding:7px 0;border-top:1px solid var(--line)}
-  .rail .step .n{font-family:'DM Mono',monospace;color:var(--teal);font-weight:600}
-  .rail .tg{margin-top:16px;font-size:12px;color:var(--ink2);background:#fbfcfd;border:1px solid var(--line);border-radius:10px;padding:11px 12px;line-height:1.5}
-  .rail .tg b{color:var(--amber)}
+  .rail .step{display:flex;gap:9px;font-size:13px;color:var(--ink2);padding:7px 0;border-top:1px solid var(--line)} .rail .step .n{font-family:'DM Mono',monospace;color:var(--amber);font-weight:600}
+  .rail .tg{margin-top:16px;font-size:12px;color:var(--ink2);background:#fbfcfd;border:1px solid var(--line);border-radius:10px;padding:11px 12px;line-height:1.5} .rail .tg b{color:var(--amber)}
   .footnote{padding:0 22px 30px;color:var(--ink3);font-size:12.5px}
 </style>
 </head>
@@ -97,124 +89,126 @@
 <svg width="0" height="0" style="position:absolute"><symbol id="mk" viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="#0c1430"/><circle cx="16" cy="16" r="15" fill="none" stroke="#1aa45a" stroke-width="1.4"/><path d="M11 21 L16 9 L21 21 Z" fill="#0f8a76"/><circle cx="22" cy="9" r="2.4" fill="#5dcaa5"/></symbol></svg>
 
 <header class="top">
-  <div class="logo"><svg class="mark"><use href="#mk"/></svg><div><h1>The Board</h1></div></div>
-  <span class="sub">Every task across the estate — one place.</span>
+  <div class="logo"><svg class="mark"><use href="#mk"/></svg><h1>The Board</h1></div>
+  <span class="sub">Every task across the estate — one place, start to finish.</span>
   <div class="right"><span class="needpill" id="needpill">0 need you</span><a class="lnk" href="./index.html">← Library</a></div>
 </header>
 
 <div class="ask">
-  <span class="jv"><svg width="18" height="18"><use href="#mk"/></svg></span>
-  <input id="askbox" placeholder="Tell Jeeves an outcome —  e.g. “announce OVERT 1.0”,  “refresh the agents page”,  “this week's digest”…"/>
-  <button id="askbtn" type="button">Start it</button>
-  <div class="hint">Jeeves drafts it and walks it to done. Anything reversible runs itself; anything irreversible stops for your yes.</div>
+  <div class="row">
+    <span class="jv"><svg width="18" height="18"><use href="#mk"/></svg></span>
+    <input id="askbox" placeholder="Tell Jeeves an outcome — Jeeves builds the steps and walks it to done…"/>
+    <button class="go" id="askbtn" type="button">Start it</button>
+  </div>
+  <div class="templates" id="templates">
+    <span style="font-size:12px;color:var(--ink3);align-self:center;font-family:'DM Mono',monospace">content you run:</span>
+    <button class="tpl" data-tpl="linkedin">in LinkedIn post</button>
+    <button class="tpl" data-tpl="substack">✉ Substack newsletter</button>
+    <button class="tpl" data-tpl="eventemail">⏰ Event reminder email</button>
+    <button class="tpl" data-tpl="luma">◎ Luma event update</button>
+  </div>
 </div>
 
 <main class="board" id="board"></main>
-<p class="footnote">This is the same board Jeeves keeps in Telegram — every card here is one tap there (<b style="font-family:'DM Mono',monospace;color:var(--amber)">/queue</b>, Approve / Hold). One board, two doors.</p>
+<p class="footnote">Multi-step flows: Jeeves runs each reversible step itself and shows the work; the one irreversible step (publish / send) stops for your yes. The same flows live in <b style="font-family:'DM Mono',monospace;color:var(--amber)">Telegram</b> — approve each gate with a tap.</p>
 
 <aside class="rail">
   <div class="jvhead"><span class="av"><svg width="20" height="20"><use href="#mk"/></svg></span><div><b>Jeeves</b><span>guiding to finished outcomes</span></div></div>
   <div class="gmsg" id="gmsg"></div>
-  <div class="stepttl">What I need from you</div>
+  <div class="stepttl">Waiting on your yes</div>
   <div id="needsteps"></div>
-  <div class="tg">Away from your desk? The same approvals are waiting in <b>Telegram</b> — reply <b>Approve</b> or <b>Hold</b> and the outcome moves.</div>
+  <div class="tg">Same gates in <b>Telegram</b> — reply <b>Approve</b> and the flow finishes itself.</div>
 </aside>
 
 <script>
-// ─── Tasks across the estate. state: draft → review → held(irreversible) → done ───
-let TASKS = [
- {id:1, title:"Announce OVERT 1.0", outcome:"Get the OVERT 1.0 release in front of the community", owner:"Scribe", site:"foundation", rev:false, state:"held",
-  preview:"OVERT 1.0 turns AI governance into a verifiable pipeline: compile 40+ frameworks into controls, sign the evidence, read it back as a report…"},
- {id:2, title:"Refresh the agents page", outcome:"Keep the Library's agents page current", owner:"Librarian", site:"library", rev:false, state:"review",
-  preview:"diff: + 2 new skills (policy-diff, attestation); updated the fleet count to 38; fixed the Beacon link."},
- {id:3, title:"This week's community digest", outcome:"Keep members in the loop", owner:"Gardener", site:"community", rev:true, state:"draft",
-  preview:"This week in the garden: 3 new members welcomed, 2 courses opened, the gates held 13 actions for review…"},
- {id:4, title:"Classroom AI guidelines (this term)", outcome:"Give NCW teachers clear, signed guidance", owner:"Counselor", site:"ncw", rev:false, state:"held",
-  preview:"Three rules for the term: disclose AI use, keep a human in every grade, no student data into public models…"},
- {id:5, title:"Map frameworks for the hiring tool", outcome:"Know exactly which rules bind the hiring screener", owner:"framework-map", site:"skill", rev:true, state:"review",
-  preview:"9 frameworks apply — incl. EU AI Act (high-risk: employment), NYC LL144, GDPR Art.30. Human gate required before any effect."},
- {id:6, title:"Sign this week's evidence", outcome:"A verifiable record an auditor can check offline", owner:"beacon-sign", site:"skill", rev:true, state:"draft",
-  preview:"42 receipts this week → one signed bundle (Ed25519), chain intact, exportable with verify.sh."},
- {id:7, title:"Weekly restore drill", outcome:"Prove we can recover the community in minutes", owner:"resilience runbook", site:"community", rev:true, state:"done",
-  preview:"Pulled A's backup back from B, verified the ledger chain, restored the PG dump into a throwaway DB — green."},
- {id:8, title:"Migrate the 6 secrets to 1Password", outcome:"Every credential brokered, none in .env", owner:"credentials runbook", site:"community", rev:false, state:"held",
-  preview:"Ready to write anthropic, digitalocean, graph, telegram, spaces-key, spaces-secret → op://AiGovOps/… (needs the vault write grant)."},
-];
-let nextId = 100;
-
-const COLS = [
-  {key:"draft", label:"Drafting", cls:"draft", blurb:"Agents are writing"},
-  {key:"review", label:"In review", cls:"review", blurb:"Ready for a look"},
-  {key:"held", label:"Needs your yes", cls:"held", blurb:"Irreversible — held for you"},
-  {key:"done", label:"Done", cls:"done", blurb:"Published / ran"},
-];
+// ─── Templates: multi-step content flows Ken & Bob run. Each step: {label, who, rev}. ───
+// rev:true  = reversible — Jeeves runs it itself.   rev:false = irreversible — the human gate.
+const TEMPLATES = {
+  linkedin: { kind:"LinkedIn", site:"foundation", outcome:"A LinkedIn post that lands well",
+    preview:"Governance that runs like engineering. This week we shipped the one-gate refactor across the V4 platform — fewer maybes, more Yes. Here's what changed… #AIGovernance #AgenticAI",
+    steps:[{label:"Draft the post",who:"Scribe",rev:true},{label:"Add an image + hashtags",who:"Designer",rev:true},{label:"Your review",who:"you",rev:true},{label:"Publish to LinkedIn",who:"Publisher",rev:false}] },
+  substack: { kind:"Substack", site:"foundation", outcome:"This week's newsletter, sent",
+    preview:"Issue 14 — The Flow-to-Trust loop. Three sections drafted: what shipped, one harm case + the gate that catches it, and what's next. Links pulled from the week's receipts.",
+    steps:[{label:"Draft the newsletter",who:"Scribe",rev:true},{label:"Pull this week's links",who:"Curator",rev:true},{label:"Your review & edit",who:"you",rev:true},{label:"Send to subscribers",who:"Publisher",rev:false}] },
+  eventemail: { kind:"Email", site:"community", outcome:"Members reminded of the upcoming event",
+    preview:"Subject: This Thursday — AiGovOps live demo. Reminder with the Luma link, time in the reader's timezone, and a one-line 'what you'll see'. Segment: members + applicants.",
+    steps:[{label:"Draft the reminder",who:"Scribe",rev:true},{label:"Pull event details from Luma",who:"Curator",rev:true},{label:"Pick recipients",who:"you",rev:true},{label:"Send the email",who:"Postman",rev:false}] },
+  luma: { kind:"Luma", site:"foundation", outcome:"The Luma event page, up to date",
+    preview:"Update the event: final title, the 2-line description, the cover image, and the agenda. Everything staged; one publish pushes it to Luma.",
+    steps:[{label:"Draft the update",who:"Scribe",rev:true},{label:"Your review",who:"you",rev:true},{label:"Update the Luma page",who:"Publisher",rev:false}] },
+};
 const SITE = {foundation:"Foundation", library:"Library", community:"Community", ncw:"NCW", skill:"Skill"};
-const $ = s => document.querySelector(s);
 
-function card(t){
-  const irr = !t.rev;
-  const chips = `<div class="chips">
-    <span class="chip owner">${t.owner}</span>
-    <span class="chip site">${SITE[t.site]||t.site}</span>
-    <span class="chip ${t.rev?'rev':'irr'}">${t.rev?'reversible':'irreversible'}</span></div>`;
-  let acts = '';
-  if(t.state==='draft') acts = `<button class="btn primary" data-act="toreview" data-id="${t.id}">Open the draft →</button>`;
-  else if(t.state==='review') acts = `<button class="btn" data-act="edit" data-id="${t.id}">Edit</button>`
-      + `<button class="btn primary" data-act="approve" data-id="${t.id}">${t.rev?'Looks good — publish':'Looks good →'}</button>`;
-  else if(t.state==='held') acts = `<button class="btn gate" data-act="publish" data-id="${t.id}">✓ Approve &amp; publish</button>`
-      + `<button class="btn ghost" data-act="hold" data-id="${t.id}">Hold</button>`;
-  else acts = `<span class="done-tag">✓ ${t.rev?'ran — signed into the ledger':'published — your approval signed'}</span>`;
-  const by = t.state==='done' ? '' : `<div class="by">${t.rev?'Jeeves can finish this':'finishes with your yes'}</div>`;
-  return `<div class="card ${t.state==='held'?'held':''}">${chips}
-    <h3>${t.title}</h3>
-    <div class="outcome">Outcome: <b>${t.outcome}</b></div>
-    <div class="preview">${t.preview}</div>
-    <div class="acts">${acts}</div>${by}</div>`;
+// Seed: two content flows mid-stream + a couple of other estate tasks, to show it all in one board.
+let FLOWS = [];
+let nid = 1;
+function mkFlow(tplKey, title, cur){ const t=TEMPLATES[tplKey]; return {id:nid++, title, kind:t.kind, site:t.site, outcome:t.outcome, preview:t.preview, steps:t.steps.map(s=>({...s})), cur:cur||0}; }
+FLOWS.push(mkFlow("linkedin", "LinkedIn: the one-gate refactor", 2));   // at "Your review"
+FLOWS.push(mkFlow("substack", "Substack: the Flow-to-Trust loop", 3));  // at "Send" (the gate)
+FLOWS.push(mkFlow("eventemail","Reminder: Thursday's live demo", 1));   // pulling Luma details
+FLOWS.push({id:nid++, title:"Sign this week's evidence", kind:"Skill", site:"skill", outcome:"A verifiable record an auditor can check offline",
+  preview:"42 receipts → one signed bundle (Ed25519), chain intact.", steps:[{label:"Build the bundle",who:"beacon-sign",rev:true},{label:"Sign + chain",who:"beacon-sign",rev:true}], cur:0});
+
+// state of a flow → which column
+function colOf(f){ if(f.cur>=f.steps.length) return "done"; const s=f.steps[f.cur]; if(!s.rev) return "held"; return f.cur===0?"draft":"review"; }
+const COLS=[{key:"draft",label:"Drafting",cls:"draft",blurb:"Jeeves is starting"},{key:"review",label:"In review",cls:"review",blurb:"Jeeves is working it"},{key:"held",label:"Needs your yes",cls:"held",blurb:"Irreversible — held for you"},{key:"done",label:"Done",cls:"done",blurb:"Published / sent"}];
+const $=s=>document.querySelector(s);
+
+function stepper(f){
+  return '<ul class="steps">'+f.steps.map((s,i)=>{
+    const cls=i<f.cur?'done':(i===f.cur?'cur'+(!s.rev?' gate':''):'');
+    const ic=i<f.cur?'✓':(i===f.cur?(s.rev?'●':'!'):(i+1));
+    const who=s.who==='you'?'you':s.who;
+    return `<li class="${cls}"><span class="ic">${ic}</span><span>${s.label} <span class="who">· ${who}</span></span></li>`;
+  }).join('')+'</ul>';
 }
-
+function card(f){
+  const col=colOf(f); const s=f.steps[f.cur];
+  let acts;
+  if(col==='done') acts=`<span class="done-tag">✓ finished — every step signed into the ledger</span>`;
+  else if(col==='held') acts=`<button class="btn gate" data-act="approve" data-id="${f.id}">✓ Approve &amp; ${s.label.toLowerCase()}</button><button class="btn ghost" data-act="hold" data-id="${f.id}">Not yet</button>`;
+  else if(s.who==='you') acts=`<button class="btn" data-act="edit" data-id="${f.id}">Edit</button><button class="btn primary" data-act="next" data-id="${f.id}">Looks good →</button>`;
+  else acts=`<button class="btn primary" data-act="next" data-id="${f.id}">▷ ${s.label} <span style="opacity:.7">(Jeeves)</span></button>`;
+  const by = col==='done'?'':(col==='held'?`<div class="by">the only step that needs you</div>`:`<div class="by">step ${f.cur+1} of ${f.steps.length} · Jeeves is on it</div>`);
+  return `<div class="card ${col==='held'?'held':''}">
+    <div class="chips"><span class="chip kind">${f.kind}</span><span class="chip owner">${SITE[f.site]||f.site}</span></div>
+    <h3>${f.title}</h3><div class="outcome">Outcome: <b>${f.outcome}</b></div>
+    ${stepper(f)}<div class="preview">${f.preview}</div><div class="acts">${acts}</div>${by}</div>`;
+}
 function render(){
-  const board = $('#board'); board.innerHTML = '';
-  COLS.forEach(c=>{
-    const items = TASKS.filter(t=>t.state===c.key);
-    const col = document.createElement('div'); col.className = `col ${c.cls}`;
-    col.innerHTML = `<div class="col-head"><span class="dot"></span><h2>${c.label}</h2><span class="ct">${items.length}</span></div>
-      <div class="stack">${items.map(card).join('') || `<div style="font-size:12px;color:var(--ink3);padding:8px 6px">${c.blurb}…</div>`}</div>`;
-    board.appendChild(col);
-  });
-  // Jeeves rail + need pill
-  const held = TASKS.filter(t=>t.state==='held');
-  $('#needpill').textContent = `${held.length} need you`;
-  $('#needpill').style.display = held.length? 'inline-block':'none';
-  $('#gmsg').innerHTML = held.length
-    ? `Here's where things stand. <b>${held.length} ${held.length===1?'thing needs':'things need'} your yes</b> — everything irreversible. The rest I'm carrying to done myself.`
-    : `All clear — nothing's waiting on you. I'm drafting and running the reversible work; I'll raise my hand the moment something needs your yes.`;
-  $('#needsteps').innerHTML = held.length
-    ? held.map((t,i)=>`<div class="step"><span class="n">${i+1}</span><span>Approve to finish: <b style="color:var(--ink)">${t.outcome}</b></span></div>`).join('')
+  const board=$('#board'); board.innerHTML='';
+  COLS.forEach(c=>{ const items=FLOWS.filter(f=>colOf(f)===c.key);
+    const col=document.createElement('div'); col.className=`col ${c.cls}`;
+    col.innerHTML=`<div class="col-head"><span class="dot"></span><h2>${c.label}</h2><span class="ct">${items.length}</span></div><div class="stack">${items.map(card).join('')|| `<div style="font-size:12px;color:var(--ink3);padding:8px 6px">${c.blurb}…</div>`}</div>`;
+    board.appendChild(col); });
+  const held=FLOWS.filter(f=>colOf(f)==='held');
+  $('#needpill').textContent=`${held.length} need you`; $('#needpill').style.display=held.length?'inline-block':'none';
+  $('#gmsg').innerHTML=held.length?`Here's where things stand. <b>${held.length} ${held.length===1?'flow is':'flows are'} at the publish step</b> — the only part that needs you. I've done every step before it.`:`All clear — I'm working the steps and will raise my hand the moment a flow reaches its publish step.`;
+  $('#needsteps').innerHTML=held.length
+    ? held.map((f,i)=>`<div class="step"><span class="n">${i+1}</span><span><b style="color:var(--ink)">${f.steps[f.cur].label}</b> to finish <i>${f.outcome}</i></span></div>`).join('')
     : `<div class="step" style="color:var(--ink3)">Nothing right now.</div>`;
 }
-
-// actions — the governance gate is enforced here
-function act(a, id){
-  const t = TASKS.find(x=>x.id===id); if(!t) return;
-  if(a==='toreview') t.state='review';
-  else if(a==='edit'){ const v = prompt('Edit the draft — Jeeves will re-draft from your note:', t.preview); if(v!=null && v.trim()) t.preview = v.trim(); }
-  else if(a==='approve'){ t.state = t.rev ? 'done' : 'held'; }   // reversible publishes; irreversible holds for a human
-  else if(a==='publish') t.state='done';                          // the human yes
-  else if(a==='hold') t.state='held';
+function act(a,id){ const f=FLOWS.find(x=>x.id===id); if(!f) return;
+  if(a==='next'||a==='approve'){ f.cur++; }                          // advance a step (gate enforced: 'approve' only appears on irreversible steps)
+  else if(a==='hold'){ /* stays at the gate */ }
+  else if(a==='edit'){ const v=prompt('Edit — Jeeves re-drafts from your note:', f.preview); if(v&&v.trim()) f.preview=v.trim(); }
   render();
 }
-$('#board').addEventListener('click', e=>{ const b=e.target.closest('[data-act]'); if(b) act(b.dataset.act, +b.dataset.id); });
+$('#board').addEventListener('click',e=>{const b=e.target.closest('[data-act]'); if(b) act(b.dataset.act,+b.dataset.id);});
 
-// "Tell Jeeves an outcome" → create a task, Jeeves drafts it
-function startTask(text){
-  const irr = /publish|merge|email|send|post|delete|deploy|launch|invite/i.test(text);
-  TASKS.unshift({id:++nextId, title:text.charAt(0).toUpperCase()+text.slice(1), outcome:text, owner:"Jeeves", site:"library",
-    rev:!irr, state:"draft", preview:"Jeeves is drafting this now…"});
+// create from a template or free text
+function startTemplate(key,title){ FLOWS.unshift(mkFlow(key, title||TEMPLATES[key].outcome, 0)); render(); }
+function startFree(text){
+  const m=Object.keys(TEMPLATES).find(k=>new RegExp(k==='eventemail'?'event|remind|email':k,'i').test(text));
+  if(m) return startTemplate(m, text.charAt(0).toUpperCase()+text.slice(1));
+  const irr=/publish|merge|send|post|delete|deploy|launch|invite/i.test(text);
+  FLOWS.unshift({id:nid++,title:text.charAt(0).toUpperCase()+text.slice(1),kind:"Task",site:"library",outcome:text,
+    preview:"Jeeves is drafting this now…",steps:[{label:"Draft it",who:"Jeeves",rev:true},{label:"Your review",who:"you",rev:true},{label:irr?"Publish":"Save",who:"Publisher",rev:!irr?true:false}],cur:0});
   render();
 }
-$('#askbtn').addEventListener('click', ()=>{ const v=$('#askbox').value.trim(); if(v){ startTask(v); $('#askbox').value=''; } });
-$('#askbox').addEventListener('keydown', e=>{ if(e.key==='Enter') $('#askbtn').click(); });
-
+$('#askbtn').addEventListener('click',()=>{const v=$('#askbox').value.trim(); if(v){startFree(v);$('#askbox').value='';}});
+$('#askbox').addEventListener('keydown',e=>{if(e.key==='Enter')$('#askbtn').click();});
+document.querySelectorAll('.tpl').forEach(b=>b.addEventListener('click',()=>startTemplate(b.dataset.tpl)));
 render();
 </script>
 </body>
