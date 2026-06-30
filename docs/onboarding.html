@@ -460,13 +460,10 @@ function render(){
 }
 
 function speak(onEnd){
-  if(!('speechSynthesis' in window)){ return scheduleTimer(onEnd); }
-  speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(SCENES[idx].vo);
-  u.rate=1.0; u.pitch=1.0;
-  u.onend=()=>{ if(playing) onEnd(); };
-  u.onerror=()=>{ if(playing) scheduleTimer(onEnd); };
-  speechSynthesis.speak(u);
+  // No browser text-to-speech. The narration voice is Bella (ElevenLabs) ONLY. If a Bella clip
+  // can't play (e.g. autoplay not yet granted, or a clip is slow), advance on a timer while the
+  // on-screen caption carries the words — never the robotic system voice.
+  scheduleTimer(onEnd);
 }
 function scheduleTimer(onEnd){
   clearTimeout(timer);
