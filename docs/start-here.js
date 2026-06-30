@@ -28,8 +28,12 @@
   function el(tag, css, html) { var e = document.createElement(tag); if (css) e.style.cssText = css; if (html != null) e.innerHTML = html; return e; }
 
   function openTour() {
-    var ov = el('div', 'position:fixed;inset:0;z-index:2147483646;background:rgba(2,12,11,.86);' +
-      'display:flex;flex-direction:column;padding:18px;box-sizing:border-box');
+    // A CONTAINED corner panel — never a full-screen takeover. Bottom-right, capped, with margins
+    // on small screens, matching Jeeves's corner-chat footprint.
+    var ov = el('div', 'position:fixed;right:16px;bottom:16px;z-index:2147483646;' +
+      'width:min(440px,calc(100vw - 24px));height:min(620px,calc(100vh - 32px));' +
+      'background:#03100f;border:1px solid rgba(120,200,190,.25);border-radius:16px;box-shadow:0 14px 50px rgba(0,0,0,.5);' +
+      'display:flex;flex-direction:column;padding:12px;box-sizing:border-box');
     var bar = el('div', 'display:flex;align-items:center;gap:10px;margin-bottom:12px;color:#cdeee4;' +
       "font:600 13px/1 'DM Mono',ui-monospace,monospace;letter-spacing:.04em");
     bar.appendChild(el('span', 'color:#6fe6a3', '▶ AiGovOps — Start here'));
