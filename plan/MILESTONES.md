@@ -3,7 +3,7 @@
 Consolidated roadmap across the infra gates and the growth lanes. Each milestone is marked
 **[auto]** (an agent can complete it reversibly) or **[gate]** (crosses the irreversibility
 boundary — needs Bob/Ken's explicit, irreversible move; an agent prepares but never executes
-it). Updated 2026-06-28.
+it). Updated 2026-07-02.
 
 ## M1 — Secrets broker (role-applications, Mac)
 - [auto] ✅ `op` CLI working; no-paste `run.sh` + `.env.op` wired; fail-closed verified.
@@ -32,11 +32,13 @@ it). Updated 2026-06-28.
 - [auto] ✅ `sitemap.xml` + `robots.txt`; canonical + JSON-LD 21/21; fixed 9 missing `og:url`.
 - [auto] ✅ `seo-drift-check.mjs` runbook (runs clean).
 - [auto] ✅ Wired into CI as a `site-checks` job — discoverability can't regress silently.
-- [gate] ⏳ **Push to `main`** → Pages redeploys the site live.
+- [gate] ✅ **Pushed to `main`** → Pages redeployed; SEO is live (`sitemap.xml`, `robots.txt`, and
+  JSON-LD all verified `200` on 2026-07-02).
 
 ## M6 — UX + accessibility (Library site)
 - [auto] ✅ Governed a11y audit 21/21=100; reduced-motion + focus-visible on 21/21.
 - [auto] ✅ Skip-link + `#main` landmark on all 21 pages; every skip target verified to resolve.
+- [auto] ✅ Deployed live — `:focus-visible` and skip-link verified on the live site (2026-07-02).
 - [gate] ⏳ Contrast spot-check via the axe/pa11y opt-in profile (needs that profile enabled).
 
 ## M7 — Automation
@@ -45,11 +47,26 @@ it). Updated 2026-06-28.
   outward-facing → opt-in.
 
 ## M8 — Cross-property reach (Glean, V4, Foundation)
-- [auto] Replicate the SEO + a11y pack on the other properties (separate repos / PR flows).
+- [auto] ✅ **Glean-ia-acs**: SEO + a11y pack replicated — `sitemap.xml`, `robots.txt`, schema.org
+  `Course` + per-lesson `LearningResource` JSON-LD, `:focus-visible`, `prefers-reduced-motion`, 44px
+  targets, and a `prefers-color-scheme` light theme. Verified live (2026-07-02).
+- [gate] ✅ Glean deploy done — Pages live at `bobrapp.github.io/Glean-Mastery/`.
+- [auto] ⏳ Replicate the same pack on **V4** and the **Foundation** site (separate repos / PR flows).
 - [gate] ⏳ Their respective deploys.
+
+## M9 — Glean-Mastery training (Glean-ia-acs)
+- [auto] ✅ Static-site generator (`scripts/build-site.mjs`) + Pages deploy (`pages.yml`), gated by the
+  schema + OPA content-integrity checks. Repo made public; Pages enabled via the workflow.
+- [auto] ✅ Full **56-lesson** curriculum built (weeks 1–8, levels 200→500): each day carries a real
+  working example, resolving sources, a quiz, and a `video_summary`; both CI gates green.
+- [auto] ✅ Course UX: localStorage progress + resume, an interactive quiz, a "how it works" start,
+  day-N-of-56, and syntax highlighting. Linked off the Library home as the **Glean-ia-acs** card.
+- [gate] ⏳ Generate the ~10-second **Veo** clips from each lesson's `video_summary` (needs a Veo/Gemini
+  key in the broker) — the scripts write the summaries; the clips don't exist yet.
 
 ---
 
 ### What an agent executes automatically now
-M5 (CI wiring) and M6 (skip-link/landmark rollout) — the remaining reversible items in this
-repo. Everything else is either already done [auto ✅] or waits at a [gate].
+M8's remaining reach (replicate the SEO + a11y pack on **V4** and **Foundation**) and, once a key is
+in the broker, M9's Veo clip generation. Everything else is either done [auto ✅] or waits at a
+[gate] that's yours — mostly the 1Password vault writes (M1, M3) and the M2 sandbox-privilege call.
