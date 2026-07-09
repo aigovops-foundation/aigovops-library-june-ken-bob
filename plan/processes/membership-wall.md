@@ -16,8 +16,22 @@ the irreversible gates) to publishing:
 | Surface | Access | Examples |
 |---|---|---|
 | **Public** | No registration, ever | www.aigovops-foundation.com, the GitHub repos, one Library teaser page |
-| **Members' Library** | Registered principals (default), or steward-approved members if tightened | community…/library/ — the hub, the wings (quantum, Glean, …) |
+| **Members' Library** | The access ladder below | community…/library/ — the hub, the wings (quantum, Glean, …) |
 | **Steward** | Ken and Bob only, session-authoritative | admin/steward pages, kill switch, holds queue |
+
+## The access ladder (amended 2026-07-09, Bob's call)
+
+`OMNI_LIBRARY_ACCESS`, one env var, steward-flipped, tightening as the estate matures:
+
+1. **`open-with-rules`** *(current)* — free reading, no account. The door is agreeing to
+   the ten community rules (`library-rules.html` sets a consent cookie; nothing stored
+   server-side). Registration is invited on the page, never required.
+2. **`signed-in`** — any registered principal reads (applicants included).
+3. **`member`** — steward-approved members only.
+
+The rules are the constant: every rung requires agreeing to them (registration implies
+them via terms/conduct; anonymous reading consents explicitly). The wall stays a
+community-builder, never a paywall and never a secrecy boundary.
 
 ## Who does what
 
