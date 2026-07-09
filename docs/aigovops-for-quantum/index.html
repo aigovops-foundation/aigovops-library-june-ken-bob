@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AiGovOps for Quantum — the Library</title>
+<meta name="description" content="AiGovOps for Quantum — govern quantum like production engineering: crypto inventory, policy as code, evidence pipelines, and a beginner's guide to the quantum landscape." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root,[data-theme="light"]{--bg:#f7f6f2;--surface:#fbfbf9;--surface2:#f1efe8;--text:#1f2937;--muted:#6b7280;--line:#d6d3d1;--primary:#01696f;--primary2:#0f766e;--good:#2f6f2f;--warn:#a16207;--risk:#9f1239;--blue:#0f4c81;--radius:16px;--shadow:0 12px 32px rgba(0,0,0,.08)}
+[data-theme="dark"]{--bg:#141414;--surface:#1d1d1d;--surface2:#242424;--text:#ece7df;--muted:#a1a1aa;--line:#3f3f46;--primary:#58a6a6;--primary2:#6cc3c3;--good:#7bc47f;--warn:#f3c969;--risk:#f28cab;--blue:#87b8f7;--shadow:0 16px 40px rgba(0,0,0,.35)}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Inter,sans-serif;line-height:1.55}a{color:var(--primary)}
+body{min-height:100vh}.wrap{max-width:1220px;margin:0 auto;padding:0 20px}.hero{padding:48px 0 24px}.kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--primary);font-weight:700}.hero h1{font-family:"Instrument Serif",serif;font-size:clamp(40px,6vw,76px);line-height:1.02;max-width:10ch;margin:14px 0}.hero p{max-width:72ch;color:var(--muted);font-size:18px}
+nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 86%, transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.navrow{display:flex;gap:10px;align-items:center;overflow:auto;padding:12px 0}.brand{font-weight:800;white-space:nowrap;margin-right:8px}.tab{border:1px solid var(--line);background:var(--surface);color:var(--text);padding:10px 14px;border-radius:999px;cursor:pointer;white-space:nowrap}.tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.grid{display:grid;grid-template-columns:280px 1fr;gap:22px;padding:20px 0 56px}.side,.maincard,.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}.side{padding:18px;position:sticky;top:72px;height:max-content}.maincard{padding:24px}.card{padding:18px}.stack{display:grid;gap:16px}.section{display:none}.section.active{display:block}.h2{font-size:30px;font-weight:800;margin:4px 0 10px}.sub{color:var(--muted);margin:0 0 16px}.pill{display:inline-block;padding:6px 10px;border-radius:999px;background:var(--surface2);font-size:12px;margin:0 8px 8px 0;border:1px solid var(--line)}
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.metric{padding:16px;border-radius:14px;background:var(--surface2);border:1px solid var(--line)}.metric b{display:block;font-size:30px;margin-bottom:4px}
+table{width:100%;border-collapse:collapse;margin-top:10px}th,td{padding:12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.callout{padding:16px 18px;border-left:4px solid var(--primary);background:var(--surface2);border-radius:12px;margin:14px 0}.good{color:var(--good)}.warn{color:var(--warn)}.risk{color:var(--risk)}.foot{color:var(--muted);font-size:13px;padding:24px 0 56px}
+.logo{width:34px;height:34px}.small{font-size:14px;color:var(--muted)} .check li{margin-bottom:8px}
+button.theme{margin-left:auto}.primer-step{padding:14px 16px;background:var(--surface2);border:1px solid var(--line);border-radius:12px;margin:10px 0}
+@media (max-width:980px){.grid,.cols2,.cols3{grid-template-columns:1fr}.side{position:static;top:auto}.hero h1{max-width:none}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="wrap navrow">
+    <svg class="logo" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" aria-label="AiGovOps for Quantum logo"><circle cx="32" cy="32" r="23"></circle><path d="M12 32h40M32 12c7 7 11 13 11 20s-4 13-11 20c-7-7-11-13-11-20s4-13 11-20Z"></path></svg>
+    <div class="brand">AiGovOps for Quantum — Alpha</div>
+    <a class="tab" href="../index.html" style="text-decoration:none">← the Library</a>
+    <button class="tab active" onclick="show('overview',this)">Overview</button>
+    <button class="tab" onclick="show('framework',this)">Framework</button>
+    <button class="tab" onclick="show('operating',this)">Operating Model</button>
+    <button class="tab" onclick="show('controls',this)">Controls</button>
+    <button class="tab" onclick="show('primer',this)">Interactive Primer</button>
+    <button class="tab" onclick="show('whitepaper',this)">White Paper</button>
+    <a class="tab" href="quantum-for-beginners.html" style="text-decoration:none">Beginner Guide</a>
+    <button class="tab" onclick="show('publish',this)">Reading Room</button>
+    <button class="tab theme" data-theme-toggle aria-label="Switch theme">◐</button>
+  </div>
+</nav>
+<header class="hero wrap">
+  <div class="kicker">Built from prior quantum analysis + AiGovOps framing</div>
+  <h1>Govern quantum like production engineering.</h1>
+  <p>This alpha package reframes quantum computing as an emerging governance domain adjacent to AI: policy as code, cryptographic inventory, evidence pipelines, workload classification, vendor risk, and operational readiness for fault-tolerant or cryptographically relevant systems. It is designed to feel publishable under the <a href="https://www.aigovops-foundation.com" target="_blank" rel="noopener noreferrer">AiGovOps Foundation</a> thesis that governance should run like engineering and ship verifiable evidence.</p>
+</header>
+<div class="wrap grid">
+  <aside class="side">
+    <div class="small">Alpha thesis</div>
+    <div class="h2" style="font-size:22px">AiGovOps for Quantum</div>
+    <p class="small">Quantum governance is not a future ethics slide. It is an operating system for post-quantum migration, quantum workload classification, supplier assurance, export-control awareness, and evidence that leaders and auditors can verify.</p>
+    <div class="pill">Policy as code</div><div class="pill">Crypto inventory</div><div class="pill">Assurance</div><div class="pill">Control evidence</div><div class="pill">Readiness scoring</div><div class="pill">Hybrid governance</div>
+  </aside>
+  <main class="stack">
+    <section id="overview" class="section active maincard">
+      <div class="h2">Why this exists</div>
+      <p class="sub">Quantum affects governance earlier than it affects operations at scale.</p>
+      <div class="cols3">
+        <div class="metric"><b>Now</b> Harvest-now-decrypt-later makes governance urgent before quantum utility is broad.</div>
+        <div class="metric"><b>2030</b> Federal contractor and high-value system deadlines are now concrete planning anchors.</div>
+        <div class="metric"><b>Adjacent</b> AiGovOps patterns already fit: inventories, controls, attestations, evidence, and auditable change flows.</div>
+      </div>
+      <div class="callout"><strong>Alpha proposition:</strong> treat quantum the way mature teams should treat AI governance — not as abstract policy, but as a living engineering program with controls, owners, inventories, runbooks, and measurable evidence.</div>
+      <table>
+        <tr><th>Domain</th><th>What to govern now</th><th>Why it matters</th></tr>
+        <tr><td>Cryptography</td><td>RSA/ECC inventory, crypto-agility, migration plans</td><td>Public-key risk arrives before broad utility because captured data can be decrypted later.</td></tr>
+        <tr><td>Quantum suppliers</td><td>Modality risk, cloud platform exposure, export-control posture</td><td>Vendor strategy differs sharply by stack layer and modality.</td></tr>
+        <tr><td>Workload claims</td><td>Evidence standards for “advantage” claims and pilot assertions</td><td>Organizations need proof, not demos, before reprioritizing spend.</td></tr>
+        <tr><td>National-security impact</td><td>Data lifetime, critical systems, partner obligations</td><td>White House policy now links quantum readiness to concrete deadlines and leadership duties.</td></tr>
+      </table>
+    </section>
+
+    <section id="framework" class="section maincard">
+      <div class="h2">Framework</div>
+      <p class="sub">An AiGovOps-style control stack for quantum.</p>
+      <div class="cols2">
+        <div class="card"><h3>1. Visibility</h3><p>Inventory cryptography, quantum-adjacent vendors, pilots, claims, and workloads. You cannot govern what you cannot enumerate.</p></div>
+        <div class="card"><h3>2. Classification</h3><p>Classify systems by cryptographic dependence, data longevity, criticality, and quantum sensitivity. Not every system deserves the same urgency.</p></div>
+        <div class="card"><h3>3. Policy as code</h3><p>Encode migration rules, control requirements, and procurement gates so governance becomes executable and testable, not a static PDF.</p></div>
+        <div class="card"><h3>4. Evidence</h3><p>Generate attestable artifacts: inventories, exception lists, vendor declarations, migration scorecards, and readiness reports.</p></div>
+        <div class="card"><h3>5. Continuous assurance</h3><p>Re-run checks as architecture changes, certificates roll, vendors update roadmaps, or federal standards evolve.</p></div>
+        <div class="card"><h3>6. Response</h3><p>Maintain runbooks for PQC migration, supplier changes, and “advantage claim” reviews so leaders can act before hype hardens into risk.</p></div>
+      </div>
+      <div class="callout"><strong>Key extension of AiGovOps thinking:</strong> AI governance often starts with models and data. Quantum governance starts with cryptography, system lifetimes, vendor posture, and proof thresholds for technical claims.</div>
+    </section>
+
+    <section id="operating" class="section maincard">
+      <div class="h2">Operating model</div>
+      <p class="sub">How a production organization would actually run this.</p>
+      <table>
+        <tr><th>Function</th><th>Role</th><th>Artifact</th></tr>
+        <tr><td>Quantum migration lead</td><td>Owns enterprise roadmap and exception handling</td><td>Roadmap, exceptions register, board updates</td></tr>
+        <tr><td>Security architecture</td><td>Maps RSA/ECC dependencies and crypto-agility gaps</td><td>Crypto BOM, key hierarchy map, risk register</td></tr>
+        <tr><td>Platform engineering</td><td>Automates scanning, evidence, and policy checks</td><td>CI/CD checks, attestation logs, policy tests</td></tr>
+        <tr><td>Procurement / legal</td><td>Requires supplier declarations and quantum clauses</td><td>Contract clauses, supplier questionnaire</td></tr>
+        <tr><td>Research / innovation</td><td>Evaluates true quantum candidate workloads</td><td>Pilot review template, advantage evidence pack</td></tr>
+      </table>
+      <h3>Suggested maturity levels</h3>
+      <div class="cols3">
+        <div class="card"><strong>Level 1</strong><br>Awareness only, no inventory.</div>
+        <div class="card"><strong>Level 2</strong><br>Inventory and named owners.</div>
+        <div class="card"><strong>Level 3</strong><br>Policies executable, evidence produced automatically.</div>
+        <div class="card"><strong>Level 4</strong><br>Contractor, vendor, and system migration flows integrated.</div>
+        <div class="card"><strong>Level 5</strong><br>Continuous assurance with board-visible metrics and tested runbooks.</div>
+        <div class="card"><strong>Level X</strong><br>Hybrid quantum pilot governance with formal proof thresholds for advantage claims.</div>
+      </div>
+    </section>
+
+    <section id="controls" class="section maincard">
+      <div class="h2">Controls</div>
+      <p class="sub">Example controls for an AiGovOps-for-Quantum alpha baseline.</p>
+      <table>
+        <tr><th>Control ID</th><th>Control</th><th>Test</th><th>Evidence</th></tr>
+        <tr><td>Q-CV-01</td><td>All high-value systems have an inventory of public-key dependencies.</td><td>Automated scan + owner attestation</td><td>Machine-readable inventory export</td></tr>
+        <tr><td>Q-AG-02</td><td>New systems must support crypto-agile key establishment.</td><td>Architecture review policy test</td><td>Design review artifact</td></tr>
+        <tr><td>Q-VR-03</td><td>Quantum vendors must disclose modality, cloud reliance, control location, and export-control posture.</td><td>Procurement gate</td><td>Supplier declaration pack</td></tr>
+        <tr><td>Q-CL-04</td><td>Any “quantum advantage” claim used for funding or production planning must include benchmark reproducibility criteria.</td><td>Research governance review</td><td>Advantage evidence memo</td></tr>
+        <tr><td>Q-MG-05</td><td>Migration milestones align to federal anchors where applicable.</td><td>Program audit</td><td>Roadmap + exception register</td></tr>
+      </table>
+      <div class="callout"><strong>Implementation note:</strong> these controls are intentionally shaped like software-delivery controls. That is the AiGovOps move: make governance inspectable, testable, and continuously executable.</div>
+    </section>
+
+    <section id="primer" class="section maincard">
+      <div class="h2">Interactive primer</div>
+      <p class="sub">Short-form teaching content for non-quantum technical readers.</p>
+      <div class="primer-step"><strong>Step 1 — What quantum is:</strong> a specialized kind of computing built from qubits rather than ordinary bits. It is not faster at everything; it is potentially better at some problem classes.</div>
+      <div class="primer-step"><strong>Step 2 — Why it matters:</strong> chemistry, some optimization, and public-key cryptography are the headline domains. Crypto risk matters first because data stolen now may be decrypted later.</div>
+      <div class="primer-step"><strong>Step 3 — Why it is hard:</strong> qubits are fragile, and error correction is expensive. The real race is not “who has the most qubits,” but who can produce useful logical qubits at viable overhead.</div>
+      <div class="primer-step"><strong>Step 4 — The five approaches:</strong> superconducting, trapped-ion, neutral-atom, photonic, and topological. Each is a different engineering answer to the same problem: build reliable logical qubits.</div>
+      <div class="primer-step"><strong>Step 5 — Good, bad, maybe impossible:</strong> good means new capability in science and optimization; bad means broken public-key cryptography and strategic surprise; maybe impossible means skeptics are right that scalable fault tolerance never escapes the lab.</div>
+      <div class="primer-step"><strong>Step 6 — What to do now:</strong> do not buy quantum hardware. Inventory cryptography, assign owners, classify sensitive systems, and define what evidence would count as a real breakthrough for your organization.</div>
+    </section>
+
+    <section id="whitepaper" class="section maincard">
+      <div class="h2">White paper core</div>
+      <p class="sub">A concise publishable thesis for “AiGovOps for Quantum — Alpha Thinking.”</p>
+      <div class="callout"><strong>Abstract:</strong> Quantum computing should be governed now, not because fault-tolerant utility is broadly available today, but because cryptographic migration, supplier posture, system longevity, and evidence standards for breakthrough claims already create governance obligations.</div>
+      <h3>Core arguments</h3>
+      <ul class="check">
+        <li>Quantum governance begins with cryptographic visibility, not speculative compute buying.</li>
+        <li>Federal policy now supplies operational deadlines that can anchor enterprise programs.</li>
+        <li>Quantum claims need reproducibility thresholds and proof standards before they influence material spend.</li>
+        <li>AiGovOps patterns transfer well: policies as code, evidence pipelines, ownership, exceptions, and continuous assurance.</li>
+        <li>The most mature early use case is PQC migration governance, not broad quantum application deployment.</li>
+      </ul>
+      <h3>Alpha publication set</h3>
+      <table>
+        <tr><th>Asset</th><th>Purpose</th></tr>
+        <tr><td>Interactive web experience</td><td>Public narrative and primer</td></tr>
+        <tr><td>White paper</td><td>Executive + practitioner framing</td></tr>
+        <tr><td>Controls catalog</td><td>Operational translation of governance thesis</td></tr>
+        <tr><td>Readiness rubric</td><td>Self-assessment for enterprises and contractors</td></tr>
+      </table>
+    </section>
+
+    <section id="publish" class="section maincard">
+      <div class="h2">Reading room</div>
+      <p class="sub">The full alpha publication set — read online or take the PDFs with you.</p>
+      <div class="cols2">
+        <div class="card"><h3><a href="aigovops-for-quantum-white-paper.pdf">White paper (PDF)</a></h3><p>“AiGovOps for Quantum — Alpha Thinking.” The executive and practitioner framing: why quantum creates governance obligations now, and how the AiGovOps control stack transfers.</p></div>
+        <div class="card"><h3><a href="quantum-for-beginners.html">Quantum for Beginners (web)</a></h3><p>A plain-language guide for non-quantum technologists: what quantum computing is, the five hardware approaches, good and bad outcomes, and the maybe-impossible case.</p></div>
+        <div class="card"><h3><a href="quantum-computing-for-beginners.pdf">Quantum Computing for Beginners (PDF)</a></h3><p>The beginner guide as a formatted, printable document.</p></div>
+        <div class="card"><h3><a href="quantum-for-beginners-expanded.pdf">Quantum for Beginners — Expanded (PDF)</a></h3><p>The expanded edition: deeper coverage of the pro and con literature, the top thinkers on both sides, and real-world scenarios.</p></div>
+      </div>
+      <div class="callout"><strong>Deep research hub:</strong> the full <a href="https://bobrapp.github.io/quantum-stack-intelligence/" target="_blank" rel="noopener noreferrer">Quantum Stack Intelligence</a> webapp — scoreboard and player profiles, the six-layer stack map, qubit modalities, big fails and retractions, capital and valuations, crypto risk and Q-Day, winners and losers.</div>
+    </section>
+    <div class="foot">Alpha thinking package built from the earlier quantum research and framed against the AiGovOps Foundation public messaging and 2026 U.S. PQC policy signals.</div>
+  </main>
+</div>
+<script>
+function show(id, btn){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));if(btn&&!btn.classList.contains('theme'))btn.classList.add('active')}
+(function(){const t=document.querySelector('[data-theme-toggle]'),r=document.documentElement;let d=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';r.setAttribute('data-theme',d);t.addEventListener('click',()=>{d=d==='dark'?'light':'dark';r.setAttribute('data-theme',d)})})();
+</script>
+</body>
+</html>
