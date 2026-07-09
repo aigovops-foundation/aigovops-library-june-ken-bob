@@ -19,7 +19,12 @@ jobs:
         continue-on-error: true
       - run: node scripts/test-library.mjs --dir docs   # hard gate: structure/link/SEO checks must pass before deploy
       - uses: actions/configure-pages@v5
+      # MEMBERSHIP WALL (plan/processes/membership-wall.md): the public github.io mirror is
+      # retired — Pages serves only the redirect stub pointing at the member-gated Library
+      # (community.aigovops-foundation.com/library/). docs/ remains the SOURCE and is still
+      # built + tested above; the librarian agent mirrors it into the gated mount. To restore
+      # the public mirror, point path back to docs.
       - uses: actions/upload-pages-artifact@v3
-        with: { path: docs }
+        with: { path: redirect-stub }
       - id: deploy
         uses: actions/deploy-pages@v4
