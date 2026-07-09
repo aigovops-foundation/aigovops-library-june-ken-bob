@@ -14,3 +14,4 @@ Every discipline follows one shape: **trigger → agent does the work → human 
 - [`reporting`](./reporting.md) — **Reporting** · Herald · `status-report`
 - [`security-privacy`](./security-privacy.md) — **Security & privacy** · Guardian · `security-privacy-review`
 - [`release`](./release.md) — **Release** · Deploy · `aigovops-deploy-workflow + github-pages-publish`
+- [`membership-wall`](./membership-wall.md) — **Membership wall** (estate system rule) · Librarian · `library_sync + /library/ gate`

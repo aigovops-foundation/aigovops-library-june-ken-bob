@@ -83,6 +83,10 @@ strongest backend each environment allows; scope every view by identity.**
   run sandboxed, no ambient network/filesystem, egress only via a declared proxy.
 - **Oversight — one surface, role-scoped.** Stewards (founders) see all + the global kill
   switch; members see only their own effects.
+- **Membership wall — public source, gated experience.** Library repos stay public on
+  GitHub; the rendered Library is served member-gated at community…/library/ (registration,
+  never money or secrecy). Rule of record: `plan/processes/membership-wall.md`. Retiring a
+  github.io mirror is a steward-shipped move — never autonomous.
 
 Full detail: `docs/control-plane.html` / `plan/control-and-deployment.md`.
 Backlog & next steps: `plan/build-tickets.md` — start with **Ticket 0** (`SecretsProvider`
