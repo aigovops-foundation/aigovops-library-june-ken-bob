@@ -16,10 +16,17 @@ it). Updated 2026-07-02.
 - [gate] ⏳ **Core↔gVisor wiring decision:** (a) mount `docker.sock` into core *(now known-good)*,
   (b) core-on-host, or (c) defer. Privilege tradeoff → Bob's call.
 
-## M3 — Omni secret centralization (droplet A)
-- [auto] ✅ Confirmed the 6 secrets are in `.env`, not yet in 1Password; migrate path staged.
-- [gate] ⏳ **Grant the service account Read & Write** on the AiGovOps vault (1Password console).
-  Then [auto] the on-host migrate + verify runs on a word.
+## M3 — Omni secret centralization (droplet A) — ✅ DONE (2026-07-10)
+- [auto] ✅ All **8** secrets migrated from `.env` into the AiGovOps 1Password vault + verified
+  reads-back; every `OMNI_SECRET_*` stripped from `.env` (backed up first); omni restarted, portal +
+  signin `200`. No file-store shadow — **1Password is the resolution source** (`scripts/migrate-secrets.sh`,
+  fail-closed: never strips a key that doesn't verify from the vault first).
+- [gate] ✅ Done via a **new Read+Write service account** — the existing SA's vault access is immutable
+  (`op service-account` has only `create`/`ratelimit`, no edit); its token was swapped into the droplet
+  `.env` **no-paste**.
+- [ ] Cleanup left for Bob (1Password console): **revoke the old read-only SA** (`3VAP6…`); de-dupe the
+  vault items flagged by the migrate (`Service Account Auth Token: aigovops-deploy` ×6, `DigitalOcean` ×3);
+  optionally **rotate** the new token (it was shown in plaintext during setup — fine if the screen was private).
 
 ## M4 — Customer insight
 - [auto] ✅ Live report generated (`plan/insights/customer-insight-2026-06-28.md`): 35 actors /
