@@ -81,4 +81,5 @@ $("assemble").onclick=function(){fetch(CORE+"/api/newsroom?preview=assemble").th
 $("bsbtn").onclick=function(){var t=encodeURIComponent($("topic").value||"AI governance");fetch(CORE+"/api/newsroom?preview=brainstorm&topic="+t).then(function(r){return r.json();}).then(render);};
 </script>
   <script src="https://www.aigovops-foundation.com/jeeves-widget.js" data-jeeves-site="library" defer></script>  <script src="./start-here.js" data-estate-id="library" defer></script>
+  <script src="estate-footer.js" defer></script>
 </body></html>
