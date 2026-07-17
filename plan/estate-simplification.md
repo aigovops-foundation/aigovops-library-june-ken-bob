@@ -82,6 +82,14 @@ beside every shelf label estate-wide.
 **Accept when:** the creed renders byte-identical on every property; no property's hero
 competes with the porch.
 
+**Rollout pattern (learned on the camp, 2026-07-17):** two integration modes, chosen by
+what the property already has. *Injector mode* — pages with no footer system load the
+Library-hosted `estate-footer.js` with `data-site` (aria-current) and `data-theme="light"`
+on light pages (fixed palette; page CSS vars are ignored so the 4.5:1 contract can't
+break). *Native mode* — properties with their own footer system (the camp's `shared.js`)
+add the creed line inside it, styled natively; a second injector would race the first and
+double the contentinfo. Either way the creed string is byte-identical.
+
 ## Out of scope (explicitly)
 Deleting pages; changing the membership wall; touching DNS, accounts, or payment
 processors autonomously; the Omni platform's internal surfaces.
