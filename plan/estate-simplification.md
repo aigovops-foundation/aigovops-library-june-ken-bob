@@ -168,6 +168,28 @@ logically, duplication dies. From the 15-page IA survey:
 two places; every retired URL 302/meta-redirects to its successor; full battery green
 (assertion updates sanctioned where they encode the old IA).
 
+## M12 — the estate's operating rhythm (directed by Bob, 2026-07-17 night)
+
+End-to-end disciplines as one battery + adaptive cadence + user feedback:
+
+- **Cloud-Mary grows four tiers**: --security (headers, no secrets in source, HTTPS
+  forms, dependency posture), --privacy (Plausible-only, no PII in URLs, no
+  third-party cookies, metadata-only promises kept), --arch (estate link integrity,
+  canonical/sitemap/load-order, no orphans), --ux (nav consistency, one-h1, CTA
+  budget, stub behavior). Mapping of Bob's list: accessibility/uptime/test/automation
+  = existing tiers; design = design tier; UX-acceptance ("ua") = happy tier.
+- **Estate-health orchestrator (Omni)**: generalizes design_warden — runs the estate
+  checks on a daily base cadence that RESPONDS TO RESULTS: red → re-check every few
+  hours + steward notification until 2 consecutive greens; sustained green → weekly
+  deep pass (scale+chaos). Rule in RUNBOOK-estate-health.md; receipts every run.
+- **User feedback**: garden strip ("Was this helpful? 👍 👎 + optional text") above
+  the footer on content pages (never stubs/consoles); POSTs to api/feedback on the
+  community droplet; Jeeves routes to Ken & Bob (Telegram + review panel, digest at
+  volume); honest privacy line; a --feedback battery tier verifies widget + endpoint.
+- **Order** (tree-conflict aware): design-review fixes land → Foundation tiers +
+  widget; P2 + RBAC ship in Omni → feedback API + orchestrator → wire, verify E2E,
+  brain filing.
+
 ## Out of scope (explicitly)
 Deleting pages; changing the membership wall; touching DNS, accounts, or payment
 processors autonomously; the Omni platform's internal surfaces.
