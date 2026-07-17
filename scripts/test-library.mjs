@@ -32,7 +32,7 @@ const REQ_TIMEOUT_MS = 15000;
 
 // Per-page content expectations (stable substrings; case-insensitive). FAIL on miss.
 const PAGE_EXPECTATIONS = {
-  "index.html":         { h1: ["library", "yes"],            body: ["six pieces", "running core"] },
+  "index.html":         { h1: ["get to", "yes"],             body: ["the three shelves", "running core"] },
   "demo.html":          { h1: ["engine"],                    body: ["yes-gate", "receipt"] },
   "design-book.html":   { h1: ["design book"],               body: ["design"] },
   "blueprint.html":     { h1: ["architecture blueprint"],    body: ["yes-gate"] },
