@@ -113,6 +113,16 @@ variant-3-almanac/`). This supersedes M6's "navy stays for the library" note.
 Canonical skin: `css/garden.css` in the Foundation repo is the source of truth; other
 repos carry a copy with a SOURCE header pointing home.
 
+> **M7–M9 + the Jeeves rule (2026-07-17, later the same day): SHIPPED.** The whole
+> estate wears aigovops-july-2026: Library all 25 pages (garden-warm halls, almanac
+> reading rooms — Library #7, wall-sync verified), camp token-aligned (#16), Beacon
+> (#14), Umbrella (#3, + revived its dead-URL e2e harness), Vendor RFI (#6), Glean
+> (#17, generator-level). Jeeves presence rule applied estate-wide: bottom-right
+> agent widget only, hero retired; the what-it-does page is jeeves-brief.html
+> (Foundation #64, camp #17). Warden's closing audit: 7/7, rcpt-f9b7ab5223d7.
+> Remaining: M10 portal surfaces; pulse.mjs template (chip in flight); Dependabot
+> chips (Beacon 2-high priority); token-file reconciliation chip.
+
 - **M6b — Foundation site, all 30 pages** (21 top-level + 9 blog/): garden.css extraction
   + per-page conversion; content/links/scripts byte-identical; full battery per PR.
 - **M7 — Library**: hub + wings go garden-warm; deep docs (blueprint, control-plane,
