@@ -130,3 +130,7 @@ word weighs. That is not a paradox. That is the design.
 *Recorded July 17, 2026, in the AiGovOps Library, while four agents were still
 converting pages in the background — the book now being written faster than its
 chapters can close.*
+
+*The estate-wide wave, the warden's first receipts, and the day the pages learned to
+have one job each: [Chapter Three — The Estate Learns to Tend
+Itself](when-creation-is-cheap-ch3.md).*
