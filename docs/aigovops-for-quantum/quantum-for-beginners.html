@@ -7,11 +7,14 @@
 <meta name="description" content="A plain-language guide to quantum computing for non-quantum technologists: what it is, why it's hard, the five hardware approaches, good and bad outcomes, and the maybe-impossible case." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Source+Sans+3:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root,[data-theme="light"]{--bg:#f7f6f2;--surface:#fbfbf9;--surface2:#f1efe8;--text:#1f2937;--muted:#6b7280;--line:#d6d3d1;--primary:#01696f;--primary2:#0f766e;--good:#2f6f2f;--warn:#a16207;--risk:#9f1239;--blue:#0f4c81;--radius:16px;--shadow:0 12px 32px rgba(0,0,0,.08)}
-[data-theme="dark"]{--bg:#141414;--surface:#1d1d1d;--surface2:#242424;--text:#ece7df;--muted:#a1a1aa;--line:#3f3f46;--primary:#58a6a6;--primary2:#6cc3c3;--good:#7bc47f;--warn:#f3c969;--risk:#f28cab;--blue:#87b8f7;--shadow:0 16px 40px rgba(0,0,0,.35)}
-*{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Inter,sans-serif;line-height:1.65}a{color:var(--primary)}
+/* skin: aigovops-july-2026 (garden-warm) — canonical tokens: foundation repo design/aigovops-july-2026/ */
+:root,[data-theme="light"]{--bg:#FAF7F0;--surface:#fff;--surface2:#F1EAD8;--text:#2B2B28;--muted:#4C4A42;--line:rgba(43,43,40,.14);--primary:#1F5E3A;--primary2:#2E7D4F;--good:#1F5E3A;--warn:#9C4E12;--risk:#A83A24;--blue:#0f4c81;--radius:16px;--shadow:0 10px 26px -14px rgba(78,60,32,.3)}
+[data-theme="dark"]{--bg:#211F1B;--surface:#292722;--surface2:#312E28;--text:#EDE8DA;--muted:#B9B3A2;--line:#3F3C35;--primary:#5DCAA5;--primary2:#7BD8B8;--good:#7bc47f;--warn:#E8B54A;--risk:#f28cab;--blue:#87b8f7;--shadow:0 16px 40px rgba(0,0,0,.35)}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Source Sans 3',Inter,sans-serif;line-height:1.65}a{color:var(--primary)}
+[data-theme="light"] body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:30;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.17 0 0 0 0 0.16 0 0 0 0 0.13 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E")}
 .wrap{max-width:860px;margin:0 auto;padding:0 20px}
 nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 86%, transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .navrow{display:flex;gap:10px;align-items:center;overflow:auto;padding:12px 0;max-width:1220px;margin:0 auto;padding-left:20px;padding-right:20px}
@@ -20,8 +23,8 @@ nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 86%,
 button.theme{margin-left:auto;border:1px solid var(--line);background:var(--surface);color:var(--text);padding:10px 14px;border-radius:999px;cursor:pointer}
 .logo{width:34px;height:34px}
 .hero{padding:48px 0 8px}.kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--primary);font-weight:700}
-h1{font-family:"Instrument Serif",serif;font-size:clamp(38px,5.5vw,64px);line-height:1.05;margin:14px 0}
-h2{font-family:"Instrument Serif",serif;font-size:32px;line-height:1.15;margin:44px 0 12px}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(38px,5.5vw,64px);line-height:1.05;margin:14px 0}
+h2{font-family:'Fraunces',serif;font-weight:600;font-size:32px;line-height:1.15;margin:44px 0 12px}
 h3{font-size:19px;font-weight:700;margin:28px 0 8px}
 p{margin:0 0 14px}.lede{color:var(--muted);font-size:18px}
 ul,ol{padding-left:24px;margin:0 0 14px}li{margin-bottom:8px}

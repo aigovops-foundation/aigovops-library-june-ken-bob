@@ -26,17 +26,25 @@
 
 <meta property="og:title" content="The Gates — Recorded Walkthrough">
 <meta property="og:description" content="A half-speed recorded walkthrough of the live AiGovOps Library gates — nine rooms, their agents, the verdicts, and Beacon signing each into the ledger.">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,300..800;1,300..800&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet"/>
 <style>
-  body{margin:0;background:#14110b;color:#f3e9d2;font-family:Georgia,'Times New Roman',serif;display:flex;flex-direction:column;min-height:100vh}
-  a.back{position:fixed;top:14px;left:18px;color:#cdbf9f;text-decoration:none;font-size:13px;letter-spacing:.3px}
-  a.back:hover{color:#d8a657}
+  /* skin: aigovops-july-2026 (garden-warm) — canonical tokens: foundation repo design/aigovops-july-2026/ */
+  :root{--ink:#2B2B28;--ink2:#4C4A42;--green:#2E7D4F;--green2:#1F5E3A;--line:rgba(43,43,40,.14);--card:#fff;
+    --g-cream:#FAF7F0;--g-charcoal:#2B2B28;--g-green-ink:#1F5E3A;--g-orange-ink:#9C4E12}
+  body{margin:0;background:var(--g-cream);color:var(--ink);font-family:'Source Sans 3','Segoe UI',system-ui,sans-serif;display:flex;flex-direction:column;min-height:100vh}
+  /* paper grain — quiet, below all widgets */
+  body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:30;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.17 0 0 0 0 0.16 0 0 0 0 0.13 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E")}
+  a.back{position:fixed;top:14px;left:18px;color:var(--g-green-ink);text-decoration:none;font-size:13px;letter-spacing:.3px}
+  a.back:hover{color:var(--g-orange-ink)}
   .wrap{max-width:1040px;margin:0 auto;padding:64px 24px 48px;text-align:center}
-  h1{font-size:30px;margin:0 0 8px;color:#f3c977;font-weight:600;letter-spacing:.3px}
-  p.sub{color:#cdbf9f;margin:0 0 26px;font-size:15px;line-height:1.5}
-  video{width:100%;border:1px solid #4a3c22;border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.55);background:#000;display:block}
-  p.note{color:#7d6c4c;font-size:12.5px;margin-top:18px}
-  a.live{color:#d8a657;text-decoration:none}
-  a.live:hover{color:#f3c977}
+  h1{font-family:'Fraunces',serif;font-size:30px;margin:0 0 8px;color:var(--g-charcoal);font-weight:600;letter-spacing:.3px}
+  p.sub{color:var(--ink2);margin:0 0 26px;font-size:15px;line-height:1.5}
+  /* the recording itself is a dark plate — dark chrome is load-bearing for video */
+  video{width:100%;border:1px solid var(--g-charcoal);border-radius:14px;box-shadow:0 18px 40px -18px rgba(78,60,32,.35);background:#000;display:block}
+  p.note{color:var(--ink2);font-size:12.5px;margin-top:18px}
+  a.live{color:var(--g-green-ink);text-decoration:none}
+  a.live:hover{color:var(--g-orange-ink)}
 </style>
 <style id="a11y-universal">
 /* a11y-universal: keyboard focus + reduced motion (additive, non-breaking) */
@@ -46,7 +54,7 @@
 a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
   outline:2px solid currentColor;outline-offset:2px;border-radius:2px
 }
-.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--green,#2ecc71);color:#04181a;padding:10px 16px;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
+.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--green,#2ecc71);color:#fff;padding:10px 16px;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
 .skip-link:focus{left:0}
 </style>
 </head>

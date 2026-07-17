@@ -25,22 +25,27 @@
 
 <meta property="og:title" content="The Library — Durability Plan">
 <meta property="og:description" content="Tier 1 ends the sleep. Tier 3 moves the ledger to Postgres. Tier 2 follows. Plus uptime monitor + backup keys.">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Source+Sans+3:ital,wght@0,300..800;1,300..800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  body{margin:0;background:#14110b;color:#f3e9d2;font-family:Georgia,'Times New Roman',serif;line-height:1.6}
-  a.back{position:fixed;top:14px;left:18px;color:#cdbf9f;text-decoration:none;font-size:13px;letter-spacing:.3px}
-  a.back:hover{color:#d8a657}
+  /* skin: aigovops-july-2026 (garden-warm) — canonical tokens: foundation repo design/aigovops-july-2026/ */
+  :root{--ink:#2B2B28;--ink2:#4C4A42;--green:#2E7D4F;--green2:#1F5E3A;--line:rgba(43,43,40,.14);--card:#fff}
+  body{margin:0;background:#FAF7F0;color:#2B2B28;font-family:'Source Sans 3','Segoe UI',system-ui,sans-serif;line-height:1.6}
+  body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:30;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.17 0 0 0 0 0.16 0 0 0 0 0.13 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E")}
+  a.back{position:fixed;top:14px;left:18px;color:#4C4A42;text-decoration:none;font-size:13px;letter-spacing:.3px}
+  a.back:hover{color:#1F5E3A}
   .wrap{max-width:780px;margin:0 auto;padding:64px 28px 64px}
-  h1{color:#f3c977;font-weight:600;margin:0 0 6px;font-size:30px;letter-spacing:.3px}
-  h2{color:#d8a657;font-weight:600;margin:38px 0 10px;font-size:22px}
-  h3{color:#e9c45f;font-weight:600;margin:24px 0 6px;font-size:17px}
+  h1{font-family:'Fraunces',serif;color:#2B2B28;font-weight:600;margin:0 0 6px;font-size:30px;letter-spacing:.3px}
+  h2{font-family:'Fraunces',serif;color:#1F5E3A;font-weight:600;margin:38px 0 10px;font-size:22px}
+  h3{font-family:'Fraunces',serif;color:#9C4E12;font-weight:600;margin:24px 0 6px;font-size:17px}
   p{margin:10px 0}
-  blockquote{border-left:3px solid #4a3c22;margin:18px 0;padding:6px 16px;color:#cdbf9f;background:rgba(255,255,255,.02)}
+  blockquote{border-left:3px solid #2E7D4F;margin:18px 0;padding:6px 16px;color:#4C4A42;background:#F1EAD8}
   ul,ol{padding-left:22px;margin:8px 0}
   li{margin:6px 0}
-  code{background:#2b2316;padding:2px 6px;border-radius:4px;font-size:13px;color:#f3c977}
-  strong{color:#f3c977}
-  em{color:#cdbf9f}
-  hr{border:none;border-top:1px solid #4a3c22;margin:28px 0}
+  code{font-family:'DM Mono',ui-monospace,monospace;background:#F1EAD8;padding:2px 6px;border-radius:4px;font-size:13px;color:#1F5E3A}
+  strong{color:#2B2B28}
+  em{color:#4C4A42}
+  hr{border:none;border-top:1px solid rgba(43,43,40,.14);margin:28px 0}
 </style><style id="a11y-universal">
 /* a11y-universal: keyboard focus + reduced motion (additive, non-breaking) */
 @media (prefers-reduced-motion: reduce){
@@ -49,7 +54,7 @@
 a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
   outline:2px solid currentColor;outline-offset:2px;border-radius:2px
 }
-.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--green,#2ecc71);color:#04181a;padding:10px 16px;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
+.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--green,#2ecc71);color:#fff;padding:10px 16px;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
 .skip-link:focus{left:0}
 </style>
 </head>

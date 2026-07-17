@@ -27,46 +27,50 @@
 <meta property="og:title" content="AiGovOps — Govern Any Agent"/>
 <meta property="og:description" content="Route any AI agent's risky actions through the Yes-Gate: propose, human-approve, brokered token, sandboxed run, signed receipt. A dependency-free MCP connector."/>
 <meta property="og:url" content="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/connect.html"/>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Source+Sans+3:ital,wght@0,300..800;1,300..800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
+  /* skin: aigovops-july-2026 (garden-warm) — canonical tokens: foundation repo design/aigovops-july-2026/ */
   :root{
-    --paper:#0c1430; --paper2:#0a1026; --ink:#dce6f5; --ink2:#8da3c8;
-    --line:rgba(120,160,210,.22); --grid:rgba(120,160,210,.07);
-    --teal:#3fd0c8; --green:#36e08a; --gold:#e8c25a; --pur:#9b8cff; --warn:#f08a8a;
-    --card:rgba(255,255,255,.035);
+    --paper:#FAF7F0; --paper2:#2B2B28; --ink:#2B2B28; --ink2:#4C4A42;
+    --line:rgba(43,43,40,.14); --grid:transparent;
+    --teal:#1F5E3A; --green:#2E7D4F; --green2:#1F5E3A; --gold:#9C4E12; --pur:#9b8cff; --warn:#f08a8a;
+    --card:#fff;
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Spectral',Georgia,serif;color:var(--ink);background:var(--paper);min-height:100%;
-    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
-    background-size:30px 30px}
+  body{font-family:'Source Sans 3','Segoe UI',system-ui,sans-serif;color:var(--ink);background:var(--paper);min-height:100%}
+  /* paper grain — quiet, below all widgets */
+  body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:30;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.17 0 0 0 0 0.16 0 0 0 0 0.13 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E")}
   .wrap{max-width:1040px;margin:0 auto;padding:34px 20px 90px}
-  .home{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:var(--ink2);text-decoration:none;border:1px solid var(--line);border-radius:8px;padding:6px 11px;margin-bottom:18px}
-  .home:hover{color:#fff;border-color:var(--teal)}
-  header{text-align:center;border:1px solid var(--line);border-radius:16px;padding:30px 22px;background:linear-gradient(180deg,rgba(63,208,200,.05),transparent)}
-  .eyebrow{font-family:'IBM Plex Mono',monospace;letter-spacing:.34em;font-size:11px;color:var(--teal)}
-  h1{font-family:'Cinzel',serif;font-weight:600;font-size:clamp(25px,4.4vw,42px);margin:10px 0 6px;color:#fff}
-  .thesis{font-family:'Spectral',serif;font-style:italic;font-size:clamp(16px,2.1vw,20px);color:var(--ink2);max-width:720px;margin:0 auto}
+  .home{display:inline-block;font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:var(--ink2);text-decoration:none;border:1px solid rgba(43,43,40,.25);border-radius:8px;padding:6px 11px;margin-bottom:18px}
+  .home:hover{color:#2B2B28;border-color:var(--teal)}
+  header{text-align:center;border:1px solid rgba(43,43,40,.08);border-radius:16px;padding:30px 22px;background:linear-gradient(180deg,rgba(46,125,79,.07),#fff 70%);box-shadow:0 10px 26px -14px rgba(78,60,32,.3)}
+  .eyebrow{font-family:'DM Mono',monospace;letter-spacing:.34em;font-size:11px;color:var(--teal)}
+  h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(25px,4.4vw,42px);margin:10px 0 6px;color:#2B2B28}
+  .thesis{font-family:'Fraunces',serif;font-style:italic;font-size:clamp(16px,2.1vw,20px);color:var(--ink2);max-width:720px;margin:0 auto}
   section{margin-top:34px;scroll-margin-top:60px}
-  h2{font-family:'Cinzel',serif;font-weight:600;font-size:clamp(19px,2.8vw,26px);color:#fff;display:flex;align-items:baseline;gap:12px}
-  h2 .n{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--teal);letter-spacing:.1em}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(19px,2.8vw,26px);color:#2B2B28;display:flex;align-items:baseline;gap:12px}
+  h2 .n{font-family:'DM Mono',monospace;font-size:13px;color:var(--teal);letter-spacing:.1em}
   .lead{color:var(--ink2);font-style:italic;font-size:16px;margin:6px 0 16px}
-  p{line-height:1.66;margin-bottom:12px;color:#cdd9ec}
-  b{color:#fff}
-  .mono{font-family:'IBM Plex Mono',monospace;color:var(--teal)}
-  .panel{border:1px solid var(--line);border-radius:14px;padding:22px 24px;background:var(--card);margin-bottom:14px}
-  .code{font-family:'IBM Plex Mono',monospace;background:var(--paper2);border:1px solid var(--line);border-radius:11px;
+  p{line-height:1.66;margin-bottom:12px;color:#4C4A42}
+  b{color:#2B2B28}
+  .mono{font-family:'DM Mono',monospace;color:var(--teal)}
+  .panel{border:1px solid rgba(43,43,40,.08);border-radius:14px;padding:22px 24px;background:var(--card);margin-bottom:14px;box-shadow:0 10px 26px -14px rgba(78,60,32,.3)}
+  .code{font-family:'DM Mono',monospace;background:var(--paper2);border:1px solid var(--paper2);border-radius:11px;
     padding:14px 16px;font-size:12.5px;line-height:1.62;color:#bfe9d0;white-space:pre-wrap;overflow-x:auto;margin:10px 0}
   table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13.5px}
   th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line)}
-  th{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;color:var(--teal)}
-  td .mono{color:var(--green)}
+  th{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.06em;color:var(--teal)}
+  td .mono{color:#1F5E3A}
   ul{list-style:none;margin:4px 0 12px}
-  li{padding-left:22px;position:relative;line-height:1.6;margin-bottom:7px;color:#cdd9ec}
+  li{padding-left:22px;position:relative;line-height:1.6;margin-bottom:7px;color:#4C4A42}
   li::before{content:"▸";position:absolute;left:2px;color:var(--green)}
-  li b{color:#fff}
-  .flow{font-family:'IBM Plex Mono',monospace;color:var(--gold);font-size:13px;text-align:center;margin:8px 0 2px}
+  li b{color:#2B2B28}
+  .flow{font-family:'DM Mono',monospace;color:var(--gold);font-size:13px;text-align:center;margin:8px 0 2px}
   footer{text-align:center;margin-top:46px;color:var(--ink2);font-style:italic;font-size:16px}
-  .fcreed{font-family:'IBM Plex Mono',monospace;letter-spacing:.2em;font-size:10.5px;color:var(--green);margin-top:6px}
+  .fcreed{font-family:'DM Mono',monospace;letter-spacing:.2em;font-size:10.5px;color:#1F5E3A;margin-top:6px}
+  /* garden re-inks for inline styles (markup untouched; see plan/LIBRARY-CONVERSION-GUIDE.md) */
+  a[href="./index.html"][style]{color:#1F5E3A!important;background:rgba(251,248,240,.96)!important;border:1px solid rgba(46,125,79,.55)!important}
 </style>
 <style id="a11y-universal">
 /* a11y-universal: keyboard focus + reduced motion (additive, non-breaking) */
@@ -76,7 +80,7 @@
 a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
   outline:2px solid currentColor;outline-offset:2px;border-radius:2px
 }
-.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--green,#2ecc71);color:#04181a;padding:10px 16px;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
+.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--green,#2ecc71);color:#fff;padding:10px 16px;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
 .skip-link:focus{left:0}
 </style>
 </head>

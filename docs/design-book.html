@@ -27,48 +27,50 @@
 <meta property="og:title" content="AiGovOps — Experience &amp; Design Book"/>
 <meta property="og:description" content="The experience and design language of the AiGovOps Library: voice, visual system, and the principles behind how the governed core looks and feels."/>
 <meta property="og:url" content="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/design-book.html"/>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Cormorant+Garamond:ital@0;1&family=Spectral:ital,wght@0,400;0,500;0,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
-  :root{--bg1:#f7efe1;--bg2:#ece0cb;--ink:#2c2317;--ink2:#6b5c45;--card:#fffaf0;--line:rgba(80,60,30,.16);
-    --teal:#0f6f73;--green:#1f9d5b;--gold:#bd8a2c;--human:#c4632a;--shadow:0 14px 40px rgba(70,45,15,.14);
+  /* skin: aigovops-july-2026 (almanac) — canonical tokens: foundation repo design/aigovops-july-2026/ */
+  :root{--bg1:#F7F3E8;--bg2:#F7F3E8;--ink:#2A2A26;--ink2:#55534B;--card:#FBF8F0;--line:rgba(42,42,38,.28);
+    --teal:#2C4F27;--green:#2C4F27;--gold:#7A5A12;--human:#c4632a;--shadow:0 14px 34px -22px rgba(42,42,38,.45);
+    --alm-green:#3D6B35;--alm-green-deep:#2C4F27;--alm-red:#C4482F;--alm-red-deep:#A83A24;--alm-tint:#E4EADB;
     /* interface (dark aigovops) */ --d1:#16122c;--d2:#1f1a3a;--dg:#2ecc71;--dt:#4FB286;--dp:#7B61FF;--dgold:#e8c879;--dmut:#a59fc2;}
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Spectral',Georgia,serif;color:var(--ink);background:radial-gradient(140% 120% at 80% -10%,#fbf4e6,var(--bg1) 45%,var(--bg2));min-height:100%}
+  body{font-family:'Source Serif 4',Georgia,serif;color:var(--ink);background:var(--bg1);min-height:100%}
   body::after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.04;z-index:99;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
   .wrap{max-width:1060px;margin:0 auto;padding:34px 20px 80px}
   header{text-align:center;margin-bottom:10px}
-  .eyebrow{font-family:'Cinzel',serif;letter-spacing:.32em;font-size:11px;color:var(--teal)}
-  h1{font-family:'Cinzel',serif;font-weight:600;font-size:clamp(26px,4.4vw,42px);margin:8px 0 6px;color:#241c10}
-  .thesis{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(17px,2.2vw,22px);color:var(--ink2);max-width:640px;margin:0 auto}
-  nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:22px 0;position:sticky;top:0;z-index:30;background:linear-gradient(var(--bg1),rgba(247,239,225,.5));padding:10px;backdrop-filter:blur(4px)}
-  nav a{text-decoration:none;font-family:'Cinzel',serif;font-size:12px;letter-spacing:.12em;color:var(--ink2);padding:8px 14px;border:1px solid var(--line);border-radius:999px;transition:.25s}
-  nav a:hover{background:#241c10;color:#f3e6c8;border-color:#241c10}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;letter-spacing:.32em;font-size:11px;color:var(--alm-green-deep)}
+  h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(26px,4.4vw,42px);margin:8px 0 6px;color:var(--ink)}
+  .thesis{font-family:'Source Serif 4',serif;font-style:italic;font-size:clamp(17px,2.2vw,22px);color:var(--ink2);max-width:640px;margin:0 auto}
+  nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:22px 0;position:sticky;top:0;z-index:30;background:rgba(247,243,232,.94);padding:10px;backdrop-filter:blur(4px);border-bottom:1px solid var(--line)}
+  nav a{text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.12em;color:var(--ink2);padding:8px 14px;border:1px solid var(--line);border-radius:999px;transition:.25s}
+  nav a:hover{color:var(--alm-green-deep);border-color:var(--alm-green);background:var(--alm-tint)}
   section{margin-top:46px}
   .shead{text-align:center;margin-bottom:22px}
-  .shead h2{font-family:'Cinzel',serif;font-weight:600;font-size:clamp(20px,3vw,30px);color:#241c10;letter-spacing:.02em}
-  .shead p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;color:var(--ink2);margin-top:4px}
+  .shead h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(20px,3vw,30px);color:var(--ink);letter-spacing:.02em}
+  .shead p{font-family:'Source Serif 4',serif;font-style:italic;font-size:18px;color:var(--ink2);margin-top:4px}
   .card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:22px}
   .illus svg{width:100%;height:auto;display:block}
   .cap{padding:16px 24px;border-top:1px solid var(--line)}
-  .cap b{font-family:'Cinzel',serif;font-size:13px;letter-spacing:.14em;color:var(--teal)}
-  .cap span{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--ink2);display:block;margin-top:2px}
+  .cap b{font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.14em;color:var(--alm-green-deep)}
+  .cap span{font-family:'Source Serif 4',serif;font-style:italic;font-size:17px;color:var(--ink2);display:block;margin-top:2px}
   .mood{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
   .mc{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:18px 18px 16px;display:flex;gap:14px}
   .mc .g{flex:0 0 54px}
-  .mc h3{font-family:'Cinzel',serif;font-size:14px;letter-spacing:.06em;color:#241c10;margin-bottom:2px}
-  .mc .ref{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);font-size:15px;margin-bottom:7px}
-  .mc p{font-size:14px;line-height:1.5;color:#3a3020}
-  .mc .ap{margin-top:7px;font-size:13.5px;color:var(--teal)}
-  .mc .ap b{color:#241c10}
-  /* interface screens */
+  .mc h3{font-family:'IBM Plex Mono',monospace;font-size:14px;letter-spacing:.06em;color:var(--ink);margin-bottom:2px}
+  .mc .ref{font-family:'Source Serif 4',serif;font-style:italic;color:var(--gold);font-size:15px;margin-bottom:7px}
+  .mc p{font-size:14px;line-height:1.5;color:var(--ink2)}
+  .mc .ap{margin-top:7px;font-size:13.5px;color:var(--alm-green-deep)}
+  .mc .ap b{color:var(--ink)}
+  /* interface screens — dark product mockups stay dark plates (sanctioned); the frame goes ink */
   .scrlabel{display:flex;align-items:baseline;gap:12px;margin:6px 4px 12px;flex-wrap:wrap}
-  .scrlabel b{font-family:'Cinzel',serif;font-size:14px;letter-spacing:.12em;color:#241c10}
-  .scrlabel span{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--ink2);font-size:16px}
-  .screen{background:radial-gradient(120% 120% at 75% 0%,#251c44,#16122c 60%,#120f24);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:20px 22px;color:#fff;font-family:'Spectral',serif;box-shadow:var(--shadow);margin-bottom:26px}
-  .screen.teal{background:radial-gradient(120% 120% at 60% 0%,#0f3133,#08201f 60%,#06181a);border-color:rgba(46,204,113,.16)}
+  .scrlabel b{font-family:'IBM Plex Mono',monospace;font-size:14px;letter-spacing:.12em;color:var(--ink)}
+  .scrlabel span{font-family:'Source Serif 4',serif;font-style:italic;color:var(--ink2);font-size:16px}
+  .screen{background:radial-gradient(120% 120% at 75% 0%,#251c44,#16122c 60%,#120f24);border:1px solid var(--ink);border-radius:16px;padding:20px 22px;color:#fff;font-family:'Source Serif 4',serif;box-shadow:var(--shadow);margin-bottom:26px}
+  .screen.teal{background:radial-gradient(120% 120% at 60% 0%,#0f3133,#08201f 60%,#06181a);border-color:var(--ink)}
   .mono{font-family:'IBM Plex Mono',monospace}
   .sg-eye{color:var(--dg);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;margin-bottom:8px}
-  .sg-h{font-weight:600;font-size:21px;letter-spacing:-.01em;margin-bottom:14px;font-family:'Cinzel',serif;color:#fff}
+  .sg-h{font-weight:600;font-size:21px;letter-spacing:-.01em;margin-bottom:14px;font-family:'Fraunces',serif;color:#fff}
   .sg-h.sm{font-size:18px}
   .bub-u{background:#5a45c9;padding:8px 13px;border-radius:13px 13px 3px 13px;font-size:14px;max-width:78%;margin-left:auto;width:fit-content}
   .bub-a{background:rgba(255,255,255,.06);padding:10px 13px;border-radius:13px 13px 13px 3px;font-size:14px;color:#ece9f6;line-height:1.5}
@@ -95,8 +97,10 @@
   .btnp{background:#7B61FF;color:#fff;font-size:12px;font-weight:600;text-align:center;padding:8px;border-radius:8px;margin-top:8px}
   .btng{background:#4FB286;color:#0f2c1b;font-size:12px;font-weight:700;text-align:center;padding:8px;border-radius:8px;margin-top:8px}
   .av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex:0 0 40px}
-  footer{text-align:center;margin-top:46px;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--ink2);font-size:16px}
-  .creed{font-family:'Cinzel',serif;letter-spacing:.24em;font-size:11px;color:var(--green);margin-top:6px}
+  footer{text-align:center;margin-top:46px;font-family:'Source Serif 4',serif;font-style:italic;color:var(--ink2);font-size:16px}
+  .creed{font-family:'IBM Plex Mono',monospace;letter-spacing:.24em;font-size:11px;color:var(--alm-green-deep);margin-top:6px}
+  /* the fixed "‹ the library set" back-link carries inline dark-hub colors — re-ink for paper (markup untouched) */
+  a[href="./index.html"][style]{color:var(--alm-green-deep)!important;background:rgba(251,248,240,.96)!important;border:1px solid rgba(61,107,53,.55)!important}
 </style>
 <style id="a11y-universal">
 /* a11y-universal: keyboard focus + reduced motion (additive, non-breaking) */
@@ -106,7 +110,7 @@
 a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
   outline:2px solid currentColor;outline-offset:2px;border-radius:2px
 }
-.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--green,#2ecc71);color:#04181a;padding:10px 16px;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
+.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--green,#2ecc71);color:#fff;padding:10px 16px;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
 .skip-link:focus{left:0}
 </style>
 </head>
