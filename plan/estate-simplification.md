@@ -103,6 +103,15 @@ break). *Native mode* — properties with their own footer system (the camp's `s
 add the creed line inside it, styled natively; a second injector would race the first and
 double the contentinfo. Either way the creed string is byte-identical.
 
+> **M10 + M11 (2026-07-17, night): SHIPPED — ALL MILESTONES CLOSED.** The Omni portal
+> (51 control-room pages + signin) converted at the token layer (vendored garden tokens,
+> omni.css semantic remap, app.js zero-diff, signin flow exercised end-to-end), pushed
+> and shipped to droplet A; design lane 10/10 on the host; warden receipt
+> rcpt-1f1947240116. M11 (one job per page): both waves merged (Foundation #67), 11/11
+> live battery. Follow-up founder decisions on record: landing/mobile keep charcoal
+> data-theme=dark (cream-light is a markup call); the June "hide Blog links" rule was
+> removed (one-line revert available); Ken's 3 Stripe tier links still pending.
+
 ## The garden estate-wide (directed by Bob, 2026-07-17): M6b–M10
 
 Bob's direction: the entire estate — every site, every doc, every repo — redesigns to
