@@ -62,7 +62,8 @@
   var LEGAL = '© 2026 AiGovOps Foundation — a 501(c)(3) nonprofit. Governance versioned like code.';
   // The estate creed — ONE sentence, identical on every property. Edit here only.
   var ESTATE_CREED = 'Ship safe AI — never unsafe AI: get to yes, stay at yes, recover to yes, and keep the garden of humanity growing.';
-  var DEFAULT_TAGLINE = 'One governed library, run by agents, held by humans, warm in every language.';
+  // Used only on pages with no footer of their own — keep it estate-neutral.
+  var DEFAULT_TAGLINE = 'The AiGovOps estate — run by agents, held by humans, warm in every language.';
   var DEFAULT_CREED = 'AGENTS DO THE BUREAUCRACY · HUMANS HOLD THE MEANING';
 
   function esc(s) {
