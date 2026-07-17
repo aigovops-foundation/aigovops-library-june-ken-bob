@@ -140,6 +140,11 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:70;opa
 svg [font-family^="Spectral"]{font-family:'Fraunces',serif}
 /* fixed back pill (inline-styled) re-inked for the garden ground */
 a[href="./index.html"][data-home][style]{color:#1F5E3A!important;background:rgba(250,247,240,.95)!important;border:1px solid rgba(46,125,79,.55)!important}
+/* narrow widths: the centered map column can reach the top of the viewport,
+   putting the h1 under the fixed back pill — start the column below it instead */
+@media (max-width:720px){
+  #map{justify-content:flex-start;padding-top:56px;overflow-y:auto}
+}
 </style>
 <style id="a11y-universal">
 /* a11y-universal: keyboard focus + reduced motion (additive, non-breaking) */

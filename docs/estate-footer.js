@@ -27,6 +27,9 @@
   // data-site marks aria-current for that property; data-theme="light" swaps the
   // color fallbacks to a fixed light-page set (page CSS vars are IGNORED in light
   // mode so the 4.5:1 contract can't be broken by an unrelated palette).
+  // data-placement="body" appends the footer to <body> (a sibling of the page's
+  // layout root) instead of inside main/.wrap — for locked 100vh layouts whose
+  // root must keep the whole viewport; the footer then sits below the fold.
   var DS = (document.currentScript && document.currentScript.dataset) || {};
   var THEME = DS.theme === 'light' ? 'light' : 'dark';
 
@@ -167,7 +170,8 @@
     if (existing) {
       existing.replaceWith(footer);           // one footer in, one out
     } else {
-      var host = document.querySelector('main') || document.querySelector('.wrap') || document.body;
+      var host = DS.placement === 'body' ? document.body
+        : (document.querySelector('main') || document.querySelector('.wrap') || document.body);
       host.appendChild(footer);
     }
   }
