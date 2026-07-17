@@ -9,6 +9,13 @@ design-review pass before implementation; findings folded in below. Session reco
 > filed in bob-brain. First giving rail live (the $500 Stripe checkout). Still open:
 > Ken's contributor/sustainer/founding Stripe links (`apply-stripe-links.sh` flips them
 > in one command), and the footer rollout to Beacon, Umbrella, Vendor RFI, and Glean.
+>
+> **M6 (2026-07-17): the porch wears the garden — SHIPPED.** The garden-warm visual
+> redesign is live on the Foundation homepage (Foundation PR #61), chosen from three
+> externally-evaluated variants (garden-warm, lantern-daylight, almanac; mockups kept
+> in the Foundation repo `mockups/m6-porch/`). Homepage-scoped `css/porch.css`; shared
+> `style.css` untouched; 8/8 battery green live. Next: garden skin for support and
+> community pages so the porch transition isn't jarring.
 
 ## The design in one paragraph
 
