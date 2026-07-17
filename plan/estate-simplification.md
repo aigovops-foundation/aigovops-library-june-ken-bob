@@ -135,6 +135,30 @@ repos carry a copy with a SOURCE header pointing home.
   the Omni direct-to-main workflow with its own cloud_mary.py battery; V4 repo docs;
   quantum-stack-intelligence webapp (link-don't-duplicate rule — propose, founders call).
 
+## M11 — the subpage simplification (directed by Bob, 2026-07-17 evening)
+
+Same garden language, one level deeper: every subpage gets ONE job, content clusters
+logically, duplication dies. From the 15-page IA survey:
+
+- **Nav becomes intent-shaped:** Home · Start Here (ecosystem reborn as orientation) ·
+  Frameworks · See It Run (alpha absorbs demo) · Blog · Support.
+- **Merges (all with garden-styled redirect stubs — no dead URLs):** demo→alpha;
+  ken+bob→founders.html; jeeves-demo + jeeves-front → jeeves-estate/jeeves-brief
+  (brief = the designated what-Jeeves-does page; estate = the canonical interactive
+  proof); events→Luma redirect.
+- **Slimming:** community drops its duplicated tier cards (link to support) and its
+  4-CTA banner → 1+1; support consolidates three competing give affordances into one
+  giving cluster + FAQ accordion; press bios shrink to one-liners + founders link;
+  ecosystem hero's 4-link Jeeves run-on → one line to the brief; the 5× gate-law
+  explainer survives only on See It Run + the brief.
+- **Bug fixes from the survey:** ken schedule anchor (support.html#schedule doesn't
+  exist), dead locale-coffee JS on alpha/demo, frameworks JSON-LD ItemList 5-vs-40,
+  blog/events chrome drift (raster logo, divergent footer).
+
+**Accept when:** each subpage answers one visitor intent; no content block exists in
+two places; every retired URL 302/meta-redirects to its successor; full battery green
+(assertion updates sanctioned where they encode the old IA).
+
 ## Out of scope (explicitly)
 Deleting pages; changing the membership wall; touching DNS, accounts, or payment
 processors autonomously; the Omni platform's internal surfaces.
