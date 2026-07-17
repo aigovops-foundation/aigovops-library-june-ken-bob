@@ -81,8 +81,11 @@ strongest backend each environment allows; scope every view by identity.**
   identical broker semantics everywhere; an agent never receives a raw secret.
 - **Chokepoint — sandbox contract from day one; gVisor where the kernel allows.** Tools
   run sandboxed, no ambient network/filesystem, egress only via a declared proxy.
-- **Oversight — one surface, role-scoped.** Stewards (founders) see all + the global kill
-  switch; members see only their own effects.
+- **Oversight — one surface, role-scoped, multi-role.** Roles are a set (co-founder /
+  steward / end-user); permission is the union. Co-founders (Bob, Ken) hold everything
+  including the global kill switch and role administration; stewards see all effects and
+  approve/moderate but hold neither the kill switch nor role admin; members see only
+  their own effects. Rule of record: Omni `docs/RUNBOOK-roles.md`.
 - **Membership wall — public source, gated experience.** Library repos stay public on
   GitHub; the rendered Library is served member-gated at community…/library/ (registration,
   never money or secrecy). Rule of record: `plan/processes/membership-wall.md`. Retiring a

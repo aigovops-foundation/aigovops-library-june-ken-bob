@@ -25,11 +25,14 @@ strongest backend each environment allows; scope every view by identity.**
   enforced everywhere. Backend is gVisor on Linux community/enclave; lighter fallback
   on dev laptops (seccomp + netns + read-only rootfs). The guarantee holds in every
   home; gVisor only strengthens it where it can run.
-- **Oversight: one surface, role-scoped.** Same code; stewards (founders) see all
-  receipts, dials, secret-issuance events, and the armed global kill switch; members
-  see only their own effects and pause only their own workflows. Receipts tagged
+- **Oversight: one surface, role-scoped, multi-role.** Same code; roles are a set
+  (co-founder / steward / end-user), permission the union. Co-founders (Bob, Ken) see
+  all receipts, dials, secret-issuance events, the armed global kill switch, and
+  administer roles; granted stewards see all receipts and dials and approve/moderate,
+  without the kill switch or role admin; members see only their own effects and pause
+  only their own workflows. Receipts tagged
   owner+scope; console is a live SSE view gated by viewer authz; the global kill
-  switch is a steward-only action that emits its own signed receipt.
+  switch is a co-founder-only action that emits its own signed receipt.
 
 Three contracts — SecretsProvider, the sandbox boundary, the oversight view — same
 semantics everywhere; only backend and visibility vary, by environment and role.

@@ -17,7 +17,7 @@ the irreversible gates) to publishing:
 |---|---|---|
 | **Public** | No registration, ever | www.aigovops-foundation.com, the GitHub repos, one Library teaser page |
 | **Members' Library** | The access ladder below | community…/library/ — the hub, the wings (quantum, Glean, …) |
-| **Steward** | Ken and Bob only, session-authoritative | admin/steward pages, kill switch, holds queue |
+| **Steward** | role-held (co-founders Ken & Bob always; granted stewards), session-authoritative | admin/steward pages, holds queue — kill switch and role admin are co-founder-only |
 
 ## The access ladder (amended 2026-07-09, Bob's call)
 
