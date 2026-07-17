@@ -201,6 +201,30 @@ End-to-end disciplines as one battery + adaptive cadence + user feedback:
   widget; P2 + RBAC ship in Omni → feedback API + orchestrator → wire, verify E2E,
   brain filing.
 
+## M13 — three doors only (directed by Bob, 2026-07-17 midnight)
+
+Off the main page, EVERYTHING consolidates into the three movements; membership is the
+default action. Nav becomes: Home · Get to Yes · Stay at Yes · Recover to Yes · Join
+(primary button → the community platform; give time/money on the join thread).
+
+- **get-to-yes.html** (ecosystem/Start-Here reborn): before you ship — the Library
+  (primary asset, membership-default CTA), frameworks explorer, training (Glean),
+  camp, quantum wing, the estate map.
+- **stay-at-yes.html** (alpha/See-It-Run reborn): while it runs — the open source
+  (Beacon, Umbrella, Vendor RFI, the platform), live gates demos, watch-it-run.
+- **recover-to-yes.html** (new): when it breaks — FailFest + F-AI-Friday corpus,
+  practitioner test, durability/recovery posture.
+- Old URLs (ecosystem, alpha, frameworks stays as an asset page linked from Get) get
+  the garden stub treatment where folded; founders/community/press/support move to the
+  Join thread + footer. Backend: the portal's member-facing navigation groups by the
+  same three movements where sensible (review + minimal implementation).
+- **Test always, update always**: every change through the 16-tier battery; the design
+  tier learns the three-door nav as an invariant; estate-health keeps watch; docs,
+  brain, and book updated.
+
+**Accept when:** a visitor off the porch sees exactly three ways plus Join, every old
+URL still lands somewhere true, and the batteries are green end to end.
+
 ## Out of scope (explicitly)
 Deleting pages; changing the membership wall; touching DNS, accounts, or payment
 processors autonomously; the Omni platform's internal surfaces.
