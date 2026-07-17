@@ -44,6 +44,8 @@
   ];
 
   var LEGAL = '© 2026 AiGovOps Foundation — a 501(c)(3) nonprofit. Governance versioned like code.';
+  // The estate creed — ONE sentence, identical on every property. Edit here only.
+  var ESTATE_CREED = 'Ship safe AI — never unsafe AI: get to yes, stay at yes, recover to yes, and keep the garden of humanity growing.';
   var DEFAULT_TAGLINE = 'One governed library, run by agents, held by humans, warm in every language.';
   var DEFAULT_CREED = 'AGENTS DO THE BUREAUCRACY · HUMANS HOLD THE MEANING';
 
@@ -66,6 +68,8 @@
         "font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;font-size:14px;line-height:1.5}" +
       '.aig-estate-footer .aig-ef-inner{max-width:1000px;margin:0 auto}' +
       '.aig-estate-footer .aig-ef-brand{margin-bottom:26px}' +
+      '.aig-estate-footer .aig-ef-estate{font-family:Fraunces,Georgia,serif;font-style:italic;' +
+        'font-size:16.5px;line-height:1.5;color:var(--ink,#e7f3f1);max-width:640px;margin-bottom:10px}' +
       '.aig-estate-footer .aig-ef-tagline{font-size:16px;color:var(--ink,#e7f3f1);max-width:640px}' +
       '.aig-estate-footer .aig-ef-creed{margin-top:8px;font-family:"DM Mono",ui-monospace,monospace;' +
         'letter-spacing:.14em;font-size:10.5px;color:var(--green2,var(--green,#6fe6a3))}' +
@@ -112,6 +116,9 @@
       brandInner = '<div class="aig-ef-tagline">' + esc(DEFAULT_TAGLINE) + '</div>' +
         '<div class="aig-ef-creed">' + esc(DEFAULT_CREED) + '</div>';
     }
+    // The estate creed leads the brand block on every property, above any
+    // page-local tagline — the one sentence a visitor meets everywhere.
+    brandInner = '<div class="aig-ef-estate">' + esc(ESTATE_CREED) + '</div>' + brandInner;
 
     var html =
       '<div class="aig-ef-inner">' +
