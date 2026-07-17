@@ -201,6 +201,15 @@ End-to-end disciplines as one battery + adaptive cadence + user feedback:
   widget; P2 + RBAC ship in Omni → feedback API + orchestrator → wire, verify E2E,
   brain filing.
 
+> **M13 (2026-07-17, midnight): SHIPPED — both halves.** Front-end: three movement
+> hubs live (get/stay/recover-to-yes.html), nav = Home · three doors · Join pill,
+> ecosystem/alpha stubbed, the three-door nav now a design-tier invariant; 16/16 live
+> battery (Foundation #72). Backend: the member portal's tiles regrouped under the
+> same three doors + Your membership (Recover previously had NO member option — now
+> Get help + protection), 10-locale door keys, SW cache bump caught live; shipped to
+> droplet A, battery at documented baseline with standalone proofs. Founder follow-ups
+> noted: duplicate Learn/Build tiles, omni.js nav grouping.
+
 ## M13 — three doors only (directed by Bob, 2026-07-17 midnight)
 
 Off the main page, EVERYTHING consolidates into the three movements; membership is the
