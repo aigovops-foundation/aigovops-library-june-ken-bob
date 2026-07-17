@@ -23,19 +23,28 @@
   <meta property="og:title" content="AiGovOps — end-to-end demo">
   <meta property="og:description" content="A live end-to-end run of the AiGovOps governed core — every step actually executed, each one leaving a signed, metadata-only receipt.">
   <meta property="og:type" content="website">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,300..800;1,300..800&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet"/>
 <style>
-:root{--paper:#0c1430;--ink:#dce6f5;--ink2:#8da3c8;--line:rgba(120,160,210,.22);--card:rgba(255,255,255,.04);--teal:#3fd0c8;--green:#36e08a;--gold:#e8c25a}
-*{box-sizing:border-box;margin:0;padding:0}body{font:16px/1.6 ui-serif,Georgia,serif;color:var(--ink);background:var(--paper);padding:40px 20px 90px}
+/* skin: aigovops-july-2026 (garden-warm) — canonical tokens: foundation repo design/aigovops-july-2026/ */
+:root{--paper:#FAF7F0;--ink:#2B2B28;--ink2:#4C4A42;--line:rgba(43,43,40,.14);--card:#fff;--teal:#1F5E3A;--green:#1F5E3A;--green2:#1F5E3A;--gold:#9C4E12;
+  --g-charcoal:#2B2B28;--g-card-line:rgba(43,43,40,.08);--g-shadow-sm:0 10px 26px -14px rgba(78,60,32,.3)}
+*{box-sizing:border-box;margin:0;padding:0}body{font:16px/1.6 'Source Sans 3','Segoe UI',system-ui,sans-serif;color:var(--ink);background:var(--paper);padding:40px 20px 90px}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:30;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.17 0 0 0 0 0.16 0 0 0 0 0.13 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E")}
 .wrap{max-width:820px;margin:0 auto}.hdr{text-align:center;margin-bottom:8px}
-h1{font-family:ui-sans-serif,system-ui;font-size:30px;color:#fff;letter-spacing:.01em}
-.sub{color:var(--ink2);font-size:15px;margin:6px 0 4px}.quote{color:var(--gold);font-style:italic;margin:14px 0 34px;text-align:center}
+h1{font-family:'Fraunces',serif;font-weight:600;font-size:30px;color:var(--g-charcoal);letter-spacing:.01em}
+.sub{color:var(--ink2);font-size:15px;margin:6px 0 4px}.quote{color:var(--gold);font-family:'Fraunces',serif;font-style:italic;margin:14px 0 34px;text-align:center}
 .scene{display:flex;gap:18px;border-top:1px solid var(--line);padding:26px 0}
-.num{font-family:ui-sans-serif;font-weight:800;color:var(--teal);font-size:22px;min-width:34px}
-h2{font-family:ui-sans-serif;font-size:19px;color:#fff;margin-bottom:8px}p{color:var(--ink);margin-bottom:10px}
-.detail{font-family:ui-monospace,monospace;font-size:13px;color:#bfe;background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:9px;padding:9px 11px}
-.receipt{margin-top:9px;font-size:12px;color:var(--ink2)}.receipt code{color:var(--green);font-size:12px}.tag{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:1px 8px;color:var(--teal);font-family:ui-sans-serif;font-size:11px}.ts{font-family:ui-monospace,monospace}
-.finale{margin-top:30px;border:1px solid var(--line);border-radius:14px;background:var(--card);padding:20px}
+.num{font-family:'Fraunces',serif;font-weight:800;color:var(--teal);font-size:22px;min-width:34px}
+h2{font-family:'Fraunces',serif;font-weight:600;font-size:19px;color:var(--g-charcoal);margin-bottom:8px}p{color:var(--ink);margin-bottom:10px}
+/* run transcripts keep a charcoal panel — dark is load-bearing for terminal output */
+.detail{font-family:'DM Mono',ui-monospace,monospace;font-size:13px;color:#5DCAA5;background:var(--g-charcoal);border:1px solid rgba(255,255,255,.14);border-radius:9px;padding:9px 11px}
+.receipt{margin-top:9px;font-size:12px;color:var(--ink2)}.receipt code{color:var(--green);font-size:12px}.tag{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:1px 8px;color:var(--teal);font-family:'Source Sans 3',sans-serif;font-size:11px}.ts{font-family:'DM Mono',ui-monospace,monospace}
+.finale{margin-top:30px;border:1px solid var(--g-card-line);border-radius:14px;background:var(--card);padding:20px;box-shadow:var(--g-shadow-sm)}
 .finale b{color:var(--green)}.meta{color:var(--ink2);font-size:13px;text-align:center;margin-top:26px}
+/* ---- garden re-inks for inline styles (markup untouched; see plan/LIBRARY-CONVERSION-GUIDE.md) ---- */
+[style*="background:var(--green)"]{color:#fff!important}          /* the "run it yourself" pill on green-ink fill */
+a[href="./index.html"][style]{color:#1F5E3A!important;background:rgba(250,247,240,.96)!important;border:1px solid rgba(46,125,79,.55)!important}
 </style><style id="a11y-universal">
 /* a11y-universal: keyboard focus + reduced motion (additive, non-breaking) */
 @media (prefers-reduced-motion: reduce){
@@ -44,7 +53,7 @@ h2{font-family:ui-sans-serif;font-size:19px;color:#fff;margin-bottom:8px}p{color
 a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
   outline:2px solid currentColor;outline-offset:2px;border-radius:2px
 }
-.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--green,#2ecc71);color:#04181a;padding:10px 16px;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
+.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--green,#2ecc71);color:#fff;padding:10px 16px;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
 .skip-link:focus{left:0}
 </style>
 </head><body><a class="skip-link" href="#main">Skip to content</a><a href="./index.html" style="position:fixed;top:12px;left:14px;z-index:9999;font:500 13px system-ui,sans-serif;color:#caa24a;background:rgba(20,12,4,.6);border:1px solid rgba(199,154,60,.5);border-radius:999px;padding:7px 13px;text-decoration:none;backdrop-filter:blur(6px)">← the Library</a><div class="wrap" id="main" role="main">

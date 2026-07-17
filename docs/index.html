@@ -35,46 +35,65 @@
   ]
 }
 </script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,300..800;1,300..800&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet"/>
 <style>
-  :root{--teal:#01696f;--green:#2ecc71;--green2:#6fe6a3;--ink:#e7f3f1;--ink2:#9fc0bd;--gold:#e8c25a;--line:rgba(120,200,190,.18);--card:rgba(255,255,255,.04)}
+  /* skin: aigovops-july-2026 (garden-warm) — canonical tokens: foundation repo design/aigovops-july-2026/ */
+  :root{--teal:#1F5E3A;--green:#2E7D4F;--green2:#1F5E3A;--ink:#2B2B28;--ink2:#4C4A42;--gold:#E8B54A;--line:rgba(43,43,40,.14);--card:#fff;
+    --g-cream:#FAF7F0;--g-deep-cream:#F1EAD8;--g-charcoal:#2B2B28;--g-green-ink:#1F5E3A;--g-green-deep:#0F4A2C;--g-orange:#E07A2A;--g-orange-ink:#9C4E12;
+    --g-card-line:rgba(43,43,40,.08);--g-shadow:0 18px 40px -18px rgba(78,60,32,.35);--g-shadow-sm:0 10px 26px -14px rgba(78,60,32,.3)}
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:radial-gradient(120% 90% at 80% -10%,#0a3034,#04181a 55%,#03100f);min-height:100vh}
+  body{font-family:'Source Sans 3','Segoe UI',system-ui,sans-serif;color:var(--ink);background:var(--g-cream);min-height:100vh}
+  /* paper grain — quiet, below all widgets */
+  body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:30;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.17 0 0 0 0 0.16 0 0 0 0 0.13 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E")}
   .wrap{max-width:1000px;margin:0 auto;padding:40px 22px 80px}
-  .eyebrow{font-family:'DM Mono',monospace;letter-spacing:.28em;font-size:11px;color:var(--green2);text-transform:uppercase}
-  h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(30px,6vw,54px);line-height:1.05;margin:14px 0 12px;color:#fff}
+  .eyebrow{font-family:'DM Mono',monospace;letter-spacing:.28em;font-size:11px;color:var(--g-green-ink);text-transform:uppercase}
+  h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(30px,6vw,54px);line-height:1.05;margin:14px 0 12px;color:var(--g-charcoal)}
   h1 .y{color:var(--green)}
   .thesis{font-size:clamp(17px,2.3vw,21px);color:var(--ink2);max-width:640px;line-height:1.5}
-  .creed{font-family:'Fraunces',serif;font-style:italic;color:var(--green2);border-left:2px solid var(--green);padding-left:16px;margin:22px 0 0;font-size:18px}
+  .creed{font-family:'Fraunces',serif;font-style:italic;color:var(--g-green-ink);border-left:2px solid var(--green);padding-left:16px;margin:22px 0 0;font-size:18px}
   .porch{font-family:'DM Mono',monospace;font-size:13px;color:var(--ink2);margin-top:14px}
-  .porch a{color:var(--green2)}
+  .porch a{color:var(--g-green-ink)}
   /* shelves — the three movements */
   .shelves{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:0 0 8px}
   @media(max-width:820px){.shelves{grid-template-columns:1fr}}
-  .shelf{border:1px solid var(--line);border-radius:16px;background:var(--card);padding:22px}
-  .shelf .gloss{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.14em;color:var(--gold);text-transform:uppercase}
-  .shelf h3{font-family:'Fraunces',serif;font-size:22px;color:#fff;margin:8px 0 6px}
+  .shelf{border:1px solid var(--g-card-line);border-radius:16px;background:var(--card);padding:22px;box-shadow:var(--g-shadow-sm)}
+  .shelf .gloss{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.14em;color:var(--g-orange-ink);text-transform:uppercase}
+  .shelf h3{font-family:'Fraunces',serif;font-size:22px;color:var(--g-charcoal);margin:8px 0 6px}
   .shelf h3 .y{color:var(--green)}
   .shelf p{font-size:13.5px;color:var(--ink2);line-height:1.5;margin-bottom:12px}
   .shelf ul{list-style:none}
-  .shelf li a{display:inline-flex;align-items:center;min-height:24px;padding:4px 0;text-decoration:none;color:var(--green2);font-size:14px}
+  .shelf li a{display:inline-flex;align-items:center;min-height:24px;padding:4px 0;text-decoration:none;color:var(--g-green-ink);font-size:14px}
   .shelf li a:hover{text-decoration:underline}
   .shelf li a::before{content:'→ ';color:var(--ink2);white-space:pre}
   section{margin-top:48px}
-  h2{font-family:'Fraunces',serif;font-weight:600;font-size:26px;color:#fff;margin-bottom:18px}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:26px;color:var(--g-charcoal);margin-bottom:18px}
   .pieces{display:grid;grid-template-columns:1fr 1fr;gap:16px}
   @media(max-width:720px){.pieces{grid-template-columns:1fr}}
-  .card{border:1px solid var(--line);border-radius:16px;background:var(--card);padding:22px;transition:.2s;text-decoration:none;color:inherit;display:block}
-  .card:hover{border-color:rgba(46,204,113,.45);background:rgba(46,204,113,.05)}
-  .card .tag{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.1em;color:var(--gold);text-transform:uppercase}
-  .card h3{font-family:'Fraunces',serif;font-size:21px;color:#fff;margin:8px 0 6px}
+  .card{border:1px solid var(--g-card-line);border-radius:16px;background:var(--card);padding:22px;transition:.2s;text-decoration:none;color:inherit;display:block;box-shadow:var(--g-shadow-sm)}
+  .card:hover{border-color:var(--green);box-shadow:var(--g-shadow)}
+  .card .tag{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.1em;color:var(--g-orange-ink);text-transform:uppercase}
+  .card h3{font-family:'Fraunces',serif;font-size:21px;color:var(--g-charcoal);margin:8px 0 6px}
   .card p{font-size:14.5px;color:var(--ink2);line-height:1.55}
-  .card .go{font-family:'DM Mono',monospace;font-size:12px;color:var(--green2);margin-top:12px;display:inline-block}
-  .repo{border:1px dashed var(--line);border-radius:14px;padding:18px 20px;margin-top:16px;font-size:14.5px;color:var(--ink2);line-height:1.55}
-  .repo b{color:#fff} .mono{font-family:'DM Mono',monospace;color:var(--green2)}
+  .card .go{font-family:'DM Mono',monospace;font-size:12px;color:var(--g-green-ink);margin-top:12px;display:inline-block}
+  .repo{border:1px dashed rgba(43,43,40,.3);border-radius:14px;padding:18px 20px;margin-top:16px;font-size:14.5px;color:var(--ink2);line-height:1.55;background:var(--g-deep-cream)}
+  .repo b{color:var(--g-charcoal)} .mono{font-family:'DM Mono',monospace;color:var(--g-green-ink)}
   footer{margin-top:56px;text-align:center;color:var(--ink2)}
-  .fcreed{font-family:'DM Mono',monospace;letter-spacing:.2em;font-size:10.5px;color:var(--green2);margin-top:8px}
-  .tagline{font-family:'Fraunces',serif;font-style:italic;font-size:17px}
+  .fcreed{font-family:'DM Mono',monospace;letter-spacing:.2em;font-size:10.5px;color:var(--g-green-ink);margin-top:8px}
+  .tagline{font-family:'Fraunces',serif;font-style:italic;font-size:17px;color:var(--g-charcoal)}
+  /* ---- garden re-inks for inline styles (markup untouched; see plan/LIBRARY-CONVERSION-GUIDE.md) ---- */
+  [style*="color:#fff"]{color:var(--g-charcoal)!important}          /* white inline text → charcoal on cream */
+  [style*="background:var(--green)"]{color:#fff!important}          /* pills/buttons on orchard green → white text */
+  [style*="color:var(--gold)"]{color:var(--g-orange-ink)!important} /* gold inline text → orange-ink on cream */
+  /* the terminal blocks keep a charcoal panel — dark is load-bearing for code */
+  [style*="color:#cfeee2"]{background:var(--g-charcoal);border-radius:10px;padding:12px 16px;--green2:#5DCAA5;--ink2:#B9B3A2}
+  [style*="color:#cfeee2"] [style*="color:#fff"]{color:#fff!important}
+  /* the in-page demo, re-grounded light */
+  #srq{background:#fff!important}
+  #srans{background:var(--g-deep-cream)!important;color:var(--g-charcoal)!important}
+  #srreceipt{background:rgba(46,125,79,.08)!important;border-color:rgba(46,125,79,.35)!important}
+  #srrisk [style*="#f0a64a"],#srrisk [style*="#e8c25a"]{color:var(--g-orange-ink)!important}
+  #srrisk [style*="#2ecc71"]{color:var(--g-green-ink)!important}
 </style>
 <style id="a11y-universal">
 /* a11y-universal: keyboard focus + reduced motion (additive, non-breaking) */
@@ -84,14 +103,12 @@
 a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
   outline:2px solid currentColor;outline-offset:2px;border-radius:2px
 }
-.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--green,#2ecc71);color:#04181a;padding:10px 16px;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
+.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--green,#2ecc71);color:#fff;padding:10px 16px;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
 .skip-link:focus{left:0}
 </style>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
-<div id="jeeves-hero"></div>
-<script src="https://www.aigovops-foundation.com/jeeves-hero.js" data-jeeves-site="library" defer></script>
 <main id="main" class="wrap">
   <div class="eyebrow">AiGovOps Foundation · The Library · Ship safe AI — never unsafe AI</div>
   <h1>Get to <span class="y">Yes</span>. Stay at <span class="y">Yes</span>.<br/>Recover to <span class="y">Yes</span>.</h1>

@@ -27,18 +27,26 @@
   <meta property="og:title" content="#F-AI-Friday — 100 Verified AI-Harm Cases">
   <meta property="og:description" content="100 real AI failures with primary sources. One per day. Each carries the gate that would have caught it.">
   <meta property="og:type" content="website">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Source+Sans+3:ital,wght@0,300..800;1,300..800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
+    /* skin: aigovops-july-2026 (garden-warm) — canonical tokens: foundation repo design/aigovops-july-2026/ */
     :root {
-      --bg: #0a0e14; --bg-card: #131820; --bg-accent: #1a2030;
-      --fg: #e8eaed; --fg-dim: #9aa0a6; --fg-faint: #5f6368;
-      --border: #2d333d; --accent: #4fc3f7; --accent-warm: #ffb74d;
-      --no: #ef5350; --maybe: #ffb74d; --yes: #66bb6a;
-      --serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      --bg: #FAF7F0; --bg-card: #fff; --bg-accent: #F1EAD8;
+      --fg: #2B2B28; --fg-dim: #4C4A42; --fg-faint: #6B675C;
+      --border: rgba(43,43,40,.14); --accent: #1F5E3A; --accent-warm: #9C4E12;
+      --no: #A83A24; --maybe: #9C4E12; --yes: #1F5E3A;
+      --serif: 'Fraunces', ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+      --sans: 'Source Sans 3', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --mono: 'DM Mono', ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      /* estate-footer palette hooks (AA on cream) */
+      --ink: #2B2B28; --ink2: #4C4A42; --green: #2E7D4F; --green2: #1F5E3A;
+      --line: rgba(43,43,40,.14); --card: #fff;
     }
     * { box-sizing: border-box; }
     body { margin:0; font-family: var(--sans); background: var(--bg); color: var(--fg); line-height: 1.55; min-height: 100vh; }
+    /* paper grain — quiet, below all widgets */
+    body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:30;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.17 0 0 0 0 0.16 0 0 0 0 0.13 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E")}
     header { padding: 36px 24px 24px; border-bottom: 1px solid var(--border); max-width: 880px; margin: 0 auto; }
     header .tag { font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em; color: var(--accent); text-transform: uppercase; }
     header h1 { margin: 8px 0 8px; font-family: var(--serif); font-size: 32px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.15; }
@@ -52,7 +60,7 @@
       text-decoration: none; font-family: inherit;
     }
     .nav button:hover, .nav a:hover { background: var(--bg-accent); border-color: var(--accent); }
-    .nav .primary { background: var(--accent); color: #000; font-weight: 600; border-color: var(--accent); }
+    .nav .primary { background: var(--accent); color: #fff; font-weight: 600; border-color: var(--accent); }
     .nav .spacer { flex: 1; }
     .filter-row { display: flex; gap: 8px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
     .filter-row input, .filter-row select {
@@ -60,15 +68,15 @@
       padding: 7px 11px; border-radius: 4px; font-family: inherit; font-size: 13px;
     }
     .filter-row input { flex: 1; min-width: 200px; }
-    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 32px; margin-bottom: 16px; }
+    .card { background: var(--bg-card); border: 1px solid rgba(43,43,40,.08); border-radius: 8px; padding: 32px; margin-bottom: 16px; box-shadow: 0 10px 26px -14px rgba(78,60,32,.3); }
     .card .id { font-family: var(--mono); font-size: 12px; color: var(--fg-faint); letter-spacing: 0.05em; }
     .card h2 { margin: 8px 0 4px; font-family: var(--serif); font-size: 26px; font-weight: 600; letter-spacing: -0.01em; }
     .card h2 .year { color: var(--fg-faint); font-weight: 400; }
     .card .meta { display: flex; gap: 12px; flex-wrap: wrap; font-size: 13px; color: var(--fg-dim); margin-bottom: 24px; }
     .verdict { display: inline-block; padding: 4px 10px; border-radius: 3px; font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
-    .verdict-0 { background: rgba(239,83,80,0.15); color: var(--no); border: 1px solid rgba(239,83,80,0.35); }
-    .verdict-maybe { background: rgba(255,183,77,0.15); color: var(--maybe); border: 1px solid rgba(255,183,77,0.35); }
-    .verdict-1 { background: rgba(102,187,106,0.15); color: var(--yes); border: 1px solid rgba(102,187,106,0.35); }
+    .verdict-0 { background: rgba(168,58,36,0.08); color: var(--no); border: 1px solid rgba(168,58,36,0.35); }
+    .verdict-maybe { background: rgba(156,78,18,0.08); color: var(--maybe); border: 1px solid rgba(156,78,18,0.35); }
+    .verdict-1 { background: rgba(31,94,58,0.08); color: var(--yes); border: 1px solid rgba(31,94,58,0.35); }
     .tier { font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; }
     h3 { font-family: var(--sans); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--fg-faint); margin: 24px 0 8px; font-weight: 600; }
     .gate { font-family: var(--serif); font-size: 18px; font-style: italic; color: var(--accent); border-left: 3px solid var(--accent); padding: 8px 0 8px 16px; margin: 16px 0; line-height: 1.45; }
@@ -81,8 +89,12 @@
     .framework-list li { font-family: var(--mono); font-size: 11px; background: var(--bg-accent); padding: 4px 8px; border-radius: 3px; color: var(--fg); }
     footer { max-width: 880px; margin: 0 auto; padding: 32px 24px; border-top: 1px solid var(--border); font-size: 12px; color: var(--fg-faint); }
     footer a { color: var(--accent); }
+    footer code { font-family: var(--mono); word-break: break-all; }
     .results-count { font-family: var(--mono); font-size: 12px; color: var(--fg-dim); margin-bottom: 12px; }
     .no-results { text-align: center; padding: 60px 20px; color: var(--fg-dim); }
+    /* garden re-inks for inline styles (markup untouched; see plan/LIBRARY-CONVERSION-GUIDE.md) */
+    nav[style]{border-top-color:rgba(43,43,40,.14)!important}
+    nav[style] a[style]{color:#1F5E3A!important}
     @media (max-width: 600px) {
       header h1 { font-size: 26px; }
       .card { padding: 22px; }
@@ -98,7 +110,7 @@
 a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
   outline:2px solid currentColor;outline-offset:2px;border-radius:2px
 }
-.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--green,#2ecc71);color:#04181a;padding:10px 16px;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
+.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--green,#2ecc71);color:#fff;padding:10px 16px;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
 .skip-link:focus{left:0}
 </style>
 </head>

@@ -27,64 +27,73 @@
 <meta property="og:title" content="AiGovOps — End-to-End Demo &amp; Plan"/>
 <meta property="og:description" content="See the AiGovOps governed core run end to end: a request crosses the Yes-Gate, effects are scoped and logged, and every step emits a signed receipt."/>
 <meta property="og:url" content="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/demo.html"/>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Cormorant+Garamond:ital@0;1&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,300..800;1,300..800&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet"/>
 <style>
+  /* skin: aigovops-july-2026 (garden-warm) — canonical tokens: foundation repo design/aigovops-july-2026/ */
   :root{
-    --bg1:#f7efe1; --bg2:#ece0cb; --ink:#2c2317; --ink2:#6b5c45;
-    --card:#fffaf0; --line:rgba(80,60,30,.16);
-    --teal:#0f6f73; --green:#1f9d5b; --gold:#bd8a2c; --human:#c4632a; --soft:#0f6f73;
-    --shadow:0 14px 40px rgba(70,45,15,.14);
+    --bg1:#FAF7F0; --bg2:#FAF7F0; --ink:#2B2B28; --ink2:#4C4A42;
+    --card:#fff; --line:rgba(43,43,40,.14);
+    --teal:#1F5E3A; --green:#1F5E3A; --green2:#1F5E3A; --gold:#E8B54A; --human:#9C4E12; --soft:#0F4A2C;
+    --shadow:0 10px 26px -14px rgba(78,60,32,.3);
+    --g-charcoal:#2B2B28; --g-deep-cream:#F1EAD8; --g-card-line:rgba(43,43,40,.08);
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{height:100%}
-  body{font-family:'Spectral',Georgia,serif;color:var(--ink);background:
-    radial-gradient(140% 120% at 80% -10%, #fbf4e6 0%, var(--bg1) 45%, var(--bg2) 100%);
+  body{font-family:'Source Sans 3','Segoe UI',system-ui,sans-serif;color:var(--ink);background:var(--bg1);
     min-height:100%;overflow-x:hidden}
-  body::after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.04;z-index:99;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  /* paper grain — quiet, below all widgets */
+  body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:99;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.17 0 0 0 0 0.16 0 0 0 0 0.13 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E")}
   .wrap{max-width:1080px;margin:0 auto;padding:34px 22px 70px}
   header{text-align:center;margin-bottom:8px}
-  .eyebrow{font-family:'Cinzel',serif;letter-spacing:.32em;font-size:11px;color:var(--teal)}
-  h1{font-family:'Cinzel',serif;font-weight:600;font-size:clamp(26px,4.4vw,42px);letter-spacing:.01em;margin:8px 0 6px;color:#241c10}
-  .thesis{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(17px,2.2vw,22px);color:var(--ink2)}
+  .eyebrow{font-family:'DM Mono',monospace;letter-spacing:.32em;font-size:11px;color:var(--teal);text-transform:uppercase}
+  h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(26px,4.4vw,42px);letter-spacing:.01em;margin:8px 0 6px;color:var(--g-charcoal)}
+  .thesis{font-family:'Fraunces',serif;font-style:italic;font-size:clamp(17px,2.2vw,22px);color:var(--ink2)}
   .legend{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin:18px 0 6px;font-size:14px}
   .legend span{display:inline-flex;align-items:center;gap:7px}
   .sw{width:12px;height:12px;border-radius:50%}
   nav{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin:22px 0 8px;position:sticky;top:0;z-index:30;
-    background:linear-gradient(var(--bg1),rgba(247,239,225,.4));padding:10px 6px;backdrop-filter:blur(4px)}
-  .tab{cursor:pointer;font-family:'Cinzel',serif;font-size:12px;letter-spacing:.12em;color:var(--ink2);
+    background:linear-gradient(var(--bg1),rgba(250,247,240,.4));padding:10px 6px;backdrop-filter:blur(4px)}
+  .tab{cursor:pointer;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.12em;color:var(--ink2);
     padding:8px 13px;border-radius:999px;border:1px solid transparent;transition:.25s;user-select:none}
   .tab:hover{color:var(--ink);border-color:var(--line)}
-  .tab.on{background:#241c10;color:#f3e6c8;border-color:#241c10}
-  .play{cursor:pointer;font-family:'Cinzel',serif;font-size:12px;letter-spacing:.12em;color:#fff;background:var(--teal);
+  .tab.on{background:var(--g-charcoal);color:#FAF7F0;border-color:var(--g-charcoal)}
+  .play{cursor:pointer;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.12em;color:#fff;background:var(--teal);
     padding:8px 15px;border-radius:999px;border:1px solid var(--teal);transition:.25s}
-  .play:hover{background:#0c5a5d}
+  .play:hover{background:#17492E}
   .stage{margin-top:14px}
   .panel{display:none;animation:rise .55s cubic-bezier(.2,.7,.2,1)}
   .panel.on{display:block}
   @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);
+  .card{background:var(--card);border:1px solid var(--g-card-line);border-radius:20px;box-shadow:var(--shadow);
     overflow:hidden}
   .split{display:grid;grid-template-columns:1fr 1fr;gap:0}
   @media(max-width:760px){.split{grid-template-columns:1fr}}
   .pad{padding:30px 32px}
-  .ptag{display:inline-flex;align-items:center;gap:6px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.16em;
+  .ptag{display:inline-flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;
     padding:4px 10px;border-radius:999px;margin-bottom:14px}
-  .t-h{background:rgba(196,99,42,.12);color:var(--human)}
-  .t-s{background:rgba(15,111,115,.12);color:var(--soft)}
-  .t-b{background:rgba(31,157,91,.14);color:var(--green)}
-  h2{font-family:'Cinzel',serif;font-weight:600;font-size:clamp(20px,2.8vw,28px);color:#241c10;margin-bottom:4px;letter-spacing:.01em}
-  .sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:19px;color:var(--ink2);margin-bottom:16px}
-  .body p{font-size:16px;line-height:1.62;color:#3a3020;margin-bottom:12px}
-  .body b{color:#241c10}
-  .conn{margin-top:14px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.1em;color:var(--teal)}
-  .vis{background:linear-gradient(160deg,#fbf4e6,#f0e3cd);display:flex;align-items:center;justify-content:center;padding:26px;border-left:1px solid var(--line)}
+  .t-h{background:rgba(156,78,18,.1);color:var(--human)}
+  .t-s{background:rgba(15,74,44,.1);color:var(--soft)}
+  .t-b{background:rgba(46,125,79,.12);color:var(--green)}
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(20px,2.8vw,28px);color:var(--g-charcoal);margin-bottom:4px;letter-spacing:.01em}
+  .sub{font-family:'Fraunces',serif;font-style:italic;font-size:19px;color:var(--ink2);margin-bottom:16px}
+  .body p{font-size:16px;line-height:1.62;color:var(--ink);margin-bottom:12px}
+  .body b{color:var(--g-charcoal)}
+  .conn{margin-top:14px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--teal);text-transform:uppercase}
+  .vis{background:linear-gradient(160deg,#FDFBF6,var(--g-deep-cream));display:flex;align-items:center;justify-content:center;padding:26px;border-left:1px solid var(--line)}
   @media(max-width:760px){.vis{border-left:none;border-top:1px solid var(--line)}}
   .vis svg{width:100%;height:auto;max-width:440px}
   .clk{cursor:pointer}
   .clk:hover{opacity:.85}
-  footer{text-align:center;margin-top:26px;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--ink2);font-size:16px}
-  .creed{font-family:'Cinzel',serif;letter-spacing:.26em;font-size:11px;color:var(--green);margin-top:6px}
+  footer{text-align:center;margin-top:26px;font-family:'Fraunces',serif;font-style:italic;color:var(--ink2);font-size:16px}
+  .creed{font-family:'DM Mono',monospace;letter-spacing:.26em;font-size:11px;color:var(--green);margin-top:6px}
+  /* the illustrations keep their own inks; only their lettering joins the family (presentation attrs → CSS wins) */
+  svg [font-family^="Cinzel"]{font-family:'Fraunces',serif}
+  svg [font-family^="Cormorant"]{font-family:'Fraunces',serif}
+  svg [font-family^="Spectral"]{font-family:'Source Sans 3',sans-serif}
+  svg [font-family="monospace"]{font-family:'DM Mono',monospace}
+  /* ---- garden re-inks for inline styles (markup untouched; see plan/LIBRARY-CONVERSION-GUIDE.md) ---- */
+  a[href="./index.html"][style]{color:#1F5E3A!important;background:rgba(250,247,240,.96)!important;border:1px solid rgba(46,125,79,.55)!important}
 </style>
 <style id="a11y-universal">
 /* a11y-universal: keyboard focus + reduced motion (additive, non-breaking) */
@@ -94,7 +103,7 @@
 a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
   outline:2px solid currentColor;outline-offset:2px;border-radius:2px
 }
-.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--green,#2ecc71);color:#04181a;padding:10px 16px;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
+.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--green,#2ecc71);color:#fff;padding:10px 16px;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
 .skip-link:focus{left:0}
 </style>
 </head>

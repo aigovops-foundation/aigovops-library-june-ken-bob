@@ -23,32 +23,39 @@
   <meta property="og:title" content="AiGovOps Library — A Day in the Library">
   <meta property="og:description" content="A narrated day in the AiGovOps Library: the governed core handling real requests, each step gated and left as a signed, metadata-only receipt.">
   <meta property="og:type" content="website">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,300..800;1,300..800&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&display=swap" rel="stylesheet"/>
 <style>
-:root{--bg:#16122c;--card:#1f1a3a;--ink:#ece8ff;--mut:#9a93c7;--teal:#4FB286;--gold:#e8c879;--violet:#7B61FF;--line:#332c5c}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto}
+/* skin: aigovops-july-2026 (garden-warm) — canonical tokens: foundation repo design/aigovops-july-2026/ */
+:root{--bg:#FAF7F0;--card:#fff;--ink:#2B2B28;--ink2:#4C4A42;--mut:#4C4A42;--teal:#4FB286;--gold:#E8B54A;--violet:#2E7D4F;--line:rgba(43,43,40,.14);
+  --green:#2E7D4F;--green2:#1F5E3A;--g-charcoal:#2B2B28;--g-card-line:rgba(43,43,40,.08);--g-shadow-sm:0 10px 26px -14px rgba(78,60,32,.3)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 'Source Sans 3',ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:30;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.17 0 0 0 0 0.16 0 0 0 0 0.13 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E")}
 .wrap{max-width:1100px;margin:0 auto;padding:24px}
-h1{font:600 24px/1.2 Cinzel,Georgia,serif;letter-spacing:.5px;margin:0 0 2px}
+h1{font:600 24px/1.2 'Fraunces',Georgia,serif;letter-spacing:.5px;margin:0 0 2px;color:var(--g-charcoal)}
 .sub{color:var(--mut);margin:0 0 16px}
-.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:14px 0;padding:10px;background:var(--card);border:1px solid var(--line);border-radius:12px}
-button{background:#2a2350;color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:8px 14px;font-weight:600;cursor:pointer}
-button:hover{border-color:var(--violet)}button.primary{background:var(--violet);border-color:var(--violet)}
+.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:14px 0;padding:10px;background:var(--card);border:1px solid var(--g-card-line);border-radius:12px;box-shadow:var(--g-shadow-sm)}
+button{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:8px 14px;font-weight:600;cursor:pointer}
+button:hover{border-color:var(--violet)}button.primary{background:var(--violet);border-color:var(--violet);color:#fff}
 .grid{display:grid;grid-template-columns:230px 1fr;gap:16px}
 @media(max-width:760px){.grid{grid-template-columns:1fr}}
-.agents{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
-.agent{display:flex;gap:8px;align-items:center;padding:7px 8px;border-radius:8px;color:var(--mut)}
-.agent .dot{width:9px;height:9px;border-radius:50%;background:#4a4470;flex:none}
-.agent.on{color:var(--ink);background:#241e44}.agent.on .dot{background:var(--teal);box-shadow:0 0 10px var(--teal)}
-.stage{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;min-height:340px}
-.room{font:600 18px/1.2 Cinzel,Georgia,serif;color:var(--gold)}
+/* the live console (roster + stage) keeps a charcoal panel — dark is load-bearing for the terminal output */
+.agents{background:var(--g-charcoal);border:1px solid var(--g-charcoal);border-radius:12px;padding:10px}
+.agent{display:flex;gap:8px;align-items:center;padding:7px 8px;border-radius:8px;color:#B9B3A2}
+.agent .dot{width:9px;height:9px;border-radius:50%;background:#57534A;flex:none}
+.agent.on{color:#EDE8DA;background:rgba(255,255,255,.08)}.agent.on .dot{background:var(--teal);box-shadow:0 0 10px var(--teal)}
+.stage{background:var(--g-charcoal);border:1px solid var(--g-charcoal);border-radius:12px;padding:16px;min-height:340px;--mut:#B9B3A2;--line:rgba(255,255,255,.14);--violet:#7B61FF}
+.room{font:600 18px/1.2 'Fraunces',Georgia,serif;color:var(--gold)}
 .tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;margin-left:8px}
 .tag.live{background:#13351f;color:#7fe0a6;border:1px solid #1f9d5b}
 .tag.script{background:#2a2350;color:#b9a6ff;border:1px solid var(--violet)}
 .body{margin-top:12px}
-pre{background:#120f24;border:1px solid var(--line);border-radius:10px;padding:12px;overflow:auto;color:#cfeae0;font-size:12.5px;white-space:pre-wrap;word-break:break-word}
-.reck{margin-top:10px;font-size:12px;color:var(--mut)}.reck b{color:var(--gold)}
-.prog{height:4px;background:#241e44;border-radius:99px;overflow:hidden;margin:10px 0}
-.prog>i{display:block;height:100%;background:var(--violet);width:0;transition:width .4s}
+pre{background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:10px;padding:12px;overflow:auto;color:#cfeae0;font-size:12.5px;white-space:pre-wrap;word-break:break-word}
+.reck{margin-top:10px;font-size:12px;color:#B9B3A2}.reck b{color:var(--gold)}
+.prog{height:4px;background:rgba(43,43,40,.12);border-radius:99px;overflow:hidden;margin:10px 0}
+.prog>i{display:block;height:100%;background:var(--green);width:0;transition:width .4s}
 .dim{color:var(--mut)}
+a[href="./index.html"][style]{color:#1F5E3A!important;background:rgba(250,247,240,.96)!important;border:1px solid rgba(46,125,79,.55)!important}
 </style><style id="a11y-universal">
 /* a11y-universal: keyboard focus + reduced motion (additive, non-breaking) */
 @media (prefers-reduced-motion: reduce){
@@ -57,7 +64,7 @@ pre{background:#120f24;border:1px solid var(--line);border-radius:10px;padding:1
 a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
   outline:2px solid currentColor;outline-offset:2px;border-radius:2px
 }
-.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--green,#2ecc71);color:#04181a;padding:10px 16px;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
+.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--green,#2ecc71);color:#fff;padding:10px 16px;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
 .skip-link:focus{left:0}
 </style>
 </head><body>
