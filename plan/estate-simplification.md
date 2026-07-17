@@ -103,6 +103,28 @@ break). *Native mode* — properties with their own footer system (the camp's `s
 add the creed line inside it, styled natively; a second injector would race the first and
 double the contentinfo. Either way the creed string is byte-identical.
 
+## The garden estate-wide (directed by Bob, 2026-07-17): M6b–M10
+
+Bob's direction: the entire estate — every site, every doc, every repo — redesigns to
+match the garden. Family rule: **match the family, not the wallpaper** — porches and
+hubs wear garden-warm (cream/orchard/signal, Fraunces); deep reading-room docs wear the
+almanac (paper/ink/botanical, same family in print form; base: `mockups/m6-porch/
+variant-3-almanac/`). This supersedes M6's "navy stays for the library" note.
+Canonical skin: `css/garden.css` in the Foundation repo is the source of truth; other
+repos carry a copy with a SOURCE header pointing home.
+
+- **M6b — Foundation site, all 30 pages** (21 top-level + 9 blog/): garden.css extraction
+  + per-page conversion; content/links/scripts byte-identical; full battery per PR.
+- **M7 — Library**: hub + wings go garden-warm; deep docs (blueprint, control-plane,
+  build-tickets, plan, design-book) go almanac; quantum wing included; deploy-gate
+  assertions updated with the content, per the M2 lesson.
+- **M8 — Camp**: already garden-native; alignment pass only (tokens + creed drift check).
+- **M9 — Beacon, Umbrella, Vendor RFI, Glean** (repos cloned 2026-07-17): garden skin +
+  estate footer/creed via injector or native mode per the M5 pattern.
+- **M10 — Platform surfaces**: Omni portal pages (signin, review, manage, humans-do) via
+  the Omni direct-to-main workflow with its own cloud_mary.py battery; V4 repo docs;
+  quantum-stack-intelligence webapp (link-don't-duplicate rule — propose, founders call).
+
 ## Out of scope (explicitly)
 Deleting pages; changing the membership wall; touching DNS, accounts, or payment
 processors autonomously; the Omni platform's internal surfaces.
