@@ -179,3 +179,6 @@ nothing, holding the meaning is the whole job.
 the AiGovOps Library. The five proposal cards were mid-flight when this chapter was
 called for; card 1 (the creed, in the shared estate footer) sits in the working tree
 awaiting the founders' word on the sentence itself.*
+
+*The day continued — the blessing, the shipping, the "it looks the same" turn, and the
+garden itself: [Chapter Two — The Day the Words Got a Garden](when-creation-is-cheap-ch2.md).*
