@@ -168,6 +168,17 @@ logically, duplication dies. From the 15-page IA survey:
 two places; every retired URL 302/meta-redirects to its successor; full battery green
 (assertion updates sanctioned where they encode the old IA).
 
+> **M12 + RBAC (2026-07-17, late night): SHIPPED.** The battery is 16 tiers (design ·
+> security 134 · privacy 106 · arch 175 · ux 161 · a11y · happy · uptime · errors ·
+> e2e · dns · i18n · scale · chaos · unit · docs) — all green live. The estate-health
+> orchestrator is seeded daily on droplet A with the results-driven escalation ladder
+> (first audit 17/17, rcpt-b9596eaa8f4b). The feedback strip is live on 18 content
+> pages → /api/feedback (CORS-allowlisted, rate-limited, zero IP retention) → Jeeves
+> routes text to stewards immediately (fan-out now includes store-granted stewards)
+> and votes to a daily digest; E2E proven. Multi-role RBAC live with Bob's roster
+> (co-founders Bob+Ken; stewards Stacy+Bill pending activation; end-users Yu, Corey,
+> Fischer); kill switch + role admin = co-founder-only; all rule surfaces aligned.
+
 ## M12 — the estate's operating rhythm (directed by Bob, 2026-07-17 night)
 
 End-to-end disciplines as one battery + adaptive cadence + user feedback:
