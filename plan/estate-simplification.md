@@ -4,6 +4,12 @@
 design-review pass before implementation; findings folded in below. Session record:
 [`plan/book/when-creation-is-cheap-ch1.md`](book/when-creation-is-cheap-ch1.md).*
 
+> **Status (2026-07-17): SHIPPED.** M1–M5b merged and live (Library #4 #5 #6, Foundation
+> #57 #59 #60, Camp #15); Cloud-Mary 8/8 tiers green against the live estate; milestone
+> filed in bob-brain. First giving rail live (the $500 Stripe checkout). Still open:
+> Ken's contributor/sustainer/founding Stripe links (`apply-stripe-links.sh` flips them
+> in one command), and the footer rollout to Beacon, Umbrella, Vendor RFI, and Glean.
+
 ## The design in one paragraph
 
 One sentence, identical on every property. Two rooms: the **porch** (the Foundation site —
