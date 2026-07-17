@@ -22,8 +22,24 @@
   // Idempotency: never inject twice, never add a second contentinfo.
   if (document.querySelector('footer.aig-estate-footer')) return;
 
-  // Which estate property is this? Used to mark aria-current on that link.
-  var CURRENT = 'library';
+  // Per-page overrides via the script tag itself:
+  //   <script src=".../estate-footer.js" data-site="ncw" data-theme="light" defer></script>
+  // data-site marks aria-current for that property; data-theme="light" swaps the
+  // color fallbacks to a fixed light-page set (page CSS vars are IGNORED in light
+  // mode so the 4.5:1 contract can't be broken by an unrelated palette).
+  var DS = (document.currentScript && document.currentScript.dataset) || {};
+  var THEME = DS.theme === 'light' ? 'light' : 'dark';
+
+  // Which estate property is this? data-site wins; else infer from the URL.
+  var CURRENT = DS.site || (function () {
+    var u = (location.hostname + location.pathname).toLowerCase();
+    if (u.indexOf('ncw-ai-camp') > -1) return 'ncw';
+    if (u.indexOf('aigovops-beacon') > -1) return 'beacon';
+    if (u.indexOf('umbrella-govops') > -1) return 'umbrella';
+    if (u.indexOf('community.aigovops') > -1) return 'community';
+    if (u.indexOf('aigovops-foundation.com') > -1) return 'foundation';
+    return 'library';
+  })();
 
   // Group A — "Explore the estate" (same-tab; stay within the estate).
   var GROUP_A = [
@@ -55,35 +71,45 @@
     });
   }
 
-  // One scoped stylesheet. Reuses page palette vars where present; the fallbacks
-  // are chosen to clear 4.5:1 on both the hub (teal/near-black) and deep-doc
-  // (navy) backgrounds. Text/link colors never depend on ambient page bg.
+  // One scoped stylesheet. Dark (default): reuses page palette vars where present;
+  // fallbacks clear 4.5:1 on the hub (teal/near-black) and deep-doc (navy)
+  // backgrounds. Light (data-theme="light"): fixed values only — light pages
+  // (e.g. the camp) don't define our vars, and guessing would risk the contract.
+  var C = THEME === 'light' ? {
+    ink:  '#1f2937', ink2: '#3f4c53', link: '#085041', creed: '#085041',
+    line: 'rgba(0,0,0,.16)', bg: 'rgba(0,0,0,.025)'
+  } : {
+    ink:  'var(--ink,#e7f3f1)', ink2: 'var(--ink2,#9fc0bd)',
+    link: 'var(--green2,var(--green,#6fe6a3))',
+    creed: 'var(--green2,var(--green,#6fe6a3))',
+    line: 'var(--line,rgba(120,180,180,.22))', bg: 'var(--card,rgba(255,255,255,.02))'
+  };
   function injectStyle() {
     if (document.getElementById('aig-estate-footer-css')) return;
     var css =
       '.aig-estate-footer{margin:64px 0 0;padding:34px 22px 40px;text-align:left;' +
-        'border-top:1px solid var(--line,rgba(120,180,180,.22));' +
-        'background:var(--card,rgba(255,255,255,.02));' +
-        'color:var(--ink2,#9fc0bd);' +
+        'border-top:1px solid ' + C.line + ';' +
+        'background:' + C.bg + ';' +
+        'color:' + C.ink2 + ';' +
         "font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;font-size:14px;line-height:1.5}" +
       '.aig-estate-footer .aig-ef-inner{max-width:1000px;margin:0 auto}' +
       '.aig-estate-footer .aig-ef-brand{margin-bottom:26px}' +
       '.aig-estate-footer .aig-ef-estate{font-family:Fraunces,Georgia,serif;font-style:italic;' +
-        'font-size:16.5px;line-height:1.5;color:var(--ink,#e7f3f1);max-width:640px;margin-bottom:10px}' +
-      '.aig-estate-footer .aig-ef-tagline{font-size:16px;color:var(--ink,#e7f3f1);max-width:640px}' +
+        'font-size:16.5px;line-height:1.5;color:' + C.ink + ';max-width:640px;margin-bottom:10px}' +
+      '.aig-estate-footer .aig-ef-tagline{font-size:16px;color:' + C.ink + ';max-width:640px}' +
       '.aig-estate-footer .aig-ef-creed{margin-top:8px;font-family:"DM Mono",ui-monospace,monospace;' +
-        'letter-spacing:.14em;font-size:10.5px;color:var(--green2,var(--green,#6fe6a3))}' +
+        'letter-spacing:.14em;font-size:10.5px;color:' + C.creed + '}' +
       '.aig-estate-footer .aig-ef-brand .tagline,.aig-estate-footer .aig-ef-brand .fcreed{margin:4px 0}' +
       '.aig-estate-footer .aig-ef-cols{display:flex;flex-wrap:wrap;gap:34px 56px}' +
       '.aig-estate-footer .aig-ef-col{display:flex;flex-direction:column;min-width:150px}' +
       '.aig-estate-footer .aig-ef-h{font-family:"DM Mono",ui-monospace,monospace;text-transform:uppercase;' +
-        'letter-spacing:.16em;font-size:10.5px;color:var(--ink2,#9fc0bd);margin-bottom:10px;font-weight:600}' +
+        'letter-spacing:.16em;font-size:10.5px;color:' + C.ink2 + ';margin-bottom:10px;font-weight:600}' +
       '.aig-estate-footer .aig-ef-col a{display:inline-flex;align-items:center;min-height:24px;padding:5px 0;' +
-        'text-decoration:none;color:var(--green2,var(--green,#6fe6a3));font-size:14px}' +
+        'text-decoration:none;color:' + C.link + ';font-size:14px}' +
       '.aig-estate-footer .aig-ef-col a:hover{text-decoration:underline}' +
-      '.aig-estate-footer .aig-ef-col a[aria-current="page"]{color:var(--ink,#e7f3f1);font-weight:600}' +
+      '.aig-estate-footer .aig-ef-col a[aria-current="page"]{color:' + C.ink + ';font-weight:600}' +
       '.aig-estate-footer .aig-ef-legal{margin-top:28px;padding-top:18px;font-size:12.5px;' +
-        'color:var(--ink2,#9fc0bd);border-top:1px solid var(--line,rgba(120,180,180,.18))}' +
+        'color:' + C.ink2 + ';border-top:1px solid ' + C.line + '}' +
       '.aig-estate-footer a:focus-visible{outline:2px solid currentColor;outline-offset:2px;border-radius:2px}' +
       '@media(max-width:560px){.aig-estate-footer .aig-ef-cols{gap:24px 28px}}';
     var st = document.createElement('style');
