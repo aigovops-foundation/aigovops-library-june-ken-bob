@@ -153,3 +153,6 @@ cannot: decide what to want, and say yes.
 *Recorded July 17, 2026, evening. Two milestones still in flight as the ink dries —
 M10's battery deliberating, M11's second wave slimming the last pages. The estate no
 longer waits for its chronicler.*
+
+*The evening the estate grew ears, reflexes, and a constitution: [Chapter Four — The
+Estate Grows Senses](when-creation-is-cheap-ch4.md).*

@@ -185,6 +185,7 @@ def main():
         ("ch1", "Chapter One — The Day the Estate Asked for One Sentence", "chapter", os.path.join(BOOK, "when-creation-is-cheap-ch1.md")),
         ("ch2", "Chapter Two — The Day the Words Got a Garden", "chapter", os.path.join(BOOK, "when-creation-is-cheap-ch2.md")),
         ("ch3", "Chapter Three — The Estate Learns to Tend Itself", "chapter", os.path.join(BOOK, "when-creation-is-cheap-ch3.md")),
+        ("ch4", "Chapter Four — The Estate Grows Senses", "chapter", os.path.join(BOOK, "when-creation-is-cheap-ch4.md")),
         ("back", "Afterword, the lessons, and the authors", "backmatter", os.path.join(HERE, "back-matter.md")),
     ]
     docs = []
@@ -192,7 +193,7 @@ def main():
         md = open(path, encoding="utf-8").read()
         # strip the repeated full book title h1 + chapter-file cross-links (ebook nav replaces them)
         md = re.sub(r"^# When Creation is Cheap.*\n", "", md)
-        md = re.sub(r"\n\*The (day continued|estate-wide wave)[^*]*\*\n?$", "", md)
+        md = re.sub(r"\n\*The [^*]{0,160}\[Chapter[^*]*\*\n?$", "", md)
         body = md_to_xhtml(md)
         x = XHTML.format(title=html.escape(ctitle), etype=etype, body=body)
         parseString(x)  # well-formedness gate — raises on bad XML
