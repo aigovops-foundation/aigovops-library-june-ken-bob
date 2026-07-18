@@ -277,6 +277,37 @@ The community platform becomes self-service and rights-respecting:
 - Batteries extended (profile/RTBF/consent lanes; a11y/ux over the new pages);
   auth-gating and RBAC guards untouched and green.
 
+## M16 — growth, governed (directed by Bob, 2026-07-18)
+
+Two new fleet agents + the membership watchdogs, all propose-only (the decision-gate
+rule is the product):
+
+- **seo-scout** (Sentinel/Strategist, weekly + on-demand): audience = policy-as-code /
+  AI-governance practitioners. Produces a weekly brief as a Board proposal: per-network
+  plays (LinkedIn = practitioners/thought-leadership; X = devs/build-in-public;
+  YouTube = demo/tutorial clips from the camp + gates; Instagram = camp/community
+  warmth), target keywords, and on-site SEO improvements (meta/schema/internal-link
+  suggestions beyond the arch tier's basics). Reads Plausible (API key → broker,
+  paste-once) when available.
+- **content-gardener** (creator, propose-only): drafts platform-shaped posts from
+  estate sources (blog excerpts, harm cases, framework entries, camp tutorials, book
+  chapters) into core.drafts → steward approval → the EXISTING gated connectors
+  publish (LinkedIn wired; X effector to add, gated; Instagram/YouTube manual or via
+  the tools below). Nothing ever auto-publishes; ALLOW_SEND flags stay off until
+  founders flip them.
+- **Marblism + Sintra combined plan** (both on annual subscriptions): Marblism is
+  wired-needs-key (broker paste-once) → use its API for asset/content generation
+  feeding the gardener's drafts. Sintra has no public API → its bots execute
+  repetitive posting on networks we haven't wired (Instagram scheduling etc.),
+  ALWAYS sourced from the same approved-drafts queue — one editorial pipeline, three
+  engines, zero ungoverned posts. Written up as RUNBOOK-growth.md.
+- **Membership watchdogs** (from the opening-membership plan): membership-health lane
+  + agent (daily), welcome watchdog (pending >24h alerts), email deliverability probe
+  (once the provider key lands — wiring pre-built, env-driven), monthly RTBF drill,
+  backup-drill extension for members + avatars.
+- **Humans-Do items**: email-provider API key (THE membership blocker), Plausible API
+  key, Marblism key, Ken's Telegram chat-id, Ken's Stripe tier links.
+
 ## Out of scope (explicitly)
 Deleting pages; changing the membership wall; touching DNS, accounts, or payment
 processors autonomously; the Omni platform's internal surfaces.
