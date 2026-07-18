@@ -234,6 +234,13 @@ default action. Nav becomes: Home · Get to Yes · Stay at Yes · Recover to Yes
 **Accept when:** a visitor off the porch sees exactly three ways plus Join, every old
 URL still lands somewhere true, and the batteries are green end to end.
 
+> **M14 (2026-07-18): SHIPPED.** The one-breath grammar is live on every content page
+> (porch, three hubs, frameworks, support, founders, press, join; corpus + brief
+> headers) — Foundation #75, net −61 lines. One-primary-per-hero is a permanent
+> design-tier invariant; 16/16 live battery post-deploy. Also this session: the four
+> footer threads founder-hidden (#73) and the Join page rebuilt as the reference
+> implementation (#74).
+
 ## M14 — dead simple, everywhere (directed by Bob, 2026-07-18)
 
 The Join page's grammar becomes the site-wide rule. **The dead-simple rule:** every
