@@ -252,6 +252,31 @@ are exempt in body but obey it in their headers. The design tier learns "one pri
 CTA in the hero" as an invariant. Applied to: the porch, the three movement hubs,
 frameworks, support, founders, press. Reference implementation: community.html.
 
+## M15 — ready for members (directed by Bob, 2026-07-18)
+
+The community platform becomes self-service and rights-respecting:
+
+- **Signup & profile**: magic-link signup flows into profile completion; editable
+  profile — display name, email, profile picture (small, sanitized), country + city,
+  topics of interest (free-form), mobile number with country code (optional) —
+  writes session-principal-only, every change receipted METADATA-ONLY (field names,
+  never values).
+- **Newsletter**: Substack opt-in stored with timestamp + the real subscribe link
+  (we never subscribe anyone server-side); stewards can see opt-ins.
+- **Volunteering**: interest flags — policy · founding circle · steward — routed to
+  stewards and visible in the console as *volunteered*; NEVER auto-granting (role
+  grants stay co-founder-only, per RUNBOOK-roles).
+- **Consent**: explicit "use my information to keep the community active" checkbox,
+  versioned + timestamped; minimal account without it.
+- **Right to be forgotten**: member-initiated, immediate, receipted — PII fields
+  purged, avatar deleted, principal pseudonymized; the signed ledger stays (it was
+  metadata-only by design — the receipts contain no PII to forget). One-click
+  unsubscribe (newsletter + notifications) separate from deletion.
+- **Community standards**: docs/COMMUNITY-STANDARDS.md (authored in the house voice,
+  policy-as-code framing) rendered as a member page, linked from join + footer.
+- Batteries extended (profile/RTBF/consent lanes; a11y/ux over the new pages);
+  auth-gating and RBAC guards untouched and green.
+
 ## Out of scope (explicitly)
 Deleting pages; changing the membership wall; touching DNS, accounts, or payment
 processors autonomously; the Omni platform's internal surfaces.
