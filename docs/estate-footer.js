@@ -1,4 +1,9 @@
 /* estate-footer.js — the shared AiGovOps ESTATE FOOTER, single-source injector.
+ * CANONICAL SERVING COPY — served at https://www.aigovops-foundation.com/estate-footer.js
+ * (the Library's github.io serves only the membership-wall redirect stub, so consumers
+ * load the injector from here). Source of truth for edits: the Library repo
+ * docs/estate-footer.js — keep the two in sync; the design battery drift-checks both.
+ *
  * Drop into any Library docs page with one line:
  *   <script src="estate-footer.js" defer></script>
  *
@@ -48,7 +53,7 @@
   var GROUP_A = [
     { id: 'foundation', label: 'Foundation',         href: 'https://www.aigovops-foundation.com' },
     { id: 'community',  label: 'Community platform',  href: 'https://community.aigovops-foundation.com' },
-    { id: 'library',    label: 'Library',             href: 'https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/' },
+    { id: 'library',    label: 'Library',             href: 'https://community.aigovops-foundation.com/library/' },
     { id: 'beacon',     label: 'Beacon',              href: 'https://aigovops-foundation.github.io/aigovops-beacon/' },
     { id: 'umbrella',   label: 'Umbrella',            href: 'https://aigovops-foundation.github.io/umbrella-govops/' },
     { id: 'ncw',        label: 'NCW AI Camp',         href: 'https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/' }
