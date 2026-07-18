@@ -277,6 +277,18 @@ The community platform becomes self-service and rights-respecting:
 - Batteries extended (profile/RTBF/consent lanes; a11y/ux over the new pages);
   auth-gating and RBAC guards untouched and green.
 
+> **M16 (2026-07-18): SHIPPED — the arc closes.** Growth agents live on droplet A:
+> seo-scout filed its first real weekly brief on production within minutes
+> (draft-38f29f9a — 10 keywords, 10 on-site findings, receipted); content-gardener
+> drafts deterministically from estate sources (zero hallucination surface, every
+> draft source-cited); membership-health ran 19/19 with the synthetic principal
+> self-cleaning (residue 0) — and its FIRST welcome-watchdog alert named all seven
+> pending members including both founders ("the founder-welcome promise says nobody
+> waits"). Email sender pre-built dark: the deliverability probe now reports the
+> blocker daily until the key lands. Schedules seeded (daily/weekly/twice-weekly/
+> monthly). Battery 143/146 = exactly the pre-M16 baseline. RUNBOOK-growth +
+> RUNBOOK-membership-health are the rules of record.
+
 ## M16 — growth, governed (directed by Bob, 2026-07-18)
 
 Two new fleet agents + the membership watchdogs, all propose-only (the decision-gate
