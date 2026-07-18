@@ -234,6 +234,17 @@ default action. Nav becomes: Home · Get to Yes · Stay at Yes · Recover to Yes
 **Accept when:** a visitor off the porch sees exactly three ways plus Join, every old
 URL still lands somewhere true, and the batteries are green end to end.
 
+## M14 — dead simple, everywhere (directed by Bob, 2026-07-18)
+
+The Join page's grammar becomes the site-wide rule. **The dead-simple rule:** every
+content page reads in one breath — (1) hero: one plain-verb h1, one sentence of truth,
+exactly ONE primary CTA; (2) at most three sections after the hero, each with one job,
+zero duplicated content; (3) one quiet secondary path at the end (a link, never a
+banner); (4) the creed footer. Long-form assets (the corpus, blog articles, the brief)
+are exempt in body but obey it in their headers. The design tier learns "one primary
+CTA in the hero" as an invariant. Applied to: the porch, the three movement hubs,
+frameworks, support, founders, press. Reference implementation: community.html.
+
 ## Out of scope (explicitly)
 Deleting pages; changing the membership wall; touching DNS, accounts, or payment
 processors autonomously; the Omni platform's internal surfaces.
