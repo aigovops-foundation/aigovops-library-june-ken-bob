@@ -48,7 +48,7 @@
   var GROUP_A = [
     { id: 'foundation', label: 'Foundation',         href: 'https://www.aigovops-foundation.com' },
     { id: 'community',  label: 'Community platform',  href: 'https://community.aigovops-foundation.com' },
-    { id: 'library',    label: 'Library',             href: 'https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/' },
+    { id: 'library',    label: 'Library',             href: 'https://community.aigovops-foundation.com/library/' },
     { id: 'beacon',     label: 'Beacon',              href: 'https://aigovops-foundation.github.io/aigovops-beacon/' },
     { id: 'umbrella',   label: 'Umbrella',            href: 'https://aigovops-foundation.github.io/umbrella-govops/' },
     { id: 'ncw',        label: 'NCW AI Camp',         href: 'https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/' }
