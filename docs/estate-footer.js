@@ -57,7 +57,6 @@
   // Group B — "Connect" (new-tab: these leave the estate).
   var GROUP_B = [
     { label: 'Newsletter', href: 'https://aigovops.substack.com/' },
-    { label: 'Events',     href: 'https://luma.com/aigovops' },
     { label: 'GitHub',     href: 'https://github.com/aigovops-foundation' },
     { label: 'LinkedIn',   href: 'https://www.linkedin.com/company/aigovops-foundation' }
   ];
