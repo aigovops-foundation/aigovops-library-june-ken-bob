@@ -311,3 +311,44 @@ rule is the product):
 ## Out of scope (explicitly)
 Deleting pages; changing the membership wall; touching DNS, accounts, or payment
 processors autonomously; the Omni platform's internal surfaces.
+
+---
+
+## M17 — The door opens (SHIPPED 2026-07-18/19) · book ch5
+
+The night email went live and the membership door opened all the way. Everything
+below is verified on production, receipted, and covered by regression lanes:
+
+- **Join flow fixed** (`07e427e`): `/` routes by identity (stranger → landing,
+  applicant → pending, member → portal, steward → cockpit); dark-sender signups get
+  the honest doorstep + steward mint-link button. New join-flow lane (39 checks).
+- **Email LIVE** (Resend): `email-provider-key` in the AiGovOps vault (app-paste
+  pattern — Claude stages the item, founder types only Cmd+V); domain
+  **aigovops-foundation.com verified** (DKIM/MX/SPF written into Cloudflare by
+  browser automation via the Claude Chrome extension, now installed in Bob's main
+  profile — the durable unlock); sender `jeeves@aigovops-foundation.com`; delivery
+  proven to Gmail + Hotmail. Three systemic fixes pinned: warden self-heals
+  vault-only keys; Resend path sends a real User-Agent (Cloudflare 1010); sandbox
+  from-address rule documented.
+- **Approval sends the welcome** (`69136cf`): `members.approve()` now emails the
+  member their sign-in link the moment a founder approves — the founder-welcome
+  promise is machine-carried; watchdog copy is sender-aware.
+- **Giving rail live** (Foundation PR #84): "Give any amount" + $25/$50/$500 quick
+  gifts (Ken's real Stripe links); tier cards stay pledge-by-email until real tier
+  checkouts exist.
+- **Onboarding drill green end to end** (`476cd4c`): stranger → join → approval →
+  email → magic link → profile → portal → right-to-be-forgotten (purge verified).
+  Four splinters fixed: checklist credits M15 + join interest; join.html CSS leak
+  (injected surfaces must never inherit page-local styles); anonymous doorstep nav
+  (Home · Help · Languages · Sign in); post-forget nav rebuild + display-name
+  headline.
+- **Beta-ready audit** (`cd25634`): members on Postgres (indexed); backups three
+  deep (nightly tarball + pg dump + reciprocal peer push-pull to droplet B, green);
+  wardens 20/20 + 17/17; per-IP **and per-recipient** email caps (success-shaped);
+  Cloudflare bot-wall passes browsers + Googlebot; load smoke 200×200 OK, p95
+  294 ms. Telegram bot now tells unknown senders their own chat id (self-serve
+  steward onboarding).
+- **Humans-Do movement**: email key ✅ · Stripe links ✅ (rail) · REMAINING: welcome
+  the 9 pending members (one click each — the email now sends itself), Ken's one
+  Telegram message to @Aigovopsadminbot, Plausible key, Marblism key (its own
+  catalog says skip), KDP publish (EPUB now carries ch5).
