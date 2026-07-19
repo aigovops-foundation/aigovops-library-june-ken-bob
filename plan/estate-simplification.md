@@ -352,3 +352,53 @@ below is verified on production, receipted, and covered by regression lanes:
   the 9 pending members (one click each — the email now sends itself), Ken's one
   Telegram message to @Aigovopsadminbot, Plausible key, Marblism key (its own
   catalog says skip), KDP publish (EPUB now carries ch5).
+
+---
+
+## M18 — The audit turns inward (SHIPPED 2026-07-19) · book ch6
+
+The backlog review, four decisions executed, and the estate's own claims tested:
+
+- **Certification v1** (`1c1876f` lineage): AiGovOps Certified Practitioner — 13 tasks
+  over the 100 verified harm cases (8 gate verdicts, 3 control matches, 2 receipt
+  forensics), 11/13 to pass, free and retryable, every miss explained. Answer key stays
+  server-side; gate tasks sample ACROSS verdicts so "answer 0 to everything" cannot pass;
+  attempts one-shot and principal-bound; credential is an HMAC that breaks if the record
+  is edited. `verify.html` + badge are PUBLIC and survive steward-only lock. LinkedIn
+  add-to-profile deep link. Lane: certification (30 checks).
+- **Fleet honesty** (`6d96cf0`): the July audit's "9 of 39" was wrong — measured properly
+  it was 30 of 42. `scripts/fleet_audit.py` classifies LIVE / WIRED / DECLARED; 12
+  mechanism-less agents moved to a `retired:` block with reason + `readmit_when` (not
+  deleted; `core.registry` reads only `agents:`). Lane: fleet honesty (9 checks).
+  **The rule proved itself the same day** — `aigovops-agent-uptime` was retired with
+  readmit_when "an uptime probe effector lands", the probe landed, and it returned.
+- **Droplet B is real preprod** (`d91df32`): not idle — it runs the Library enclave stack;
+  omni-preprod now on 127.0.0.1:8798 with its own Postgres 16 + pgvector. **Full restore
+  drill PASSED**, counted from inside the tarball: members 13/13, brain 493/493 with
+  embeddings intact, feedback 1/1, kv 25/25. `promote-to-prod.sh` (dry-run default,
+  refuses a dirty tree or red battery, ships both stages via `ship.sh`).
+- **Plumbing** (`1c1876f`): Resend bounce/complaint webhook (Svix-signed; fails closed on
+  missing secret, forged signature, swapped payload, hour-old replay) → `core/suppression.py`,
+  with the fence INSIDE all three transports; soft bounces don't suppress; a spam complaint
+  can never be cleared by a steward. Stripe was already built and verified — only ever
+  needed the secret (now a catalog slug). `effectors/uptime.py` + `scripts/uptime_watch.sh`
+  (the external half, on droplet B). Lane: plumbing (28 checks).
+  **Kill switch VERIFIED already enforcing cross-process** (14/14) — that audit finding
+  was stale; nothing to fix.
+- **Backup privacy** (`cdd6b19`): the drill's "secrets in the clear" alarm was **wrong** —
+  verified from the attacker's position (only the in-tarball key) that the store opens
+  nothing. But the real hazard underneath: the store's encryption key is DERIVED from the
+  ledger signing key, so safety was accidental. `backup.py` now drops `.gatekey` only once
+  the key is escrowed in the broker, failing safe in every doubt. `scripts/anonymize.py`
+  pseudonymizes preprod (RFC-2606 `.invalid` emails, ids preserved), refusing production
+  three ways — and writing that test caught `OMNI_ENV=production` slipping past the guard,
+  because `core/env.py` infers on unknown values. Lane: backup privacy (18 checks).
+- **Credentials contract 35/35** — green for the first time in weeks (both webhook secrets
+  declared NO_PROBE with reasons; `brain-session-perplexity` finally recorded as what it is,
+  a browser session document checked by `session_freshness`, not an API key).
+
+**OPEN founder gates from this milestone:** escrow the ledger signing key (approved,
+running in a separate session — until it lands, a backup's chain cannot be
+signature-verified); decide whether to delete the 14 existing tarballs that contain
+`.gatekey`; and preprod currently holds real member data until `anonymize.py --apply` is
+run there.
