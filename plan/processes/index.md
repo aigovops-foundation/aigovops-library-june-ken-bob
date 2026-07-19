@@ -15,3 +15,4 @@ Every discipline follows one shape: **trigger → agent does the work → human 
 - [`security-privacy`](./security-privacy.md) — **Security & privacy** · Guardian · `security-privacy-review`
 - [`release`](./release.md) — **Release** · Deploy · `aigovops-deploy-workflow + github-pages-publish`
 - [`membership-wall`](./membership-wall.md) — **Membership wall** (estate system rule) · Librarian · `library_sync + /library/ gate`
+- [`external-claims`](./external-claims.md) — **External claims & contributed methods** · Referee · `evaluate-external-claim`
