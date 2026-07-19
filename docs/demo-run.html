@@ -59,8 +59,12 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visibl
 </head><body><a class="skip-link" href="#main">Skip to content</a><a href="./index.html" style="position:fixed;top:12px;left:14px;z-index:9999;font:500 13px system-ui,sans-serif;color:#caa24a;background:rgba(20,12,4,.6);border:1px solid rgba(199,154,60,.5);border-radius:999px;padding:7px 13px;text-decoration:none;backdrop-filter:blur(6px)">← the Library</a><div class="wrap" id="main" role="main">
 <div class="hdr"><h1>AiGovOps — the governed core, end to end</h1>
 <div class="sub">A live walk through the whole system. Every step below was actually executed to generate this page; each left a signed, metadata-only receipt.</div>
-<div style="margin:16px 0 4px"><a href="https://198.199.121.180/demo" style="display:inline-block;background:var(--green);color:#06241a;font-family:ui-sans-serif;font-weight:700;text-decoration:none;border-radius:10px;padding:11px 20px">▶ Run it yourself, live on the host →</a></div>
-<div class="sub" style="font-size:12.5px">(opens the running core; accept the self-signed cert, paste a steward token, and watch fresh receipts)</div></div>
+<!-- REMOVED 2026-07-19 (security review): this published a raw host IP and told stewards to
+     "accept the self-signed cert, paste a steward token" — training our own people to hand a
+     token past a certificate warning, which is the exact shape of a phishing attack. A live
+     demo can return behind a real DNS name with a real certificate; it must never pair
+     "accept the warning" with "paste a token" in one sentence. -->
+<div class="sub" style="font-size:12.5px">Every step below was run for real. The receipts are the record — <a href="./pulse.html" style="color:var(--green)">see the live pulse</a>.</div></div>
 <div class="quote">“Agents do the bureaucracy; humans hold the meaning — and humans hold the keys.”</div>
 
   <section class="scene">
