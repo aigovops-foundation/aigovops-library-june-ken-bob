@@ -2,6 +2,15 @@ node_modules/
 .env
 core/.env
 core/keys/*.pem
+# ALL keys, at any depth — not just core/keys/. The original rule covered core/keys/ only,
+# so the dev keypair at the repo ROOT (keys/private.pem) was committed to a PUBLIC repo on
+# 2026-06-08 and sat in HEAD for six weeks. keygen.mjs even told us it was "gitignored".
+# A rule that protects one directory reads like a rule that protects keys, right up until
+# someone puts a key somewhere else.
+keys/*.pem
+**/keys/*.pem
+*.pem
+!keys/.gitkeep
 core/ledger/*.ndjson
 *.log
 .DS_Store
