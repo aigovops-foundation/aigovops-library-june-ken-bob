@@ -188,6 +188,7 @@ def main():
         ("ch4", "Chapter Four — The Estate Grows Senses", "chapter", os.path.join(BOOK, "when-creation-is-cheap-ch4.md")),
         ("ch5", "Chapter Five — The Door Opens", "chapter", os.path.join(BOOK, "when-creation-is-cheap-ch5.md")),
         ("ch6", "Chapter Six — The Audit Turns Inward", "chapter", os.path.join(BOOK, "when-creation-is-cheap-ch6.md")),
+        ("ch7", "Chapter Seven — The Instruments Were Lying", "chapter", os.path.join(BOOK, "when-creation-is-cheap-ch7.md")),
         ("back", "Afterword, the lessons, and the authors", "backmatter", os.path.join(HERE, "back-matter.md")),
     ]
     docs = []
