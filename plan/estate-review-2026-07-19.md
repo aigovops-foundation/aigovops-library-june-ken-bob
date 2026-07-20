@@ -448,3 +448,94 @@ green light which means nothing is dangerous. This is the mirror image and it is
 a red gate does not merely fail to inform — it **conceals everything behind it**, and it decays
 into a thing people route around. One week of red hid a broken accessibility gate, an unrun test
 lane, and a governance lint that had never once enforced its governance.
+
+---
+
+## Wave 3 — the credibility pass (done 2026-07-20)
+
+Every finding was re-verified before being touched. **Three of them had already gone stale**,
+which is its own lesson: a review is a photograph, and acting on an old one is how you "fix"
+something that is already right. (See also the Library-sitemap correction above.)
+
+### The serious one: published evidence that had not happened
+
+`umbrella-govops/docs/index.html` carried a strip headed **"Live evidence — Sigstore keyless ·
+in-toto v1.0"**, with a timestamped run: *147 controls · NIST 94% · EU 91% · ISO 42001 88% ·
+Korea 76%*, a signed in-toto statement, and **a Rekor inclusion proof at log index 142337991**.
+
+None of it happened. The registry holds **four** provisional UCIDs.
+
+The Rekor index is the sharp end. A transparency log exists precisely so that anyone can look an
+entry up — so this was a *checkable* false claim, published by a project whose entire subject is
+evidence integrity, on a page that also asks people to trust its attestations. This is worse than
+the invented pledge signatories (W1-8), because fabricated *cryptographic* evidence is the exact
+thing the Foundation tells the world it prevents.
+
+Now labelled as the shape of a run rather than a run, with no invented identifiers, the real
+registry count, and a promise that real timestamps and a real log index appear only after a real
+run. The sample in-toto JSON is marked EXAMPLE with symbolic counts, matching the elided digests
+already beside them.
+
+### Quickstarts that failed on their first command
+
+| Repo | What it told you to do | What happened |
+|---|---|---|
+| umbrella-govops | `pipx install umbrella-conformance` | PyPI 404 — the name was never published. The CLI is real and in the repo. |
+| aigovops-beacon | `docker run ghcr.io/bobrapp/aigovops-beacon` | Not pullable; the org moved and no image was ever pushed. |
+| aigovops-beacon | `npm install` at the repo root | No `package.json` there — the Node project is in `server/`. |
+| aigovops-beacon | "Open http://localhost:8080" | The default is **8787**. |
+
+Both now document the path that works, verified against `pyproject.toml` and
+`server/package.json` rather than assumed. **The first draft of the beacon fix carried the wrong
+port forward** — the correction needed correcting, which is why it was checked against the config
+instead of the old README.
+
+### Dead links
+
+`bobrapp.github.io/{aigovops-beacon,umbrella-govops}` both 404: **GitHub Pages does not follow
+the repo-rename redirects that github.com does**, so 138 references pointed at nothing while the
+`github.com/bobrapp/...` links beside them silently resolved. Repointed to the
+`aigovops-foundation.github.io` equivalents (verified 200) — including the link *text* that still
+read as the dead host while pointing at the live one, because a link whose visible text disagrees
+with its destination is its own small dishonesty.
+
+### The creed
+
+Three variants in circulation: the canonical, one that stopped at *"humans hold the meaning."*,
+and one that said *"humans hold moral legitimacy."* **The keys clause is the governance claim** —
+"humans hold the meaning" says people supply the judgement; "and humans hold the keys" says they
+retain the ability to stop it, which is the irreversibility boundary written as a sentence.
+
+73 instances restored across the Library, Beacon, Umbrella and Glean-Mastery. Glean's were all
+emitted by `scripts/build-site.mjs` onto 57 pages **while that repo's own CLAUDE.md carried the
+correct creed** — the instructions were right and the generator ignored them, which is the only
+way a canonical string drifts across 57 pages without anyone editing 57 pages. Fixed at the
+generator; `site/` is gitignored, so fixing the output would have evaporated on the next build.
+
+### Already stale — no action needed
+
+- **"500+ frameworks · 10,000+ experts"** — gone from every published surface already. The only
+  surviving mention is the note in `growth-100k-recommendations.md` *describing* the problem.
+- **"10,000+ taxis"** on the quantum page — this describes **D-Wave's** published CeBIT 2017 /
+  Lisbon 2019 pilot, not an AiGovOps claim about itself. Correct as written.
+- **The Library sitemap** — the membership wall working as designed (see the correction above).
+
+### Where I was wrong, twice, in the same way
+
+A find-and-replace rewrote **session transcripts** and the **broken-link table in `HIBT.md`** —
+both of which *record* that those URLs were dead. Left in, `HIBT.md` would have asserted that the
+working URL returns a 404, and a transcript of what was actually said would have been edited.
+Both reverted.
+
+**Rewriting a record so it agrees with the present is the same failure this whole pass exists to
+correct.** It just looks tidier, and it is much easier to do by accident — a bulk edit does not
+know the difference between a claim and a report of a claim.
+
+### Still human-only
+
+- **`help@aigovops.org` cannot receive mail** — `aigovops.org` has **no MX record**, and the
+  address is published in `help.html` and all twelve language files under a promise of a reply
+  in two working days. The deliverable domains are `aigovops-foundation.com` (Hostinger) and
+  `aigovops.community` (Microsoft 365). Choosing the destination decides who receives members'
+  help mail, so it waits for a founder. `ken@aigovops.org` is dead for the same reason.
+- **`aigovops.org` DNS** — still Ken's, still pending.
