@@ -16,4 +16,5 @@ Every discipline follows one shape: **trigger → agent does the work → human 
 - [`release`](./release.md) — **Release** · Deploy · `aigovops-deploy-workflow + github-pages-publish`
 - [`membership-wall`](./membership-wall.md) — **Membership wall** (estate system rule) · Librarian · `library_sync + /library/ gate`
 - [`external-claims`](./external-claims.md) — **External claims & contributed methods** · Referee · `evaluate-external-claim`
+- [`decision-2026-07-19-ledger-pii`](./decision-2026-07-19-ledger-pii.md) — **Decision record**: document the exception (31 historic records), don't rewrite the chain · Bob
 - [`disaster-recovery`](./disaster-recovery.md) — **Disaster recovery** (the DR agent) · dr-agent · `jeeves dr` + monthly `dr-rehearse`
