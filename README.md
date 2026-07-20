@@ -2,7 +2,7 @@
 
 **One combined repo for the whole set** — the vision, the feel, the build, the way it runs, and the running core of the AiGovOps Library.
 
-> *"Agents do the bureaucracy; humans hold moral legitimacy."*
+> *"Agents do the bureaucracy; humans hold the meaning — and humans hold the keys."*
 
 A shareable hub page (GitHub Pages) presents the non-secret story; the source of truth lives alongside it, private.
 

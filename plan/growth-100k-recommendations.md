@@ -121,4 +121,4 @@ cert badge-adds, magic-link success).
 *The machines can build every reversible piece of this. The founders own: the keys
 (email, Plausible, Marblism, Stripe), the welcomes, the partnership calls, and the
 decision on what "practitioner" means. Same as it ever was: agents do the
-bureaucracy; humans hold the meaning.*
+bureaucracy; humans hold the meaning — and humans hold the keys.*

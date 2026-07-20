@@ -1,6 +1,6 @@
 # AiGovOps Library — The Plan (end-to-end)
 
-> *"Agents do the bureaucracy; humans hold moral legitimacy."*
+> *"Agents do the bureaucracy; humans hold the meaning — and humans hold the keys."*
 
 This is the private source of truth for **how the library is built and run**. The
 public, secret-free face of it is the GitHub Pages site in [`/docs`](../docs/index.html).

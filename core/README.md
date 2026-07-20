@@ -3,7 +3,7 @@
 > **One governed core that runs anywhere — laptop, container, VPS, or the canonical cloud.**
 > The center of truth for the community, convening wherever it's invited, always in your language.
 >
-> _"Agents do the bureaucracy; humans hold moral legitimacy."_
+> _"Agents do the bureaucracy; humans hold the meaning — and humans hold the keys."_
 
 This is the **starter scaffold** for the architecture blueprint: a small, real,
 **dependency-free** Node 20+ core you can run today. It signs metadata-only
