@@ -401,3 +401,50 @@ Battery: **164/164 in both modes** (default and `--prod-parity`).
 **The rule this adds:** *test the journey, not only the joints.* Every lane can be green while
 the experience is broken, because no lane owns the path between them — and the leaks that
 matter most live exactly there, in the space between two components that each work.
+
+### Wave 4b — the gate nobody could pass
+
+The persona walk sent me to check CI. **`omni-ci` had failed on every commit since 2026-07-13
+— 55 consecutive red runs**, and the estate had shipped direct-to-main past it the whole week,
+including four times that day by me. Three faults, nested.
+
+**The token guard (the visible one).** It compared `control-room/tokens.css` against
+`/css/tokens.css` on the foundation site — which on 2026-07-17 became the *frozen legacy*
+`--aigov-*` layer. Its own header says it is superseded. The canonical had moved to
+`/design/aigovops-july-2026/tokens.css`. It also compared whole files byte-for-byte, so a
+vendored copy — which must say it is a copy — could never match.
+
+And the failure printed a remediation, `curl $CANON -o $LOCAL`, that would have **overwritten
+the control room's garden tokens with the retired navy ones**, reverting a shipped design
+migration across 55 pages. *A red gate whose suggested fix breaks production is worse than no
+gate: it is a trap, and it gets more tempting the longer it stays red.* All 20 token values were
+already identical. Only the instrument was wrong.
+
+**What was hiding behind it.** A job stops at its first failing step, so for a week nothing after
+that line ran:
+
+- `test_fleet_honesty` — the fleet-honesty lane was the one suite the CI gate never executed
+  (`ModuleNotFoundError: yaml` in the runner, passing locally).
+- **The enforcement lint** — the one the Wave 3 sweep named as *"the CI lint that 'proves' no
+  ungated effects exist"*. Two of its three checks could not do the job they were named for.
+  The route check grepped SKILL.md **prose** for "core.mediator", which any sentence containing
+  those words satisfied *including a negation*, while never reading `effects_via` — the field
+  that actually declares the route. And the ambient-authority check was `grep -c … >= 7` against
+  a roster of **43**: thirty-six agents could have declared ambient authority and it would still
+  have gone green. That is not a check; it is a rounding error with an exit code.
+- **pa11y (WCAG 2.2 AA)** — red on all 20 of its runs, hiding a real defect: `a.omni-btn` set
+  `color:var(--ink)` at specificity (0,1,1) and beat `.omni-btn-primary` at (0,1,0), so every
+  primary button rendered as a **link** drew charcoal on dark green at **1.84:1**. The 32
+  `<button>` ones were fine, which is exactly why nobody saw it — the same component looked
+  correct everywhere we happened to look.
+
+**Now:** enforcement lint rewritten to read the registry (no thresholds, verified against itself
+by injecting a violation), contrast at 7.72:1, cascade rule owned by `test_a11y.py` because the
+*local* battery is the only gate on a direct-to-main repo. **All four workflows green — the first
+green `omni-ci` in seven days.**
+
+**The rule this adds:** *never leave a gate permanently red.* The estate already knew that a
+green light which means nothing is dangerous. This is the mirror image and it is worse, because
+a red gate does not merely fail to inform — it **conceals everything behind it**, and it decays
+into a thing people route around. One week of red hid a broken accessibility gate, an unrun test
+lane, and a governance lint that had never once enforced its governance.
