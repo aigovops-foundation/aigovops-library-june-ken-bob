@@ -129,6 +129,74 @@ moved; or gate the CTA up front ("Free — sign in to start").
 | W2-11 | Rate limiter never evicts — one entry per source IP, forever. | Opportunistic sweep of empty deques inside the existing lock. | S |
 | W2-12 | Auth is tested almost entirely in **dev mode** (only 23 of ~150 suites set `OMNI_AUTH_REQUIRED=1`), and the **Postgres backend has never been executed by any test**. | Flip `OMNI_AUTH_REQUIRED=1` as the battery default and expect honest failures; add a Postgres service container to CI. | M |
 
+### Wave 2 — shipped 2026-07-19
+
+Eight of the twelve are closed. What the work actually taught us, beyond the fixes:
+
+**W2-1 notifications** — `core/notifications_db.py`: one indexed row per notification, so a
+broadcast touches one row per member instead of rewriting a document every other writer is
+queued behind. Measured on preprod (droplet B, real Postgres): **18.1 ms/write**, flat, against
+a projected 288 ms and climbing. New lane, 22 checks.
+
+**W2-2 scheduler** — `pipelines.run`/`workflows.run` wrapped so one raising job becomes
+`status="error"` instead of freezing the other 22 forever; `TimeoutStartSec=900` added to the
+unit and **applied live on production** (`TimeoutStartUSec=15min` confirmed).
+
+**W2-4 certification** — the attempt is now claimed atomically *inside* the lock, so a
+double-submit finds it already gone. Pinned by a real two-thread race, not an assertion about
+one.
+
+**W2-5 watchdog** — this one grew. Droplet B already had two probes and both asked the same
+question: *does prod return 200?* That catches the loud failure and misses every quiet one —
+prod can serve a perfect home page for days while the scheduler is dead, the backup timer has
+stopped, or Postgres is refusing every connection. `core/liveness.py` + `/api/liveness` answer
+the second question in three numbers, token-authed and **metadata-only** (the same rule the
+ledger now enforces: an operational surface never carries a person). It fails closed — an
+unconfigured token authorises nobody — and fails safe: anything it cannot determine reads as
+bad. The watchdog block on B is skipped entirely without a token rather than reporting green,
+because *a control that cannot check must never claim it checked.* New lane, 32 checks.
+
+**W2-8 supply chain** — SHA-pinned. The step has `OP_SERVICE_ACCOUNT_TOKEN` in scope, and a
+mutable tag means whoever controls that repo can re-point it at any commit and take the
+credential that is now canonical for the whole estate.
+
+**W2-9 / W2-10 / W2-11** — `O_CREAT|O_EXCL` on the gate key; `id` as tie-breaker in every
+`ORDER BY` (every migrated member shares a `created_at`, because Postgres `now()` is the
+*transaction* timestamp — so paging could show one member twice and skip another); rate-limiter
+eviction inside the existing lock.
+
+**W2-12 — measured, not closed, and the number is worse than we estimated.** The battery ran
+with `OMNI_AUTH_REQUIRED` unset; production sets it to 1, which disables the `?as=` identity
+shortcut. The fix was supposed to be "flip the default and expect honest failures." Flipping it
+produced **27 of 156 suites failing** — a sixth of the battery reaches the app through a door
+the live site does not have. They 401, or read an empty list where a steward view should be.
+That is not an afternoon's work, and it is not an "M".
+
+So the flip is **opt-in (`--prod-parity`), not default** — deliberately and temporarily.
+Defaulting it today means a permanently red gate, and a gate nobody can get green is a gate
+nobody reads. What is *not* acceptable is letting the narrower claim pass silently, so the
+battery now prints the boundary on every single run: *"27 of these suites fail under prod
+auth."* A green battery that quietly means something smaller than "the deployed thing works"
+is the same failure mode as a backup job reporting success while copying nothing — and we
+found one of those today too.
+
+`test_control_room` was fixed properly rather than left in the pile: it drove the room through
+`?as=bobrapp`, so its greens were never evidence about production. It now pins the permissive
+mode explicitly with a comment saying what it therefore does not prove.
+
+**W2-12 stays open**, resized: 27 suites to move onto real sessions, plus the Postgres service
+container in CI.
+
+Also fixed in passing, and worth naming because it is the same failure class the estate exists
+to catch: `scripts/backup.py` **returned 0 when no off-host remote was configured**. The daily
+`offsite-backup` schedule had therefore been reporting success for weeks while copying nothing,
+with both droplets in one datacenter. It now exits 1 and the schedule reads red. Two test
+suites asserted the old exit-0 behaviour and were updated to pin the new contract.
+
+**Still open:** W2-3 (~30 read-modify-write sites → `store.update()`), W2-6 (standby role +
+WAL archiving on B — needs cloudflared credentials, so it is Bob's), W2-7 (drop root), and
+W2-12 as resized above.
+
 ---
 
 ## Wave 3 — Truth and reach (the credibility pass)
