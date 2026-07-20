@@ -246,10 +246,18 @@ three contradictory promises on one screen · Umbrella's quickstart installs a p
 
 **Dead links:** Beacon's and Umbrella's **first README link both 404** (stale
 `bobrapp.github.io` — Pages doesn't follow repo-rename redirects), *including a QR code
-printed on a presentation slide* · **the Library's entire sitemap is dead — 22 of 23 URLs
-404, and every canonical points at them**, which drops the Library from search entirely ·
-`help@aigovops.org` **has no MX record** while `help.html` promises a reply in two working
-days.
+printed on a presentation slide* · `help@aigovops.org` **has no MX record** while `help.html`
+promises a reply in two working days.
+
+> **Correction, 2026-07-20 — the "dead Library sitemap" finding was wrong.** It read the 404s
+> as rot. They are the **membership wall working**: the github.io mirror was retired on
+> 2026-07-09, and what it serves now is a deliberate tombstone — "The Library has moved", a
+> `noindex` robots tag, a canonical pointing at `community…/library/`, and a redirect there.
+> The content pages 404 *because they are meant to*. Verified end to end today: the mirror
+> tombstones, the walled mount 302s an anonymous caller to sign-in, and the Foundation sitemap
+> resolves 200 on every URL. Left uncorrected, this entry would have sent someone to "fix"
+> correct behaviour and reopen the wall — **a false finding in a review is more expensive than
+> a missing one**, because it comes with authority and a work order attached.
 
 **Consistency:** the creed exists in **five variants**; `blueprint.html` says "humans hold
 *moral legitimacy*" — the keys clause is the governance claim and half the instances drop
@@ -320,3 +328,76 @@ entries.
 **The one-line summary:** *the governed core is well built; the ungoverned paths around it
 are where everything happens.* Wave 1 closes the paths that touch real people; Wave 2
 closes the ones that break under growth; Wave 3 makes the public claims true.
+
+---
+
+## Wave 4 — the persona walk (2026-07-20)
+
+Bob asked for the thing none of the other waves had done: *does the experience work end to end
+for everyone who uses it?* Every existing lane tested a unit, an endpoint or an invariant. None
+walked a person through the site. So four people were walked, over real HTTP, with real
+sessions: a **stranger** on the porch, an **applicant** signed in but not yet approved, an
+approved **member**, and a **steward**.
+
+It found three faults on the first run, and the third was in the walk itself.
+
+### 1. The member directory was public
+
+`GET /api/members` returned the entire roster — every name, and one row whose name field held a
+real email address — to anyone on the internet, no session required. Confirmed live on
+production before the fix.
+
+`/api/search` had been gated in Wave 2 for exactly this reason: it returns members. This
+endpoint returns the same data more directly and was not looked at. **A fix that does not go
+looking for its twin is half a fix.**
+
+Fixed at the route (`_reader`, session-authoritative, 401 for anonymous). Both real callers —
+`admin.html` and `portal.html` — are signed-in surfaces, so no legitimate reader lost anything.
+A second, smaller leak was closed alongside it: the directory now shows the local part of an
+address rather than the whole thing, so one member's email is no longer handed to every other
+member. The stored record is untouched — a display rule, not a mutation.
+
+### 2. A page nobody had classified defaulted to PUBLIC
+
+`estate.html` — the whole estate map — served 200 to anonymous callers on production, while
+every sibling steward page redirected. The page was not mishandled; **the default was wrong.**
+The server kept a hand-typed list of the *steward* pages, so anything unlisted was public.
+Thirty-two of fifty-five pages had drifted onto the public side that way, including
+`console.html`, `mission-control.html`, `system-map.html`, and `review.html` — whose own eyebrow
+reads *"Back of house · stewards only"* while it was being served to anyone who asked.
+
+The list is now **inverted**: `_OPEN_PAGES` names the twenty-six pages that may be seen, and
+everything else is back-of-house. A new page is private until someone deliberately opens it, and
+the cost of forgetting is now a member seeing a redirect — visible, reversible, reported in
+minutes — instead of a stranger reading the back of the house in silence.
+
+### 3. The walk was lying to itself — three times
+
+Worth recording in full, because the instruments keep being the least-audited code:
+
+- **`urllib` follows redirects.** A page that correctly 302'd an intruder to `/portal.html` read
+  back as **200**, so the walk scored seven working gates as leaks. A gate test must see the
+  gate's *own* answer, not the answer of wherever it was sent.
+- **A stale server answered a whole run.** `stderr` was silenced, so "Address already in use"
+  vanished and the probes were served by the *previous* run's process — the walk reported on
+  code it was not running. It now refuses to start if anything is listening.
+- **Then the new guard was wrong too**: it tested `bind()`, which also fails on a `TIME_WAIT`
+  socket that is not a server. It now asks the question it means — *is anything listening* — by
+  connecting.
+
+A fourth of the same family turned up in `test_members`: its readiness probe could not tell
+"not listening yet" from "listening and refusing me", so a 401 read as a dead server.
+
+### What is now permanent
+
+| | |
+|---|---|
+| `tests/test_personas.py` | the four-persona walk, 51 checks, in the battery |
+| `tests/test_page_gating.py` | the closed-by-default page rule, 57 checks |
+| `tests/test_anonymous_reads.py` | extended to cover `/api/members` |
+
+Battery: **164/164 in both modes** (default and `--prod-parity`).
+
+**The rule this adds:** *test the journey, not only the joints.* Every lane can be green while
+the experience is broken, because no lane owns the path between them — and the leaks that
+matter most live exactly there, in the space between two components that each work.
