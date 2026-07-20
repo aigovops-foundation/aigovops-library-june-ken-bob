@@ -539,3 +539,37 @@ know the difference between a claim and a report of a claim.
   `aigovops.community` (Microsoft 365). Choosing the destination decides who receives members'
   help mail, so it waits for a founder. `ken@aigovops.org` is dead for the same reason.
 - **`aigovops.org` DNS** — still Ken's, still pending.
+
+---
+
+## Sessions on an indexed table (2026-07-20) — and the number that matters next
+
+`auth.principal_for_session()` runs on **every authenticated request** and parsed the entire
+`sessions.json` to answer one key: **12.84 ms at 20,000 sessions, ~77 req/s per core**, degrading
+in the worst possible direction — every member who signs in slowed every other member's page down.
+
+Now an indexed table (`core/sessions_db.py`), with the file store kept for a machine with no
+database, one selector deciding between them, and session ids stored **hashed** so a leaked
+backup of the table is not a set of live logins.
+
+**The cutover would have signed everyone out.** Production switched to an empty table while 16
+live cookies still referenced the file. I caught it by checking after the deploy — having
+verified the backend was selected without asking what happened to the people already signed in.
+Migrated, verified over live HTTPS, and the adoption now happens automatically the first time an
+empty table is found, so the next box to cross over does not repeat it.
+
+**What it fixed, and what it did not.** Measured on production:
+
+| | |
+|---|---|
+| the indexed query itself | **0.127 ms** |
+| opening the connection | **12.86 ms** |
+
+The *scaling* problem is solved — cost no longer grows with session count. But the absolute
+latency is now dominated entirely by per-call connection setup, exactly as `members_db` already
+is (**W1-3**, still open). **A shared connection pool is worth ~100× on every authenticated
+request** and is the largest remaining win on this path. It belongs in its own change, across all
+three db modules at once.
+
+Reporting the 12.84 → 4.5 ms improvement without this table would have been true and misleading:
+the win is the *shape* of the curve, not the current number.
