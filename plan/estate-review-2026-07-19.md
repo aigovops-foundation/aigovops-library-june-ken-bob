@@ -193,9 +193,29 @@ to catch: `scripts/backup.py` **returned 0 when no off-host remote was configure
 with both droplets in one datacenter. It now exits 1 and the schedule reads red. Two test
 suites asserted the old exit-0 behaviour and were updated to pin the new contract.
 
-**Still open:** W2-3 (~30 read-modify-write sites → `store.update()`), W2-6 (standby role +
-WAL archiving on B — needs cloudflared credentials, so it is Bob's), W2-7 (drop root), and
-W2-12 as resized above.
+### Closed overnight 2026-07-19/20
+
+**W2-7 (drop root) — done.** Production runs as an unprivileged `omni` account with
+ProtectSystem=strict and writes confined to /opt/omni, across all five units, with automatic
+rollback. The part that nearly got missed: Postgres uses socket peer authentication, so the DB
+role followed the OS user — and that role was `root`, a Postgres **superuser**. The app had
+admin rights over every database on the box. Dropping the OS user alone would have moved the
+problem, not fixed it. Also found: the systemd units existed only on the droplet, so the
+estate's own infrastructure was undocumented and unrecoverable.
+
+**W2-3 (lost updates) — 36 sites down to 2** (both remaining are single-threaded demo-seed
+helpers). The recurring finding: four modules were guarded by a *threading* lock — real
+protection within one process, while three processes write those files. The code merely
+LOOKED protected, which is worse than looking unprotected.
+
+**W2-12 — done.** Prod-parity now matches the default battery exactly. Converting the suites
+kept finding defects the `?as=` shortcut had hidden, including three live production bugs:
+members could never see their own RSVP, five endpoints served anonymous callers as members
+(and one of them returns the member directory), and `/api/humans-do` shelled out to the
+1Password CLI inside a request with a 20-second ceiling.
+
+**Still open:** W2-6 (standby role + WAL archiving on droplet B — needs cloudflared
+credentials, so it is Bob's).
 
 ---
 
