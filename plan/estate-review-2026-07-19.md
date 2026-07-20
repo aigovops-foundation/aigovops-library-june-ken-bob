@@ -573,3 +573,46 @@ three db modules at once.
 
 Reporting the 12.84 → 4.5 ms improvement without this table would have been true and misleading:
 the win is the *shape* of the curve, not the current number.
+
+---
+
+## W2-6 — mostly closed (2026-07-20)
+
+**RPO: 24 hours → ~5 minutes.** Postgres now archives every WAL segment locally and
+`omni-wal-ship.timer` moves them to the sfo3 Space every five minutes. `archive_timeout=300`
+forces a segment even when idle — without it a quiet night archives nothing and the recovery
+point silently stretches back to the last write rather than the last five minutes. Verified end
+to end: three segments in `spaces:allbuckets-non-nyc-1/wal`, `pg_stat_archiver.failed_count = 0`,
+unit exits 0, timer scheduled.
+
+The database does **not** ship them itself: `archive_command` runs once per segment, so an S3 PUT
+there needs credentials on disk (which `core/secrets.py` exists to avoid) or a broker lookup per
+segment — a vault call in a hot loop, which is exactly what rate-limited this estate out of its
+own 1Password earlier the same day.
+
+Two traps, both now in `RUNBOOK-dr.md`:
+
+- **`test ! -f X && cp` is an archive_command trap.** When the segment is already archived,
+  `test` fails, the `&&` chain exits non-zero, and Postgres records a *failure* and retries
+  forever. Left alone that fills `pg_wal` and then the disk.
+- **The command cannot hand out a group it does not belong to.** `install -g omni` failed because
+  `postgres` is not in `omni` — three real failures before anyone looked. The directory carries
+  the **setgid** bit instead, so the kernel assigns the group.
+
+**The single-writer fence is engaged.** `OMNI_ROLE` was **unset** on droplet B, and unset
+defaults to `primary` — so both boxes believed they could perform governed effects against a
+hash-chained ledger. That is the split-brain the fence exists to prevent, and it was disengaged
+on the box most likely to be promoted in a hurry. Now `OMNI_ROLE=standby`, verified by calling
+the mediator there: `{'status': 'blocked', 'verdict': 0, 'reason': 'this node is a standby'}`.
+Droplet A remains `primary`. Promotion stays `scripts/failover.py`, after the old primary is
+confirmed down.
+
+**Still open on W2-6 (RTO, not RPO):** droplet B cannot take ingress — no `cloudflared`, no tunnel
+credentials. That is Bob's, because it needs Cloudflare credentials.
+
+### New finding: W2-7 was applied to droplet A only
+
+Droplet A's `omni` service runs as the unprivileged `omni` user. **Droplet B's `omni-preprod`
+still runs as `root`** — the same 2,231 lines of hand-rolled HTTP, on a box that is reachable and
+holds a real Postgres. The hardening shipped in Wave 2 was never carried across, which is the
+predictable failure of fixing "the server" rather than "every server". Tracked as **W2-7b**.
