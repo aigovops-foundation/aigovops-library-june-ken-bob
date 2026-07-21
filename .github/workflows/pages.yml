@@ -9,8 +9,8 @@ jobs:
     environment: { name: github-pages, url: "${{ steps.deploy.outputs.page_url }}" }
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with: { node-version: 20 }
       - run: node scripts/build-docs.mjs   # inline the single-source Yes-Gate logic into docs/
       # The pulse self-test regenerates docs/pulse.html; if it ever breaks it must NOT block the
@@ -18,13 +18,13 @@ jobs:
       - run: cd core && node scripts/pulse.mjs   # exercise the engine → docs/pulse.html
         continue-on-error: true
       - run: node scripts/test-library.mjs --dir docs   # hard gate: structure/link/SEO checks must pass before deploy
-      - uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
       # MEMBERSHIP WALL (plan/processes/membership-wall.md): the public github.io mirror is
       # retired — Pages serves only the redirect stub pointing at the member-gated Library
       # (community.aigovops-foundation.com/library/). docs/ remains the SOURCE and is still
       # built + tested above; the librarian agent mirrors it into the gated mount. To restore
       # the public mirror, point path back to docs.
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
         with: { path: redirect-stub }
       - id: deploy
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
