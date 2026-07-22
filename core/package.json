@@ -15,6 +15,8 @@
     "rotate-keys": "node scripts/rotate-keys.mjs",
     "gate": "node scripts/governance-gate.mjs",
     "scan": "node scripts/scan.mjs",
+    "enclave:preflight": "node scripts/enclave-preflight.mjs",
+    "enclave:verify": "node scripts/enclave-verify.mjs",
     "demo": "node scripts/demo.mjs",
     "test": "node --test",
     "pulse": "node scripts/pulse.mjs",

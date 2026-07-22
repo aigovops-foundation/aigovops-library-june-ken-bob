@@ -27,6 +27,10 @@ core/evidence-bundle/
 deploy/.env
 deploy/.dead-simple.state
 
+# rendered enclave config — the human pastes real secrets into it on the host
+deploy/enclave/*.env
+deploy/enclave/.enclave-up.state
+
 # stray nested runtime ledger artifact (runtime data, not source)
 core/core/
 
