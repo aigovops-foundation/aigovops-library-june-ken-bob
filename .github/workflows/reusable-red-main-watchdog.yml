@@ -1,0 +1,107 @@
+name: reusable-red-main-watchdog
+
+# A reusable, dependency-free watchdog that fails LOUD when a repo's default branch has been
+# red for longer than a threshold. Adopt it in one line; it needs no PAT and no external action.
+#
+# Adopt it from another repo with:
+#   jobs:
+#     red-main:
+#       uses: aigovops-foundation/aigovops-library-june-ken-bob/.github/workflows/reusable-red-main-watchdog.yml@main
+#       with:
+#         max_red_hours: 48          # optional (default 48)
+#         workflow_file: "ci.yml"    # optional; omit to watch every workflow on the branch
+#
+# WHY THIS EXISTS. A red main is only a control if somebody hears it. In the 2026-07 estate
+# sweep, TWO default branches had been failing for WEEKS with nobody notified — the Foundation
+# site's live-site E2E, and Omni-v4's nightly corpus drift (12 days, 13 orphaned branches). Both
+# were found by a human happening to look. A control that reports healthy while nobody is
+# watching is the most dangerous kind; this one turns "red for a while" into its own failure.
+#
+# WHY PER-REPO AND NOT ONE ESTATE-WIDE JOB. A central watchdog would have to read other repos'
+# Actions history, which GITHUB_TOKEN cannot do — it would need a long-lived cross-repo PAT, a
+# standing credential the estate would then have to hold and rotate. Each repo watching ITSELF
+# uses only its own scoped token. No new secret exists anywhere.
+#
+# WHY IT MEASURES DURATION, NOT JUST "IS IT RED". A single failed run is often a flake or a
+# transient upstream. What matters — and what nobody notices — is red that STAYS red. The job
+# walks back through runs to the last success and fails only past the threshold, so a flake
+# self-heals on the next green run and a genuine outage escalates on its own.
+
+on:
+  workflow_call:
+    inputs:
+      max_red_hours:
+        description: "Fail once the default branch has been failing for longer than this many hours."
+        required: false
+        type: number
+        default: 48
+      workflow_file:
+        description: "Optional workflow filename (e.g. ci.yml) to watch. Omit to watch all workflows."
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Fail if the default branch has been red past the threshold
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MAX_RED_HOURS: ${{ inputs.max_red_hours }}
+          WORKFLOW_FILE: ${{ inputs.workflow_file }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -uo pipefail
+          branch=$(gh api "repos/$REPO" --jq .default_branch)
+          q="repos/$REPO/actions/runs?branch=$branch&event=push&per_page=50"
+          [ -n "$WORKFLOW_FILE" ] && q="repos/$REPO/actions/workflows/$WORKFLOW_FILE/runs?branch=$branch&per_page=50"
+          gh api "$q" > runs.json || { echo "could not read Actions history"; exit 1; }
+
+          python3 - <<'PY'
+          import json, os, sys
+          from datetime import datetime, timezone
+
+          runs = json.load(open("runs.json")).get("workflow_runs", [])
+          # Completed runs only, newest first. A run still in progress tells us nothing yet.
+          runs = [r for r in runs if r.get("status") == "completed"]
+          runs.sort(key=lambda r: r["created_at"], reverse=True)
+
+          if not runs:
+              print("red-main-watchdog: no completed runs to judge — not asserting health.")
+              sys.exit(0)
+
+          latest = runs[0]
+          if latest["conclusion"] in ("success", "skipped", "neutral"):
+              print(f"red-main-watchdog: green — latest run {latest['conclusion']} ({latest['created_at']}).")
+              sys.exit(0)
+
+          # Red now. Walk back to the last success to measure how long it has been red.
+          first_bad = latest
+          for r in runs:
+              if r["conclusion"] in ("success", "skipped", "neutral"):
+                  break
+              first_bad = r
+
+          started = datetime.fromisoformat(first_bad["created_at"].replace("Z", "+00:00"))
+          hours = (datetime.now(timezone.utc) - started).total_seconds() / 3600.0
+          limit = float(os.environ["MAX_RED_HOURS"])
+
+          print(f"latest conclusion : {latest['conclusion']}")
+          print(f"red since         : {first_bad['created_at']}  ({hours:.1f}h)")
+          print(f"threshold         : {limit:.0f}h")
+          print(f"first failing run : {first_bad.get('html_url')}")
+
+          if hours > limit:
+              print(f"::error::default branch has been red for {hours:.1f}h (threshold {limit:.0f}h) — "
+                    f"first failure {first_bad['created_at']}: {first_bad.get('html_url')}")
+              sys.exit(1)
+
+          print(f"red-main-watchdog: red for {hours:.1f}h, still under the {limit:.0f}h threshold — "
+                f"not escalating yet (a flake should go green on the next run).")
+          PY

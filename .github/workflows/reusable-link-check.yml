@@ -1,0 +1,174 @@
+name: reusable-link-check
+
+# A reusable, dependency-free link checker for a PUBLISHED site. Crawls same-origin pages,
+# then checks every link it finds — and, crucially, judges internal and external links by
+# DIFFERENT standards. Adopt it in one line; no npm install, no external action.
+#
+# Adopt it from another repo with:
+#   jobs:
+#     link-check:
+#       uses: aigovops-foundation/aigovops-library-june-ken-bob/.github/workflows/reusable-link-check.yml@main
+#       with:
+#         site_url: "https://aigovops-foundation.github.io/umbrella-govops/"
+#         skip_pattern: "linkedin\\.com|/cdn-cgi/"   # optional regex of URLs to ignore
+#         fail_on_external: false                    # optional (default false) — see below
+#
+# WHY INTERNAL AND EXTERNAL ARE NOT THE SAME BUG. In the 2026-07 estate sweep a raw crawl
+# reported 20 "broken" links across the estate. Only 7 were real. The rest were third-party
+# sites refusing a bot: g2.com and businesswire returning 403, hashicorp 429, a Cloudflare
+# email-obfuscation path that only resolves once the page's JS runs. A checker that fails the
+# build on those trains everyone to ignore it — and then the 7 REAL ones (umbrella's doc links,
+# every one a 404 on the live site) stay published for months. So: an internal 4xx/5xx is OURS
+# and fails the job; an external one is reported, never silently dropped, but does not fail by
+# default. Turn on fail_on_external only where you control the far end.
+#
+# WHY IT WILL NOT WANDER OFF-SITE. The Library's own published page is a "this has moved" stub
+# that redirects to the member-gated community. A naive recursive crawler follows that redirect
+# and starts crawling a different property entirely (it did — it hung). This one only RECURSES
+# into pages on the starting origin, so a redirect off-origin is checked as a link and never
+# becomes a new crawl frontier.
+
+on:
+  workflow_call:
+    inputs:
+      site_url:
+        description: "Published site root to crawl, e.g. https://example.github.io/repo/"
+        required: true
+        type: string
+      max_pages:
+        description: "Safety cap on how many same-origin pages to crawl."
+        required: false
+        type: number
+        default: 200
+      skip_pattern:
+        description: "Optional Python regex; any URL matching it is not checked."
+        required: false
+        type: string
+        default: ""
+      fail_on_external:
+        description: "Also fail the job on broken EXTERNAL links (default false — they are reported)."
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  link-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Crawl the published site and check every link
+        env:
+          SITE_URL: ${{ inputs.site_url }}
+          MAX_PAGES: ${{ inputs.max_pages }}
+          SKIP_PATTERN: ${{ inputs.skip_pattern }}
+          FAIL_ON_EXTERNAL: ${{ inputs.fail_on_external }}
+        run: |
+          set -uo pipefail
+          python3 - <<'PY'
+          import os, re, sys, urllib.request, urllib.error, urllib.parse
+          from html.parser import HTMLParser
+          from collections import deque
+
+          START = os.environ["SITE_URL"]
+          MAX_PAGES = int(float(os.environ["MAX_PAGES"]))
+          SKIP = os.environ.get("SKIP_PATTERN") or ""
+          FAIL_EXT = os.environ.get("FAIL_ON_EXTERNAL", "false").lower() == "true"
+          skip_re = re.compile(SKIP) if SKIP else None
+          ORIGIN = urllib.parse.urlparse(START).netloc
+          UA = {"User-Agent": "Mozilla/5.0 (compatible; aigovops-link-check/1.0)"}
+
+          # <link rel=preconnect|dns-prefetch|prefetch|preload> are performance HINTS pointing at
+          # an ORIGIN, not a page. Checking them reports a bare CDN host as 404 (fonts.googleapis.com
+          # does exactly that) — a false positive that teaches people to ignore the lane.
+          HINT_RELS = {"preconnect", "dns-prefetch", "prefetch", "preload", "modulepreload"}
+
+          class Links(HTMLParser):
+              def __init__(self):
+                  super().__init__(); self.out = []
+              def handle_starttag(self, tag, attrs):
+                  a = dict(attrs)
+                  if tag == "link":
+                      rels = (a.get("rel") or "").lower().split()
+                      if any(r in HINT_RELS for r in rels):
+                          return
+                  for key in ("href", "src"):
+                      v = a.get(key)
+                      if v:
+                          self.out.append(v)
+
+          def fetch(url, method="GET"):
+              """Return (status, content_type, body). status 0 = could not connect."""
+              req = urllib.request.Request(url, headers=UA, method=method)
+              try:
+                  with urllib.request.urlopen(req, timeout=25) as r:
+                      ct = r.headers.get("Content-Type", "")
+                      body = r.read() if method == "GET" and "html" in ct else b""
+                      return r.status, ct, body
+              except urllib.error.HTTPError as e:
+                  return e.code, "", b""
+              except Exception:
+                  return 0, "", b""
+
+          seen_pages, queue, checked, results = set(), deque([START]), {}, []
+
+          while queue and len(seen_pages) < MAX_PAGES:
+              page = queue.popleft()
+              if page in seen_pages:
+                  continue
+              seen_pages.add(page)
+              status, ct, body = fetch(page)
+              if status != 200 or "html" not in ct:
+                  continue
+              p = Links()
+              try:
+                  p.feed(body.decode("utf-8", "replace"))
+              except Exception:
+                  continue
+              for raw in p.out:
+                  raw = raw.strip()
+                  if not raw or raw.startswith(("mailto:", "tel:", "javascript:", "data:", "#")):
+                      continue
+                  absu = urllib.parse.urljoin(page, raw).split("#")[0]
+                  if not absu.startswith(("http://", "https://")):
+                      continue
+                  if skip_re and skip_re.search(absu):
+                      continue
+                  same = urllib.parse.urlparse(absu).netloc == ORIGIN
+                  if absu not in checked:
+                      checked[absu] = (page, same)
+                  # Only RECURSE into same-origin HTML — never let a redirect start a new crawl.
+                  if same and absu not in seen_pages and len(seen_pages) + len(queue) < MAX_PAGES:
+                      queue.append(absu)
+
+          internal_bad, external_bad = [], []
+          for url, (parent, same) in sorted(checked.items()):
+              status, _, _ = fetch(url, method="GET")
+              if status == 200:
+                  continue
+              row = (status, url, parent)
+              (internal_bad if same else external_bad).append(row)
+
+          print(f"crawled {len(seen_pages)} page(s) on {ORIGIN}; checked {len(checked)} link(s)\n")
+
+          if external_bad:
+              print(f"--- EXTERNAL: {len(external_bad)} not-200 (reported, not owned by us) ---")
+              for status, url, parent in external_bad:
+                  note = " [bot-block / rate-limit, likely fine]" if status in (401, 403, 429, 0) else ""
+                  print(f"  {status or 'ERR'}  {url}{note}")
+                  print(f"        on: {parent}")
+              print("")
+
+          if internal_bad:
+              print(f"--- INTERNAL: {len(internal_bad)} broken (OURS) ---")
+              for status, url, parent in internal_bad:
+                  print(f"::error::broken internal link {status or 'ERR'} {url} (linked from {parent})")
+              print("")
+
+          fail = bool(internal_bad) or (FAIL_EXT and bool(external_bad))
+          if fail:
+              sys.exit(1)
+          print("link-check: no broken internal links." +
+                (f" ({len(external_bad)} external not-200 reported above.)" if external_bad else ""))
+          PY
