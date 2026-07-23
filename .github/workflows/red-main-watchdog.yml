@@ -1,0 +1,19 @@
+name: red-main-watchdog
+
+# This repo adopting the estate's shared red-main watchdog — the proof-of-pattern for rolling
+# it out across the estate (one `uses:` line per repo).
+#
+# It runs on a schedule rather than on push BECAUSE the failure it catches is duration, not an
+# event: a main that has been red for days while everyone assumes it is green. Two estate repos
+# were exactly that in July 2026 — nobody was told, because nothing was watching.
+
+on:
+  schedule:
+    - cron: "0 15 * * *"   # 15:00 UTC daily (08:00 PT) — a working-hours alarm, not a 3am one
+  workflow_dispatch:
+
+jobs:
+  red-main:
+    uses: ./.github/workflows/reusable-red-main-watchdog.yml
+    with:
+      max_red_hours: 48

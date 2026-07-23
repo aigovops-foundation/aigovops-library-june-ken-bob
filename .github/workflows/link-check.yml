@@ -1,0 +1,20 @@
+name: link-check
+
+# This repo adopting the estate's shared link checker.
+#
+# What it guards here is small but load-bearing: this repo's Pages site is no longer the Library
+# itself — it is the "the Library has moved" stub that sends readers to the member-gated
+# community. That stub IS the estate's public front door to the Library, so its links must keep
+# resolving. If the community URL ever moves again, this lane says so instead of leaving a
+# public page pointing nowhere.
+
+on:
+  schedule:
+    - cron: "0 16 * * 1"   # Mondays 16:00 UTC — link rot is a weekly-cadence problem
+  workflow_dispatch:
+
+jobs:
+  link-check:
+    uses: ./.github/workflows/reusable-link-check.yml
+    with:
+      site_url: "https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/"

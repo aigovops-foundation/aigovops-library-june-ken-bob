@@ -1,0 +1,165 @@
+name: reusable-dependency-triage
+
+# A reusable, dependency-free triage lane for npm advisories. It works out whether a SAFE fix
+# exists, proves it by building, and tells you exactly what to run — and refuses to recommend
+# the breaking kind. Adopt it in one line.
+#
+# Adopt it from another repo with:
+#   jobs:
+#     dep-triage:
+#       uses: aigovops-foundation/aigovops-library-june-ken-bob/.github/workflows/reusable-dependency-triage.yml@main
+#       with:
+#         working_directory: "server"        # optional (default ".")
+#         verify_command: "npm run build"    # optional but STRONGLY recommended — see below
+#         audit_level: "high"                # optional (default high)
+#
+# WHY THIS EXISTS — THE POISONED BUMP. Dependabot answers "which version clears the advisory",
+# not "which version still works". In the 2026-07 estate sweep, two of its PRs did real damage
+# if merged: one raised linkinator 6 -> 8, which crashes on the repo's Node 20
+# (webidl.util.markAsUncloneable is not a function) and reddened the link check; another raised
+# vite 5 -> 8 while leaving @vitejs/plugin-react on 4, whose peer range stops at vite 7 — an
+# ERESOLVE that broke install outright. Both "fixed" the advisory. Both were worse than the
+# vulnerability. A dev-scope advisory is not worth a broken build.
+#
+# SO THIS LANE SPLITS THE TWO CASES:
+#   SAFE      — `npm audit fix` (non-forcing, --package-lock-only) clears it, package.json is
+#               UNCHANGED, and verify_command still passes. That is a lockfile-only patch bump:
+#               it names the exact command and fails loud so a human lands it.
+#   NOT SAFE  — the only remaining fix needs --force or a package.json (major) change. It is
+#               reported, never applied, and explicitly marked as needing a human decision,
+#               because that is precisely the shape that broke the two PRs above.
+#
+# WHY IT DOES NOT OPEN A PR OR PUSH A BRANCH. This org forbids Actions from creating pull
+# requests, and a nightly job that pushes anyway just accumulates litter — Omni-v4's corpus-sync
+# left 13 orphaned branches doing exactly that. This lane reports; a human runs one command.
+
+on:
+  workflow_call:
+    inputs:
+      working_directory:
+        description: "Directory containing package.json / package-lock.json."
+        required: false
+        type: string
+        default: "."
+      node_version:
+        description: "Node version used to audit and verify."
+        required: false
+        type: string
+        default: "20"
+      audit_level:
+        description: "npm audit severity threshold (low|moderate|high|critical)."
+        required: false
+        type: string
+        default: "high"
+      verify_command:
+        description: "Command proving a proposed fix still works (e.g. 'npm run build'). Skipped if empty."
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_directory }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: ${{ inputs.node_version }}
+
+      - name: Triage advisories and prove any safe fix
+        env:
+          AUDIT_LEVEL: ${{ inputs.audit_level }}
+          VERIFY_CMD: ${{ inputs.verify_command }}
+          WORKDIR: ${{ inputs.working_directory }}
+        run: |
+          set -uo pipefail
+
+          if [ ! -f package-lock.json ]; then
+            echo "dependency-triage: no package-lock.json in '$WORKDIR' — nothing to audit."
+            echo "A committed lockfile is what makes CI reproducible; consider adding one."
+            exit 0
+          fi
+
+          before=$(npm audit --package-lock-only --json 2>/dev/null || true)
+          count=$(printf '%s' "$before" | python3 -c "
+          import sys, json
+          try: d = json.load(sys.stdin)
+          except Exception: print(0); raise SystemExit
+          v = d.get('metadata', {}).get('vulnerabilities', {})
+          print(sum(v.get(k, 0) for k in ('moderate','high','critical')))
+          ")
+
+          if [ "${count:-0}" = "0" ]; then
+            echo "dependency-triage: clean — no moderate+ advisories."
+            exit 0
+          fi
+
+          echo "Found $count moderate+ advisory/advisories. Testing whether a SAFE fix exists…"
+          printf '%s' "$before" | python3 -c "
+          import sys, json
+          d = json.load(sys.stdin)
+          for name, v in sorted(d.get('vulnerabilities', {}).items()):
+              print(f\"  [{v.get('severity')}] {name}  {v.get('range','')}  (via {v.get('effects') or 'direct'})\")
+          " || true
+
+          cp package.json /tmp/pkg.before
+          cp package-lock.json /tmp/lock.before
+
+          # Non-forcing, lockfile-only: this is the shape that CANNOT introduce a major bump.
+          npm audit fix --package-lock-only --no-fund >/tmp/fix.log 2>&1 || true
+
+          after_count=$(npm audit --package-lock-only --json 2>/dev/null | python3 -c "
+          import sys, json
+          try: d = json.load(sys.stdin)
+          except Exception: print(-1); raise SystemExit
+          v = d.get('metadata', {}).get('vulnerabilities', {})
+          print(sum(v.get(k, 0) for k in ('moderate','high','critical')))
+          ")
+
+          pkg_changed=1; cmp -s package.json /tmp/pkg.before && pkg_changed=0
+
+          if [ "$pkg_changed" = "1" ]; then
+            echo ""
+            echo "::error::a fix exists but it CHANGES package.json (a major/breaking bump) — not recommending it automatically."
+            echo "This is the poisoned-bump shape: it clears the advisory and may break the build."
+            echo "Decide deliberately, and bump peers together (e.g. vite AND @vitejs/plugin-react)."
+            git --no-pager diff --no-index /tmp/pkg.before package.json | head -40 || true
+            exit 1
+          fi
+
+          if [ "${after_count:-0}" != "0" ]; then
+            echo ""
+            echo "::error::no non-breaking fix available — $after_count moderate+ advisory/advisories remain after a non-forcing audit fix."
+            echo "Remaining work needs a human: a major upgrade, an override, or accepting the risk with a note."
+            tail -20 /tmp/fix.log || true
+            exit 1
+          fi
+
+          # A lockfile-only fix clears everything. Prove it still builds before recommending it.
+          if [ -n "$VERIFY_CMD" ]; then
+            echo ""
+            echo "Lockfile-only fix clears all advisories. Verifying with: $VERIFY_CMD"
+            npm ci --no-audit --no-fund >/tmp/ci.log 2>&1 || { echo "::error::npm ci failed after the fix"; tail -20 /tmp/ci.log; exit 1; }
+            if ! sh -c "$VERIFY_CMD" >/tmp/verify.log 2>&1; then
+              echo "::error::the proposed fix clears the advisories but FAILS '$VERIFY_CMD' — do not land it as-is."
+              tail -25 /tmp/verify.log
+              exit 1
+            fi
+            echo "verify passed."
+          fi
+
+          echo ""
+          echo "::error::a SAFE lockfile-only fix is available and verified — please land it."
+          echo "Run this in '$WORKDIR', then commit package-lock.json:"
+          echo ""
+          echo "    npm audit fix --package-lock-only"
+          echo ""
+          echo "package.json is unchanged; only transitive versions move."
+          git --no-pager diff --no-index --stat /tmp/lock.before package-lock.json | tail -5 || true
+          exit 1
