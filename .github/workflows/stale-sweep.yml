@@ -1,0 +1,20 @@
+name: stale-sweep
+
+# This repo adopting the estate's shared stale sweep — the proof-of-pattern for rolling it out.
+#
+# Monthly, not daily: litter accumulates on a scale of weeks, and a lane that reports the same
+# tidy-up every morning is one people learn to scroll past. It REPORTS and never deletes — a
+# branch can be the only reference to unmerged work, and this estate has already had a snapshot
+# survive only because someone tagged it before a reset.
+
+on:
+  schedule:
+    - cron: "0 14 1 * *"   # 14:00 UTC on the 1st of each month
+  workflow_dispatch:
+
+jobs:
+  stale-sweep:
+    uses: ./.github/workflows/reusable-stale-sweep.yml
+    with:
+      branch_days: 30
+      pr_days: 21

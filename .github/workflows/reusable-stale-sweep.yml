@@ -1,0 +1,136 @@
+name: reusable-stale-sweep
+
+# A reusable, dependency-free sweep that reports branches and pull requests a repo has stopped
+# looking at. Adopt it in one line; no PAT, no external action.
+#
+# Adopt it from another repo with:
+#   jobs:
+#     stale-sweep:
+#       uses: aigovops-foundation/aigovops-library-june-ken-bob/.github/workflows/reusable-stale-sweep.yml@main
+#       with:
+#         branch_days: 30      # optional (default 30)
+#         pr_days: 21          # optional (default 21)
+#         fail_on_findings: false   # optional (default false) — see below
+#
+# WHY THIS EXISTS. Litter is silent. In the July 2026 estate sweep a single nightly job that could
+# not open a PR had quietly pushed a fresh branch every night for two weeks — 28 orphaned
+# `corpus-sync/<date>` branches across two repos before a human happened to list them. Nothing was
+# broken enough to notice, and that is the point: an accumulating pile is evidence of a control
+# failing over and over, and it reads as normal because it grew one day at a time.
+#
+# WHY IT REPORTS AND DOES NOT DELETE. Deleting a branch can discard the only reference to work that
+# was never merged — this estate has already seen a snapshot survive only because someone tagged it
+# before a reset. Branch deletion is cheap to do by hand and expensive to get wrong, so the lane
+# names what it found and a human decides. It also never touches a branch with an OPEN PR.
+#
+# WHY IT DOES NOT FAIL BY DEFAULT. Stale branches are housekeeping, not an outage. A lane that
+# reds the build over tidiness competes with the lanes that mean something, and the estate's real
+# lesson from this month is that a control everyone learns to ignore is worse than no control.
+# Set fail_on_findings: true where you want the tidiness enforced.
+
+on:
+  workflow_call:
+    inputs:
+      branch_days:
+        description: "Report branches with no commit in this many days."
+        required: false
+        type: number
+        default: 30
+      pr_days:
+        description: "Report open PRs with no update in this many days."
+        required: false
+        type: number
+        default: 21
+      fail_on_findings:
+        description: "Fail the job when anything is reported (default false — it is a report)."
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report branches and PRs nobody is looking at
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          BRANCH_DAYS: ${{ inputs.branch_days }}
+          PR_DAYS: ${{ inputs.pr_days }}
+          FAIL_ON: ${{ inputs.fail_on_findings }}
+        run: |
+          set -uo pipefail
+          gh api "repos/$REPO/branches?per_page=100" --paginate > branches.json || echo "[]" > branches.json
+          gh api "repos/$REPO/pulls?state=open&per_page=100" --paginate > prs.json || echo "[]" > prs.json
+          gh api "repos/$REPO" --jq '.default_branch' > default_branch.txt || echo "main" > default_branch.txt
+
+          python3 - <<'PY'
+          import json, os, subprocess, sys
+          from datetime import datetime, timezone
+
+          repo = os.environ["REPO"]
+          bdays = float(os.environ["BRANCH_DAYS"]); pdays = float(os.environ["PR_DAYS"])
+          fail_on = os.environ.get("FAIL_ON", "false").lower() == "true"
+          default = open("default_branch.txt").read().strip() or "main"
+
+          branches = json.load(open("branches.json"))
+          prs = json.load(open("prs.json"))
+          # A branch with an open PR is being looked at by definition — never report it.
+          pr_heads = {p["head"]["ref"] for p in prs}
+          now = datetime.now(timezone.utc)
+
+          def age_days(iso):
+              return (now - datetime.fromisoformat(iso.replace("Z", "+00:00"))).total_seconds() / 86400.0
+
+          stale_b = []
+          for b in branches:
+              name = b["name"]
+              if name == default or name in pr_heads:
+                  continue
+              sha = b["commit"]["sha"]
+              try:
+                  c = json.loads(subprocess.run(
+                      ["gh", "api", f"repos/{repo}/commits/{sha}", "--jq",
+                       '{d: .commit.committer.date}'], capture_output=True, text=True).stdout)
+                  d = age_days(c["d"])
+              except Exception:
+                  continue
+              if d > bdays:
+                  stale_b.append((d, name))
+
+          stale_p = [(age_days(p["updated_at"]), p["number"], p["title"][:60])
+                     for p in prs if age_days(p["updated_at"]) > pdays]
+
+          stale_b.sort(reverse=True); stale_p.sort(reverse=True)
+
+          print(f"{len(branches)} branch(es), {len(prs)} open PR(s) on {repo} (default: {default})\n")
+
+          if stale_b:
+              print(f"--- branches with no commit in {bdays:.0f}+ days: {len(stale_b)} ---")
+              for d, n in stale_b:
+                  print(f"  {d:6.0f}d  {n}")
+              print("  (none of these has an open PR. Review before deleting — a branch can be the"
+                    "\n   only reference to unmerged work.)\n")
+          else:
+              print(f"no branches idle beyond {bdays:.0f} days.\n")
+
+          if stale_p:
+              print(f"--- open PRs untouched in {pdays:.0f}+ days: {len(stale_p)} ---")
+              for d, num, t in stale_p:
+                  print(f"  {d:6.0f}d  #{num}  {t}")
+              print("")
+          else:
+              print(f"no open PR idle beyond {pdays:.0f} days.\n")
+
+          found = len(stale_b) + len(stale_p)
+          if found and fail_on:
+              print(f"::error::{found} stale item(s) — fail_on_findings is on")
+              sys.exit(1)
+          if found:
+              print(f"::notice::{found} stale item(s) reported (not failing — this is housekeeping)")
+          print("stale-sweep: done.")
+          PY
