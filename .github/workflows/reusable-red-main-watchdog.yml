@@ -59,49 +59,88 @@ jobs:
         run: |
           set -uo pipefail
           branch=$(gh api "repos/$REPO" --jq .default_branch)
-          q="repos/$REPO/actions/runs?branch=$branch&event=push&per_page=50"
-          [ -n "$WORKFLOW_FILE" ] && q="repos/$REPO/actions/workflows/$WORKFLOW_FILE/runs?branch=$branch&per_page=50"
+          q="repos/$REPO/actions/runs?branch=$branch&per_page=100"
+          [ -n "$WORKFLOW_FILE" ] && q="repos/$REPO/actions/workflows/$WORKFLOW_FILE/runs?branch=$branch&per_page=100"
           gh api "$q" > runs.json || { echo "could not read Actions history"; exit 1; }
+          printf "%s" "$branch" > branch.txt
 
           python3 - <<'PY'
           import json, os, sys
           from datetime import datetime, timezone
 
+          branch = open("branch.txt").read().strip() or "main"
           runs = json.load(open("runs.json")).get("workflow_runs", [])
-          # Completed runs only, newest first. A run still in progress tells us nothing yet.
           runs = [r for r in runs if r.get("status") == "completed"]
-          runs.sort(key=lambda r: r["created_at"], reverse=True)
 
           if not runs:
               print("red-main-watchdog: no completed runs to judge — not asserting health.")
               sys.exit(0)
 
-          latest = runs[0]
-          if latest["conclusion"] in ("success", "skipped", "neutral"):
-              print(f"red-main-watchdog: green — latest run {latest['conclusion']} ({latest['created_at']}).")
+          # Judge EACH workflow, not just the most recent run overall. A single-latest-run check
+          # reports green whenever ANY workflow ran green recently — so a nightly job that has been
+          # failing for a week hides behind a ci.yml that passed an hour ago. That is exactly how
+          # four red workflows sat unnoticed across the estate in 2026-07; this watchdog missed
+          # them too until it was made per-workflow. Health is: every workflow's newest run is good.
+          from collections import defaultdict
+          by_wf = defaultdict(list)
+          for r in runs:
+              by_wf[r.get("workflow_id") or r.get("name")].append(r)
+
+          GOOD = ("success", "skipped", "neutral")
+          limit = float(os.environ["MAX_RED_HOURS"])
+          # A workflow whose newest run is this old isn't part of "main health now" — it's dormant
+          # or retired (e.g. a cron that was removed leaves a last-failed run on the books forever).
+          # We still SHOW it, so a genuinely-stalled schedule isn't hidden, but we don't escalate on
+          # it — nagging about a retired job every day is the cry-wolf failure the whole fleet avoids.
+          DORMANT_DAYS = max(14.0, 2.0 * limit / 24.0)
+          now = datetime.now(timezone.utc)
+          reds, dormant = [], []
+
+          for wf_runs in by_wf.values():
+              wf_runs.sort(key=lambda r: r["created_at"], reverse=True)
+              latest = wf_runs[0]
+              if latest["conclusion"] in GOOD:
+                  continue
+              first_bad = latest
+              for r in wf_runs:                 # walk back to the last good run
+                  if r["conclusion"] in GOOD:
+                      break
+                  first_bad = r
+              red_h = (now - datetime.fromisoformat(first_bad["created_at"].replace("Z", "+00:00"))).total_seconds() / 3600.0
+              idle_h = (now - datetime.fromisoformat(latest["created_at"].replace("Z", "+00:00"))).total_seconds() / 3600.0
+              name = latest.get("name", "?")
+              if idle_h > DORMANT_DAYS * 24.0:
+                  dormant.append((idle_h, name, latest))
+              else:
+                  reds.append((red_h, name, first_bad))
+
+          checked = len(by_wf)
+          reds.sort(reverse=True); dormant.sort(reverse=True)
+
+          if dormant:
+              print(f"--- dormant (latest run failed, but not run in {DORMANT_DAYS:.0f}+ days — retired? not escalating): {len(dormant)} ---")
+              for idle_h, name, r in dormant:
+                  print(f"  {idle_h/24.0:5.0f}d idle  {name}  (last run {r['conclusion']}: {r.get('html_url')})")
+              print("")
+
+          if not reds:
+              print(f"red-main-watchdog: green — every ACTIVE workflow's latest run is good "
+                    f"({checked} workflow(s) on {branch}, {len(dormant)} dormant).")
               sys.exit(0)
 
-          # Red now. Walk back to the last success to measure how long it has been red.
-          first_bad = latest
-          for r in runs:
-              if r["conclusion"] in ("success", "skipped", "neutral"):
-                  break
-              first_bad = r
+          over = [x for x in reds if x[0] > limit]
+          print(f"{checked} workflow(s) on {branch}; {len(reds)} actively red (threshold {limit:.0f}h):\n")
+          for hours, name, fb in reds:
+              flag = "  <-- OVER THRESHOLD" if hours > limit else ""
+              print(f"  {hours:6.1f}h  {name}{flag}")
+              print(f"           since {fb['created_at']}: {fb.get('html_url')}")
 
-          started = datetime.fromisoformat(first_bad["created_at"].replace("Z", "+00:00"))
-          hours = (datetime.now(timezone.utc) - started).total_seconds() / 3600.0
-          limit = float(os.environ["MAX_RED_HOURS"])
-
-          print(f"latest conclusion : {latest['conclusion']}")
-          print(f"red since         : {first_bad['created_at']}  ({hours:.1f}h)")
-          print(f"threshold         : {limit:.0f}h")
-          print(f"first failing run : {first_bad.get('html_url')}")
-
-          if hours > limit:
-              print(f"::error::default branch has been red for {hours:.1f}h (threshold {limit:.0f}h) — "
-                    f"first failure {first_bad['created_at']}: {first_bad.get('html_url')}")
+          if over:
+              worst_h, worst_n, worst_fb = over[0]
+              print(f"\n::error::{len(over)} workflow(s) red past {limit:.0f}h on {branch} — "
+                    f"worst: '{worst_n}' for {worst_h:.1f}h (since {worst_fb['created_at']}: {worst_fb.get('html_url')})")
               sys.exit(1)
 
-          print(f"red-main-watchdog: red for {hours:.1f}h, still under the {limit:.0f}h threshold — "
-                f"not escalating yet (a flake should go green on the next run).")
+          print(f"\nred-main-watchdog: {len(reds)} red but all under {limit:.0f}h — not escalating yet "
+                f"(a flake should go green on the next run).")
           PY
