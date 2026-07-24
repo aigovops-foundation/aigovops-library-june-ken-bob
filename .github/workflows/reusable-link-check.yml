@@ -67,7 +67,7 @@ jobs:
         run: |
           set -uo pipefail
           python3 - <<'PY'
-          import os, re, sys, urllib.request, urllib.error, urllib.parse
+          import os, re, sys, time, urllib.request, urllib.error, urllib.parse
           from html.parser import HTMLParser
           from collections import deque
 
@@ -142,9 +142,29 @@ jobs:
                   if same and absu not in seen_pages and len(seen_pages) + len(queue) < MAX_PAGES:
                       queue.append(absu)
 
+          def verify(url, retry):
+              """A transport failure (status 0) or a 5xx/429 can be a blip; a 404 is a fact, so
+              only the former is retried. One flaky moment must not red the lane — a checker that
+              cries wolf is the exact failure this lane exists to avoid.
+
+              Retries are spent ONLY on internal links, because those are the ones that can fail
+              the build. An external blip is merely reported either way, so paying 6s of backoff
+              per bot-blocked third party would just make every run slower for no added signal."""
+              tries = 3 if retry else 1
+              status = 0
+              for i in range(tries):
+                  status, _, _ = fetch(url, method="GET")
+                  if status == 200:
+                      return status
+                  if not (status == 0 or status == 429 or status >= 500):
+                      return status          # a definite answer (404, 403…) — no point retrying
+                  if i + 1 < tries:
+                      time.sleep(2 * (i + 1))
+              return status
+
           internal_bad, external_bad = [], []
           for url, (parent, same) in sorted(checked.items()):
-              status, _, _ = fetch(url, method="GET")
+              status = verify(url, retry=same)
               if status == 200:
                   continue
               row = (status, url, parent)
