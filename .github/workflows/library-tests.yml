@@ -1,7 +1,18 @@
 name: library-tests
-# Scheduled drift check of the DEPLOYED site (HTTP mode): SSL expiry, dead
-# external links, broken CI badge, accidental un-publish — things the pre-deploy
-# --dir gate in pages.yml can't see. Pre-deploy structural checks live there.
+# Scheduled drift check of what this repo's Pages site ACTUALLY serves — the doorstep, not the
+# Library. pages.yml deploys `redirect-stub`, because the Library itself moved behind the
+# membership wall at community…/library/ (public source, gated experience).
+#
+# This used to run the full page suite in HTTP mode against this URL, asserting the old homepage
+# ("the three shelves", links to /plan.html, an <h1> mentioning "yes"). Those pages are
+# deliberately no longer published here, so it failed every night for reasons that were correct
+# behaviour — a control testing a target that no longer exists in that form. It cried wolf until
+# nobody read it. Now it checks the three things that are actually load-bearing: the doorstep
+# serves, the destination is alive, and THE WALL IS UP (the Library's pages must 404 here — if a
+# deploy ever published docs/ by mistake, the Library would silently go public).
+#
+# The pre-deploy structural gate over the real pages (test-library.mjs --dir docs) is unchanged
+# and still runs in pages.yml — that is where the Library's own content is verified.
 on:
   schedule:
     - cron: "17 13 * * *"   # 13:17 UTC daily
@@ -20,4 +31,4 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with: { node-version: 20 }
-      - run: node scripts/test-library.mjs --base "${{ github.event.inputs.base_url || 'https://aigovops-foundation.github.io/aigovops-library-june-ken-bob' }}"
+      - run: node scripts/test-redirect-stub.mjs --base "${{ github.event.inputs.base_url || 'https://aigovops-foundation.github.io/aigovops-library-june-ken-bob' }}"
