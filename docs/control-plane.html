@@ -91,6 +91,10 @@
   .tag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10px;padding:3px 8px;border-radius:6px;margin:2px 3px 0 0;border:1px solid var(--line);color:var(--ink2)}
   /* the backlog link carries an inline teal underline — re-ink for paper (markup untouched) */
   a[href="./build-tickets.html"][style]{border-bottom-color:rgba(61,107,53,.45)!important}
+  /* Diagram labels use Cinzel/Spectral inline (SVG); map them to the garden faces so the
+     deep pages match the hub (UX review move #4d). demo/demo-e2e already do this. */
+  svg [font-family^="Cinzel"]{font-family:'Fraunces',serif}
+  svg [font-family^="Spectral"]{font-family:'Source Serif 4',serif}
 </style>
 <style id="a11y-universal">
 /* a11y-universal: keyboard focus + reduced motion (additive, non-breaking) */
