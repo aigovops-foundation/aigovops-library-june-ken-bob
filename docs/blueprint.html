@@ -84,6 +84,10 @@
   .tag.t{color:var(--alm-green);border-color:rgba(61,107,53,.35)}
   /* the fixed "‹ the library set" back-link carries inline dark-hub colors — re-ink for paper (markup untouched) */
   a[href="./index.html"][style]{color:var(--alm-green-deep)!important;background:rgba(251,248,240,.96)!important;border:1px solid rgba(61,107,53,.55)!important}
+  /* Diagram labels use Cinzel/Spectral inline (SVG); map them to the garden faces so the
+     deep pages match the hub (UX review move #4d). demo/demo-e2e already do this. */
+  svg [font-family^="Cinzel"]{font-family:'Fraunces',serif}
+  svg [font-family^="Spectral"]{font-family:'Source Serif 4',serif}
 </style>
 <style id="a11y-universal">
 /* a11y-universal: keyboard focus + reduced motion (additive, non-breaking) */
