@@ -63,11 +63,15 @@ workflow; do not apply that here.)
 
 ## Design conventions
 
-- **Deep docs** (blueprint, control-plane, build-tickets): navy "architectural blueprint"
-  aesthetic — Cinzel (display), Spectral (body), IBM Plex Mono (technical); indigo
-  `#0c1430` with teal/green/gold accents; grid background; numbered sections with a sticky
-  nav and a "← back" link. Match the existing pages' CSS tokens exactly.
-- **The hub** (`index.html`): Fraunces + DM Mono, teal/green on near-black.
+- **Garden-warm, estate-wide** (the navy "architectural blueprint" is RETIRED). Cream ground
+  (`#FAF7F0`/`#F7F3E8`), orchard green accents (`#2E7D4F`/`#1F5E3A`), Fraunces for display.
+  Match the aigovops-july-2026 design system — the same tokens the community and Beacon use.
+- **Deep docs** (blueprint, control-plane, build-tickets): Fraunces (display), Source Serif 4
+  (body), IBM Plex Mono (technical) — a touch more "technical document" than the hub, but the
+  same garden-warm palette; numbered sections with a sticky nav and a "← back" link. Match the
+  existing pages' CSS tokens exactly.
+- **The hub** (`index.html`): Fraunces + Source Sans 3 + DM Mono, garden-warm; leads with the
+  live "See it run" demo before the shelves (the intuition-first order).
 - Write in prose, not bullet-soup; be precise and honest; don't overclaim (e.g. "100%
   visibility of *effects*", not of model thoughts). Keep the founders' voice.
 
