@@ -10,7 +10,7 @@
 //   STEWARDS=login1,login2                     GitHub logins that get the steward role
 //   SESSION_SECRET                             HMAC key for session cookies (else random per-boot)
 //   STEWARD_TOKEN                              optional ops bearer token (admin escape hatch)
-//   AUTH_DISABLED=true                         LOCAL DEV ONLY — treat caller as steward
+//   AUTH_DISABLED=true                         LOCAL DEV ONLY (honored only when NODE_ENV=development|test) — treat caller as steward
 //
 // Fail-closed: with nothing configured, writes are denied (401).
 
@@ -19,12 +19,27 @@ import { identify, identityFromClaims } from './identity.js';
 import * as oidc from './oidc.js';
 
 const b64u = (b) => Buffer.from(b).toString('base64url');
+
+// AUTH_DISABLED is a LOCAL-DEV-ONLY escape hatch that treats every caller as a steward
+// (kill switch, key rotation, decide). It must NEVER take effect in a user-facing /
+// production deploy. We honor it ONLY when NODE_ENV is *explicitly* development or test —
+// never in production, and (fail-safe) never when NODE_ENV is unset, because production
+// deploys frequently leave NODE_ENV blank. A raw AUTH_DISABLED=true outside dev/test is
+// ignored, and we warn loudly so the misconfiguration is visible in logs.
+const NODE_ENV = process.env.NODE_ENV || '';
+const AUTH_DISABLED = process.env.AUTH_DISABLED === 'true'
+  && (NODE_ENV === 'development' || NODE_ENV === 'test');
+if (process.env.AUTH_DISABLED === 'true' && !AUTH_DISABLED) {
+  console.warn('[auth] SECURITY: AUTH_DISABLED=true was IGNORED — it is only honored when NODE_ENV=development or test. Authentication stays ENFORCED here.');
+}
+
 const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
 if (!process.env.SESSION_SECRET) {
   // In production, refuse to boot rather than silently serving auth with a random per-boot key — a
-  // misconfigured prod deploy should fail closed, not keep running. Dev/test (no NODE_ENV=production)
-  // keep the warn-and-continue behavior.
-  if (process.env.NODE_ENV === 'production' && process.env.AUTH_DISABLED !== 'true') {
+  // misconfigured prod deploy should fail closed, not keep running. Dev/test keep warn-and-continue.
+  // Note: AUTH_DISABLED no longer buys an exception here — it is ignored outside dev/test (above),
+  // so a production deploy must set a real SESSION_SECRET regardless of any AUTH_DISABLED setting.
+  if (NODE_ENV === 'production') {
     throw new Error('[auth] SESSION_SECRET must be set in production — refusing to boot with a random per-boot key.');
   }
   console.warn('[auth] SESSION_SECRET unset — using a random per-boot key (sessions drop on restart).');
@@ -76,8 +91,9 @@ export function identityFromReq(req) {
       && crypto.timingSafeEqual(Buffer.from(auth), Buffer.from(expectedBearer))) {
     return identify({ id: 'ops:token', role: 'steward' });
   }
-  // 2) local-dev override (must be explicit; logs loudly)
-  if (process.env.AUTH_DISABLED === 'true') return identify({ id: 'local:dev', role: 'steward' });
+  // 2) local-dev override — explicit, and honored ONLY in dev/test (see the AUTH_DISABLED
+  //    guard at the top of this file; a raw AUTH_DISABLED=true in prod is ignored there).
+  if (AUTH_DISABLED) return identify({ id: 'local:dev', role: 'steward' });
   // 3) signed session cookie (GitHub OAuth or OIDC). Provider-aware so the
   //    governed loop attributes + scopes by the real subject, not a stub.
   const s = verifySession(parseCookies(req)[COOKIE]);
