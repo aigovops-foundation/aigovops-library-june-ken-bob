@@ -26,6 +26,27 @@ name: reusable-red-main-watchdog
 # transient upstream. What matters — and what nobody notices — is red that STAYS red. The job
 # walks back through runs to the last success and fails only past the threshold, so a flake
 # self-heals on the next green run and a genuine outage escalates on its own.
+#
+# WHY THE CALLER MUST DECLARE `permissions`. This workflow reads Actions history, so it needs
+# `actions: read` — and a called workflow's permissions can only be a SUBSET of its caller's.
+# A caller on the stock default token (`contents`/`metadata` only) therefore cannot satisfy it
+# and the run dies at startup, with no job and no log. Every adopting caller needs:
+#     permissions:
+#       contents: read
+#       actions: read
+#
+# WHY IT IGNORES ITS OWN WORKFLOW. A watchdog that counts its own runs as evidence is a trap:
+# the moment it alarms, its own failure becomes the red it is alarming about, and it stays red
+# forever even after the real problem is fixed. It can never return to green under its own
+# power. So the verdict excludes the calling workflow's own id — it is still REPORTED, so a
+# broken watchdog is visible, but it cannot latch itself.
+#
+# WHY IT FETCHES RUNS PER WORKFLOW. One global `actions/runs?per_page=100` sounds equivalent but
+# is not: in a busy repo those 100 runs are consumed by whatever pushed most recently. On Omni
+# that window reached back only ~2.6 days, so a workflow red for a week measured as "53h" — and
+# a repo just slightly busier would push the window under the threshold, making a permanently
+# red main UNDETECTABLE. Querying each workflow's own history keeps the depth independent of
+# how noisy its neighbours are.
 
 on:
   workflow_call:
@@ -56,36 +77,47 @@ jobs:
           MAX_RED_HOURS: ${{ inputs.max_red_hours }}
           WORKFLOW_FILE: ${{ inputs.workflow_file }}
           REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
         run: |
           set -uo pipefail
-          branch=$(gh api "repos/$REPO" --jq .default_branch)
-          q="repos/$REPO/actions/runs?branch=$branch&per_page=100"
-          [ -n "$WORKFLOW_FILE" ] && q="repos/$REPO/actions/workflows/$WORKFLOW_FILE/runs?branch=$branch&per_page=100"
-          gh api "$q" > runs.json || { echo "could not read Actions history"; exit 1; }
-          printf "%s" "$branch" > branch.txt
+          branch=$(gh api "repos/$REPO" --jq .default_branch) \
+            || { echo "could not read repo metadata"; exit 1; }
 
-          python3 - <<'PY'
-          import json, os, sys
+          # The calling workflow's own id, so the verdict can exclude it (see WHY IT IGNORES ITSELF).
+          # A reusable workflow shares the caller's run id, so this resolves to the ADOPTING
+          # workflow — red-main-watchdog.yml in the repo being watched, not this file.
+          self_id=$(gh api "repos/$REPO/actions/runs/$RUN_ID" --jq .workflow_id) || self_id=""
+
+          if [ -n "$WORKFLOW_FILE" ]; then
+            gh api "repos/$REPO/actions/workflows/$WORKFLOW_FILE" --jq .id > ids.txt \
+              || { echo "could not read workflow $WORKFLOW_FILE"; exit 1; }
+          else
+            # Disabled workflows are excluded deliberately: someone turned them off on purpose,
+            # and nagging daily about a job that is meant to be off is the cry-wolf failure mode.
+            gh api "repos/$REPO/actions/workflows?per_page=100" \
+              --jq '.workflows[] | select(.state == "active") | .id' > ids.txt \
+              || { echo "could not list workflows"; exit 1; }
+          fi
+
+          mkdir -p runs
+          while IFS= read -r id; do
+            [ -n "$id" ] || continue
+            gh api "repos/$REPO/actions/workflows/$id/runs?branch=$branch&per_page=100" > "runs/$id.json" \
+              || { echo "could not read Actions history for workflow $id"; exit 1; }
+          done < ids.txt
+
+          BRANCH="$branch" SELF_ID="$self_id" python3 - <<'PY'
+          import glob, json, os, sys
           from datetime import datetime, timezone
 
-          branch = open("branch.txt").read().strip() or "main"
-          runs = json.load(open("runs.json")).get("workflow_runs", [])
-          runs = [r for r in runs if r.get("status") == "completed"]
-
-          if not runs:
-              print("red-main-watchdog: no completed runs to judge — not asserting health.")
-              sys.exit(0)
+          branch = os.environ.get("BRANCH", "").strip() or "main"
+          self_id = os.environ.get("SELF_ID", "").strip()
 
           # Judge EACH workflow, not just the most recent run overall. A single-latest-run check
           # reports green whenever ANY workflow ran green recently — so a nightly job that has been
           # failing for a week hides behind a ci.yml that passed an hour ago. That is exactly how
           # four red workflows sat unnoticed across the estate in 2026-07; this watchdog missed
           # them too until it was made per-workflow. Health is: every workflow's newest run is good.
-          from collections import defaultdict
-          by_wf = defaultdict(list)
-          for r in runs:
-              by_wf[r.get("workflow_id") or r.get("name")].append(r)
-
           GOOD = ("success", "skipped", "neutral")
           limit = float(os.environ["MAX_RED_HOURS"])
           # A workflow whose newest run is this old isn't part of "main health now" — it's dormant
@@ -94,9 +126,18 @@ jobs:
           # it — nagging about a retired job every day is the cry-wolf failure the whole fleet avoids.
           DORMANT_DAYS = max(14.0, 2.0 * limit / 24.0)
           now = datetime.now(timezone.utc)
-          reds, dormant = [], []
+          reds, dormant, checked, self_row = [], [], 0, None
 
-          for wf_runs in by_wf.values():
+          def age_h(run):
+              return (now - datetime.fromisoformat(run["created_at"].replace("Z", "+00:00"))).total_seconds() / 3600.0
+
+          for path in sorted(glob.glob("runs/*.json")):
+              wf_id = os.path.basename(path)[:-len(".json")]
+              wf_runs = [r for r in json.load(open(path)).get("workflow_runs", [])
+                         if r.get("status") == "completed"]
+              if not wf_runs:                   # never run on this branch, or call-only (reusable)
+                  continue
+              checked += 1
               wf_runs.sort(key=lambda r: r["created_at"], reverse=True)
               latest = wf_runs[0]
               if latest["conclusion"] in GOOD:
@@ -106,16 +147,31 @@ jobs:
                   if r["conclusion"] in GOOD:
                       break
                   first_bad = r
-              red_h = (now - datetime.fromisoformat(first_bad["created_at"].replace("Z", "+00:00"))).total_seconds() / 3600.0
-              idle_h = (now - datetime.fromisoformat(latest["created_at"].replace("Z", "+00:00"))).total_seconds() / 3600.0
-              name = latest.get("name", "?")
-              if idle_h > DORMANT_DAYS * 24.0:
-                  dormant.append((idle_h, name, latest))
+              # Every run we fetched is bad, so we never actually saw it go green — the true red
+              # age is at least this, and is reported with ">=" rather than as a precise figure.
+              floor = all(r["conclusion"] not in GOOD for r in wf_runs)
+              name = latest.get("name") or wf_id
+              row = (age_h(first_bad), name, first_bad, floor)
+              if wf_id == self_id:
+                  self_row = row
+              elif age_h(latest) > DORMANT_DAYS * 24.0:
+                  dormant.append((age_h(latest), name, latest))
               else:
-                  reds.append((red_h, name, first_bad))
+                  reds.append(row)
 
-          checked = len(by_wf)
-          reds.sort(reverse=True); dormant.sort(reverse=True)
+          if not checked:
+              print("red-main-watchdog: no completed runs to judge — not asserting health.")
+              sys.exit(0)
+
+          # Sort on the numeric key only — tuples carrying a dict raise TypeError on ties.
+          reds.sort(key=lambda x: x[0], reverse=True)
+          dormant.sort(key=lambda x: x[0], reverse=True)
+
+          if self_row:
+              red_h, name, fb, floor = self_row
+              print(f"note: this watchdog's own workflow ('{name}') is {'>=' if floor else ''}{red_h:.1f}h red. "
+                    f"It is excluded from the verdict below — a watchdog that counts its own alarm as "
+                    f"the fire can never go green again. Its runs are visible in Actions.\n")
 
           if dormant:
               print(f"--- dormant (latest run failed, but not run in {DORMANT_DAYS:.0f}+ days — retired? not escalating): {len(dormant)} ---")
@@ -130,15 +186,16 @@ jobs:
 
           over = [x for x in reds if x[0] > limit]
           print(f"{checked} workflow(s) on {branch}; {len(reds)} actively red (threshold {limit:.0f}h):\n")
-          for hours, name, fb in reds:
+          for hours, name, fb, floor in reds:
               flag = "  <-- OVER THRESHOLD" if hours > limit else ""
-              print(f"  {hours:6.1f}h  {name}{flag}")
+              print(f"  {'>=' if floor else '  '}{hours:6.1f}h  {name}{flag}")
               print(f"           since {fb['created_at']}: {fb.get('html_url')}")
 
           if over:
-              worst_h, worst_n, worst_fb = over[0]
+              worst_h, worst_n, worst_fb, worst_floor = over[0]
               print(f"\n::error::{len(over)} workflow(s) red past {limit:.0f}h on {branch} — "
-                    f"worst: '{worst_n}' for {worst_h:.1f}h (since {worst_fb['created_at']}: {worst_fb.get('html_url')})")
+                    f"worst: '{worst_n}' for {'>=' if worst_floor else ''}{worst_h:.1f}h "
+                    f"(since {worst_fb['created_at']}: {worst_fb.get('html_url')})")
               sys.exit(1)
 
           print(f"\nred-main-watchdog: {len(reds)} red but all under {limit:.0f}h — not escalating yet "
