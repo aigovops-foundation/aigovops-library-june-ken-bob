@@ -12,6 +12,14 @@ on:
     - cron: "0 14 1 * *"   # 14:00 UTC on the 1st of each month
   workflow_dispatch:
 
+# Same reason as red-main-watchdog.yml: the reusable asks for `pull-requests: read`, which the
+# stock default token does not grant, and a called workflow can never hold more than its caller.
+# Without this block the first scheduled run would have died as a startup_failure — silently,
+# exactly like the watchdog did. This lane had not run yet, so the bug was latent, not visible.
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
   stale-sweep:
     uses: ./.github/workflows/reusable-stale-sweep.yml
