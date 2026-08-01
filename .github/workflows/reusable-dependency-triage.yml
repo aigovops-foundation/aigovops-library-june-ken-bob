@@ -114,7 +114,19 @@ jobs:
           # Non-forcing, lockfile-only: this is the shape that CANNOT introduce a major bump.
           npm audit fix --package-lock-only --no-fund >/tmp/fix.log 2>&1 || true
 
-          after_count=$(npm audit --package-lock-only --json 2>/dev/null | python3 -c "
+          # `npm audit` EXITS NON-ZERO whenever advisories remain — which is precisely the case the
+          # branches below exist to report. GitHub runs `run:` blocks under `bash -e {0}`, and the
+          # `set -uo pipefail` at the top does NOT clear that inherited `-e`. So this assignment,
+          # unguarded and made a pipeline by `pipefail`, aborted the entire step the moment there
+          # was something to say: advisories printed, then exit 1 with no verdict, no diagnosis,
+          # nothing. The `before=` capture above already guards with `|| true`; this one did not.
+          #
+          # Beacon's studio lane died exactly here from 2026-07-28 — it could never reach the "no
+          # non-breaking fix available" message below, the single most important thing this lane
+          # has to say. A triage lane that goes silent whenever it finds something is worse than
+          # no lane at all: it reds the branch and tells you nothing about why.
+          after=$(npm audit --package-lock-only --json 2>/dev/null || true)
+          after_count=$(printf '%s' "$after" | python3 -c "
           import sys, json
           try: d = json.load(sys.stdin)
           except Exception: print(-1); raise SystemExit
