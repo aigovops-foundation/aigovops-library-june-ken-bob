@@ -14,7 +14,7 @@
   var s = document.currentScript;
   if (!s) return;
   var TOUR = s.getAttribute('data-tour') ||
-    'https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/onboarding.html';
+    'https://community.aigovops-foundation.com/library/onboarding.html';
   var ID = (s.getAttribute('data-estate-id') || '').trim();
   var POS = (s.getAttribute('data-position') || 'left').trim();
   var KEY = 'aigov-start-here-dismissed';

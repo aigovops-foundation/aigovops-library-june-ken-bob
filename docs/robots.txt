@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/sitemap.xml
+Sitemap: https://community.aigovops-foundation.com/library/sitemap.xml

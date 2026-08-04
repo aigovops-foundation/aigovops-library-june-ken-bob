@@ -8,10 +8,10 @@
 <meta property="og:type" content="website"/>
 <meta property="og:title" content="System Pulse — AiGovOps Library"/>
 <meta property="og:description" content="Live system pulse for the AiGovOps Library: the governed core is exercised on every deploy, emitting a receipt from each Yes-Gate decision."/>
-<meta property="og:url" content="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/pulse.html"/>
-<link rel="canonical" href="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/pulse.html"/>
+<meta property="og:url" content="https://community.aigovops-foundation.com/library/pulse.html"/>
+<link rel="canonical" href="https://community.aigovops-foundation.com/library/pulse.html"/>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/pulse.html","url":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/pulse.html","name":"System Pulse — AiGovOps Library","isPartOf":{"@id":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/#site"},"publisher":{"@id":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/#org"},"description":"Live system pulse for the AiGovOps Library: the governed core is exercised on every deploy, emitting a receipt from each Yes-Gate decision."}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://community.aigovops-foundation.com/library/pulse.html","url":"https://community.aigovops-foundation.com/library/pulse.html","name":"System Pulse — AiGovOps Library","isPartOf":{"@id":"https://community.aigovops-foundation.com/library/#site"},"publisher":{"@id":"https://community.aigovops-foundation.com/library/#org"},"description":"Live system pulse for the AiGovOps Library: the governed core is exercised on every deploy, emitting a receipt from each Yes-Gate decision."}
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Source+Sans+3:ital,wght@0,300..800;1,300..800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
@@ -60,8 +60,8 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font:40
 <a class="back" href="./index.html">← back to the library</a>
 <h1>System Pulse</h1>
 <div class="meta">
-  <span>Generated 2026-07-25 15:09:31 UTC</span>
-  <span>commit b48deb4</span>
+  <span>Generated 2026-08-03 01:45:47 UTC</span>
+  <span>commit 98dc1fa</span>
 </div>
 
 <div class="score">
@@ -81,11 +81,11 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font:40
 
 <h2>Engine Exercise</h2>
 <ul class="checks">
-  <li><span class="icon ok">●</span><span class="name">T0 · issue a scoped grant</span><span class="detail">grantId=f6d7253a… token≠master ✓ ttl=60s</span></li>
+  <li><span class="icon ok">●</span><span class="name">T0 · issue a scoped grant</span><span class="detail">grantId=278dbf8f… token≠master ✓ ttl=60s</span></li>
   <li><span class="icon ok">●</span><span class="name">T0 · redeem the token (valid)</span><span class="detail">redeem ok=true scope=github-deploy</span></li>
   <li><span class="icon ok">●</span><span class="name">T0 · revoke → token fails closed</span><span class="detail">revoked → revoked ✓</span></li>
   <li><span class="icon ok">●</span><span class="name">T0 · describe() leaks no secret</span><span class="detail">owner=lab scope=github-deploy activeGrants=2</span></li>
-  <li><span class="icon ok">●</span><span class="name">T1 · approve → paired linked receipts</span><span class="detail">approved ✓ proposalId=d05e3325… token=84f5eec0…</span></li>
+  <li><span class="icon ok">●</span><span class="name">T1 · approve → paired linked receipts</span><span class="detail">approved ✓ proposalId=1588afbc… token=5795e5a2…</span></li>
   <li><span class="icon ok">●</span><span class="name">T1 · deny → no token, fails closed</span><span class="detail">denied ✓ grant=null reason=denied</span></li>
   <li><span class="icon ok">●</span><span class="name">T5 · under cap → approved</span><span class="detail">approved=true ✓ spend recorded</span></li>
   <li><span class="icon ok">●</span><span class="name">T5 · at cap → halted + breach receipt</span><span class="detail">capped=true ✓ reason=capped:spend-cap</span></li>

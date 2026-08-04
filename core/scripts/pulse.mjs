@@ -175,10 +175,10 @@ const html = `<!DOCTYPE html>
 <meta property="og:type" content="website"/>
 <meta property="og:title" content="System Pulse — AiGovOps Library"/>
 <meta property="og:description" content="Live system pulse for the AiGovOps Library: the governed core is exercised on every deploy, emitting a receipt from each Yes-Gate decision."/>
-<meta property="og:url" content="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/pulse.html"/>
-<link rel="canonical" href="https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/pulse.html"/>
+<meta property="og:url" content="https://community.aigovops-foundation.com/library/pulse.html"/>
+<link rel="canonical" href="https://community.aigovops-foundation.com/library/pulse.html"/>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/pulse.html","url":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/pulse.html","name":"System Pulse — AiGovOps Library","isPartOf":{"@id":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/#site"},"publisher":{"@id":"https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/#org"},"description":"Live system pulse for the AiGovOps Library: the governed core is exercised on every deploy, emitting a receipt from each Yes-Gate decision."}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://community.aigovops-foundation.com/library/pulse.html","url":"https://community.aigovops-foundation.com/library/pulse.html","name":"System Pulse — AiGovOps Library","isPartOf":{"@id":"https://community.aigovops-foundation.com/library/#site"},"publisher":{"@id":"https://community.aigovops-foundation.com/library/#org"},"description":"Live system pulse for the AiGovOps Library: the governed core is exercised on every deploy, emitting a receipt from each Yes-Gate decision."}
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Source+Sans+3:ital,wght@0,300..800;1,300..800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
