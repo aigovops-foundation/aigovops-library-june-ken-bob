@@ -1,0 +1,172 @@
+name: reusable-repo-sync-check
+
+# A reusable lane that answers one question a repo cannot answer about itself from inside CI:
+# is anything that matters living ONLY on somebody's laptop?
+#
+# Adopt it from another repo with:
+#   jobs:
+#     repo-sync:
+#       uses: aigovops-foundation/aigovops-library-june-ken-bob/.github/workflows/reusable-repo-sync-check.yml@main
+#       permissions:
+#         contents: read
+#       with:
+#         max_branch_age_days: 30      # optional (default 30)
+#
+# WHY THIS EXISTS. On 2026-08-04 an estate audit found work living only on one laptop THREE times
+# in a single day: 28 uncommitted files fixing 23 broken canonicals, a prototype whose GitHub repo
+# existed but was empty, and a warm-standby droplet nobody could verify. None of them were visible
+# to any control. Every lane was green, because every lane only ever looked at what had already
+# been pushed. Silence meant "nobody looked", not "nothing to see".
+#
+# WHAT IT CAN AND CANNOT SEE — stated plainly, because a control that overstates its reach is the
+# hollow-green failure this estate keeps finding. CI runs on a clone of what was ALREADY pushed,
+# so it can never see an unpushed commit or an uncommitted file directly. What it CAN see are the
+# fingerprints those leave behind on the remote:
+#   - a branch that has not moved in weeks (someone's work, parked and forgotten)
+#   - a branch whose PR was merged but that was never deleted (drifts, then gets re-based on by
+#     mistake — exactly the stale seo/ branches this estate had on two repos)
+#   - an EMPTY default branch (a repo created as a placeholder and never pushed to — precisely
+#     how the Yes-in-a-Day prototype stayed laptop-only for a month)
+# A local-only working tree is caught by the operator-side check in the estate runbook, not here.
+# This lane says so rather than implying full coverage.
+
+on:
+  workflow_call:
+    inputs:
+      max_branch_age_days:
+        description: "Flag branches with no commits newer than this many days."
+        required: false
+        type: number
+        default: 30
+      ignore_branches:
+        description: "Space-separated branch names never to flag (e.g. long-lived release lines)."
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  sync-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Look for work that may only exist on somebody's machine
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          MAX_AGE: ${{ inputs.max_branch_age_days }}
+          IGNORE: ${{ inputs.ignore_branches }}
+        run: |
+          set -uo pipefail
+
+          # `gh api` exits non-zero on an empty repo (409) and on some list endpoints, and GitHub
+          # runs `run:` under `bash -e` which `set -uo pipefail` does NOT clear — so every capture
+          # here is guarded. That exact asymmetry silently killed reusable-dependency-triage for a
+          # week: it died the moment it had something to report. Never leave one unguarded.
+          default_branch=$(gh api "repos/$REPO" --jq .default_branch 2>/dev/null || echo "")
+          [ -n "$default_branch" ] || { echo "could not read repo metadata"; exit 1; }
+
+          # Fetch each branch INDIVIDUALLY. The list endpoint returns only {name, commit:{sha,url}} —
+          # it carries no committer date — so judging branch age from the list silently never fires:
+          # every age reads as unknown and the lane reports a confident green. Caught by checking the
+          # lane against a repo with five 60-to-80-day-old branches and getting no notes at all.
+          gh api "repos/$REPO/branches?per_page=100" --jq '.[].name' 2>/dev/null > branch_names.txt || : > branch_names.txt
+          echo "[" > branches.json; first=1
+          while IFS= read -r b; do
+            [ -n "$b" ] || continue
+            detail=$(gh api "repos/$REPO/branches/$b" 2>/dev/null || echo "")
+            [ -n "$detail" ] || continue
+            [ "$first" = 1 ] || echo "," >> branches.json
+            printf '%s' "$detail" >> branches.json; first=0
+          done < branch_names.txt
+          echo "]" >> branches.json
+          gh api "repos/$REPO/pulls?state=closed&per_page=100" 2>/dev/null > closed_prs.json || echo "[]" > closed_prs.json
+          gh api "repos/$REPO/commits?sha=$default_branch&per_page=1" 2>/dev/null > head_commit.json || echo "[]" > head_commit.json
+
+          DEFAULT_BRANCH="$default_branch" python3 - <<'PY'
+          import json, os, sys
+          from datetime import datetime, timezone
+
+          default_branch = os.environ["DEFAULT_BRANCH"]
+          max_age = float(os.environ.get("MAX_AGE") or 30)
+          ignore = set((os.environ.get("IGNORE") or "").split())
+          ignore.add(default_branch)
+          now = datetime.now(timezone.utc)
+
+          def load(p, fallback):
+              try:
+                  d = json.load(open(p))
+                  return d if isinstance(d, list) else fallback
+              except Exception:
+                  return fallback
+
+          branches = load("branches.json", [])
+          closed = load("closed_prs.json", [])
+          head = load("head_commit.json", [])
+
+          findings, notes = [], []
+
+          # An empty default branch means the repo is a placeholder — whatever it was created to
+          # hold is, by definition, somewhere else. That is the loudest possible version of this
+          # lane's question, so it is a finding rather than a note.
+          if not head:
+              findings.append(("empty-default-branch",
+                               f"{default_branch} has no commits — this repo holds nothing, so "
+                               f"whatever it was created for lives somewhere that is not GitHub"))
+
+          merged_unmerged_heads = {
+              pr["head"]["ref"] for pr in closed
+              if pr.get("merged_at") and pr.get("head", {}).get("ref")
+          }
+
+          stale, merged_leftovers = [], []
+          for b in branches:
+              name = b.get("name", "")
+              if name in ignore:
+                  continue
+              iso = (b.get("commit", {}).get("commit", {}).get("committer", {}) or {}).get("date")
+              age = None
+              if iso:
+                  age = (now - datetime.fromisoformat(iso.replace("Z", "+00:00"))).days
+              if name in merged_unmerged_heads:
+                  merged_leftovers.append((name, age))
+              elif age is not None and age > max_age:
+                  stale.append((name, age))
+
+          # Merged-but-undeleted is a finding: it is the shape that gets branched from by mistake
+          # and silently rebases someone onto month-old code. Simply-stale is a note — a parked
+          # branch is often deliberate, and nagging about it daily is how a lane teaches people to
+          # scroll past it.
+          if merged_leftovers:
+              worst = ", ".join(f"{n} ({a}d)" if a is not None else n
+                                for n, a in sorted(merged_leftovers, key=lambda x: -(x[1] or 0))[:5])
+              findings.append(("merged-branch-not-deleted",
+                               f"{len(merged_leftovers)} branch(es) whose PR merged but were never "
+                               f"deleted — they drift and get branched from by mistake: {worst}"))
+          if stale:
+              worst = ", ".join(f"{n} ({a}d)" for n, a in sorted(stale, key=lambda x: -x[1])[:5])
+              notes.append(f"{len(stale)} branch(es) with no commit in {max_age:.0f}+ days: {worst}")
+
+          print(f"repo-sync-check: {len(branches)} branch(es) on {default_branch}\n")
+          for n in notes:
+              print(f"  note: {n}")
+          if notes:
+              print("")
+
+          # State the boundary every run, not only when clean. A reader who sees a green lane
+          # should know exactly which risks it did NOT examine.
+          print("  not covered by this lane (CI only ever sees what was already pushed):")
+          print("    - uncommitted files in a working tree")
+          print("    - commits made locally and never pushed")
+          print("    - a deployed host running code that matches no commit (see ship.sh --check)")
+          print("")
+
+          if not findings:
+              print("repo-sync-check: green — nothing suggests work is stranded off GitHub.")
+              sys.exit(0)
+
+          for kind, detail in findings:
+              print(f"::error::{kind} — {detail}")
+          sys.exit(1)
+          PY
