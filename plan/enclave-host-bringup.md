@@ -13,6 +13,52 @@ reversible is already done.** You perform the credential steps, nothing else.
 
 ---
 
+## Checklist — the one page to keep open
+
+A tick-box view of the whole run; the sections below carry the detail for each
+line. Every step is marked **🤖 automated** (the kit does it, safe to re-run) or
+**🔴 human — irreversible** (yours alone: credentials, accounts, access control,
+spend). The 🔴 items are the whole reason a human is in this loop.
+
+> **Secret discipline, every 🔴 step:** the value goes to your password manager
+> and into `deploy/enclave/enclave.env` **on the host** — never into this repo,
+> never into chat, never pasted back to an agent.
+
+The orchestrator drives all of this and pauses at each 🔴 gate:
+`bash deploy/enclave/enclave-up.sh` (idempotent + resumable; `--status`,
+`--from <phase>`). Budget **~35 min, ~23 of it genuinely human.**
+
+**Before you start** — pin two names (§1):
+- [ ] `ENCLAVE_HOST` (e.g. `console.internal`) · [ ] `VAULT_ADDR` (e.g. `https://vault.internal:8200`)
+
+**Phase 0 — provision** (§0):
+- [ ] **🔴** Linux VM you control, Ubuntu LTS, ≥2 vCPU / 4 GB / 40 GB, real kernel (not a shared container host)
+
+**Phase 1 — the reversible pass** (§2), all 🤖:
+- [ ] `npm run enclave:preflight` — names any missing dial, fail-closed
+- [ ] `sudo bash deploy/enclave/install-components.sh` — Node, Docker, gVisor, Vault, opa, Postgres, Keycloak image
+- [ ] `bash deploy/enclave/render-env.sh` — writes `enclave.env` (mode 600, no secrets)
+
+**Phase 2 — the five human moves** (§3 · full commands in `deploy/enclave/HUMAN-STEPS.md`):
+- [ ] **🔴 Vault** init + unseal → paste **app** token `VAULT_TOKEN` → unlocks **T2**
+- [ ] **🔴 Keycloak** realm `aigovops` + client `aigov-console` + group `steward` → paste `OIDC_CLIENT_SECRET` → unlocks **T8**
+- [ ] **🔴 Postgres** role + db (you choose the password) → set `DATABASE_URL`; then **🤖** `cd core && npm i pg`
+- [ ] **🔴 Core secrets** — `openssl rand -hex 32` ×2 → `SESSION_SECRET`, `STEWARD_TOKEN`
+
+**Phase 3 — start + verify** (§4–5), all 🤖:
+- [ ] start the core against `enclave.env` (`assertEnclave()` refuses a weak dial)
+- [ ] `npm run enclave:verify` — proof, not config
+- [ ] ✅ **`ENCLAVE GREEN — T2 Vault · T4 gVisor · T7 rego · T8 OIDC · durable ledger`**
+
+**Phase 4 — per-member onboarding** (§3.2b) — **🔴** ~1 min each: Keycloak → add user → join `steward`.
+
+**What flips green:** this one host takes **T2 / T4 / T7 / T8** and the mutation
+tools from *proven-with-fakes* to *proven-live* — the **"first enclave-ready
+release"** milestone, and the last backlog item needing a human's irreversible
+move.
+
+---
+
 ## 0. Why a real Linux host
 
 Every other dial can be exercised on a laptop. gVisor cannot. `runsc` is a
