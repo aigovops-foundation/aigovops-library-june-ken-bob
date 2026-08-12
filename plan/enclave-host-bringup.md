@@ -59,6 +59,81 @@ move.
 
 ---
 
+## Two postures — pick your broker
+
+The enclave hardens every dial. The one you choose between is the **secrets
+broker**, and it defines the posture:
+
+| Posture | Broker | Human credential work | Air-gapped? | Stand up with |
+|---------|--------|-----------------------|-------------|---------------|
+| **Air-gapped** | HashiCorp **Vault** in perimeter | `vault operator init` + unseal (5 keys), paste an app token | **Yes** — verify offline | `deploy/enclave/enclave-up.sh` |
+| **Managed (Jeeves)** | **1Password** vault | **one** paste: a service-account token | No (1Password is cloud) | `deploy/enclave/jeeves.sh` |
+
+Both enforce the same T4/T7/T8/storage dials and the same invariant — an agent
+never receives a raw secret; the gate brokers an ephemeral, scoped token.
+`enclaveSecretsKind(env)` reports which is in force and `enclavePreflight()`
+returns `posture: 'managed'` or `'air-gapped'`, flagging the 1Password cloud
+dependency loudly so it is never silent. Choose **air-gapped** for a regulated,
+offline-verify customer; choose **managed** when you want it live fast and a
+cloud secret store is acceptable.
+
+---
+
+## Jeeves — the 1Password fast path (copy-paste)
+
+`deploy/enclave/jeeves.sh` is the managed-posture standup: same phases as
+`enclave-up.sh`, but 1Password brokers the secrets, so there is **no Vault to
+init/unseal** and the credential work collapses to one token. The `jeeves` agent
+(`.claude/agents/jeeves.md`) can drive Chrome to each console page and pause for
+your click.
+
+```bash
+# on the enclave host, as a sudo-capable user
+git clone <this repo> /opt/aigovops && cd /opt/aigovops
+bash deploy/enclave/jeeves.sh            # idempotent + resumable; pauses at each human gate
+```
+
+The four reversible bring-up pieces, if you drive them by hand:
+
+```bash
+sudo bash deploy/enclave/install-components.sh          # runsc, opa, Postgres, Keycloak image, op
+bash deploy/provision/1-onepassword.sh                  # create the AiGovOps vault + items (op signin first)
+ENCLAVE_SECRETS=1password bash deploy/enclave/render-env.sh   # write enclave.env (op:// refs, no secrets)
+cd core && npm run enclave:verify                       # prove every dial green at runtime
+```
+
+**The one credential paste** — a 1Password service account (replaces Vault's
+init + unseal keys entirely):
+
+```bash
+# 1Password console -> Developer -> Service Accounts -> Create ('aigov-enclave'),
+# grant READ on the 'AiGovOps' vault, copy the ops_... token, then on the host:
+export OP_SERVICE_ACCOUNT_TOKEN=ops_...
+# persist it for the core: uncomment the same line in deploy/enclave/enclave.env
+```
+
+**The two externally-issued secrets go INTO 1Password** (the broker serves them —
+you never paste them into a file):
+
+```bash
+op item edit oidc     client-secret='<from Keycloak>'                                  --vault AiGovOps
+op item edit postgres url='postgres://aigov:<password>@127.0.0.1:5432/aigov'           --vault AiGovOps
+```
+
+**Start + verify:**
+
+```bash
+cd core && set -a && . ../deploy/enclave/enclave.env && set +a && npm start
+bash deploy/enclave/jeeves.sh --only verify
+# -> ENCLAVE GREEN — T2 (1Password) · T4 gVisor · T7 rego · T8 OIDC · durable ledger
+```
+
+Everything below (§0–§9) is the full Vault-path narrative; the sizing, the
+component detail, the verify semantics, and the honest-scope note all apply to
+both postures — only the secrets broker differs.
+
+---
+
 ## 0. Why a real Linux host
 
 Every other dial can be exercised on a laptop. gVisor cannot. `runsc` is a

@@ -13,10 +13,16 @@ set -euo pipefail
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$HERE/../.." && pwd)"
-TMPL="$HERE/templates/enclave.env.tmpl"
 OUT="${ENCLAVE_ENV_OUT:-$HERE/enclave.env}"
 PRINT=0; FORCE=0
 for a in "$@"; do case "$a" in --print) PRINT=1 ;; --force) FORCE=1 ;; esac; done
+
+# Which broker posture? ENCLAVE_SECRETS=1password selects the managed (Jeeves)
+# template — 1Password brokers, no Vault to init. Default: air-gapped Vault.
+case "$(echo "${ENCLAVE_SECRETS:-vault}" | tr '[:upper:]' '[:lower:]')" in
+  1password|onepassword|op) TMPL="$HERE/templates/enclave.1password.env.tmpl" ;;
+  *)                        TMPL="$HERE/templates/enclave.env.tmpl" ;;
+esac
 
 c_grn=$'\033[1;32m'; c_yel=$'\033[1;33m'; c_dim=$'\033[2m'; c_off=$'\033[0m'
 ok()   { echo "${c_grn}✅${c_off} $*"; }
@@ -28,6 +34,8 @@ warn() { echo "${c_yel}⚠${c_off}  $*"; }
 export ENCLAVE_HOST="${ENCLAVE_HOST:-console.internal}"
 export VAULT_ADDR="${VAULT_ADDR:-https://vault.internal:8200}"
 export VAULT_KV_MOUNT="${VAULT_KV_MOUNT:-secret}"
+export OP_VAULT="${OP_VAULT:-AiGovOps}"
+export OP_FIELD="${OP_FIELD:-credential}"
 export SANDBOX_IMAGE="${SANDBOX_IMAGE:-node:20-alpine}"
 export SANDBOX_EGRESS_NET="${SANDBOX_EGRESS_NET:-aigov-egress}"
 export POLICY_DIR="${POLICY_DIR:-/app/core/policy}"
@@ -56,7 +64,10 @@ render() {
 if [ "$PRINT" = "1" ]; then render; exit 0; fi
 
 if [ -f "$OUT" ] && [ "$FORCE" != "1" ]; then
-  if grep -qE '^(VAULT_TOKEN|OIDC_CLIENT_SECRET|SESSION_SECRET|STEWARD_TOKEN)=.' "$OUT" 2>/dev/null; then
+  # A REAL pasted secret is a sensitive key with a value that is NOT an op://
+  # reference (references aren't secrets). Covers both postures: Vault's token
+  # and the four Vault-path secrets, plus the 1Password service-account token.
+  if grep -vE '=op://' "$OUT" 2>/dev/null | grep -qE '^(VAULT_TOKEN|OP_SERVICE_ACCOUNT_TOKEN|OIDC_CLIENT_SECRET|SESSION_SECRET|STEWARD_TOKEN)=.' 2>/dev/null; then
     warn "$OUT already has pasted secrets — refusing to overwrite (use --force if you mean it)"
     exit 0
   fi

@@ -517,6 +517,16 @@ once.)
   enclave:preflight`/`enclave:verify`) and the runbook now opens with a **tick-box standup
   checklist** (`plan/enclave-host-bringup.md`, ✅ 2026-08-12) marking each step automated vs
   human-irreversible — so when Bob sits down, only the ~23 minutes of credential moves remain.
+  **Managed (Jeeves) fast path added (✅ 2026-08-12):** a second posture brokers secrets
+  through **1Password** instead of a hand-initialised Vault, collapsing the credential work to
+  a **single service-account-token paste** (no `vault operator init`, no unseal keys).
+  `enclave.js` now accepts `SECRETS_PROFILE=1password` as a valid in-perimeter broker
+  (`enclaveSecretsKind()` → `posture: managed|air-gapped`), the runtime verifier proves the
+  1Password broker with `op whoami`, and `deploy/enclave/jeeves.sh` + the `jeeves` browser
+  agent drive it. **Tradeoff flagged, not silent:** 1Password is a cloud store, so the managed
+  posture is **not air-gapped** — the Vault path stays for regulated, offline-verify enclaves.
+  Tests: `core/test/enclave.test.mjs` + `enclave.bringup.test.mjs` (managed posture passes,
+  fails closed without a service-account token, cloud tradeoff surfaced).
 
 ---
 
