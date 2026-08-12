@@ -512,7 +512,11 @@ once.)
 - **N1 · Stand up the Linux enclave host** — L — _left for Bob (irreversible ops)._ Docker+gVisor,
   Vault, Keycloak, Postgres, the `opa` binary on a Linux VM; flips the gold items (live Vault,
   gVisor run, real rego, live OIDC, mutation tools) green at once. Not started — needs Bob's
-  credential/ops steps.
+  credential/ops steps. **Operator kit ready:** the reversible bring-up is fully automated
+  (`deploy/enclave/enclave-up.sh` + `install-components.sh` + `render-env.sh`, `npm run
+  enclave:preflight`/`enclave:verify`) and the runbook now opens with a **tick-box standup
+  checklist** (`plan/enclave-host-bringup.md`, ✅ 2026-08-12) marking each step automated vs
+  human-irreversible — so when Bob sits down, only the ~23 minutes of credential moves remain.
 
 ---
 
