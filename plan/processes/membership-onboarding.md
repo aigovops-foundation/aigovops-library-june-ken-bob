@@ -46,11 +46,13 @@ human's move:
       `smtps://user:app-password@smtp.gmail.com:465`) — OR admin-consent Graph `Mail.Send`/
       `Mail.ReadWrite` on the `aigovops.community` app so the Outlook connector can send.
 - [ ] Add Ken to `founders.json` (`handles`; his `email` is already set).
-- [ ] Decide the guardrails on open registration (domain allow/deny, a hold on the first N,
-      captcha at the wall). **STILL OPEN.** With `auto_accept: true` and no guardrail, go-live =
-      open door to read-only for everyone.
-- [x] `auto_accept: true` — **flipped by Bob's explicit instruction (2026-08-13).** Inert until
-      the IdP is live; recommend closing the guardrail box first.
+- [x] Guardrail set: **hold-the-first-N (N=25).** The first 25 registrations are HELD for a
+      human (Bob/Ken) to approve — proposals on the Yes-Gate, not auto-admits. After 25 are
+      approved, auto-admit opens on its own (still ≤1/min). Tune N or add domain allow/deny /
+      captcha in `member-onboarding.config.json` → `guardrails`.
+- [x] `auto_accept: true` — **flipped by Bob's explicit instruction (2026-08-13),** guarded by
+      the hold-first-25 ramp. Inert until the IdP is live.
 
-`auto_accept` is armed, but the door doesn't open until the IdP is stood up: the scaffold still
-prepares and proposes; the IdP + guardrail decision are the remaining human moves.
+`auto_accept` is armed and ramped, but the door doesn't open until the IdP is stood up — and
+even then, the first 25 wait for a human. The IdP is the remaining human move; the scaffold
+still prepares and proposes.

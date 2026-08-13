@@ -2,7 +2,7 @@
   "$comment": "Member onboarding config. auto_accept was ARMED by Bob's explicit instruction (2026-08-13). It is still INERT until the IdP (N1) is stood up — no running system reads this config yet, so it admits NOBODY today. See plan/processes/membership-onboarding.md.",
 
   "auto_accept": true,
-  "auto_accept_note": "ARMED by Bob's explicit call (2026-08-13). INERT until the IdP is live — nothing consumes this config yet, so it admits NOBODY today. When the enclave/OIDC (N1) is stood up, true here auto-admits EVERY registrant at read-only. GUARDRAILS ARE STILL OPEN (domain allow/deny, hold-first-N, captcha) — decide at least one before the IdP goes live, or it is open-door. Read is open; creating anything still needs Bob/Ken via the Yes-Gate.",
+  "auto_accept_note": "ARMED by Bob's explicit call (2026-08-13), GUARDED by hold_first_n. INERT until the IdP is live — nothing consumes this config yet, so it admits NOBODY today. When the enclave/OIDC (N1) is stood up, the first `guardrails.hold_first_n` registrations are HELD for a human; only after those are approved does auto-admit open. Read is open; creating anything still needs Bob/Ken via the Yes-Gate.",
 
   "default_role": "member",
   "default_capability": "read",
@@ -10,6 +10,16 @@
 
   "rate_limit_per_minute": 1,
   "rate_limit_note": "At most one auto-onboarding per minute; the rest queue. Abuse throttle for open registration.",
+
+  "guardrails": {
+    "hold_first_n": 25,
+    "hold_note": "The RAMP: the first 25 registrations are HELD for a human (Bob or Ken) to approve — each is a proposal on the Yes-Gate, not an auto-admit. Once 25 have been human-approved, auto_accept opens for the rest (still <=1/min). Watch the opening cohort, confirm it's real, then the door opens on its own. Set hold_first_n to 0 only to skip the ramp deliberately.",
+    "held_count": 0,
+    "held_count_note": "How many have been human-approved so far. While held_count < hold_first_n, every new registration waits for Bob/Ken. The runtime increments this on each approval; it is data, not config.",
+    "domain_allow": [],
+    "domain_deny": [],
+    "captcha": false
+  },
 
   "cc_founders_on_every_email": true,
   "founders_source": "founders.json",
