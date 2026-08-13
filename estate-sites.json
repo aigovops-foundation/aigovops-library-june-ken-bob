@@ -1,0 +1,13 @@
+{
+  "$comment": "The AiGovOps estate — every property the interaction crawler audits. The aggregator (estate-interaction-crawl.yml) loops this list; the monitor (docs/estate-health.html) renders the result. Add a property by adding a row. failOnDead=true makes a dead button fail that property's own run; gated=true means the public surface needs a session (crawled read-only until an auth recipe is wired).",
+  "generatedFor": "estate interaction audit",
+  "sites": [
+    { "name": "Foundation site", "base": "https://www.aigovops-foundation.com", "failOnDead": true, "gated": false },
+    { "name": "Community platform", "base": "https://community.aigovops-foundation.com", "failOnDead": false, "gated": true },
+    { "name": "Library (rendered)", "base": "https://community.aigovops-foundation.com/library/", "failOnDead": false, "gated": true },
+    { "name": "Beacon", "base": "https://aigovops-foundation.github.io/aigovops-beacon/", "failOnDead": true, "gated": false },
+    { "name": "Umbrella", "base": "https://aigovops-foundation.github.io/umbrella-govops/", "failOnDead": true, "gated": false },
+    { "name": "Lantern", "base": "https://aigovops-foundation.github.io/aigovops-lantern/", "failOnDead": true, "gated": false },
+    { "name": "NCW AI Camp", "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/", "failOnDead": true, "gated": false }
+  ]
+}

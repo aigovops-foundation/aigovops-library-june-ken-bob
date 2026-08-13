@@ -1,0 +1,53 @@
+name: estate-interaction-crawl
+
+# Crawls the WHOLE estate (every property in estate-sites.json), writes docs/estate-health.json,
+# and commits it so the live monitor (docs/estate-health.html) updates. Scheduled + on demand.
+# Exits non-zero (turning the run red) if any failOnDead property has a dead/broken control.
+#
+# This is the estate-wide aggregator; a property can ALSO gate its own PRs with
+# reusable-interaction-crawl.yml. Runbook: plan/processes/estate-interaction-audit.md.
+
+on:
+  schedule:
+    - cron: "20 15 * * *"   # daily — a dead button is a daily-cadence problem
+  workflow_dispatch:
+
+permissions:
+  contents: write   # to commit the refreshed docs/estate-health.json
+
+concurrency:
+  group: estate-interaction-crawl
+  cancel-in-progress: false
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install Playwright + Chromium
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm i -D playwright@1.55.0 >/dev/null 2>&1
+          npx playwright install --with-deps chromium
+      - name: Crawl the estate → docs/estate-health.json
+        id: crawl
+        run: node scripts/estate-crawl.mjs || echo "estate_red=1" >> "$GITHUB_OUTPUT"
+      - name: Commit the refreshed board (data only)
+        run: |
+          git config user.name "aigovops-estate-bot"
+          git config user.email "noreply@aigovops-foundation.com"
+          if ! git diff --quiet -- docs/estate-health.json; then
+            git add docs/estate-health.json
+            git commit -m "chore(estate-health): refresh interaction board [automated]"
+            git push
+          else
+            echo "no change in estate-health.json"
+          fi
+      - name: Fail the run if the estate is red
+        if: steps.crawl.outputs.estate_red == '1'
+        run: |
+          echo "::error::The estate has dead or broken controls — see docs/estate-health.html"
+          exit 1

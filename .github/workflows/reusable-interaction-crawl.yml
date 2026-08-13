@@ -1,0 +1,73 @@
+name: reusable-interaction-crawl
+
+# The estate's shared INTERACTION crawler — the browser-driven sibling of reusable-link-check.
+# link-check asks "does this href 200?"; this opens every page in headless Chromium and asks
+# "does every button and link actually DO something?" — catching dead cards, handler-less
+# buttons, no-op toggles, missing #anchors and on-load JS errors that curl cannot see.
+#
+# Adopt it from any property in one block:
+#   jobs:
+#     interaction-crawl:
+#       uses: aigovops-foundation/aigovops-library-june-ken-bob/.github/workflows/reusable-interaction-crawl.yml@main
+#       with:
+#         site_url: "https://aigovops-foundation.github.io/umbrella-govops/"
+#         fail_on_dead: true          # optional (default true) — a dead button fails the build
+#         max_pages: 120              # optional
+#
+# Engine + runbook live in the Library: scripts/interaction-crawl.mjs,
+# plan/processes/estate-interaction-audit.md.
+
+on:
+  workflow_call:
+    inputs:
+      site_url:
+        description: "Published site root to crawl in a real browser."
+        required: true
+        type: string
+      fail_on_dead:
+        description: "Fail the job on a DEAD control (clickable but no link/handler). Default true."
+        required: false
+        type: boolean
+        default: true
+      max_pages:
+        description: "Safety cap on same-origin pages to crawl."
+        required: false
+        type: number
+        default: 120
+
+permissions:
+  contents: read
+
+jobs:
+  interaction-crawl:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the Library (engine + fixture + test)
+        uses: actions/checkout@v4
+        with:
+          repository: aigovops-foundation/aigovops-library-june-ken-bob
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install Playwright + Chromium
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm i -D playwright@1.55.0 >/dev/null 2>&1
+          npx playwright install --with-deps chromium
+      - name: Self-test — prove the detector on the fixture (no false wolves)
+        run: node --test test/interaction-crawl.test.mjs
+      - name: Crawl ${{ inputs.site_url }}
+        run: |
+          node scripts/interaction-crawl.mjs \
+            --url "${{ inputs.site_url }}" \
+            --out interaction-crawl.json \
+            --site-name "${{ inputs.site_url }}" \
+            --max-pages ${{ inputs.max_pages }} \
+            ${{ inputs.fail_on_dead && '--fail-on-dead' || '' }}
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: interaction-crawl
+          path: interaction-crawl.json

@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Estate Interaction Health — AiGovOps</title>
+<meta name="description" content="Live board: every page of the AiGovOps estate, every button and link crawled and clicked, dead ones flagged." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Source+Serif+4:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FAF7F0; --cream-2:#F7F3E8; --ink:#26312B; --ink-soft:#5c6b62;
+    --green:#2E7D4F; --green-deep:#1F5E3A; --line:#e3ddcf; --card:#fffdf8;
+    --red:#b4232a; --red-bg:#fbeceb; --amber:#8a5a00; --amber-bg:#fcf3dd;
+    --green-bg:#e7f3ea; --slate:#7a756a; --slate-bg:#efece3;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--cream);color:var(--ink);font-family:'Source Serif 4',Georgia,serif;line-height:1.5}
+  .wrap{max-width:1080px;margin:0 auto;padding:28px 20px 60px}
+  h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(1.5rem,3vw,2.1rem);margin:0 0 4px}
+  .sub{color:var(--ink-soft);font-size:.95rem;margin:0 0 20px}
+  .mono{font-family:'IBM Plex Mono',monospace}
+  .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 22px}
+  .bar .grow{flex:1}
+  button{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 15px}
+  button:hover{border-color:var(--green)}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:0 0 26px}
+  .tile{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+  .tile .n{font-family:'Fraunces',serif;font-size:1.9rem;font-weight:600;line-height:1}
+  .tile .l{color:var(--ink-soft);font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;margin-top:6px}
+  .tile.red .n{color:var(--red)} .tile.green .n{color:var(--green-deep)}
+  .site{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:12px}
+  .site header{display:flex;flex-wrap:wrap;align-items:center;gap:10px;cursor:pointer}
+  .site h3{font-family:'Fraunces',serif;font-weight:600;font-size:1.12rem;margin:0}
+  .site .base{color:var(--ink-soft);font-size:.82rem;word-break:break-all}
+  .badge{font-family:'IBM Plex Mono',monospace;font-size:.72rem;font-weight:500;padding:3px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em}
+  .b-green{background:var(--green-bg);color:var(--green-deep)}
+  .b-red{background:var(--red-bg);color:var(--red)}
+  .b-warn{background:var(--amber-bg);color:var(--amber)}
+  .b-pending,.b-error{background:var(--slate-bg);color:var(--slate)}
+  .b-error{color:var(--red)}
+  .metrics{display:flex;flex-wrap:wrap;gap:16px;margin-top:10px;font-size:.86rem;color:var(--ink-soft)}
+  .metrics b{color:var(--ink);font-family:'IBM Plex Mono',monospace}
+  .detail{margin-top:12px;border-top:1px dashed var(--line);padding-top:12px;display:none}
+  .detail.open{display:block}
+  .issue{font-family:'IBM Plex Mono',monospace;font-size:.8rem;background:var(--red-bg);border-left:3px solid var(--red);padding:8px 10px;border-radius:6px;margin:6px 0;word-break:break-word}
+  .issue .pg{color:var(--ink-soft)}
+  .none{color:var(--green-deep);font-size:.86rem}
+  .foot{color:var(--ink-soft);font-size:.8rem;margin-top:26px;border-top:1px solid var(--line);padding-top:14px}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  .live{background:var(--green)} .stale{background:var(--amber)}
+  a{color:var(--green-deep)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Estate Interaction Health</h1>
+  <p class="sub">Every page of the estate, every button and link — crawled in a real browser, clicked or verified, dead ones flagged. Not just "does the URL 200?" — "does the button actually <em>do</em> something?"</p>
+
+  <div class="bar">
+    <div id="freshness" class="mono" style="font-size:.85rem"><span class="dot stale"></span>loading…</div>
+    <div class="grow"></div>
+    <label class="mono" style="font-size:.82rem"><input type="checkbox" id="auto" checked> auto-refresh (30s)</label>
+    <button id="refresh">Refresh now</button>
+  </div>
+
+  <div class="tiles" id="tiles"></div>
+  <div id="sites"></div>
+
+  <div class="foot" id="foot"></div>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let timer = null;
+
+function badge(status){
+  const map = { green:['b-green','healthy'], red:['b-red','dead buttons'], warn:['b-warn','review'], pending:['b-pending','pending'], error:['b-error','unreachable'] };
+  const [cls,label] = map[status] || ['b-pending', status];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+function ago(iso){
+  if(!iso) return 'never';
+  const s = Math.max(0,(Date.now()-new Date(iso).getTime())/1000);
+  if(s<90) return Math.round(s)+'s ago';
+  if(s<5400) return Math.round(s/60)+'m ago';
+  if(s<172800) return Math.round(s/3600)+'h ago';
+  return Math.round(s/86400)+'d ago';
+}
+function esc(s){ return String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+function pathOf(u){ try{ return new URL(u).pathname; }catch{ return u; } }
+
+function render(data){
+  const e = data.estate || {};
+  $('tiles').innerHTML = [
+    ['properties', e.properties, ''],
+    ['reporting', e.reporting, ''],
+    ['green', e.healthy, 'green'],
+    ['red', e.red, e.red>0?'red':''],
+    ['dead buttons', e.dead, e.dead>0?'red':''],
+    ['broken links', e.broken, e.broken>0?'red':''],
+  ].map(([l,n,c])=>`<div class="tile ${c}"><div class="n">${n==null?'–':n}</div><div class="l">${l}</div></div>`).join('');
+
+  $('sites').innerHTML = (data.sites||[]).map((s,i)=>{
+    const sm = s.summary;
+    const metrics = sm ? `<div class="metrics">
+        <span>pages <b>${sm.pages}</b></span>
+        <span>working <b>${sm.ok}</b></span>
+        <span>dead <b style="color:${sm.dead?'var(--red)':'inherit'}">${sm.dead}</b></span>
+        <span>broken <b style="color:${sm.broken?'var(--red)':'inherit'}">${sm.broken}</b></span>
+        <span>external <b>${sm.external}</b></span>
+        <span>ran <b>${ago(s.ranAt)}</b></span>
+      </div>` : `<div class="metrics"><span>${esc(s.note||'no data yet')}</span></div>`;
+    const dead = (s.dead||[]).map(d=>`<div class="issue"><span class="pg">${esc(pathOf(d.page))}</span> &nbsp;&lt;${esc(d.tag)}&gt; "${esc(d.text||d.cls)}"<br>↳ ${esc(d.reason)}</div>`).join('');
+    const broken = (s.broken||[]).map(b=>`<div class="issue"><span class="pg">${esc(pathOf(b.page))}</span> "${esc(b.text)}" → ${esc(b.href)}<br>↳ ${esc(b.reason)}</div>`).join('');
+    const jserr = (s.consoleErrors||[]).map(c=>`<div class="issue"><span class="pg">${esc(pathOf(c.page))}</span> ${esc((c.errors||[])[0]||'')}</div>`).join('');
+    const detail = sm ? (dead||broken||jserr ? dead+broken+jserr : `<div class="none">✓ every button and link on ${sm.pages} pages checks out</div>`) : '';
+    return `<div class="site">
+      <header onclick="this.parentNode.querySelector('.detail')?.classList.toggle('open')">
+        <h3>${esc(s.name)}</h3> ${badge(s.status)}
+        <div class="grow"></div>
+        <span class="base mono">${esc(s.base)}</span>
+      </header>
+      ${metrics}
+      ${sm ? `<div class="detail">${detail}</div>` : ''}
+    </div>`;
+  }).join('');
+
+  const gen = data.generatedAt;
+  const stale = gen ? (Date.now()-new Date(gen).getTime()) > 26*3600*1000 : true;
+  $('freshness').innerHTML = `<span class="dot ${stale?'stale':'live'}"></span>estate crawled ${ago(gen)}${stale?' — stale, waiting on next scheduled run':''}`;
+  $('foot').innerHTML = `Source of truth: <span class="mono">estate-health.json</span>, written by <span class="mono">estate-interaction-crawl.yml</span> (scheduled + on demand). Engine: <span class="mono">scripts/interaction-crawl.mjs</span>. Runbook: <span class="mono">plan/processes/estate-interaction-audit.md</span>. This board polls the JSON every 30s; the crawl itself runs in CI where the live domains are reachable.`;
+}
+
+async function load(){
+  try{
+    const res = await fetch('estate-health.json?t='+Date.now(), {cache:'no-store'});
+    render(await res.json());
+  }catch(err){
+    $('freshness').innerHTML = `<span class="dot stale"></span>could not load estate-health.json — ${esc(err.message)}`;
+  }
+}
+function schedule(){ clearInterval(timer); if($('auto').checked) timer=setInterval(load, 30000); }
+$('refresh').onclick = load;
+$('auto').onchange = schedule;
+load(); schedule();
+</script>
+</body>
+</html>
