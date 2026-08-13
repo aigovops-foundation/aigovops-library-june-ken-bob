@@ -1,0 +1,37 @@
+{
+  "$comment": "SCAFFOLD — the reversible half of member onboarding. It is INERT until a human arms it: auto_accept is false, and no email sends without ESTATE_SMTP_URL. Going live (flipping auto_accept true, wiring the IdP) is a steward move — see plan/processes/membership-onboarding.md. This file is prepared-and-proposed, never self-activated.",
+
+  "auto_accept": false,
+  "auto_accept_note": "OFF by design. When on, a new registration is auto-admitted at read-only. Turning this on is Bob/Ken's explicit call and needs the live IdP.",
+
+  "default_role": "member",
+  "default_capability": "read",
+  "capability_note": "member = read + propose. Reading is open once admitted; CREATING anything is a proposal the Yes-Gate holds for Bob or Ken. A member never creates without approval.",
+
+  "rate_limit_per_minute": 1,
+  "rate_limit_note": "At most one auto-onboarding per minute; the rest queue. Abuse throttle for open registration.",
+
+  "cc_founders_on_every_email": true,
+  "founders_source": "founders.json",
+
+  "emails": {
+    "welcome": "plan/templates/member-welcome.md",
+    "daily_update": "plan/templates/member-daily-update.md",
+    "friday_ask": "plan/templates/member-friday-ask.md"
+  },
+
+  "drip": {
+    "sequence": "plan/templates/emails/member-drip.md",
+    "cadence": "welcome on admission, one email/day for days 1-14, then weekly",
+    "feedback_to": ["ken.johnston@aigovops.community", "bob.rapp@aigovops.community"],
+    "feedback_note": "every email ends with a feedback footer naming Ken and Bob with both addresses"
+  },
+
+  "log_to_brain": true,
+  "brain_note": "Keep all this traffic in the brain: every send emits a metadata-only ledger receipt (template id + recipient hash + timestamp) — never the body, never PII. The brain is the signed ledger.",
+
+  "monitoring": {
+    "activity": "signed ledger (metadata-only)",
+    "note": "Every member effect is a proposal receipt; stewards see all, members see only their own. No new machinery — this is the governed core."
+  }
+}

@@ -1,5 +1,8 @@
 {
-  "$comment": "Who gets the hourly estate-health digest (GitHub handles, no @). The notify workflow mentions these on the pinned issue and pings them when a page flips red. ADD KEN'S GITHUB HANDLE HERE so he gets it too — a placeholder is not mentioned.",
+  "$comment": "Who gets estate-health digests and who member feedback reaches. handles = GitHub logins mentioned on the pinned issue; emails = addresses every founder-facing mail cc's / feedback routes to. Add Ken's GitHub handle to handles[] for the issue ping.",
   "founders": ["bobrapp"],
-  "todo": "add Ken Johnston's GitHub handle to founders[] to include him on the hourly digest"
+  "handles": ["bobrapp"],
+  "names": { "ken.johnston@aigovops.community": "Ken Johnston", "bob.rapp@aigovops.community": "Bob Rapp" },
+  "emails": ["ken.johnston@aigovops.community", "bob.rapp@aigovops.community"],
+  "todo": "add Ken Johnston's GitHub handle to handles[]/founders[] for the pinned-issue mention (email is already set)"
 }

@@ -42,6 +42,7 @@ jobs:
         run: |
           node scripts/estate-digest.mjs > digest.md
           echo "state=$(node scripts/estate-digest.mjs --status || true)" >> "$GITHUB_OUTPUT"
+          echo "score=$(node -e "console.log(JSON.parse(require('fs').readFileSync('docs/estate-health.json')).estate.score ?? '')")" >> "$GITHUB_OUTPUT"
 
       - name: Commit the refreshed board (data only)
         run: |
@@ -83,6 +84,12 @@ jobs:
               const head = state === 'red' ? '🔴 A page just went RED — get it back to green:' : state === 'green' ? '🟢 Back to all-green.' : 'ℹ️ Estate health update.';
               await github.rest.issues.createComment({ owner, repo, issue_number: issue.number, body: `${head}\n\n${body}` });
             }
+
+      - name: Email the digest to the founders (armed only when ESTATE_SMTP_URL is set)
+        if: always()
+        env:
+          ESTATE_SMTP_URL: ${{ secrets.ESTATE_SMTP_URL }}
+        run: node scripts/send-digest-email.mjs --subject "🌿 Estate health — ${{ steps.digest.outputs.score }}% (${{ steps.digest.outputs.state }})" --body digest.md
 
       - name: Fail the run if any page is red
         if: steps.crawl.outputs.estate_red == '1' || steps.digest.outputs.state == 'red'
