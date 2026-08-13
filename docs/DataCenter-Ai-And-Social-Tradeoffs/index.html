@@ -285,7 +285,7 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute
       </div>
       <div class="mod">
         <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M5 6.5l14 11M19 6.5l-14 11M12 3l-2 2.5M12 3l2 2.5M12 21l-2-2.5M12 21l2-2.5"/></svg>Air conditioning</h4>
-        <p class="note">AC uses 19% of US home electricity <span class="badge b-measured">measured</span> — about <span class="mono">2,050 kWh/yr</span> for an average home, ≈ <span class="mono">790 kg CO2e</span> on the US grid. <span class="badge b-derived">derived</span></p>
+        <p class="note">AC uses 19% of US home electricity <span class="badge b-measured">measured</span> — about <span class="mono">2,050 kWh/yr</span> for an average home, ≈ <span class="mono">787 kg CO2e</span> on the US grid. <span class="badge b-derived">derived</span></p>
         <div class="switch">
           <button id="acOn" class="on" onclick="setAC(true)">Typical US home AC</button>
           <button id="acOff" onclick="setAC(false)">No AC</button>
@@ -566,13 +566,14 @@ function calc(){
   var prompts=aiN*365;
   var aiWh=prompts*a.wh;
   var aiKwh=aiWh/1000;
+  var aiKwhR=Math.round(aiKwh*10)/10; // the kWh as shown (1 dp), so step 4's arithmetic reproduces exactly
   var aiKg=(a.g!==null? prompts*a.g : aiWh*GRID/1000)/1000;
   var aiDerived=a.g===null;
   var stHrs=stN*52, stKwh=stHrs*0.077;
   var stG=stBasis==='iea'?36:55;
   var stKg=stHrs*stG/1000;
   var phKg=phoneMode==='dev'?19:phoneMode==='all'?62:0;
-  var gal=drN/22.2, drKg=drN*400/1000;
+  var gal=drN/22.2, drKg=gal*8887/1000;
   var htKg=heatMode==='gas'?HEAT_GAS:heatMode==='hp'?Math.round(HEAT_GAS*(1-(HEAT_HP_LO+HEAT_HP_HI)/2)):0;
   var acKg=acOn? AC_KWH*GRID_US/1000 : 0;
   var bfKg=bfN*52*BURGER;
@@ -582,7 +583,7 @@ function calc(){
    +step('<b>2.</b> Each prompt uses about '+a.wh+' watt-hours (Wh). '+fmt(prompts,0)+' \u00d7 '+a.wh+' = <b>'+fmt(aiWh,0)+' Wh</b>.')
    +step('<b>3.</b> 1,000 Wh = 1 kilowatt-hour (kWh). '+fmt(aiWh,0)+' \u00f7 1,000 \u2248 <b>'+fmt(aiKwh,1)+' kWh</b> a year.')
    +(aiDerived
-     ? step('<b>4.</b> Making 1 kWh of world-average electricity releases about 458 g of CO2e. '+fmt(aiKwh,1)+' \u00d7 458 \u2248 <b>'+fmt(aiKg*1000,0)+' g \u2248 '+fmt(aiKg,1)+' kg CO2e</b>.')
+     ? step('<b>4.</b> Making 1 kWh of world-average electricity releases about 458 g of CO2e. '+fmt(aiKwhR,1)+' \u00d7 458 \u2248 <b>'+fmt(aiKwhR*458,0)+' g \u2248 '+fmt(aiKwhR*458/1000,1)+' kg CO2e</b>.')
      : step('<b>4.</b> Google reports 0.03 g of CO2e per prompt. '+fmt(prompts,0)+' \u00d7 0.03 \u2248 <b>'+fmt(aiKg*1000,0)+' g \u2248 '+fmt(aiKg,1)+' kg CO2e</b>.'))
    +kid('Feel it: a microwave uses about 1,000 watts \u2014 so your whole year of prompts \u2248 running a microwave for '+hoursNice(aiKwh)+', or one 9-watt LED bulb for '+fmt(aiKwh*111,0)+' hours, or '+fmt(aiKwh/0.015,0)+' phone charges.');
   document.getElementById('math-st').innerHTML=
@@ -645,7 +646,7 @@ function calc(){
   document.getElementById('headline').innerHTML=hl;
   var eq='';
   if(aiN>0){
-    var mi=aiKg*1000/400;
+    var mi=aiKg*1000*22.2/8887;
     var brg=aiKg/BURGER;
     eq='Equivalence: your whole year of AI prompts \u2248 <b>'+(mi<1?fmt(mi,2):fmt(mi,1))+' miles of driving</b> or <b>'+(brg<1?fmt(brg,2):fmt(brg,1))+' quarter-pound burgers</b> \u2014 same carbon ledger, same sources as the bars above.';
   }

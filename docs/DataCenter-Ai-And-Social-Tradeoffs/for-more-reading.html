@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>For More Reading — Data Centers, AI &amp; Social Trade-offs</title>
-<meta name="description" content="The complete, verified source library behind the Data Centers, AI &amp; Social Trade-offs calculator — every primary source, its exact finding, its caveats, and the twelve most common misquotes in the AI-energy debate." />
+<meta name="description" content="The complete, verified source library behind the Data Centers, AI &amp; Social Trade-offs calculator — every primary source, its exact finding, its caveats, and the fifteen most common misquotes in the AI-energy debate." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Source+Sans+3:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -165,7 +165,7 @@ function render(){
   var html='',n=0;
   ENTRIES.forEach(function(e){
     if(filt!=='all'&&e.cat!==filt)return;
-    var hay=(e.title+' '+e.meta+' '+e.find+' '+e.cav+' '+e.cat).toLowerCase();
+    var hay=(e.title+' '+e.meta+' '+e.find+' '+e.cav+' '+e.cat+' '+(e.vt||'')).toLowerCase();
     if(q&&hay.indexOf(q)===-1)return;
     n++;
     var links=e.links.map(function(l){return '<a href="'+l[1]+'" target="_blank" rel="noopener noreferrer">'+l[0]+' ↗</a>'}).join('');
