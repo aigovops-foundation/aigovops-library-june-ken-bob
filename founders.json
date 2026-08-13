@@ -1,0 +1,5 @@
+{
+  "$comment": "Who gets the hourly estate-health digest (GitHub handles, no @). The notify workflow mentions these on the pinned issue and pings them when a page flips red. ADD KEN'S GITHUB HANDLE HERE so he gets it too — a placeholder is not mentioned.",
+  "founders": ["bobrapp"],
+  "todo": "add Ken Johnston's GitHub handle to founders[] to include him on the hourly digest"
+}

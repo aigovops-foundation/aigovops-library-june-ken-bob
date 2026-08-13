@@ -244,28 +244,42 @@ async function main() {
   // classify
   let ok = 0, dead = 0, broken = 0, external = 0, delegated = 0, consoleErrPages = 0;
   const deadList = [], brokenList = [];
+  const pageHealth = []; // per-page red/green — the goal is green for every page
   for (const pg of pages) {
     if (pg.consoleErrors.length) consoleErrPages++;
+    let pDead = 0, pBroken = 0;
     for (const el of pg.elements) {
       const c = classify(el, pg.delegation, targetStatus);
       el.verdict = c.verdict; el.reason = c.reason;
       if (c.verdict === 'WIRED' || c.verdict === 'LINK') ok++;
       else if (c.verdict === 'EXTERNAL') external++;
       else if (c.verdict === 'DELEGATED?') delegated++;
-      else if (c.verdict === 'DEAD') { dead++; if (el.visible) deadList.push({ page: pg.url, tag: el.tag, text: el.text, cls: el.cls, reason: c.reason }); }
-      else if (c.verdict === 'BROKEN') { broken++; brokenList.push({ page: pg.url, text: el.text, href: el.href, reason: c.reason }); }
+      else if (c.verdict === 'DEAD') { dead++; pDead += el.visible ? 1 : 0; if (el.visible) deadList.push({ page: pg.url, tag: el.tag, text: el.text, cls: el.cls, reason: c.reason }); }
+      else if (c.verdict === 'BROKEN') { broken++; pBroken++; brokenList.push({ page: pg.url, text: el.text, href: el.href, reason: c.reason }); }
     }
+    const jsErr = pg.consoleErrors.length;
+    pageHealth.push({
+      path: (() => { try { return new URL(pg.url).pathname; } catch { return pg.url; } })(),
+      dead: pDead, broken: pBroken, jsErrors: jsErr,
+      status: (pDead === 0 && pBroken === 0 && jsErr === 0 && !pg.loadError) ? 'green' : 'red',
+      loadError: pg.loadError || null,
+    });
   }
+  pageHealth.sort((a, b) => (a.status === b.status ? a.path.localeCompare(b.path) : a.status === 'red' ? -1 : 1));
 
   await browser.close();
 
   const report = {
     site: SITE_NAME, base: BASE, generatedAt: new Date().toISOString(),
     summary: {
-      pages: pages.length, ok, dead, broken, external, delegated,
+      pages: pages.length,
+      greenPages: pageHealth.filter(p => p.status === 'green').length,
+      redPages: pageHealth.filter(p => p.status === 'red').length,
+      ok, dead, broken, external, delegated,
       consoleErrorPages: consoleErrPages,
       healthy: dead === 0 && broken === 0 && consoleErrPages === 0,
     },
+    pageHealth,
     dead: deadList.filter(d => d.visible !== false), broken: brokenList,
     consoleErrors: pages.filter(p => p.consoleErrors.length).map(p => ({ page: p.url, errors: p.consoleErrors })),
     pages,

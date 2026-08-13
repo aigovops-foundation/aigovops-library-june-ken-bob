@@ -1,19 +1,19 @@
 name: estate-interaction-crawl
 
-# Crawls the WHOLE estate (every property in estate-sites.json), writes docs/estate-health.json,
-# and commits it so the live monitor (docs/estate-health.html) updates. Scheduled + on demand.
-# Exits non-zero (turning the run red) if any failOnDead property has a dead/broken control.
-#
-# This is the estate-wide aggregator; a property can ALSO gate its own PRs with
-# reusable-interaction-crawl.yml. Runbook: plan/processes/estate-interaction-audit.md.
+# HOURLY end-to-end interaction test across the whole estate. Crawls every page of every
+# property (estate-sites.json) in a real browser, scores each PAGE red or green (green is
+# the goal), refreshes the live board (docs/estate-health.json → docs/estate-health.html),
+# and delivers the digest Ken and Bob GET: a pinned issue updated every hour, with a ping
+# when a page flips red. Runbook: plan/processes/estate-interaction-audit.md.
 
 on:
   schedule:
-    - cron: "20 15 * * *"   # daily — a dead button is a daily-cadence problem
+    - cron: "0 * * * *"   # hourly, on the hour
   workflow_dispatch:
 
 permissions:
-  contents: write   # to commit the refreshed docs/estate-health.json
+  contents: write   # commit the refreshed board
+  issues: write     # upsert the founders' digest issue
 
 concurrency:
   group: estate-interaction-crawl
@@ -32,22 +32,60 @@ jobs:
           npm init -y >/dev/null 2>&1
           npm i -D playwright@1.55.0 >/dev/null 2>&1
           npx playwright install --with-deps chromium
+
       - name: Crawl the estate → docs/estate-health.json
         id: crawl
         run: node scripts/estate-crawl.mjs || echo "estate_red=1" >> "$GITHUB_OUTPUT"
+
+      - name: Build the founders' digest
+        id: digest
+        run: |
+          node scripts/estate-digest.mjs > digest.md
+          echo "state=$(node scripts/estate-digest.mjs --status || true)" >> "$GITHUB_OUTPUT"
+
       - name: Commit the refreshed board (data only)
         run: |
           git config user.name "aigovops-estate-bot"
           git config user.email "noreply@aigovops-foundation.com"
           if ! git diff --quiet -- docs/estate-health.json; then
             git add docs/estate-health.json
-            git commit -m "chore(estate-health): refresh interaction board [automated]"
+            git commit -m "chore(estate-health): hourly interaction board [automated]"
             git push
-          else
-            echo "no change in estate-health.json"
           fi
-      - name: Fail the run if the estate is red
-        if: steps.crawl.outputs.estate_red == '1'
+
+      - name: Deliver the digest to the founders (pinned issue + ping on flip)
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('digest.md', 'utf8');
+            const state = '${{ steps.digest.outputs.state }}'.trim() || 'pending';
+            const MARK = '<!-- estate-health-digest -->';
+            const title = '🌿 Estate Interaction Health — hourly';
+            const { owner, repo } = context.repo;
+            // find our pinned digest issue (open, by marker in body)
+            const found = await github.rest.search.issuesAndPullRequests({
+              q: `repo:${owner}/${repo} is:issue is:open in:body "${MARK}"`
+            });
+            const issue = found.data.items[0];
+            const fullBody = `${MARK}\n\n${body}\n\n<sub>Updated hourly by estate-interaction-crawl.yml. This body always shows the latest crawl.</sub>`;
+            if (!issue) {
+              const created = await github.rest.issues.create({ owner, repo, title, body: fullBody, labels: ['estate-health', `state:${state}`] });
+              if (state === 'red') await github.rest.issues.createComment({ owner, repo, issue_number: created.data.number, body });
+              return;
+            }
+            // refresh the pinned body every hour
+            await github.rest.issues.update({ owner, repo, issue_number: issue.number, title, body: fullBody });
+            // only PING (a new comment) when the state FLIPS — no hourly spam
+            const prev = (issue.labels || []).map(l => (l.name||l)).find(n => n.startsWith('state:')) || 'state:pending';
+            if (prev !== `state:${state}`) {
+              await github.rest.issues.setLabels({ owner, repo, issue_number: issue.number, labels: ['estate-health', `state:${state}`] });
+              const head = state === 'red' ? '🔴 A page just went RED — get it back to green:' : state === 'green' ? '🟢 Back to all-green.' : 'ℹ️ Estate health update.';
+              await github.rest.issues.createComment({ owner, repo, issue_number: issue.number, body: `${head}\n\n${body}` });
+            }
+
+      - name: Fail the run if any page is red
+        if: steps.crawl.outputs.estate_red == '1' || steps.digest.outputs.state == 'red'
         run: |
-          echo "::error::The estate has dead or broken controls — see docs/estate-health.html"
+          echo "::error::Estate has red pages — see the pinned Estate Health issue and docs/estate-health.html"
           exit 1

@@ -62,11 +62,28 @@ drill-down of each defect, colour-coded, auto-refreshing every 30s. It reads
 `docs/estate-health.json`, which the aggregator rewrites on every run. It answers, at a glance,
 *"is the whole estate 100% clickable right now?"*
 
-## How it runs (and stays green)
+## The habit — hourly, and Ken & Bob get it
 
-- **`estate-interaction-crawl.yml`** (aggregator) — scheduled + on-demand. Crawls every
-  property in `estate-sites.json`, writes `docs/estate-health.json`, and **exits non-zero if any
-  `failOnDead` property has a dead/broken control**, so the estate turning red is loud.
+Every hour, on the hour, **`estate-interaction-crawl.yml`** runs the whole estate end-to-end and
+scores **every page red or green — green is the goal for each one**. It then:
+
+1. rewrites `docs/estate-health.json` (the live board updates), committing data-only;
+2. builds the digest (`scripts/estate-digest.mjs`) — a per-property table plus every red page
+   named with *why*;
+3. **delivers it to the founders**: it keeps one pinned **Estate Interaction Health** issue whose
+   body always shows the latest crawl, and it **pings** the people in `founders.json` with a new
+   comment only when the estate **flips** red→green or green→red — a heartbeat you can watch, not
+   hourly spam. (Add Ken's GitHub handle to `founders.json` so he gets it too.)
+
+The run **fails red** if any `failOnDead` page has a dead/broken control, so a regression is loud
+in the Actions tab as well as on the board.
+
+> Hourly is deliberate: a dead button on a launch page is an hourly-cadence problem, not a weekly
+> one. The whole-estate crawl is a few minutes of CI per hour.
+
+## How it runs
+
+- **`estate-interaction-crawl.yml`** (hourly aggregator, above) — the estate-wide habit + digest.
 - **`reusable-interaction-crawl.yml`** — a property gates its **own PRs** by adopting it in one
   line (the same pattern as the link checker):
 

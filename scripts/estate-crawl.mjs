@@ -50,6 +50,7 @@ for (const s of registry.sites) {
     name: s.name, base: s.base, gated: false,
     status: rep.summary.healthy ? 'green' : (red ? 'red' : 'warn'),
     ranAt: rep.generatedAt, summary: rep.summary,
+    pageHealth: rep.pageHealth || [],
     dead: rep.dead || [], broken: rep.broken || [], consoleErrors: rep.consoleErrors || [],
   });
 }
@@ -60,6 +61,8 @@ const estate = {
   reporting: reporting.length,
   healthy: reporting.filter((s) => s.status === 'green').length,
   red: reporting.filter((s) => s.status === 'red').length,
+  greenPages: reporting.reduce((n, s) => n + (s.summary?.greenPages || 0), 0),
+  redPages: reporting.reduce((n, s) => n + (s.summary?.redPages || 0), 0),
   dead: reporting.reduce((n, s) => n + (s.summary?.dead || 0), 0),
   broken: reporting.reduce((n, s) => n + (s.summary?.broken || 0), 0),
   consoleErrorPages: reporting.reduce((n, s) => n + (s.summary?.consoleErrorPages || 0), 0),
