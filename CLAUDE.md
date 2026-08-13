@@ -105,3 +105,28 @@ Backlog & next steps: `plan/build-tickets.md` — start with **Ticket 0** (`Secr
   gitignored.
 - Tokens/credentials live only in the shell session, never written to a file or committed.
 - The ledger and beacons are metadata-only — no payloads, no PII, ever.
+
+## Estate interaction health — the hourly rule
+
+**Green is the goal for every page.** Every hour, the whole estate is crawled in a real
+browser and every button and link is verified to actually *do* something (not just "does the
+URL 200?"). A control that looks clickable but leads nowhere is a defect, the same as a 404.
+
+- Engine + runbook: `scripts/interaction-crawl.mjs`, `plan/processes/estate-interaction-audit.md`;
+  live board `docs/estate-health.html`; skill `plan/skills/estate-health/`.
+- The hourly run scores the estate (share of pages fully green) and delivers the digest to the
+  founders (`founders.json`) — a heartbeat, pinging on any red↔green flip. A red page is an
+  action: fix the button; **never turn a `failOnDead` gate off to fake green.**
+
+## Membership — read is open-able, creation is gated (and the boundary holds)
+
+The governed model already answers "let them read but not create without Ken or Bob": a member's
+role is **read + propose**; every effect is a proposal the human decides (the Yes-Gate). Member
+activity is metadata in the signed ledger. Keep it there.
+
+But **onboarding members, granting access, and sending mail on the founders' behalf are
+irreversible, outward-facing moves** — creating accounts / changing access controls / registrar
++ identity wiring. Per the one rule that overrides everything, an agent **prepares and proposes**
+these; it never auto-accepts a member, auto-grants access, or sends an email as Bob/Ken without
+their explicit approval and the real credentials. Auto-accept and auto-mail are **steward-shipped**,
+never autonomous — exactly as the membership wall itself is.
