@@ -1,8 +1,8 @@
 {
-  "$comment": "SCAFFOLD — the reversible half of member onboarding. It is INERT until a human arms it: auto_accept is false, and no email sends without ESTATE_SMTP_URL. Going live (flipping auto_accept true, wiring the IdP) is a steward move — see plan/processes/membership-onboarding.md. This file is prepared-and-proposed, never self-activated.",
+  "$comment": "Member onboarding config. auto_accept was ARMED by Bob's explicit instruction (2026-08-13). It is still INERT until the IdP (N1) is stood up — no running system reads this config yet, so it admits NOBODY today. See plan/processes/membership-onboarding.md.",
 
-  "auto_accept": false,
-  "auto_accept_note": "OFF by design. When on, a new registration is auto-admitted at read-only. Turning this on is Bob/Ken's explicit call and needs the live IdP.",
+  "auto_accept": true,
+  "auto_accept_note": "ARMED by Bob's explicit call (2026-08-13). INERT until the IdP is live — nothing consumes this config yet, so it admits NOBODY today. When the enclave/OIDC (N1) is stood up, true here auto-admits EVERY registrant at read-only. GUARDRAILS ARE STILL OPEN (domain allow/deny, hold-first-N, captcha) — decide at least one before the IdP goes live, or it is open-door. Read is open; creating anything still needs Bob/Ken via the Yes-Gate.",
 
   "default_role": "member",
   "default_capability": "read",

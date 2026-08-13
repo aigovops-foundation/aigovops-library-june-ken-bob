@@ -40,14 +40,17 @@ human's move:
 
 ## Go-live checklist (the human steps)
 
-- [ ] Stand up / point at the IdP for the membership wall (the enclave/OIDC work, N1).
+- [ ] Stand up / point at the IdP for the membership wall (the enclave/OIDC work, N1). **This
+      is the on-switch — until it's live, auto_accept admits nobody.**
 - [ ] Create an email sender identity; set `ESTATE_SMTP_URL` as a repo secret (e.g.
-      `smtps://user:app-password@smtp.gmail.com:465`).
-- [ ] Add Ken to `founders.json` (`handles` + `emails`).
-- [ ] Decide the guardrails you want on open registration (domain allow/deny, a hold on the
-      first N, captcha at the wall) and set them.
-- [ ] Flip `auto_accept: true` **only when** the above are in place — a steward move, reviewed,
-      never by an agent on its own.
+      `smtps://user:app-password@smtp.gmail.com:465`) — OR admin-consent Graph `Mail.Send`/
+      `Mail.ReadWrite` on the `aigovops.community` app so the Outlook connector can send.
+- [ ] Add Ken to `founders.json` (`handles`; his `email` is already set).
+- [ ] Decide the guardrails on open registration (domain allow/deny, a hold on the first N,
+      captcha at the wall). **STILL OPEN.** With `auto_accept: true` and no guardrail, go-live =
+      open door to read-only for everyone.
+- [x] `auto_accept: true` — **flipped by Bob's explicit instruction (2026-08-13).** Inert until
+      the IdP is live; recommend closing the guardrail box first.
 
-Until every box is checked, this stays a scaffold: it prepares and proposes; you make the
-irreversible move.
+`auto_accept` is armed, but the door doesn't open until the IdP is stood up: the scaffold still
+prepares and proposes; the IdP + guardrail decision are the remaining human moves.
