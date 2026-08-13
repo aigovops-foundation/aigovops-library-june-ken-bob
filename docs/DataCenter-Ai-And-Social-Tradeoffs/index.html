@@ -89,6 +89,33 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute
 .gb .gbw{background:var(--surface2);border-radius:6px;height:18px;overflow:hidden}.gb .gbb{height:100%;border-radius:6px;min-width:2px}
 .gb .gbn{font-family:'DM Mono',monospace;font-size:12.5px;text-align:right}
 @media (max-width:720px){.results .rrow{grid-template-columns:130px 1fr 84px}.sbrow{grid-template-columns:1fr;gap:6px}.sbnum{text-align:left}}
+/* v2 design pass */
+.herogrid{display:grid;grid-template-columns:1fr 330px;gap:40px;align-items:center}
+@media(max-width:960px){.herogrid{grid-template-columns:1fr}.ledgerstack{display:none}}
+.ledgerstack{display:grid;gap:10px}
+.lcard{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 14px;font-size:14px;font-weight:600;box-shadow:var(--shadow);animation:lfloat 7s ease-in-out infinite}
+.lcard svg{width:18px;height:18px;flex:none;color:var(--primary)}
+.lcard .lu{margin-left:auto;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);font-weight:400}
+.lcard:nth-child(2){animation-delay:.6s;transform-origin:60% 40%}.lcard:nth-child(3){animation-delay:1.2s}.lcard:nth-child(4){animation-delay:1.8s}.lcard:nth-child(5){animation-delay:2.4s}.lcard:nth-child(6){animation-delay:3s}
+@keyframes lfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.lcap{font-size:12px;color:var(--muted);text-align:center;font-family:'DM Mono',monospace;letter-spacing:.04em}
+.scalebar{display:flex;gap:8px;align-items:center;font-size:12.5px;color:var(--muted);margin:10px 0 4px;flex-wrap:wrap}
+.scalebar button{border:1px solid var(--line);background:var(--surface);color:var(--text);padding:5px 12px;border-radius:999px;cursor:pointer;font-size:12.5px}
+.scalebar button.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+.equiv{border-top:1px dashed var(--line);padding-top:10px;font-size:13.5px !important;color:var(--text) !important}
+.equiv b{color:var(--primary)}
+.rbar,.wbar{transition:width .45s cubic-bezier(.22,1,.36,1)}
+.metric,.lcard{transition:transform .25s ease, box-shadow .25s ease}
+.metric:hover{transform:translateY(-3px)}
+.drops{display:grid;grid-template-columns:repeat(12,1fr);gap:6px;margin:14px 0 6px;max-width:340px}
+.drop{width:100%;aspect-ratio:.8;transition:opacity .4s ease, fill .4s ease}
+.sbarwrap{background-color:var(--surface2);background-image:linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:25.05% 100%}
+.ruler{display:grid;grid-template-columns:minmax(210px,300px) 1fr 90px;gap:12px;padding:2px 0 6px}
+.ruler .rl{position:relative;height:14px;font-family:'DM Mono',monospace;font-size:10.5px;color:var(--muted)}
+.ruler .rl span{position:absolute;transform:translateX(-50%)}
+@media(max-width:720px){.ruler{display:none}}
+[data-theme="dark"] .attr div{color:#211F1B;font-weight:600}
+@media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
@@ -110,9 +137,22 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute
 
 <header class="hero wrap">
   <div class="kicker">An AiGovOps Foundation published artifact · every number links to its primary source</div>
-  <h1>We already pay for the technologies we love. What makes AI different?</h1>
-  <p class="lede">Phones, streaming, cloud, cars, furnaces, dairy, flying — modern life is a set of resource trade-offs we largely made peace with. This calculator puts AI's costs on the same table, fairly: the same ledgers, honest functional units, and a source you can click behind every figure. It is balanced by construction — the comparators get their positives, and AI gets both its real costs and its real caveats.</p>
-  <p class="thesis">AI is the first technology whose costs concentrate faster than its benefits become legible. That is an argument for governance instrumentation — not an argument for or against adoption.</p>
+  <div class="herogrid">
+    <div>
+      <h1>We already pay for the technologies we love. What makes AI different?</h1>
+      <p class="lede">Phones, streaming, cloud, cars, furnaces, dairy, flying — modern life is a set of resource trade-offs we largely made peace with. This calculator puts AI's costs on the same table, fairly: the same ledgers, honest functional units, and a source you can click behind every figure. It is balanced by construction — the comparators get their positives, and AI gets both its real costs and its real caveats.</p>
+      <p class="thesis">AI is the first technology whose costs concentrate faster than its benefits become legible. That is an argument for governance instrumentation — not an argument for or against adoption.</p>
+    </div>
+    <aside class="ledgerstack" aria-hidden="true">
+      <div class="lcard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg>Energy<span class="lu">kWh · TWh</span></div>
+      <div class="lcard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18a4 4 0 1 1 .6-7.95 6 6 0 0 1 11.3 2A3.5 3.5 0 0 1 17 18H6Z"/></svg>Carbon<span class="lu">g · kg CO2e</span></div>
+      <div class="lcard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3s6 6.6 6 11a6 6 0 1 1-12 0c0-4.4 6-11 6-11Z"/></svg>Water<span class="lu">withdrawn ≠ consumed</span></div>
+      <div class="lcard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20 9 4l4 9 3-5 5 12H3Z"/></svg>Land<span class="lu">km²</span></div>
+      <div class="lcard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="7" width="10" height="10" rx="1"/><path d="M4 10h3M4 14h3M17 10h3M17 14h3M10 4v3M14 4v3M10 17v3M14 17v3"/></svg>Materials<span class="lu">e-waste · Mt</span></div>
+      <div class="lcard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><circle cx="16.5" cy="9.5" r="2.5"/><path d="M3.5 19c.6-3 2.8-5 5.5-5s4.9 2 5.5 5M14.5 14.5c2 .3 3.6 1.9 4 4.5"/></svg>Social<span class="lu">never netted out</span></div>
+      <div class="lcap">six ledgers · kept separate · no composite score</div>
+    </aside>
+  </div>
   <div style="margin-top:18px">
     <span class="pill"><span class="badge b-measured">measured</span>&nbsp; metered or telemetry data</span>
     <span class="pill"><span class="badge b-modeled">modeled</span>&nbsp; peer-reviewed or institutional estimate</span>
@@ -171,7 +211,14 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute
     </div>
     <div class="card results">
       <div class="headline" id="headline"></div>
-      <div id="rows"></div>
+      <div class="scalebar"><span>Bar scale</span><button id="scLin" class="on" onclick="setScale('lin')">Linear · honest</button><button id="scSq" onclick="setScale('sqrt')">√ compressed · keeps small bars visible</button></div>
+      <div id="rows">
+        <div class="rrow"><div class="rname">AI prompts<span class="rsub" id="sub-ai"></span></div><div class="rbarwrap"><div class="rbar ai" id="bar-ai"></div></div><div class="rnum"><span id="num-ai"></span><br><a class="src" id="src-ai" href="#" target="_blank" rel="noopener noreferrer">source</a> <span class="badge" id="bdg-ai"></span></div></div>
+        <div class="rrow"><div class="rname">Streaming<span class="rsub" id="sub-st"></span></div><div class="rbarwrap"><div class="rbar" id="bar-st"></div></div><div class="rnum"><span id="num-st"></span><br><a class="src" id="src-st" href="#" target="_blank" rel="noopener noreferrer">source</a> <span class="badge b-modeled" id="bdg-st">modeled</span></div></div>
+        <div class="rrow"><div class="rname">Smartphone<span class="rsub" id="sub-ph"></span></div><div class="rbarwrap"><div class="rbar" id="bar-ph"></div></div><div class="rnum"><span id="num-ph"></span><br><a class="src" href="https://www.ericsson.com/en/reports-and-papers/research-papers/life-cycle-assessment-of-a-smartphone" target="_blank" rel="noopener noreferrer">source</a> <span class="badge b-modeled">modeled</span></div></div>
+        <div class="rrow"><div class="rname">Driving<span class="rsub" id="sub-dr"></span></div><div class="rbarwrap"><div class="rbar" id="bar-dr"></div></div><div class="rnum"><span id="num-dr"></span><br><a class="src" href="https://www.epa.gov/greenvehicles/greenhouse-gas-emissions-typical-passenger-vehicle" target="_blank" rel="noopener noreferrer">source</a> <span class="badge b-measured">measured</span></div></div>
+      </div>
+      <p class="finefoot equiv" id="equiv"></p>
       <p class="finefoot" id="waterline"></p>
       <p class="finefoot"><b>Boundaries:</b> AI figures exclude model training and end-user devices (per each source's stated scope). Streaming's footprint is mostly <em>your own equipment</em>: for a European streaming hour, end-user devices carry 51%, the home router 38%, the network 10% — and data centers roughly 1% <a class="src" href="https://ctprodstorageaccountp.blob.core.windows.net/prod-drupal-files/documents/resource/public/Carbon-impact-of-video-streaming.pdf" target="_blank" rel="noopener noreferrer">Carbon Trust 2021</a>:</p>
       <div class="attr" aria-label="Streaming carbon attribution: devices 51%, router 38%, network 10%, data centers 1%">
@@ -190,6 +237,7 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute
   <h2>Sector scale — large, but not an outlier</h2>
   <p class="sub">Global data centers used about 415 TWh in 2024 — roughly 1.5% of world electricity <a class="src" href="https://www.iea.org/reports/energy-and-ai/executive-summary" target="_blank" rel="noopener noreferrer">IEA Energy and AI</a>. On this axis AI is large but unremarkable. Hover the boundary notes: these bars deliberately do <em>not</em> share a definition, which is exactly why single-bar comparisons mislead.</p>
   <div class="card">
+    <div class="ruler" aria-hidden="true"><div></div><div class="rl"><span style="left:0">0</span><span style="left:25%">250</span><span style="left:50%">500</span><span style="left:75%">750</span><span style="left:100%">1,000 TWh</span></div><div></div></div>
     <div id="sectorbars"></div>
     <div class="callout w"><b>Read the boundaries before the bars.</b> "Data centers" ≠ "AI" (all workloads, all operators). The GSMA 300 TWh covers operators' <em>entire</em> electricity — fixed + mobile networks, data centers, offices; mobile access networks alone are roughly 135–180 TWh <a class="src" href="https://eibi.co.uk/wp-content/uploads/MobileNetZero2026.pdf" target="_blank" rel="noopener noreferrer">GSMA Mobile Net Zero 2026</a>. The dairy figure is on-farm electricity only, excluding irrigation, processing and the cold chain <a class="src" href="https://agris.fao.org/search/en/providers/122535/records/65df79af0f3e94b9e5d8d855" target="_blank" rel="noopener noreferrer">Mohsenimanesh et al. 2021</a>. The aviation figure is a European-departures decarbonization <em>scenario</em> for 2050 — proof that clean-energy transitions compete with AI for the same clean electrons <a class="src" href="https://www.destination2050.eu/wp-content/uploads/2025/02/DESTINATION_2050_Roadmap_2025.pdf" target="_blank" rel="noopener noreferrer">Destination 2050 (2025)</a>.</div>
   </div>
@@ -218,7 +266,8 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute
       </div>
       <div class="bignum" id="wNum">13.9 gal</div>
       <div class="mono" style="font-size:13px;color:var(--muted)" id="wLabel">freshwater withdrawn per kWh of US electricity</div>
-      <div class="wbarwrap"><div class="wbar" id="wBar" style="width:100%"></div></div>
+      <div class="drops" id="drops" aria-hidden="true"></div>
+      <div class="mono" style="font-size:12px;color:var(--muted)" id="dropCap">36 drops withdrawn…</div>
       <p class="finefoot">US national averages, 2005 fuel-mix baseline — the canonical citation for the withdrawal-consumption gap, and dated; flag it as such. <span class="badge b-modeled">modeled</span> <a class="src" href="https://publications.anl.gov/anlpubs/2011/02/69392.pdf" target="_blank" rel="noopener noreferrer">Argonne National Laboratory</a></p>
     </div>
     <div class="card">
@@ -295,7 +344,8 @@ th{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute
 
 <script>
 function toggleTheme(){var h=document.documentElement;h.setAttribute('data-theme',h.getAttribute('data-theme')==='light'?'dark':'light');}
-var phoneMode='all', waterMode='w';
+var phoneMode='all', waterMode='w', scaleMode='lin';
+function setScale(m){scaleMode=m;document.getElementById('scLin').classList.toggle('on',m==='lin');document.getElementById('scSq').classList.toggle('on',m==='sqrt');calc();}
 var GRID=458; // g CO2e per kWh, Ember 2025 global average
 var AI={google:{wh:0.24,g:0.03,water:0.26,note:'Median for a Gemini Apps text prompt, May 2025. Includes accelerators, host CPU, idle machines, PUE and embodied hardware; excludes training, storage, networking and your device. CO2 is Google\u2019s market-based 0.03 g CO2e/prompt; water is consumption, not withdrawal.',cls:'measured'},
         epoch:{wh:0.30,g:null,water:null,note:'Typical text query on GPT-4o (\u224810x below the older estimate); long inputs rise to 2.5\u201340 Wh. Excludes training and embodied energy. CO2 derived here: Wh \u00d7 458 g CO2e/kWh.',cls:'modeled'},
@@ -306,7 +356,12 @@ function setPhone(m){phoneMode=m;['phDev','phAll','phOff'].forEach(function(id){
 function setWater(m){waterMode=m;document.getElementById('wW').classList.toggle('on',m==='w');document.getElementById('wC').classList.toggle('on',m==='c');
   document.getElementById('wNum').textContent=m==='w'?'13.9 gal':'0.39 gal';
   document.getElementById('wLabel').textContent=m==='w'?'freshwater withdrawn per kWh of US electricity':'freshwater consumed per kWh of US electricity \u2014 \u224836\u00d7 less';
-  document.getElementById('wBar').style.width=m==='w'?'100%':'2.8%';}
+  document.getElementById('dropCap').textContent=m==='w'?'36 drops withdrawn \u2014 most flow back to the source\u2026':'\u2026but only about 1 drop is actually consumed.';
+  drawDrops(m);}
+function drawDrops(m){var el=document.getElementById('drops');if(!el)return;var html='';
+  for(var i=0;i<36;i++){var on=(m==='w')||i===0;
+    html+='<svg class="drop" viewBox="0 0 20 25" style="opacity:'+(on?1:.22)+'"><path d="M10 1s8 8.8 8 14.7a8 8 0 1 1-16 0C2 9.8 10 1 10 1Z" fill="'+(on?'var(--blue)':'none')+'" stroke="var(--blue)" stroke-width="1.4"/></svg>';}
+  el.innerHTML=html;}
 function calc(){
   var aiN=+document.getElementById('aiN').value, basis=document.getElementById('aiBasis').value;
   var stN=+document.getElementById('stN').value, drN=+document.getElementById('drN').value;
@@ -324,20 +379,29 @@ function calc(){
   var stKg=stN*52*stG/1000;
   var phKg=phoneMode==='dev'?19:phoneMode==='all'?62:0;
   var drKg=drN*400/1000;
-  var rows=[
-    {name:'AI prompts',sub:fmt(aiN,0)+'/day \u00b7 '+fmt(aiKwh,1)+' kWh/yr',kg:aiKg,cls:'ai',badge:aiDerived?'derived':'measured',url:AIURL[basis]},
-    {name:'Streaming',sub:fmt(stN,0)+' hr/wk \u00b7 '+fmt(stKwh,0)+' kWh/yr',kg:stKg,badge:'modeled',url: stBasis==='iea'?'https://www.iea.org/commentaries/the-carbon-footprint-of-streaming-video-fact-checking-the-headlines':'https://ctprodstorageaccountp.blob.core.windows.net/prod-drupal-files/documents/resource/public/Carbon-impact-of-video-streaming.pdf'},
-    {name:'Smartphone',sub:phoneMode==='dev'?'device only':phoneMode==='all'?'incl. network + data centers':'none',kg:phKg,badge:'modeled',url:'https://www.ericsson.com/en/reports-and-papers/research-papers/life-cycle-assessment-of-a-smartphone'},
-    {name:'Driving',sub:fmt(drN,0)+' mi/yr \u00b7 '+fmt(drN/22.2,0)+' gal',kg:drKg,badge:'measured',url:'https://www.epa.gov/greenvehicles/greenhouse-gas-emissions-typical-passenger-vehicle'}
-  ];
-  var max=Math.max.apply(null,rows.map(function(r){return r.kg})).valueOf()||1;
-  var html='';
-  rows.forEach(function(r){
-    html+='<div class="rrow"><div class="rname">'+r.name+'<span class="rsub">'+r.sub+'</span></div>'
-      +'<div class="rbarwrap"><div class="rbar '+(r.cls||'')+'" style="width:'+Math.max(100*r.kg/max,0.5)+'%"></div></div>'
-      +'<div class="rnum">'+fmt(r.kg,r.kg<10?1:0)+' kg<br><a class="src" href="'+r.url+'" target="_blank" rel="noopener noreferrer">source</a> <span class="badge b-'+(r.badge==='estimate'?'modeled':r.badge)+'">'+r.badge+'</span></div></div>';
+  var vals={ai:aiKg,st:stKg,ph:phKg,dr:drKg};
+  var max=Math.max(aiKg,stKg,phKg,drKg,0.001);
+  var scale=function(v){if(v<=0)return 0;return scaleMode==='sqrt'?100*Math.sqrt(v)/Math.sqrt(max):100*v/max;};
+  document.getElementById('sub-ai').textContent=fmt(aiN,0)+'/day \u00b7 '+fmt(aiKwh,1)+' kWh/yr';
+  document.getElementById('sub-st').textContent=fmt(stN,0)+' hr/wk \u00b7 '+fmt(stKwh,0)+' kWh/yr';
+  document.getElementById('sub-ph').textContent=phoneMode==='dev'?'device only':phoneMode==='all'?'incl. network + data centers':'none';
+  document.getElementById('sub-dr').textContent=fmt(drN,0)+' mi/yr \u00b7 '+fmt(drN/22.2,0)+' gal';
+  ['ai','st','ph','dr'].forEach(function(k){
+    document.getElementById('bar-'+k).style.width=Math.max(scale(vals[k]),0.4)+'%';
+    document.getElementById('num-'+k).textContent=fmt(vals[k],vals[k]<10?1:0)+' kg';
   });
-  document.getElementById('rows').innerHTML=html;
+  document.getElementById('src-ai').href=AIURL[basis];
+  var bdg=document.getElementById('bdg-ai');
+  bdg.textContent=aiDerived?'derived':'measured';
+  bdg.className='badge '+(aiDerived?'b-derived':'b-measured');
+  document.getElementById('src-st').href= stBasis==='iea'?'https://www.iea.org/commentaries/the-carbon-footprint-of-streaming-video-fact-checking-the-headlines':'https://ctprodstorageaccountp.blob.core.windows.net/prod-drupal-files/documents/resource/public/Carbon-impact-of-video-streaming.pdf';
+  var eq='';
+  if(aiN>0){
+    var mi=aiKg*1000/400;
+    var hrs=stKg>0? aiKg*1000/stG :0;
+    eq='Equivalence: your year of AI prompts \u2248 <b>'+(mi<1?fmt(mi,2):fmt(mi,1))+' miles of driving</b>'+(hrs>0?' or <b>'+fmt(hrs,0)+' hours of streaming</b>':'')+' \u2014 same carbon ledger, same sources as the bars above.';
+  }
+  document.getElementById('equiv').innerHTML=eq;
   var hl;
   if(drKg>0&&aiKg>0){var pct=100*aiKg/drKg;var pctStr=pct<0.01?'less than 0.01%':pct<1?'<b>'+fmt(pct,2)+'%</b>':'<b>'+fmt(pct,1)+'%</b>';hl='Your AI use \u2248 <b>'+fmt(aiKg,1)+' kg CO2e/yr</b> \u2014 '+(aiKg<drKg? pctStr+' of your driving footprint':'about <b>'+fmt(aiKg/drKg,1)+'\u00d7</b> your driving footprint')+', on the \u201c'+ (basis==='google'?'Google measured':basis==='epoch'?'Epoch modeled':'de Vries upper-bound') +'\u201d basis.';}
   else if(aiKg>0){hl='Your AI use \u2248 <b>'+fmt(aiKg,1)+' kg CO2e/yr</b> on the selected basis.';}
@@ -357,7 +421,7 @@ var SECTORS=[
   {n:'Global dairy, on-farm electricity',s:'excludes irrigation, processing, cold chain \u2014 methane, not electricity, is dairy\u2019s real ledger',v:64.2,badge:'modeled',color:'var(--blue)',url:'https://agris.fao.org/search/en/providers/122535/records/65df79af0f3e94b9e5d8d855',src:'Mohsenimanesh 2021'}
 ];
 (function(){
-  var max=950, html='';
+  var max=1000, html='';
   SECTORS.forEach(function(x){
     html+='<div class="sbrow"><div class="sbname">'+x.n+'<small>'+x.s+'</small></div>'
       +'<div class="sbarwrap"><div class="sbar" style="width:'+(100*x.v/max)+'%;background:'+x.color+'"></div></div>'
@@ -366,6 +430,7 @@ var SECTORS=[
   document.getElementById('sectorbars').innerHTML=html;
 })();
 calc();
+drawDrops('w');
 </script>
 </body>
 </html>
