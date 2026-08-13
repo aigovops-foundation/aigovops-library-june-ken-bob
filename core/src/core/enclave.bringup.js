@@ -19,6 +19,7 @@
 // binaries that exist on the enclave host anyway.
 
 import { execFileSync } from 'node:child_process';
+import { enclaveSecretsKind } from './enclave.js';
 
 // --- the default injectable runner -------------------------------------------
 // Returns { ok, stdout } — NEVER throws, so a missing binary reads as absent.
@@ -181,15 +182,26 @@ export const VERIFY_CHECKS = [
     },
   },
   {
-    key: 'vault-serving',
-    label: 'Vault serving + unsealed',
+    key: 'secrets-broker',
+    label: 'Secrets broker serving',
+    // The proof adapts to whichever broker is in force. VAULT: /sys/health must
+    // report initialized + unsealed. 1PASSWORD (the Jeeves/managed posture): the
+    // service account must actually authenticate — `op whoami` succeeds — so the
+    // broker can resolve op:// references at runtime. Either way this proves the
+    // broker is live, not merely named; no secret is read to stdout.
     prove: ({ run, env }) => {
+      if (enclaveSecretsKind(env) === '1password') {
+        if (!env.OP_SERVICE_ACCOUNT_TOKEN) return { ok: false, detail: 'OP_SERVICE_ACCOUNT_TOKEN not set (the 1Password broker would hang on an interactive prompt)' };
+        const r = run(['op', 'whoami'], { timeout: 15000 });
+        const ok = !!r.ok && /service.account|user|url|ID/i.test(String(r.stdout || ''));
+        return { ok, detail: ok ? '1Password service account authenticated (op whoami)' : 'op whoami failed — check OP_SERVICE_ACCOUNT_TOKEN + vault grant' };
+      }
       const addr = env.VAULT_ADDR || 'http://127.0.0.1:8200';
       const r = run(['curl', '-sS', '--max-time', '10', `${addr}/v1/sys/health`], { timeout: 15000 });
       let body = null;
       try { body = JSON.parse(String(r.stdout || '')); } catch { /* fail-closed below */ }
       const ok = !!body && body.initialized === true && body.sealed === false;
-      return { ok, detail: ok ? `initialized + unsealed at ${addr}` : `not ready at ${addr} (init/unseal is a HUMAN step — see HUMAN-STEPS.md)` };
+      return { ok, detail: ok ? `Vault initialized + unsealed at ${addr}` : `Vault not ready at ${addr} (init/unseal is a HUMAN step — see HUMAN-STEPS.md)` };
     },
   },
   {

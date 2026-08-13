@@ -170,10 +170,26 @@ test('gVisor check does NOT pass on a runc fallback', () => {
   assert.strictEqual(r.ok, false, 'a host kernel banner must not count as gVisor');
 });
 
-test('vault check fails closed when sealed', () => {
+test('secrets-broker check fails closed when Vault is sealed', () => {
   const run = () => ({ ok: true, stdout: JSON.stringify({ initialized: true, sealed: true }) });
-  const r = verify({ run, env: GREEN_ENV, checks: VERIFY_CHECKS.filter((c) => c.key === 'vault-serving') });
+  const r = verify({ run, env: GREEN_ENV, checks: VERIFY_CHECKS.filter((c) => c.key === 'secrets-broker') });
   assert.strictEqual(r.ok, false, 'a sealed Vault is not serving');
+});
+
+test('secrets-broker check proves the 1Password service account under the managed posture', () => {
+  const opEnv = { ...GREEN_ENV, SECRETS_PROFILE: '1password', OP_SERVICE_ACCOUNT_TOKEN: 'ops_fake' };
+  const only = VERIFY_CHECKS.filter((c) => c.key === 'secrets-broker');
+  // op whoami authenticates → green (and it must NOT touch Vault's /sys/health).
+  const okRun = (argv) => argv[0] === 'op' && argv[1] === 'whoami'
+    ? { ok: true, stdout: 'URL: https://my.1password.com\nService Account: ops' }
+    : { ok: false, stdout: 'should not be called' };
+  assert.strictEqual(verify({ run: okRun, env: opEnv, checks: only }).ok, true);
+  // op whoami fails → fail closed.
+  const badRun = () => ({ ok: false, stdout: '', error: 'not signed in' });
+  assert.strictEqual(verify({ run: badRun, env: opEnv, checks: only }).ok, false);
+  // 1Password posture without a service-account token fails closed (would hang).
+  const { OP_SERVICE_ACCOUNT_TOKEN, ...noToken } = opEnv;
+  assert.strictEqual(verify({ run: okRun, env: noToken, checks: only }).ok, false);
 });
 
 test('opa check fails when rego disagrees with the JS rule', () => {
