@@ -67,6 +67,8 @@ const estate = {
   broken: reporting.reduce((n, s) => n + (s.summary?.broken || 0), 0),
   consoleErrorPages: reporting.reduce((n, s) => n + (s.summary?.consoleErrorPages || 0), 0),
 };
+// the uptime score: % of crawled pages that are fully green (100 = every button works)
+{ const t = estate.greenPages + estate.redPages; estate.score = t ? Math.round((100 * estate.greenPages) / t) : null; }
 writeFileSync(OUT, JSON.stringify({ generatedAt: new Date().toISOString(), estate, sites }, null, 2));
 console.log(`\n  estate-crawl → ${OUT}`);
 console.log(`  properties ${estate.properties} · reporting ${estate.reporting} · green ${estate.healthy} · red ${estate.red} · dead ${estate.dead} · broken ${estate.broken}`);

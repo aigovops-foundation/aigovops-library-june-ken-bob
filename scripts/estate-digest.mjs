@@ -30,11 +30,11 @@ const dot = (s) => (s === 'green' ? '🟢' : s === 'red' ? '🔴' : '⚪');
 const founders = (() => { try { return JSON.parse(readFileSync(join(ROOT, 'founders.json'), 'utf8')).founders || []; } catch { return []; } })();
 
 const L = [];
-L.push(`# ${dot(overall)} Estate Interaction Health — ${overall.toUpperCase()}`);
+L.push(`# ${dot(overall)} Estate Interaction Health — ${overall.toUpperCase()} · score ${e.score ?? '–'}%`);
 L.push('');
 L.push(`_Every page of the estate, every button and link, opened in a real browser and verified to actually do something. **Green is the goal for each page.**_`);
 L.push('');
-L.push(`**Estate:** ${e.greenPages ?? 0} pages green · **${e.redPages ?? 0} pages red** · ${e.healthy ?? 0}/${e.reporting ?? 0} properties green · ${e.dead ?? 0} dead buttons · ${e.broken ?? 0} broken links`);
+L.push(`**Uptime score: ${e.score ?? '–'}%** _(share of crawled pages fully green)_ · ${e.greenPages ?? 0} pages green · **${e.redPages ?? 0} pages red** · ${e.healthy ?? 0}/${e.reporting ?? 0} properties green · ${e.dead ?? 0} dead buttons · ${e.broken ?? 0} broken links`);
 L.push(`_crawled ${data.generatedAt || 'never'} · live board: \`docs/estate-health.html\`_`);
 L.push('');
 

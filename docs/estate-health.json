@@ -10,7 +10,8 @@
     "redPages": 0,
     "dead": 0,
     "broken": 0,
-    "consoleErrorPages": 0
+    "consoleErrorPages": 0,
+    "score": 100
   },
   "sites": [
     {
