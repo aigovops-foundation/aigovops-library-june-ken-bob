@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Data Centers, AI &amp; Social Trade-offs — the Library</title>
+<meta name="description" content="An interactive, source-verified calculator comparing the energy, carbon, water, land and social trade-offs of AI data centers against the everyday technologies we already choose — phones, streaming, cloud, cars, heating, dairy and aviation. Every number links to its primary source." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Source+Sans+3:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* skin: aigovops-july-2026 (garden-warm) — canonical tokens: foundation repo design/aigovops-july-2026/ */
+:root,[data-theme="light"]{--bg:#FAF7F0;--surface:#fff;--surface2:#F1EAD8;--text:#2B2B28;--muted:#4C4A42;--line:rgba(43,43,40,.14);--primary:#1F5E3A;--primary2:#2E7D4F;--good:#1F5E3A;--warn:#9C4E12;--risk:#A83A24;--blue:#0f4c81;--gold:#E8B54A;--radius:16px;--shadow:0 10px 26px -14px rgba(78,60,32,.3)}
+[data-theme="dark"]{--bg:#211F1B;--surface:#292722;--surface2:#312E28;--text:#EDE8DA;--muted:#B9B3A2;--line:#3F3C35;--primary:#5DCAA5;--primary2:#7BD8B8;--good:#7bc47f;--warn:#E8B54A;--risk:#f28cab;--blue:#87b8f7;--gold:#E8B54A;--shadow:0 16px 40px rgba(0,0,0,.35)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Source Sans 3',Inter,sans-serif;line-height:1.55}a{color:var(--primary)}
+[data-theme="light"] body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:30;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.17 0 0 0 0 0.16 0 0 0 0 0.13 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E")}
+body{min-height:100vh}.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 86%, transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.navrow{display:flex;gap:10px;align-items:center;overflow:auto;padding:12px 0}.brand{font-weight:800;white-space:nowrap;margin-right:8px;font-size:15px}
+.tab{border:1px solid var(--line);background:var(--surface);color:var(--text);padding:9px 14px;border-radius:999px;cursor:pointer;white-space:nowrap;text-decoration:none;font-size:14px}
+.tab:hover{border-color:var(--primary)}.tab.cta{background:var(--primary);color:#fff;border-color:var(--primary)}
+button.theme{margin-left:auto;border:1px solid var(--line);background:var(--surface);color:var(--text);padding:9px 13px;border-radius:999px;cursor:pointer}
+.logo{width:34px;height:34px;flex:none}
+.hero{padding:52px 0 18px}.kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--primary);font-weight:700}
+.hero h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(36px,5.4vw,64px);line-height:1.04;max-width:17ch;margin:14px 0}
+.hero p.lede{max-width:76ch;color:var(--muted);font-size:18px}
+.thesis{font-family:'Fraunces',serif;font-style:italic;font-size:clamp(19px,2.4vw,24px);color:var(--primary);border-left:3px solid var(--primary);padding-left:18px;max-width:64ch;margin:22px 0 0;line-height:1.4}
+section{padding:34px 0 8px}
+h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(26px,3.4vw,36px);margin:0 0 6px}
+.sub{color:var(--muted);margin:0 0 18px;max-width:80ch;font-size:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:960px){.grid2,.grid3,.grid4{grid-template-columns:1fr}.calcgrid{grid-template-columns:1fr !important}}
+.badge{display:inline-block;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:999px;border:1px solid;vertical-align:middle;white-space:nowrap}
+.b-measured{color:var(--good);border-color:var(--good)}.b-modeled{color:var(--blue);border-color:var(--blue)}.b-scenario{color:var(--warn);border-color:var(--warn)}.b-vendor{color:var(--risk);border-color:var(--risk)}.b-derived{color:var(--muted);border-color:var(--muted)}
+.src{font-family:'DM Mono',monospace;font-size:11px;text-decoration:none;border-bottom:1px dotted var(--primary);white-space:nowrap}
+.mono{font-family:'DM Mono',monospace}
+.callout{padding:16px 18px;border-left:4px solid var(--primary);background:var(--surface2);border-radius:12px;margin:16px 0;font-size:15px}
+.callout.w{border-left-color:var(--warn)}
+/* calculator */
+.calcgrid{display:grid;grid-template-columns:430px 1fr;gap:18px;align-items:start}
+.mod{border-bottom:1px solid var(--line);padding:14px 0}.mod:last-child{border-bottom:none}
+.mod h4{margin:0 0 2px;font-size:16px}.mod .note{font-size:12.5px;color:var(--muted);margin:2px 0 8px;line-height:1.45}
+.mod label{font-size:13px;color:var(--muted)}
+input[type=range]{width:100%;accent-color:var(--primary);margin:6px 0 2px}
+select{width:100%;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--text);font-family:inherit;font-size:13.5px;margin:4px 0}
+.val{font-family:'DM Mono',monospace;font-size:13px;color:var(--primary);font-weight:500}
+.switch{display:flex;gap:8px;margin:6px 0}
+.switch button{flex:1;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--text);cursor:pointer;font-size:13px}
+.switch button.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+.results .rrow{display:grid;grid-template-columns:190px 1fr 120px;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
+.results .rrow:last-of-type{border-bottom:none}
+.rname{font-size:14px;font-weight:600}.rname .rsub{display:block;font-weight:400;font-size:11.5px;color:var(--muted)}
+.rbarwrap{background:var(--surface2);border-radius:8px;height:26px;position:relative;overflow:hidden}
+.rbar{height:100%;border-radius:8px;background:var(--primary2);transition:width .35s ease;min-width:2px}
+.rbar.ai{background:var(--warn)}
+.rnum{font-family:'DM Mono',monospace;font-size:13.5px;text-align:right}
+.headline{font-family:'Fraunces',serif;font-size:clamp(18px,2.4vw,23px);line-height:1.4;margin:14px 0 4px}
+.headline b{color:var(--primary)}
+.finefoot{font-size:12px;color:var(--muted);margin-top:12px;line-height:1.5}
+/* attribution bar */
+.attr{display:flex;height:34px;border-radius:10px;overflow:hidden;margin:10px 0 4px}
+.attr div{display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;color:#fff;white-space:nowrap}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--muted);margin-top:6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px}
+/* sector bars */
+.sbrow{display:grid;grid-template-columns:minmax(210px,300px) 1fr 90px;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.sbrow:last-of-type{border-bottom:none}
+.sbname{font-size:14.5px;font-weight:600;line-height:1.3}.sbname small{display:block;font-weight:400;font-size:11.5px;color:var(--muted)}
+.sbarwrap{background:var(--surface2);border-radius:8px;height:30px;overflow:hidden}
+.sbar{height:100%;border-radius:8px;min-width:3px}
+.sbnum{font-family:'DM Mono',monospace;font-size:14px;text-align:right}
+/* water */
+.wtoggle{display:flex;gap:10px;margin:12px 0}
+.wtoggle button{padding:10px 16px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--text);cursor:pointer;font-size:14px;font-weight:600}
+.wtoggle button.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.bignum{font-family:'DM Mono',monospace;font-size:clamp(38px,6vw,58px);color:var(--blue);line-height:1;margin:8px 0 2px}
+.wbarwrap{background:var(--surface2);border-radius:10px;height:38px;overflow:hidden;margin:12px 0 4px}
+.wbar{height:100%;background:var(--blue);border-radius:10px;transition:width .5s ease;min-width:4px}
+.metric{padding:16px;border-radius:14px;background:var(--surface2);border:1px solid var(--line)}
+.metric b{display:block;font-size:26px;margin-bottom:4px;font-family:'DM Mono',monospace;font-weight:500}
+.metric .ml{font-size:13.5px;color:var(--muted);line-height:1.45}
+.pill{display:inline-block;padding:6px 10px;border-radius:999px;background:var(--surface2);font-size:12px;margin:0 8px 8px 0;border:1px solid var(--line)}
+.foot{color:var(--muted);font-size:13px;padding:30px 0 60px;border-top:1px solid var(--line);margin-top:40px;line-height:1.6}
+table{width:100%;border-collapse:collapse;margin-top:10px}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:14px}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.gridbars{display:grid;gap:8px;margin-top:10px}
+.gb{display:grid;grid-template-columns:110px 1fr 64px;gap:10px;align-items:center;font-size:13.5px}
+.gb .gbw{background:var(--surface2);border-radius:6px;height:18px;overflow:hidden}.gb .gbb{height:100%;border-radius:6px;min-width:2px}
+.gb .gbn{font-family:'DM Mono',monospace;font-size:12.5px;text-align:right}
+@media (max-width:720px){.results .rrow{grid-template-columns:130px 1fr 84px}.sbrow{grid-template-columns:1fr;gap:6px}.sbnum{text-align:left}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="wrap navrow">
+    <svg class="logo" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" aria-label="Data Centers, AI and Social Trade-offs logo"><path d="M32 8v10M32 46v10"/><circle cx="32" cy="32" r="10"/><path d="M10 32h12M42 32h12"/><path d="M14 20l8 6M50 20l-8 6M14 44l8-6M50 44l-8-6"/></svg>
+    <div class="brand">Data Centers, AI &amp; Social Trade-offs</div>
+    <a class="tab" href="../index.html">← the Library</a>
+    <a class="tab" href="#calculator">Calculator</a>
+    <a class="tab" href="#sector">Sectors</a>
+    <a class="tab" href="#different">Why AI differs</a>
+    <a class="tab" href="#water">Water</a>
+    <a class="tab" href="#ledgers">Ledgers</a>
+    <a class="tab" href="#method">Method</a>
+    <a class="tab cta" href="for-more-reading.html">More reading →</a>
+    <button class="theme" onclick="toggleTheme()" aria-label="Switch theme">◐</button>
+  </div>
+</nav>
+
+<header class="hero wrap">
+  <div class="kicker">An AiGovOps Foundation published artifact · every number links to its primary source</div>
+  <h1>We already pay for the technologies we love. What makes AI different?</h1>
+  <p class="lede">Phones, streaming, cloud, cars, furnaces, dairy, flying — modern life is a set of resource trade-offs we largely made peace with. This calculator puts AI's costs on the same table, fairly: the same ledgers, honest functional units, and a source you can click behind every figure. It is balanced by construction — the comparators get their positives, and AI gets both its real costs and its real caveats.</p>
+  <p class="thesis">AI is the first technology whose costs concentrate faster than its benefits become legible. That is an argument for governance instrumentation — not an argument for or against adoption.</p>
+  <div style="margin-top:18px">
+    <span class="pill"><span class="badge b-measured">measured</span>&nbsp; metered or telemetry data</span>
+    <span class="pill"><span class="badge b-modeled">modeled</span>&nbsp; peer-reviewed or institutional estimate</span>
+    <span class="pill"><span class="badge b-scenario">scenario</span>&nbsp; projection, not a forecast</span>
+    <span class="pill"><span class="badge b-vendor">vendor</span>&nbsp; commercially interested study</span>
+    <span class="pill"><span class="badge b-derived">derived</span>&nbsp; computed here, formula shown</span>
+  </div>
+</header>
+
+<section class="wrap" id="calculator">
+  <h2>Your year in technology</h2>
+  <p class="sub">Set your own usage. Costs are stated per outcome — per prompt, per hour, per mile — because industry totals compared to cow totals are a category error. No composite score is computed: the ledgers stay separate, and weighing them is a values choice that belongs to you, not to this page.</p>
+  <div class="calcgrid">
+    <div class="card">
+      <div class="mod">
+        <h4>AI assistant prompts</h4>
+        <p class="note">Pick your evidence basis — the three published numbers use different models, boundaries and years, and are <em>not</em> directly comparable.</p>
+        <label>Prompts per day: <span class="val" id="aiV">30</span></label>
+        <input type="range" id="aiN" min="0" max="300" value="30" oninput="calc()">
+        <select id="aiBasis" onchange="calc()">
+          <option value="google">0.24 Wh/prompt — Google Gemini median, May 2025 (measured telemetry + modeled overheads)</option>
+          <option value="epoch">0.30 Wh/prompt — Epoch AI typical GPT-4o query, 2025 (modeled)</option>
+          <option value="devries">2.9 Wh/prompt — de Vries 2023 stated upper bound, GPT-3.5/A100 era (estimate)</option>
+        </select>
+        <p class="note" id="aiNote"></p>
+      </div>
+      <div class="mod">
+        <h4>Video streaming</h4>
+        <p class="note">Energy: <span class="mono">0.077 kWh/hr</span> <span class="badge b-modeled">modeled</span> <a class="src" href="https://www.iea.org/commentaries/the-carbon-footprint-of-streaming-video-fact-checking-the-headlines" target="_blank" rel="noopener noreferrer">IEA 2020</a>. Carbon basis:</p>
+        <label>Hours per week: <span class="val" id="stV">10</span></label>
+        <input type="range" id="stN" min="0" max="45" value="10" oninput="calc()">
+        <select id="stBasis" onchange="calc()">
+          <option value="iea">36 g CO2/hr — IEA central estimate, 2019 global average</option>
+          <option value="ct">55 g CO2e/hr — Carbon Trust / DIMPACT, Europe 2020</option>
+        </select>
+      </div>
+      <div class="mod">
+        <h4>Smartphone</h4>
+        <p class="note">Ericsson lifecycle study (Sony Z5, 3-year life): <span class="mono">19 kg CO2e/yr</span> device only, <span class="mono">62 kg CO2e/yr</span> once allocated network + data-center impact is included. <span class="badge b-modeled">modeled</span> <a class="src" href="https://www.ericsson.com/en/reports-and-papers/research-papers/life-cycle-assessment-of-a-smartphone" target="_blank" rel="noopener noreferrer">Ericsson LCA</a></p>
+        <div class="switch">
+          <button id="phDev" onclick="setPhone('dev')">Device only (19 kg/yr)</button>
+          <button id="phAll" class="on" onclick="setPhone('all')">+ network &amp; data centers (62 kg/yr)</button>
+          <button id="phOff" onclick="setPhone('off')">No phone</button>
+        </div>
+      </div>
+      <div class="mod">
+        <h4>Driving (gasoline vehicle)</h4>
+        <p class="note"><span class="mono">~400 g CO2/mile</span> average passenger vehicle; <span class="mono">8,887 g CO2/gallon</span> of gasoline (tailpipe only, 22.2 mpg assumption). <span class="badge b-measured">measured</span> <a class="src" href="https://www.epa.gov/greenvehicles/greenhouse-gas-emissions-typical-passenger-vehicle" target="_blank" rel="noopener noreferrer">US EPA</a></p>
+        <label>Miles per year: <span class="val" id="drV">11,500</span></label>
+        <input type="range" id="drN" min="0" max="30000" step="500" value="11500" oninput="calc()">
+      </div>
+      <div class="mod">
+        <h4>Home heating</h4>
+        <p class="note">Space heating was 42% of US residential energy use in 2020 <span class="badge b-measured">measured</span> <a class="src" href="https://www.eia.gov/pressroom/releases/press535.php" target="_blank" rel="noopener noreferrer">EIA RECS</a>. Switching a furnace to a heat pump cuts heating CO2 by <span class="mono">38–53%</span> (44–60% on 100-yr GWP) <span class="badge b-modeled">modeled</span> <a class="src" href="https://wcec.ucdavis.edu/wcec-newly-published-journal-article-on-greenhouse-gas-emission-forecasts-for-residential-heat-pumps/" target="_blank" rel="noopener noreferrer">UC Davis WCEC</a>. Shown as an insight, not a bar — no verified absolute per-home factor is published in our sources.</p>
+      </div>
+    </div>
+    <div class="card results">
+      <div class="headline" id="headline"></div>
+      <div id="rows"></div>
+      <p class="finefoot" id="waterline"></p>
+      <p class="finefoot"><b>Boundaries:</b> AI figures exclude model training and end-user devices (per each source's stated scope). Streaming's footprint is mostly <em>your own equipment</em>: for a European streaming hour, end-user devices carry 51%, the home router 38%, the network 10% — and data centers roughly 1% <a class="src" href="https://ctprodstorageaccountp.blob.core.windows.net/prod-drupal-files/documents/resource/public/Carbon-impact-of-video-streaming.pdf" target="_blank" rel="noopener noreferrer">Carbon Trust 2021</a>:</p>
+      <div class="attr" aria-label="Streaming carbon attribution: devices 51%, router 38%, network 10%, data centers 1%">
+        <div style="width:51%;background:var(--primary2)">devices 51%</div>
+        <div style="width:38%;background:var(--warn)">router 38%</div>
+        <div style="width:10%;background:var(--blue)">10%</div>
+        <div style="width:1%;background:var(--risk)"></div>
+      </div>
+      <div class="legend"><span><i style="background:var(--primary2)"></i>end-user devices</span><span><i style="background:var(--warn)"></i>home router</span><span><i style="background:var(--blue)"></i>network</span><span><i style="background:var(--risk)"></i>data centers ≈1%</span></div>
+      <p class="finefoot">Derived CO2 for AI prompts uses the global average grid intensity of <span class="mono">458 g CO2e/kWh</span> (2025) <a class="src" href="https://ember-energy.org/latest-insights/global-electricity-review-2026/electricity-demand-and-supply-trends/" target="_blank" rel="noopener noreferrer">Ember</a>, except the Google basis, which reports its own market-based <span class="mono">0.03 g CO2e/prompt</span>.</p>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" id="sector">
+  <h2>Sector scale — large, but not an outlier</h2>
+  <p class="sub">Global data centers used about 415 TWh in 2024 — roughly 1.5% of world electricity <a class="src" href="https://www.iea.org/reports/energy-and-ai/executive-summary" target="_blank" rel="noopener noreferrer">IEA Energy and AI</a>. On this axis AI is large but unremarkable. Hover the boundary notes: these bars deliberately do <em>not</em> share a definition, which is exactly why single-bar comparisons mislead.</p>
+  <div class="card">
+    <div id="sectorbars"></div>
+    <div class="callout w"><b>Read the boundaries before the bars.</b> "Data centers" ≠ "AI" (all workloads, all operators). The GSMA 300 TWh covers operators' <em>entire</em> electricity — fixed + mobile networks, data centers, offices; mobile access networks alone are roughly 135–180 TWh <a class="src" href="https://eibi.co.uk/wp-content/uploads/MobileNetZero2026.pdf" target="_blank" rel="noopener noreferrer">GSMA Mobile Net Zero 2026</a>. The dairy figure is on-farm electricity only, excluding irrigation, processing and the cold chain <a class="src" href="https://agris.fao.org/search/en/providers/122535/records/65df79af0f3e94b9e5d8d855" target="_blank" rel="noopener noreferrer">Mohsenimanesh et al. 2021</a>. The aviation figure is a European-departures decarbonization <em>scenario</em> for 2050 — proof that clean-energy transitions compete with AI for the same clean electrons <a class="src" href="https://www.destination2050.eu/wp-content/uploads/2025/02/DESTINATION_2050_Roadmap_2025.pdf" target="_blank" rel="noopener noreferrer">Destination 2050 (2025)</a>.</div>
+  </div>
+</section>
+
+<section class="wrap" id="different">
+  <h2>Where AI genuinely is different: density, concentration, velocity</h2>
+  <p class="sub">A globally modest percentage can still be a local grid, water and ratepayer emergency. The defensible claim is not that AI uses uniquely vast energy — it is that AI's demand concentrates in specific places and grows faster than the institutions watching it.</p>
+  <div class="grid4">
+    <div class="metric"><b>7–8×</b><div class="ml">A generative-AI training cluster "might consume seven or eight times more energy than a typical computing workload" — Noman Bashir, MIT <span class="badge b-modeled">expert estimate</span><br><a class="src" href="https://news.mit.edu/2025/explained-generative-ai-environmental-impact-0117" target="_blank" rel="noopener noreferrer">MIT News 2025</a></div></div>
+    <div class="metric"><b>23%</b><div class="ml">Share of Ireland's metered electricity used by data centers in 2025 — up from 5% in 2015 <span class="badge b-measured">measured</span><br><a class="src" href="https://www.cso.ie/en/releasesandpublications/ep/p-dcmec/datacentresmeteredelectricityconsumption2025/keyfindings/" target="_blank" rel="noopener noreferrer">CSO Ireland</a></div></div>
+    <div class="metric"><b>5 states</b><div class="ml">US states above 10% of electricity going to data centers (2023): Virginia 25.6%, N. Dakota 15.4%, Nebraska 11.7%, Iowa 11.4%, Oregon 11.4% <span class="badge b-modeled">modeled</span><br><a class="src" href="https://www.wpr.org/wp-content/uploads/2024/06/3002028905_Powering-Intelligence_-Analyzing-Artificial-Intelligence-and-Data-Center-Energy-Consumption.pdf" target="_blank" rel="noopener noreferrer">EPRI 2024</a></div></div>
+    <div class="metric"><b>+17%</b><div class="ml">Growth of global data-center electricity demand in 2025 alone — versus a projected doubling to ~950 TWh by 2030 <span class="badge b-scenario">scenario</span><br><a class="src" href="https://www.iea.org/reports/key-questions-on-energy-and-ai/executive-summary" target="_blank" rel="noopener noreferrer">IEA 2026 update</a></div></div>
+  </div>
+  <div class="callout"><b>The balancing fact:</b> even so, data centers account for <em>less than 10%</em> of global electricity demand growth between 2024 and 2030 in the IEA Base Case — air conditioning, industry and EVs each add more <a class="src" href="https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai" target="_blank" rel="noopener noreferrer">IEA Energy and AI</a>. And mobile networks scaled alongside a felt consumer benefit; AI's infrastructure spending precedes its felt benefit by years. Identical energy numbers, very different politics.</div>
+</section>
+
+<section class="wrap" id="water">
+  <h2>The water ledger — one distinction carries the whole debate</h2>
+  <p class="sub">Water <b>withdrawn</b> is taken from a source and mostly returned; water <b>consumed</b> is evaporated or otherwise removed from the local environment <a class="src" href="https://water.usgs.gov/water-basics_glossary.html" target="_blank" rel="noopener noreferrer">USGS glossary</a>. Nearly every alarming AI-water headline blurs the two. Toggle below — same kilowatt-hour, ~36× apart.</p>
+  <div class="grid2">
+    <div class="card">
+      <div class="wtoggle">
+        <button id="wW" class="on" onclick="setWater('w')">Withdrawn</button>
+        <button id="wC" onclick="setWater('c')">Consumed</button>
+      </div>
+      <div class="bignum" id="wNum">13.9 gal</div>
+      <div class="mono" style="font-size:13px;color:var(--muted)" id="wLabel">freshwater withdrawn per kWh of US electricity</div>
+      <div class="wbarwrap"><div class="wbar" id="wBar" style="width:100%"></div></div>
+      <p class="finefoot">US national averages, 2005 fuel-mix baseline — the canonical citation for the withdrawal-consumption gap, and dated; flag it as such. <span class="badge b-modeled">modeled</span> <a class="src" href="https://publications.anl.gov/anlpubs/2011/02/69392.pdf" target="_blank" rel="noopener noreferrer">Argonne National Laboratory</a></p>
+    </div>
+    <div class="card">
+      <table>
+        <tr><th>Claim</th><th>What the source actually says</th></tr>
+        <tr><td class="mono">4.2–6.6 bn m³ by 2027</td><td>Global AI demand's projected water <b>withdrawal</b> — more than 4–6× Denmark's annual total. Often misquoted as "consumption". <span class="badge b-modeled">modeled</span> <a class="src" href="https://arxiv.org/abs/2304.03271" target="_blank" rel="noopener noreferrer">Li et al., "Making AI Less Thirsty"</a></td></tr>
+        <tr><td class="mono">9.3 trillion L by 2030</td><td>Water footprint of the <b>electricity generation</b> powering data centers — equal to the basic annual domestic water needs of Sub-Saharan Africa's 1.3 billion people. <span class="badge b-scenario">scenario</span> <a class="src" href="https://unu.edu/inweh/news/environmental-cost-of-AIs-Enrgy-use-carbon-water-and-land-footprints" target="_blank" rel="noopener noreferrer">UNU-INWEH 2026</a></td></tr>
+        <tr><td class="mono">0.26 mL per prompt</td><td>Google's measured median water <b>consumption</b> per Gemini text prompt (May 2025) — about five drops. <span class="badge b-measured">measured</span> <a class="src" href="https://services.google.com/fh/files/misc/measuring_the_environmental_impact_of_delivering_ai_at_google_scale.pdf" target="_blank" rel="noopener noreferrer">Google 2025</a></td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" id="ledgers">
+  <h2>The other ledgers — kept separate on purpose</h2>
+  <p class="sub">Low-carbon electricity is not automatically low-water or low-land. Collapsing these into one score destroys exactly the information a governance conversation needs.</p>
+  <div class="grid3">
+    <div class="card">
+      <h4 style="margin:0 0 8px">Land <span class="badge b-scenario">scenario</span></h4>
+      <p style="font-size:14.5px;color:var(--muted);margin:0">The land footprint of the electricity supplying data centers is projected to exceed <b>14,500 km²</b> by 2030 — roughly twice metropolitan Jakarta <a class="src" href="https://unu.edu/inweh/news/environmental-cost-of-AIs-Enrgy-use-carbon-water-and-land-footprints" target="_blank" rel="noopener noreferrer">UNU-INWEH</a>.</p>
+    </div>
+    <div class="card">
+      <h4 style="margin:0 0 8px">E-waste <span class="badge b-modeled">modeled range</span></h4>
+      <p style="font-size:14.5px;color:var(--muted);margin:0">Generative-AI e-waste could reach <b>0.4–2.5 Mt/yr by 2030</b> with no mitigation — 2.5 is the aggressive top of the range, and circular strategies could cut it 16–86% <a class="src" href="https://www.nature.com/articles/s43588-024-00712-6" target="_blank" rel="noopener noreferrer">Wang et al., Nature Comput. Sci.</a>. The viral "16 Mt" figure came from an unrefereed preprint.</p>
+    </div>
+    <div class="card">
+      <h4 style="margin:0 0 8px">Avoided emissions <span class="badge b-scenario">scenario</span></h4>
+      <p style="font-size:14.5px;color:var(--muted);margin:0">Existing AI applications <i>could</i> cut <b>1.4 Gt CO2 in 2035</b> in the IEA's exploratory Widespread Adoption Case — but "there is currently no momentum" ensuring it, and AI "is not a silver bullet" <a class="src" href="https://www.iea.org/reports/energy-and-ai/executive-summary" target="_blank" rel="noopener noreferrer">IEA</a>.</p>
+    </div>
+  </div>
+  <h2 style="margin-top:34px;font-size:clamp(22px,2.8vw,28px)">And the benefits column — for everything on the table</h2>
+  <p class="sub">A fair ledger records why we chose these technologies at all. AI's benefit line is the only one still being written.</p>
+  <div class="card" style="padding:8px 20px">
+    <table>
+      <tr><th>Technology</th><th>The positive we bought</th><th>The cost we accepted</th></tr>
+      <tr><td><b>Mobile</b></td><td>5.8 billion unique subscribers — 70% of humanity connected; ~$6.5 trillion (5.8%) of global GDP <a class="src" href="https://www.gsmaintelligence.com/research/the-mobile-economy-2026" target="_blank" rel="noopener noreferrer">GSMA Intelligence</a> <a class="src" href="https://www.gsma.com/solutions-and-impact/connectivity-for-good/mobile-economy/" target="_blank" rel="noopener noreferrer">Mobile Economy</a></td><td>~300 TWh of operator electricity (2024, all operations) <a class="src" href="https://view.gsma.com/mobile-net-zero-2026" target="_blank" rel="noopener noreferrer">GSMA</a></td></tr>
+      <tr><td><b>Streaming</b></td><td>Beats the store-rental era it replaced — a 2014 LCA put store-rented DVDs at 0.71 kg CO2e/viewing-hour vs 0.42 for streaming (roughly tied with mail-order DVD) <a class="src" href="https://iopscience.iop.org/article/10.1088/1748-9326/9/5/054007" target="_blank" rel="noopener noreferrer">Shehabi et al. 2014</a></td><td>~36–55 g CO2e per hour, mostly in your own living room <a class="src" href="https://www.iea.org/commentaries/the-carbon-footprint-of-streaming-video-fact-checking-the-headlines" target="_blank" rel="noopener noreferrer">IEA</a></td></tr>
+      <tr><td><b>Cloud</b></td><td>Consolidation is real but the headline numbers are vendors': Microsoft/WSP's "22–93% more efficient" is a 2018 vendor study (and that span is SharePoint-only); AWS/451's "3.6× more efficient" is vendor-commissioned too <span class="badge b-vendor">vendor</span> <a class="src" href="https://www.wsp.com/-/media/sector/us/document/pdf-microsoft-cloud-carbon-study-2018" target="_blank" rel="noopener noreferrer">WSP/Microsoft</a> <a class="src" href="https://d39w7f4ix9f5s9.cloudfront.net/e3/79/42bf75c94c279c67d777f002051f/carbon-reduction-opportunity-of-moving-to-aws.pdf" target="_blank" rel="noopener noreferrer">451 Research</a></td><td>Part of the same 415 TWh data-center total</td></tr>
+      <tr><td><b>Cars</b></td><td>3.29 trillion vehicle-miles of American mobility in 2024 <a class="src" href="https://www.fhwa.dot.gov/policyinformation/statistics/2024/vm1.cfm" target="_blank" rel="noopener noreferrer">FHWA</a></td><td>~4.6 t CO2 per typical vehicle per year <a class="src" href="https://www.epa.gov/greenvehicles/greenhouse-gas-emissions-typical-passenger-vehicle" target="_blank" rel="noopener noreferrer">EPA</a></td></tr>
+      <tr><td><b>Livestock &amp; dairy</b></td><td>Livelihoods of at least 1.3 billion people; 34% of global food protein <a class="src" href="https://www.fao.org/animal-production/en" target="_blank" rel="noopener noreferrer">FAO</a>; the dairy chain alone supports up to a billion <a class="src" href="https://openknowledge.fao.org/server/api/core/bitstreams/beee9189-d92d-4a0d-86af-a1e3328c33d1/content" target="_blank" rel="noopener noreferrer">FAO Dairy Facts</a></td><td>6.2 Gt CO2e/yr — ~12% of anthropogenic emissions; milk is 30% of it. Its electricity (~64 TWh on-farm) is the wrong axis; methane dominates <a class="src" href="https://openknowledge.fao.org/server/api/core/bitstreams/a06a30d3-6e9d-4e9c-b4b7-29a6cc307208/content" target="_blank" rel="noopener noreferrer">FAO GLEAM 2023</a></td></tr>
+      <tr><td><b>Aviation</b></td><td>Global connectivity at 2.5% of CO2 emissions (2019; ~3.5% of radiative forcing to date) <a class="src" href="https://ourworldindata.org/global-aviation-emissions" target="_blank" rel="noopener noreferrer">Our World in Data</a></td><td>Its own net-zero path needs 762 TWh of clean electricity by 2050 (Europe alone) — competing for AI's electrons <a class="src" href="https://www.destination2050.eu/wp-content/uploads/2025/02/DESTINATION_2050_Roadmap_2025.pdf" target="_blank" rel="noopener noreferrer">Destination 2050</a></td></tr>
+      <tr><td><b>AI</b></td><td>A scenario, not yet a receipt: up to 1.4 Gt CO2 avoided in 2035 <em>if</em> adoption is widespread <a class="src" href="https://iea.blob.core.windows.net/assets/86ed1178-4d77-45ac-ab38-28e849f3b93f/EnergyandAI.pdf" target="_blank" rel="noopener noreferrer">IEA</a></td><td>415→~950 TWh (2024→2030 Base Case), concentrated in a handful of grids <a class="src" href="https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai" target="_blank" rel="noopener noreferrer">IEA</a></td></tr>
+    </table>
+  </div>
+</section>
+
+<section class="wrap" id="method">
+  <h2>Method — standards we inherit, not invent</h2>
+  <p class="sub">This artifact adopts existing legitimacy chains rather than asking you to trust a new formula.</p>
+  <div class="grid3">
+    <div class="card"><h4 style="margin:0 0 6px">SCI — ISO/IEC 21031:2024</h4><p style="font-size:14px;color:var(--muted);margin:0">The Software Carbon Intensity spec: <span class="mono">SCI = (E × I + M) per R</span> — energy × grid intensity + embodied carbon, per an explicitly chosen functional unit. Now an ISO standard. <a class="src" href="https://sci.greensoftware.foundation/" target="_blank" rel="noopener noreferrer">GSF spec</a> <a class="src" href="https://www.iso.org/standard/86612.html" target="_blank" rel="noopener noreferrer">ISO</a></p></div>
+    <div class="card"><h4 style="margin:0 0 6px">MLPerf Power</h4><p style="font-size:14px;color:var(--muted);margin:0">The only measured, boundary-defined AI energy benchmark — "from microwatts to megawatts," training and inference, 1,841 reproducible measurements. <a class="src" href="https://arxiv.org/abs/2410.12032" target="_blank" rel="noopener noreferrer">arXiv:2410.12032</a> <a class="src" href="https://mlcommons.org/working-groups/benchmarks/power/" target="_blank" rel="noopener noreferrer">MLCommons</a></p></div>
+    <div class="card"><h4 style="margin:0 0 6px">Grid data</h4><p style="font-size:14px;color:var(--muted);margin:0">EPA eGRID (US regional factors, 2023 data) <a class="src" href="https://www.epa.gov/egrid" target="_blank" rel="noopener noreferrer">EPA</a>; global average 458 g CO2e/kWh (2025) <a class="src" href="https://ember-energy.org/latest-insights/global-electricity-review-2026/electricity-demand-and-supply-trends/" target="_blank" rel="noopener noreferrer">Ember</a>; per-workload telemetry via CodeCarbon <a class="src" href="https://github.com/mlco2/codecarbon" target="_blank" rel="noopener noreferrer">GitHub</a>.</p></div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h4 style="margin:0 0 4px">Why the grid you plug into matters more than the query you type</h4>
+    <p style="font-size:14px;color:var(--muted);margin:0 0 6px">Median published lifecycle emissions per kWh of electricity generation <a class="src" href="https://docs.nrel.gov/docs/fy21osti/80580.pdf" target="_blank" rel="noopener noreferrer">NREL LCA Harmonization</a>:</p>
+    <div class="gridbars">
+      <div class="gb"><span>Nuclear</span><div class="gbw"><div class="gbb" style="width:1.2%;background:var(--primary2)"></div></div><span class="gbn">12 g</span></div>
+      <div class="gb"><span>Wind</span><div class="gbw"><div class="gbb" style="width:1.3%;background:var(--primary2)"></div></div><span class="gbn">13 g</span></div>
+      <div class="gb"><span>Solar PV</span><div class="gbw"><div class="gbb" style="width:4.3%;background:var(--primary2)"></div></div><span class="gbn">43 g</span></div>
+      <div class="gb"><span>Natural gas</span><div class="gbw"><div class="gbb" style="width:48.6%;background:var(--warn)"></div></div><span class="gbn">486 g</span></div>
+      <div class="gb"><span>Coal</span><div class="gbw"><div class="gbb" style="width:100%;background:var(--risk)"></div></div><span class="gbn">1,001 g</span></div>
+    </div>
+  </div>
+  <div class="callout"><b>Editorial rules of this artifact:</b> six separate ledgers, mandatory functional units, withdrawal and consumption never conflated, scenarios visually distinct from observations, vendor studies labeled as vendor studies, and no default composite score. Rights-related and irreversible harms are never netted against benefits. Weighing the ledgers is a values exercise — this page refuses to do it for you.</div>
+</section>
+
+<div class="wrap foot">
+  <b>Data Centers, AI &amp; Social Trade-offs</b> — published by the <a href="https://www.aigovops-foundation.com" target="_blank" rel="noopener noreferrer">AiGovOps Foundation</a> in the Library · August 2026.<br>
+  Companion: <a href="for-more-reading.html">For more reading — every source, every caveat, and the twelve most common misquotes</a> · <a href="../index.html">← back to the Library</a><br>
+  All figures verified against the linked primary sources on 12 August 2026. Corrections welcome — file an issue in the Library repo.
+</div>
+
+<script>
+function toggleTheme(){var h=document.documentElement;h.setAttribute('data-theme',h.getAttribute('data-theme')==='light'?'dark':'light');}
+var phoneMode='all', waterMode='w';
+var GRID=458; // g CO2e per kWh, Ember 2025 global average
+var AI={google:{wh:0.24,g:0.03,water:0.26,note:'Median for a Gemini Apps text prompt, May 2025. Includes accelerators, host CPU, idle machines, PUE and embodied hardware; excludes training, storage, networking and your device. CO2 is Google\u2019s market-based 0.03 g CO2e/prompt; water is consumption, not withdrawal.',cls:'measured'},
+        epoch:{wh:0.30,g:null,water:null,note:'Typical text query on GPT-4o (\u224810x below the older estimate); long inputs rise to 2.5\u201340 Wh. Excludes training and embodied energy. CO2 derived here: Wh \u00d7 458 g CO2e/kWh.',cls:'modeled'},
+        devries:{wh:2.9,g:null,water:null,note:'\u201cAt most, 2.9 Wh per request\u201d \u2014 an explicit upper bound for GPT-3.5-era ChatGPT on A100 hardware, routinely misquoted as an average. CO2 derived here: Wh \u00d7 458 g CO2e/kWh.',cls:'estimate'}};
+var AIURL={google:'https://services.google.com/fh/files/misc/measuring_the_environmental_impact_of_delivering_ai_at_google_scale.pdf',epoch:'https://epoch.ai/gradient-updates/how-much-energy-does-chatgpt-use',devries:'https://doi.org/10.1016/j.joule.2023.09.004'};
+function fmt(n,d){return n.toLocaleString('en-US',{maximumFractionDigits:d===undefined?1:d});}
+function setPhone(m){phoneMode=m;['phDev','phAll','phOff'].forEach(function(id){document.getElementById(id).classList.remove('on')});document.getElementById(m==='dev'?'phDev':m==='all'?'phAll':'phOff').classList.add('on');calc();}
+function setWater(m){waterMode=m;document.getElementById('wW').classList.toggle('on',m==='w');document.getElementById('wC').classList.toggle('on',m==='c');
+  document.getElementById('wNum').textContent=m==='w'?'13.9 gal':'0.39 gal';
+  document.getElementById('wLabel').textContent=m==='w'?'freshwater withdrawn per kWh of US electricity':'freshwater consumed per kWh of US electricity \u2014 \u224836\u00d7 less';
+  document.getElementById('wBar').style.width=m==='w'?'100%':'2.8%';}
+function calc(){
+  var aiN=+document.getElementById('aiN').value, basis=document.getElementById('aiBasis').value;
+  var stN=+document.getElementById('stN').value, drN=+document.getElementById('drN').value;
+  var stBasis=document.getElementById('stBasis').value;
+  document.getElementById('aiV').textContent=fmt(aiN,0);
+  document.getElementById('stV').textContent=fmt(stN,0);
+  document.getElementById('drV').textContent=fmt(drN,0);
+  var a=AI[basis];
+  document.getElementById('aiNote').textContent=a.note;
+  var aiKwh=aiN*365*a.wh/1000;
+  var aiKg=(a.g!==null? aiN*365*a.g : aiKwh*GRID)/1000;
+  var aiDerived=a.g===null;
+  var stKwh=stN*52*0.077;
+  var stG=stBasis==='iea'?36:55;
+  var stKg=stN*52*stG/1000;
+  var phKg=phoneMode==='dev'?19:phoneMode==='all'?62:0;
+  var drKg=drN*400/1000;
+  var rows=[
+    {name:'AI prompts',sub:fmt(aiN,0)+'/day \u00b7 '+fmt(aiKwh,1)+' kWh/yr',kg:aiKg,cls:'ai',badge:aiDerived?'derived':'measured',url:AIURL[basis]},
+    {name:'Streaming',sub:fmt(stN,0)+' hr/wk \u00b7 '+fmt(stKwh,0)+' kWh/yr',kg:stKg,badge:'modeled',url: stBasis==='iea'?'https://www.iea.org/commentaries/the-carbon-footprint-of-streaming-video-fact-checking-the-headlines':'https://ctprodstorageaccountp.blob.core.windows.net/prod-drupal-files/documents/resource/public/Carbon-impact-of-video-streaming.pdf'},
+    {name:'Smartphone',sub:phoneMode==='dev'?'device only':phoneMode==='all'?'incl. network + data centers':'none',kg:phKg,badge:'modeled',url:'https://www.ericsson.com/en/reports-and-papers/research-papers/life-cycle-assessment-of-a-smartphone'},
+    {name:'Driving',sub:fmt(drN,0)+' mi/yr \u00b7 '+fmt(drN/22.2,0)+' gal',kg:drKg,badge:'measured',url:'https://www.epa.gov/greenvehicles/greenhouse-gas-emissions-typical-passenger-vehicle'}
+  ];
+  var max=Math.max.apply(null,rows.map(function(r){return r.kg})).valueOf()||1;
+  var html='';
+  rows.forEach(function(r){
+    html+='<div class="rrow"><div class="rname">'+r.name+'<span class="rsub">'+r.sub+'</span></div>'
+      +'<div class="rbarwrap"><div class="rbar '+(r.cls||'')+'" style="width:'+Math.max(100*r.kg/max,0.5)+'%"></div></div>'
+      +'<div class="rnum">'+fmt(r.kg,r.kg<10?1:0)+' kg<br><a class="src" href="'+r.url+'" target="_blank" rel="noopener noreferrer">source</a> <span class="badge b-'+(r.badge==='estimate'?'modeled':r.badge)+'">'+r.badge+'</span></div></div>';
+  });
+  document.getElementById('rows').innerHTML=html;
+  var hl;
+  if(drKg>0&&aiKg>0){var pct=100*aiKg/drKg;var pctStr=pct<0.01?'less than 0.01%':pct<1?'<b>'+fmt(pct,2)+'%</b>':'<b>'+fmt(pct,1)+'%</b>';hl='Your AI use \u2248 <b>'+fmt(aiKg,1)+' kg CO2e/yr</b> \u2014 '+(aiKg<drKg? pctStr+' of your driving footprint':'about <b>'+fmt(aiKg/drKg,1)+'\u00d7</b> your driving footprint')+', on the \u201c'+ (basis==='google'?'Google measured':basis==='epoch'?'Epoch modeled':'de Vries upper-bound') +'\u201d basis.';}
+  else if(aiKg>0){hl='Your AI use \u2248 <b>'+fmt(aiKg,1)+' kg CO2e/yr</b> on the selected basis.';}
+  else{hl='Slide the inputs to see your own ledger.';}
+  document.getElementById('headline').innerHTML=hl;
+  var wl='';
+  if(basis==='google'&&aiN>0){wl='Water: \u2248 <b>'+fmt(aiN*365*0.26/1000,1)+' L consumed/yr</b> for your prompts (0.26 mL each, Google measured median). For scale: generating one kWh of US electricity consumes \u22481.5 L (0.39 gal) upstream.';}
+  else if(aiN>0){wl='Water: no verified per-prompt figure exists for this basis \u2014 shown as n.a. rather than guessed.';}
+  document.getElementById('waterline').innerHTML=wl;
+}
+var SECTORS=[
+  {n:'Data centers, world \u2014 2024',s:'all workloads, not only AI \u00b7 ~1.5% of global electricity',v:415,badge:'modeled',color:'var(--warn)',url:'https://www.iea.org/reports/energy-and-ai/executive-summary',src:'IEA'},
+  {n:'Data centers, world \u2014 2025',s:'+17% in one year',v:485,badge:'modeled',color:'var(--warn)',url:'https://www.iea.org/reports/key-questions-on-energy-and-ai/executive-summary',src:'IEA 2026'},
+  {n:'Data centers, world \u2014 2030',s:'IEA Base Case \u00b7 just under 3% of global electricity',v:950,badge:'scenario',color:'var(--gold)',url:'https://www.iea.org/reports/key-questions-on-energy-and-ai/executive-summary',src:'IEA 2026'},
+  {n:'Telecom operators \u2014 2024',s:'ALL operator electricity: fixed + mobile + offices; mobile networks alone \u2248135\u2013180',v:300,badge:'measured',color:'var(--primary2)',url:'https://view.gsma.com/mobile-net-zero-2026',src:'GSMA'},
+  {n:'European aviation\u2019s clean-electricity need \u2014 2050',s:'net-zero roadmap scenario: SAF, hydrogen, carbon removal',v:762,badge:'scenario',color:'var(--gold)',url:'https://www.destination2050.eu/wp-content/uploads/2025/02/DESTINATION_2050_Roadmap_2025.pdf',src:'Destination 2050'},
+  {n:'Global dairy, on-farm electricity',s:'excludes irrigation, processing, cold chain \u2014 methane, not electricity, is dairy\u2019s real ledger',v:64.2,badge:'modeled',color:'var(--blue)',url:'https://agris.fao.org/search/en/providers/122535/records/65df79af0f3e94b9e5d8d855',src:'Mohsenimanesh 2021'}
+];
+(function(){
+  var max=950, html='';
+  SECTORS.forEach(function(x){
+    html+='<div class="sbrow"><div class="sbname">'+x.n+'<small>'+x.s+'</small></div>'
+      +'<div class="sbarwrap"><div class="sbar" style="width:'+(100*x.v/max)+'%;background:'+x.color+'"></div></div>'
+      +'<div class="sbnum">'+x.v.toLocaleString('en-US')+' TWh<br><a class="src" href="'+x.url+'" target="_blank" rel="noopener noreferrer">'+x.src+'</a> <span class="badge b-'+x.badge+'">'+x.badge+'</span></div></div>';
+  });
+  document.getElementById('sectorbars').innerHTML=html;
+})();
+calc();
+</script>
+</body>
+</html>
