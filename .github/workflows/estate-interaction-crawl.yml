@@ -85,11 +85,15 @@ jobs:
               await github.rest.issues.createComment({ owner, repo, issue_number: issue.number, body: `${head}\n\n${body}` });
             }
 
-      - name: Email the digest to the founders (armed only when ESTATE_SMTP_URL is set)
+      - name: Email the digest to the founders (Graph app-only, else SMTP, else skip)
         if: always()
         env:
+          GRAPH_TENANT_ID: ${{ secrets.GRAPH_TENANT_ID }}
+          GRAPH_CLIENT_ID: ${{ secrets.GRAPH_CLIENT_ID }}
+          GRAPH_CLIENT_SECRET: ${{ secrets.GRAPH_CLIENT_SECRET }}
+          GRAPH_SENDER: ${{ secrets.GRAPH_SENDER }}
           ESTATE_SMTP_URL: ${{ secrets.ESTATE_SMTP_URL }}
-        run: node scripts/send-digest-email.mjs --subject "🌿 Estate health — ${{ steps.digest.outputs.score }}% (${{ steps.digest.outputs.state }})" --body digest.md
+        run: node scripts/send-mail.mjs --subject "🌿 Estate health — ${{ steps.digest.outputs.score }}% (${{ steps.digest.outputs.state }})" --body digest.md
 
       - name: Fail the run if any page is red
         if: steps.crawl.outputs.estate_red == '1' || steps.digest.outputs.state == 'red'
