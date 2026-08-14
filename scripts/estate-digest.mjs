@@ -36,6 +36,7 @@ L.push(`_Every page of the estate, every button and link, opened in a real brows
 L.push('');
 L.push(`**Uptime score: ${e.score ?? '–'}%** _(share of crawled pages fully green)_ · ${e.greenPages ?? 0} pages green · **${e.redPages ?? 0} pages red** · ${e.healthy ?? 0}/${e.reporting ?? 0} properties green · ${e.dead ?? 0} dead buttons · ${e.broken ?? 0} broken links`);
 L.push(`_crawled ${data.generatedAt || 'never'} · live board: \`docs/estate-health.html\`_`);
+if (data.mail) { const md = data.mail.status === 'ok' ? '🟢' : data.mail.status === 'error' ? '🔴' : '⚪'; L.push(`_Mail: ${md} ${data.mail.status} (${data.mail.provider}) — ${data.mail.detail}_`); }
 L.push('');
 
 L.push('| Property | State | Pages 🟢 | Pages 🔴 | Dead | Broken |');

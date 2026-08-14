@@ -6584,5 +6584,11 @@
       "broken": [],
       "consoleErrors": []
     }
-  ]
+  ],
+  "mail": {
+    "provider": "none",
+    "status": "unconfigured",
+    "detail": "no mailer configured — armed, not live (set GRAPH_* or ESTATE_SMTP_URL)",
+    "checkedAt": "2026-08-14T18:06:45.782Z"
+  }
 }

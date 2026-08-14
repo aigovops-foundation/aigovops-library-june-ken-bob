@@ -27,6 +27,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
+      - name: Test the mailer logic (no browser, no network)
+        run: node --test test/mail-health.test.mjs
       - name: Install Playwright + Chromium
         run: |
           npm init -y >/dev/null 2>&1
@@ -36,6 +38,16 @@ jobs:
       - name: Crawl the estate → docs/estate-health.json
         id: crawl
         run: node scripts/estate-crawl.mjs || echo "estate_red=1" >> "$GITHUB_OUTPUT"
+
+      - name: Mail-health check (non-destructive) → board
+        if: always()
+        env:
+          GRAPH_TENANT_ID: ${{ secrets.GRAPH_TENANT_ID }}
+          GRAPH_CLIENT_ID: ${{ secrets.GRAPH_CLIENT_ID }}
+          GRAPH_CLIENT_SECRET: ${{ secrets.GRAPH_CLIENT_SECRET }}
+          GRAPH_SENDER: ${{ secrets.GRAPH_SENDER }}
+          ESTATE_SMTP_URL: ${{ secrets.ESTATE_SMTP_URL }}
+        run: node scripts/mail-health.mjs --write docs/estate-health.json
 
       - name: Build the founders' digest
         id: digest
