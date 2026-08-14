@@ -99,6 +99,7 @@ jobs:
 
       - name: Email the digest to the founders (Graph app-only, else SMTP, else skip)
         if: always()
+        continue-on-error: true   # a mail misconfig must not mask the estate red/green result
         env:
           GRAPH_TENANT_ID: ${{ secrets.GRAPH_TENANT_ID }}
           GRAPH_CLIENT_ID: ${{ secrets.GRAPH_CLIENT_ID }}
