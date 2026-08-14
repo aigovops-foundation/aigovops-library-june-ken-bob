@@ -16,37 +16,52 @@ Known identifiers (from the live tenant — these are IDs, not secrets):
 
 ---
 
-## Track A — Entra admin-consent (unblocks the hourly email + the member drip)
+## Track A — email, done the right way (Microsoft Graph app-only)
 
-The connector authenticates fine (it can read mail), but sending/drafting is denied because
-`Mail.Send` / `Mail.ReadWrite` aren't consented on the app. The OBO path requests `.default`, so
-it uses whatever **static** permissions the app registration carries — which means the two scopes
-must be **added to the app AND admin-consented**. ~3 minutes.
+Not a personal Gmail, not fragile basic-auth SMTP. A **dedicated Entra app** with the `Mail.Send`
+**application** permission, locked to one sender mailbox, with its client secret in CI. It sends
+from a real Foundation address **and** runs unattended in the hourly job. `scripts/send-mail.mjs`
+already speaks it — it just needs the four secrets. ~10 minutes, once.
 
-### If `07c030f6…` is your own App registration (most likely)
-1. **portal.azure.com** → **Microsoft Entra ID** → **App registrations** → **All applications** →
-   paste `07c030f6-5743-41b7-ba00-0a6e85f37c17`.
-2. **API permissions** → **+ Add a permission** → **Microsoft Graph** → **Delegated permissions**
-   → tick **`Mail.Send`** and **`Mail.ReadWrite`** → **Add permissions**.
-3. Click **✔ Grant admin consent for AiGovOps** → confirm. Every row should show a green
-   "Granted for AiGovOps".
+### 1. Create the mailer app (Entra admin center)
+1. **entra.microsoft.com** → **App registrations** → **New registration** → name
+   `AiGovOps Estate Mailer` → **Register**. Copy the **Application (client) ID** and the
+   **Directory (tenant) ID** (`887c5b91-…`).
+2. **API permissions** → **+ Add a permission** → **Microsoft Graph** → **Application permissions**
+   → tick **`Mail.Send`** → **Add**. Then **✔ Grant admin consent for AiGovOps** (green check).
+3. **Certificates & secrets** → **+ New client secret** → copy the **Value** now (shown once).
 
-### If it's an Enterprise Application (a vendor's multi-tenant app)
-Use the one-click admin-consent URL (sign in as a Global Admin, review, **Accept** — grants
-tenant-wide):
+### 2. Lock it to ONE mailbox (so the app can only send *as* the sender, not the whole tenant)
+Create the sender mailbox (e.g. `estate@aigovops.community`), then in **Exchange Online
+PowerShell**:
 ```
-https://login.microsoftonline.com/887c5b91-e526-4ba4-97ef-bbcdcef45420/adminconsent?client_id=07c030f6-5743-41b7-ba00-0a6e85f37c17
+New-ApplicationAccessPolicy -AppId <client-id> -PolicyScopeGroupId estate@aigovops.community `
+  -AccessRight RestrictAccess -Description "AiGovOps Estate Mailer — estate@ only"
 ```
-Caveat: consent only grants what the app **requests**. If the vendor app doesn't request
-`Mail.Send`/`Mail.ReadWrite`, they must be added to its manifest first (Enterprise applications →
-the app → Permissions), or the send scope won't appear.
+This is the guardrail: an app-only `Mail.Send` is tenant-wide by default; the policy pins it to the
+one address.
 
-### Verify
-Once consented, ask me to retry the send — the welcome + the estate-health digest go out to
-`bob.rapp@` and `ken.johnston@aigovops.community` immediately, and the **hourly digest email**
-starts working. (Alternative if you'd rather not consent Graph: set the `ESTATE_SMTP_URL` repo
-secret — e.g. `smtps://user:app-password@smtp.gmail.com:465` — and the CI job sends without the
-connector at all.)
+### 3. Put the secrets in CI (repo → Settings → Secrets and variables → Actions)
+| Secret | Value |
+|---|---|
+| `GRAPH_TENANT_ID` | `887c5b91-e526-4ba4-97ef-bbcdcef45420` |
+| `GRAPH_CLIENT_ID` | the mailer app's client ID |
+| `GRAPH_CLIENT_SECRET` | the secret **Value** from step 1.3 |
+| `GRAPH_SENDER` | `estate@aigovops.community` |
+
+The hourly workflow already reads these; the moment they exist, the digest emails to
+`bob.rapp@` and `ken.johnston@aigovops.community` send on their own — no connector, no Gmail.
+
+### Interactive sends (on-demand, from this session)
+Separately, if you want *me* to send from the **connector** (Bob.Rapp@aigovops.community) rather
+than build the app-only path, admin-consent `Mail.Send`/`Mail.ReadWrite` (delegated) on the
+connector app `07c030f6-5743-41b7-ba00-0a6e85f37c17` — but that only covers interactive sends,
+not the unattended hourly job. The Graph app-only path above is the one that does both.
+
+### Fallback
+If you'd rather use SMTP, set `ESTATE_SMTP_URL` instead (e.g.
+`smtps://estate%40aigovops.community:app-password@smtp.office365.com:587`) — but M365 often
+disables basic-auth SMTP, so the Graph app-only path is the reliable one.
 
 ---
 
