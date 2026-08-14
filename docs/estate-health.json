@@ -1,0 +1,265 @@
+{
+  "generatedAt": "2026-08-13T22:49:31.220Z",
+  "$comment": "SEED — replaced hourly by estate-interaction-crawl.yml (crawls the live estate). Foundation row is a real crawl of the current site.",
+  "estate": {
+    "properties": 7,
+    "reporting": 1,
+    "healthy": 1,
+    "red": 0,
+    "greenPages": 25,
+    "redPages": 0,
+    "dead": 0,
+    "broken": 0,
+    "consoleErrorPages": 0,
+    "score": 100
+  },
+  "sites": [
+    {
+      "name": "Foundation site",
+      "base": "https://www.aigovops-foundation.com",
+      "gated": false,
+      "status": "green",
+      "ranAt": "2026-08-13T22:49:31.220Z",
+      "summary": {
+        "pages": 25,
+        "greenPages": 25,
+        "redPages": 0,
+        "ok": 604,
+        "dead": 0,
+        "broken": 0,
+        "external": 192,
+        "delegated": 5,
+        "consoleErrorPages": 0,
+        "healthy": true
+      },
+      "pageHealth": [
+        {
+          "path": "/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green"
+        },
+        {
+          "path": "/alpha.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green"
+        },
+        {
+          "path": "/blog.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green"
+        },
+        {
+          "path": "/blog/agentic-frontiers-retrospective.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green"
+        },
+        {
+          "path": "/blog/agentic-hell.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green"
+        },
+        {
+          "path": "/blog/eu-ai-act-90-day-roadmap.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green"
+        },
+        {
+          "path": "/blog/flow-to-trust-loop.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green"
+        },
+        {
+          "path": "/blog/healthcare-ai-governance-spring-2026.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green"
+        },
+        {
+          "path": "/blog/nist-ai-rmf-vs-real-world.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green"
+        },
+        {
+          "path": "/blog/no-more-anonymous-ghosts.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green"
+        },
+        {
+          "path": "/blog/stop-writing-for-humans.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green"
+        },
+        {
+          "path": "/blog/what-is-aigovops.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green"
+        },
+        {
+          "path": "/community.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green"
+        },
+        {
+          "path": "/ecosystem.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green"
+        },
+        {
+          "path": "/f-ai-friday.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green"
+        },
+        {
+          "path": "/founders.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green"
+        },
+        {
+          "path": "/frameworks.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green"
+        },
+        {
+          "path": "/get-to-yes.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green"
+        },
+        {
+          "path": "/index.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green"
+        },
+        {
+          "path": "/jeeves-brief.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green"
+        },
+        {
+          "path": "/jeeves-estate.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green"
+        },
+        {
+          "path": "/press.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green"
+        },
+        {
+          "path": "/recover-to-yes.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green"
+        },
+        {
+          "path": "/stay-at-yes.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green"
+        },
+        {
+          "path": "/support.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green"
+        }
+      ],
+      "dead": [],
+      "broken": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "Community platform",
+      "base": "https://community.aigovops-foundation.com",
+      "gated": true,
+      "status": "pending",
+      "note": "gated surface — needs an authenticated session to crawl",
+      "summary": null
+    },
+    {
+      "name": "Library (rendered)",
+      "base": "https://community.aigovops-foundation.com/library/",
+      "gated": true,
+      "status": "pending",
+      "note": "gated surface — needs an authenticated session to crawl",
+      "summary": null
+    },
+    {
+      "name": "Beacon",
+      "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
+      "gated": false,
+      "status": "pending",
+      "note": "awaiting first CI crawl",
+      "summary": null
+    },
+    {
+      "name": "Umbrella",
+      "base": "https://aigovops-foundation.github.io/umbrella-govops/",
+      "gated": false,
+      "status": "pending",
+      "note": "awaiting first CI crawl",
+      "summary": null
+    },
+    {
+      "name": "Lantern",
+      "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
+      "gated": false,
+      "status": "pending",
+      "note": "awaiting first CI crawl",
+      "summary": null
+    },
+    {
+      "name": "NCW AI Camp",
+      "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
+      "gated": false,
+      "status": "pending",
+      "note": "awaiting first CI crawl",
+      "summary": null
+    }
+  ]
+}

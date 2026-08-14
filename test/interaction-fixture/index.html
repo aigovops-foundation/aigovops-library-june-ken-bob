@@ -1,0 +1,21 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Interaction fixture</title></head>
+<body>
+  <!-- GOOD: should all classify WIRED/LINK -->
+  <a href="good.html">Good internal link</a>
+  <a href="https://example.com">External link</a>
+  <a href="#sec">Anchor to existing</a>
+  <h2 id="sec">Section</h2>
+  <button onclick="void 0">Wired via onclick</button>
+  <button id="js-wired">Wired via addEventListener</button>
+  <div class="card" style="cursor:pointer"><a href="good.html">covered child link</a></div>
+  <a href="good.html"><span style="cursor:pointer">span inside a link</span></a>
+  <form action="good.html"><button type="submit">Submit</button></form>
+
+  <!-- BAD: planted defects the crawler must catch -->
+  <a href="does-not-exist.html">Broken internal link</a>   <!-- BROKEN: 404 -->
+  <a href="#nope">Anchor to missing target</a>              <!-- DEAD: no #nope -->
+  <button>Dead button (no handler)</button>                 <!-- DEAD -->
+  <div class="btn" style="cursor:pointer">Dead card (no handler) &rarr;</div> <!-- DEAD -->
+
+  <script>document.getElementById('js-wired').addEventListener('click', () => {});</script>
+</body></html>
