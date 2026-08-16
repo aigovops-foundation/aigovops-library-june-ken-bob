@@ -23,7 +23,14 @@ const G = {
 };
 
 async function check() {
-  if (G.tenant && G.client && G.secret && G.sender) {
+  // Match send-mail.mjs precedence so the board shows the provider that will actually send.
+  const graphReady = !!(G.tenant && G.client && G.secret && G.sender);
+  const smtpReady = !!process.env.ESTATE_SMTP_URL;
+  const forced = (process.env.MAIL_PROVIDER || '').toLowerCase();
+  const provider = forced === 'smtp' ? 'smtp' : forced === 'graph' ? 'graph'
+    : smtpReady ? 'smtp' : graphReady ? 'graph' : 'none';
+  if (provider === 'smtp' && smtpReady) return { provider: 'smtp', status: 'ok', detail: 'SMTP relay configured (send verified at send time)' };
+  if (provider === 'graph' && graphReady) {
     try {
       const r = await fetch(`https://login.microsoftonline.com/${encodeURIComponent(G.tenant)}/oauth2/v2.0/token`, {
         method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' },

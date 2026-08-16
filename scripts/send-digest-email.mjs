@@ -32,7 +32,10 @@ if (!recipients.length) { console.log('send-digest-email: no recipients (set fou
 const u = new URL(URL_);
 const host = u.hostname, port = Number(u.port || 465);
 const user = decodeURIComponent(u.username), pass = decodeURIComponent(u.password);
-const from = opt('from', `AiGovOps Estate <${user}>`);
+// The From/envelope address is NOT the SMTP username. SendGrid's user is the literal
+// "apikey"; the From must be a sender you verified in SendGrid. Set ESTATE_MAIL_FROM.
+const fromAddr = process.env.ESTATE_MAIL_FROM || user;
+const from = opt('from', `AiGovOps Estate <${fromAddr}>`);
 const subject = opt('subject', 'AiGovOps — estate health');
 const body = readFileSync(opt('body', 'digest.md'), 'utf8');
 
@@ -64,7 +67,7 @@ function smtp(sock) {
     await send('AUTH LOGIN'); await expect(334);
     await send(b64(user)); await expect(334);
     await send(b64(pass)); await expect(235);
-    await send(`MAIL FROM:<${user}>`); await expect(250);
+    await send(`MAIL FROM:<${fromAddr}>`); await expect(250);
     for (const [cmd, code] of rcptCmds) { await send(cmd); await expect(code); }
     await send('DATA'); await expect(354);
     await send(msg + '\r\n.'); await expect(250);

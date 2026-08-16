@@ -47,6 +47,8 @@ jobs:
           GRAPH_CLIENT_SECRET: ${{ secrets.GRAPH_CLIENT_SECRET }}
           GRAPH_SENDER: ${{ secrets.GRAPH_SENDER }}
           ESTATE_SMTP_URL: ${{ secrets.ESTATE_SMTP_URL }}
+          ESTATE_MAIL_FROM: ${{ secrets.ESTATE_MAIL_FROM }}
+          MAIL_PROVIDER: ${{ vars.MAIL_PROVIDER }}
         run: node scripts/mail-health.mjs --write docs/estate-health.json
 
       - name: Build the founders' digest
@@ -106,6 +108,8 @@ jobs:
           GRAPH_CLIENT_SECRET: ${{ secrets.GRAPH_CLIENT_SECRET }}
           GRAPH_SENDER: ${{ secrets.GRAPH_SENDER }}
           ESTATE_SMTP_URL: ${{ secrets.ESTATE_SMTP_URL }}
+          ESTATE_MAIL_FROM: ${{ secrets.ESTATE_MAIL_FROM }}
+          MAIL_PROVIDER: ${{ vars.MAIL_PROVIDER }}
         run: node scripts/send-mail.mjs --subject "🌿 Estate health — ${{ steps.digest.outputs.score }}% (${{ steps.digest.outputs.state }})" --body digest.md
 
       - name: Fail the run if any page is red

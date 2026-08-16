@@ -20,6 +20,11 @@ test('reports SMTP when ESTATE_SMTP_URL is set (no network needed)', () => {
   assert.match(out, /mail-health: ok \(smtp\)/);
 });
 
+test('SMTP wins when both SMTP and Graph are configured (relay is explicit)', () => {
+  const out = run({ ESTATE_SMTP_URL: 'smtps://apikey:SG.k@smtp.sendgrid.net:465', GRAPH_TENANT_ID: 't', GRAPH_CLIENT_ID: 'c', GRAPH_CLIENT_SECRET: 's', GRAPH_SENDER: 'x@y.com' });
+  assert.match(out, /mail-health: ok \(smtp\)/);
+});
+
 test('never prints the client secret', () => {
   const out = run({ GRAPH_TENANT_ID: 't', GRAPH_CLIENT_ID: 'c', GRAPH_CLIENT_SECRET: 'SUPERSECRETVALUE', GRAPH_SENDER: 'estate@x.com' });
   assert.ok(!out.includes('SUPERSECRETVALUE'), 'the secret must never appear in output');
