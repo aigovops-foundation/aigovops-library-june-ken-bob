@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-08-16T22:09:40.600Z",
+  "generatedAt": "2026-08-16T23:10:33.975Z",
   "estate": {
     "properties": 7,
     "reporting": 5,
     "healthy": 1,
     "red": 4,
-    "greenPages": 240,
-    "redPages": 28,
+    "greenPages": 239,
+    "redPages": 29,
     "dead": 609,
-    "broken": 4,
+    "broken": 5,
     "consoleErrorPages": 0,
-    "score": 90
+    "score": 89
   },
   "sites": [
     {
@@ -18,7 +18,7 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-16T22:04:19.885Z",
+      "ranAt": "2026-08-16T23:04:52.936Z",
       "summary": {
         "pages": 26,
         "greenPages": 26,
@@ -266,14 +266,14 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-16T22:06:10.766Z",
+      "ranAt": "2026-08-16T23:06:52.366Z",
       "summary": {
         "pages": 80,
-        "greenPages": 71,
-        "redPages": 9,
-        "ok": 3472,
+        "greenPages": 70,
+        "redPages": 10,
+        "ok": 3471,
         "dead": 203,
-        "broken": 0,
+        "broken": 1,
         "external": 1551,
         "delegated": 15,
         "consoleErrorPages": 0,
@@ -316,6 +316,14 @@
           "path": "/aigovops-beacon/lab-200.html",
           "dead": 147,
           "broken": 0,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/checklist.html",
+          "dead": 0,
+          "broken": 1,
           "jsErrors": 0,
           "status": "red",
           "loadError": null
@@ -498,14 +506,6 @@
         },
         {
           "path": "/aigovops-ncw-ai-camp/centerpiece.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/checklist.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -2344,7 +2344,14 @@
           "reason": "clickable affordance with no link and no handler"
         }
       ],
-      "broken": [],
+      "broken": [
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/checklist.html",
+          "text": "✅ This checklist, blank The same six rows as a fill-in sheet — one page per tabl",
+          "href": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/downloads/first-30-days-checklist.pdf",
+          "reason": "internal link → HTTP 503"
+        }
+      ],
       "consoleErrors": []
     },
     {
@@ -2352,7 +2359,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-16T22:07:54.150Z",
+      "ranAt": "2026-08-16T23:08:46.180Z",
       "summary": {
         "pages": 80,
         "greenPages": 71,
@@ -4438,7 +4445,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-16T22:07:57.213Z",
+      "ranAt": "2026-08-16T23:08:49.474Z",
       "summary": {
         "pages": 2,
         "greenPages": 0,
@@ -4503,7 +4510,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-16T22:09:40.524Z",
+      "ranAt": "2026-08-16T23:10:33.903Z",
       "summary": {
         "pages": 80,
         "greenPages": 72,
