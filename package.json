@@ -8,6 +8,7 @@
   "scripts": {
     "build:docs": "node scripts/build-docs.mjs",
     "audit:repos": "node scripts/repo-audit.mjs --open",
+    "estate:exec": "node scripts/estate-exec-digest.mjs",
     "audit:repos:offline": "node scripts/repo-audit.mjs --repos-file audit/repos.inventory.json --open",
     "test": "cd core && node --test"
   },
