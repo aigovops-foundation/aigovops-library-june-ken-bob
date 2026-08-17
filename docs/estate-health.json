@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-08-17T17:13:50.518Z",
+  "generatedAt": "2026-08-17T18:14:45.296Z",
   "estate": {
     "properties": 7,
     "reporting": 5,
     "healthy": 1,
     "red": 4,
-    "greenPages": 237,
-    "redPages": 31,
+    "greenPages": 240,
+    "redPages": 28,
     "dead": 609,
-    "broken": 7,
+    "broken": 4,
     "consoleErrorPages": 0,
-    "score": 88
+    "score": 90
   },
   "sites": [
     {
@@ -18,7 +18,7 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-17T17:08:21.626Z",
+      "ranAt": "2026-08-17T18:09:27.108Z",
       "summary": {
         "pages": 26,
         "greenPages": 26,
@@ -266,14 +266,14 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-17T17:10:15.879Z",
+      "ranAt": "2026-08-17T18:11:15.896Z",
       "summary": {
         "pages": 80,
-        "greenPages": 68,
-        "redPages": 12,
-        "ok": 3469,
+        "greenPages": 71,
+        "redPages": 9,
+        "ok": 3472,
         "dead": 203,
-        "broken": 3,
+        "broken": 0,
         "external": 1551,
         "delegated": 15,
         "consoleErrorPages": 0,
@@ -321,22 +321,6 @@
           "loadError": null
         },
         {
-          "path": "/aigovops-ncw-ai-camp/checklist.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/es/workshop.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
           "path": "/aigovops-ncw-ai-camp/jeeves-demo.html",
           "dead": 23,
           "broken": 0,
@@ -364,14 +348,6 @@
           "path": "/aigovops-ncw-ai-camp/kit/ksr-cards.html",
           "dead": 6,
           "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/workshop.html",
-          "dead": 0,
-          "broken": 1,
           "jsErrors": 0,
           "status": "red",
           "loadError": null
@@ -529,6 +505,14 @@
           "loadError": null
         },
         {
+          "path": "/aigovops-ncw-ai-camp/checklist.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/aigovops-ncw-ai-camp/community-resources.html",
           "dead": 0,
           "broken": 0,
@@ -554,6 +538,14 @@
         },
         {
           "path": "/aigovops-ncw-ai-camp/downloads/hint-logs-spec.md",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/es/workshop.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -898,6 +890,14 @@
         },
         {
           "path": "/aigovops-ncw-ai-camp/whats-new.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/workshop.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -2344,26 +2344,7 @@
           "reason": "clickable affordance with no link and no handler"
         }
       ],
-      "broken": [
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/workshop.html",
-          "text": "🗓️ The 30-day getting-started guide What to do in week one, week two, and the r",
-          "href": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/downloads/get-started-30-days.pdf",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/checklist.html",
-          "text": "🗓️ The 30-day guide Getting started in four moves — week one through the rest o",
-          "href": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/downloads/get-started-30-days.pdf",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/es/workshop.html",
-          "text": "🗓️ La guía de inicio de 30 días Qué hacer en la primera semana, en la segunda y",
-          "href": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/downloads/get-started-30-days.pdf",
-          "reason": "internal link → HTTP 503"
-        }
-      ],
+      "broken": [],
       "consoleErrors": []
     },
     {
@@ -2371,7 +2352,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-17T17:12:01.990Z",
+      "ranAt": "2026-08-17T18:12:57.717Z",
       "summary": {
         "pages": 80,
         "greenPages": 71,
@@ -4457,7 +4438,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-17T17:12:05.096Z",
+      "ranAt": "2026-08-17T18:13:00.655Z",
       "summary": {
         "pages": 2,
         "greenPages": 0,
@@ -4522,7 +4503,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-17T17:13:50.446Z",
+      "ranAt": "2026-08-17T18:14:45.234Z",
       "summary": {
         "pages": 80,
         "greenPages": 72,
