@@ -71,12 +71,21 @@ async function sendGraph() {
   return 0;
 }
 
-if (G.tenant && G.client && G.secret && G.sender) {
+// Provider precedence: MAIL_PROVIDER wins if set; otherwise an explicit SMTP relay
+// (ESTATE_SMTP_URL) takes priority over Graph — you configured a relay, you mean it —
+// then Graph app-only, then nothing.
+const graphReady = !!(G.tenant && G.client && G.secret && G.sender);
+const smtpReady = !!process.env.ESTATE_SMTP_URL;
+const forced = (process.env.MAIL_PROVIDER || '').toLowerCase();
+const provider = forced === 'smtp' ? 'smtp' : forced === 'graph' ? 'graph'
+  : smtpReady ? 'smtp' : graphReady ? 'graph' : 'none';
+
+if (provider === 'graph' && graphReady) {
   process.exit(await sendGraph());
-} else if (process.env.ESTATE_SMTP_URL) {
+} else if (provider === 'smtp' && smtpReady) {
   const r = spawnSync('node', [join(HERE, 'send-digest-email.mjs'), '--subject', subject, '--body', bodyFile, ...(toArg ? ['--to', toArg] : [])], { stdio: 'inherit', env: process.env });
   process.exit(r.status || 0);
 } else {
-  console.log('send-mail: no mail provider configured (set GRAPH_* for Microsoft Graph app-only, or ESTATE_SMTP_URL for SMTP) — skipping. This is the paused, human-armed state.');
+  console.log('send-mail: no mail provider configured (set ESTATE_SMTP_URL for SMTP/SendGrid, or GRAPH_* for Microsoft Graph app-only) — skipping. This is the paused, human-armed state.');
   process.exit(0);
 }
