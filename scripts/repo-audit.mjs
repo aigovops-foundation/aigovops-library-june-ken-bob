@@ -165,12 +165,27 @@ async function enumerateLive(owners) {
 
 /* ── deep per-repo checks ───────────────────────────────────────────────────── */
 
-const RISKY_ROOT = [
+// Matched against the BASENAME, at any depth. Anchoring these to the repo root was a mistake in
+// the first cut: it silently half-worked, because the tree call recursed anyway (see deepCheck),
+// so `^\.env` matched a root .env but never config/.env — inconsistent coverage that read as
+// thorough. Basename matching is honest about what it does: find the shape wherever it lives.
+const RISKY_FILE = [
   /^\.env(\..+)?$/i, /\.pem$/i, /\.key$/i, /^id_rsa/i, /^secrets?\..*json$/i,
   /^secrets?\.(ya?ml|txt|env)$/i, /^credentials(\..+)?$/i, /service[-_]?account.*\.json$/i,
   /^\.npmrc$/i, /^\.netrc$/i, /^gha-creds-.*\.json$/i,
 ];
+// Shapes that LOOK like the above and are meant to be committed. A scanner that cries wolf on a
+// public key teaches its reader to skim the BLOCKER list, which is the one list that must never be
+// skimmed. Both of these were real false positives on the first live run: aigovops-beacon's
+// audit/keys/public-key.pem (a public key — publishing it is the point) and Omni-Rapp's
+// .env.example (a template with no values).
+const BENIGN_FILE = [
+  /^\.env\.(example|sample|template|dist|defaults?)$/i,
+  /\.pub$/i, /public[-_.].*\.pem$/i, /.*[-_.]public\.pem$/i,
+  /^known_hosts$/i,
+];
 const CI_DIR = '.github/workflows';
+const basename = (p) => p.split('/').pop();
 
 async function deepCheck(repo) {
   const [owner, name] = repo.full_name.split('/');
@@ -194,9 +209,20 @@ async function deepCheck(repo) {
 
   if (m.size === 0) { d.notes.push('repository is empty (0 KB)'); d.empty = true; }
 
-  // Root tree — one call answers most of the checklist.
-  const tree = await api(`/repos/${owner}/${name}/git/trees/${encodeURIComponent(m.default_branch || 'main')}?recursive=0`);
-  const rootNames = tree.ok && Array.isArray(tree.data.tree) ? tree.data.tree.map(t => t.path) : [];
+  // The whole tree in one call. NOTE: GitHub treats ANY value of `recursive` as true — `recursive=0`
+  // recursed, which is how a nested public-key.pem surfaced from a scan documented as root-only.
+  // Recursing is what we actually want for the credential sweep, so this asks for it plainly.
+  const tree = await api(`/repos/${owner}/${name}/git/trees/${encodeURIComponent(m.default_branch || 'main')}?recursive=1`);
+  const paths = tree.ok && Array.isArray(tree.data.tree) ? tree.data.tree.map(t => t.path) : [];
+  // GitHub caps a tree response and sets `truncated`. Without this the sweep would quietly cover
+  // part of a large repo and report the same clean result as a fully-scanned one.
+  if (tree.ok && tree.data.truncated) {
+    d.truncated = true;
+    d.notes.push('file tree truncated by the API — the credential sweep did not see every file');
+  }
+  // Root-level presence checks stay root-level: a nested path contains a slash, so these never
+  // match a README buried three directories down and call the repo documented.
+  const rootNames = paths.filter(p => !p.includes('/'));
   const has = (re) => rootNames.some(n => re.test(n));
 
   d.checks.readme = has(/^readme(\.md|\.rst|\.txt)?$/i);
@@ -206,7 +232,11 @@ async function deepCheck(repo) {
   d.checks.description = Boolean(m.description && m.description.trim());
   d.checks.topics = (m.topics || []).length > 0;
 
-  for (const n of rootNames) if (RISKY_ROOT.some(re => re.test(n))) d.riskyFiles.push(n);
+  for (const p of paths) {
+    const base = basename(p);
+    if (BENIGN_FILE.some(re => re.test(base))) continue;
+    if (RISKY_FILE.some(re => re.test(base))) d.riskyFiles.push(p);
+  }
 
   // CI, security policy, dependabot, codeowners live under .github/
   const ghDir = await api(`/repos/${owner}/${name}/contents/.github`);
@@ -549,16 +579,33 @@ function renderReport(state) {
   p(rule());
   p();
   for (const line of wrap(
-    'This audit reads metadata and root-level file listings through the GitHub REST API. It does ' +
-    'not read file contents beyond package.json, does not scan git history, and does not verify ' +
-    'that any credential-shaped file actually contains a credential — it flags the shape and ' +
-    'leaves the judgement to a human. Branch protection and org settings are not checked (they ' +
-    'need admin scope). Nothing here is a substitute for GitHub secret scanning.', 74)) p('  ' + line);
+    'This audit reads repository metadata and the full file TREE (names only) through the GitHub ' +
+    'REST API. Presence checks — README, LICENSE, .gitignore — are root-level; the credential ' +
+    'sweep matches filename shapes at any depth. It does not read file contents beyond ' +
+    'package.json, does not scan git history, and does not verify that any credential-shaped file ' +
+    'actually contains a credential — it flags the shape and leaves the judgement to a human. ' +
+    'Branch protection and org settings are not checked (they need admin scope). Nothing here is ' +
+    'a substitute for GitHub secret scanning.', 74)) p('  ' + line);
   p();
-  if (apiErrors.length) {
-    p(`  API calls that did not return (${apiErrors.length}):`);
-    for (const e of apiErrors.slice(0, 25)) p(`    · ${e}`);
-    if (apiErrors.length > 25) p(`    … and ${apiErrors.length - 25} more`);
+  const truncatedRepos = repos.filter(r => r.deep?.truncated);
+  if (truncatedRepos.length) {
+    p(`  Trees truncated by the API — credential sweep incomplete on these (${truncatedRepos.length}):`);
+    for (const r of truncatedRepos) p(`    · ${r.full_name}`);
+    p();
+  }
+  // An empty repo answers its tree call with 409. That is the check working, not the check
+  // failing — listing it beside real outages buries the outages in noise.
+  const benign = apiErrors.filter(e => /409 .*Git Repository is empty/i.test(e));
+  const realErrors = apiErrors.filter(e => !benign.includes(e));
+  if (realErrors.length) {
+    p(`  API calls that did not return (${realErrors.length}) — these repos are UNDER-reported:`);
+    for (const e of realErrors.slice(0, 25)) p(`    · ${e}`);
+    if (realErrors.length > 25) p(`    … and ${realErrors.length - 25} more`);
+    p('    Re-run to pick these up; a 5xx here is GitHub being slow, not a clean repo.');
+    p();
+  }
+  if (benign.length) {
+    p(`  (${benign.length} further 409s are empty repositories — expected, already counted above.)`);
     p();
   }
   p(`  Text export : ${OUT}`);
