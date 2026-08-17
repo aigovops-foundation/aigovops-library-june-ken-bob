@@ -19,6 +19,13 @@ GITHUB_TOKEN=$(gh auth token) npm run audit:repos
 npm run audit:repos:offline
 ```
 
+Both npm shortcuts pass `--open`: when the run finishes it copies the report to the
+clipboard and reveals it in the file manager, so the last step is *paste* rather than hunt
+for a path. A report nobody opens is a report nobody read. Every run also prints the
+`cat` / `pbcopy` / `open -R` commands, so the handoff works even when `--open` can't (no
+clipboard tool, headless CI). Nothing there can fail a run — a missing `pbcopy` must never
+turn a successful audit into a failed one.
+
 Outputs land in `audit/`, which is **gitignored on purpose**. The report enumerates
 private repository names and this repo is public; the script and its config are source,
 the reports are not. Same lesson as `keys/*.pem` — the ignore rule covers the whole
