@@ -21,6 +21,9 @@
 //
 // Options
 //   --owners a,b        owners to audit          (default: repo-audit.config.json)
+//   --only a/b,c/d      audit ONLY these repos, by full name. Skips enumeration, so it is
+//                       seconds rather than minutes — the way to re-check the handful GitHub
+//                       5xx'd on last run without re-scanning the whole estate.
 //   --repos-file PATH   JSON {repos:[...]} or newline-delimited owner/name list.
 //                       Skips live enumeration — use when the API is unreachable.
 //   --out PATH          text export               (default audit/repo-audit-<stamp>.txt)
@@ -58,6 +61,7 @@ const config = existsSync(CONFIG_PATH) ? JSON.parse(readFileSync(CONFIG_PATH, 'u
 const TOKEN = process.env.GITHUB_TOKEN || process.env.GH_TOKEN || '';
 const OWNERS = (opt('owners', (config.owners || ['bobrapp', 'aigovops-foundation']).join(','))).split(',').map(s => s.trim()).filter(Boolean);
 const REPOS_FILE = opt('repos-file', null);
+const ONLY = (opt('only', '') || '').split(',').map(s => s.trim()).filter(Boolean);
 const STALE_DAYS = Number(opt('stale-days', config.staleDays ?? 90));
 const DORMANT_DAYS = Number(opt('dormant-days', config.dormantDays ?? 365));
 const CONCURRENCY = Number(opt('concurrency', 6));
@@ -471,6 +475,14 @@ function renderReport(state) {
   p(`  Repos found    : ${repos.length}`);
   p(`  Tier           : ${mode.deep ? 'DEEP (per-repo contents checked)' : 'INVENTORY ONLY'}`);
   p(`  Source of list : ${mode.source}`);
+  if (mode.partial) {
+    p();
+    p('  ┌─ PARTIAL RUN ────────────────────────────────────────────────────────┐');
+    p('  │ Only the repos named on the command line were audited. The counts    │');
+    p('  │ and findings below describe THOSE repos, not the estate. Nothing     │');
+    p('  │ here says anything about the repos that were not asked for.          │');
+    p('  └──────────────────────────────────────────────────────────────────────┘');
+  }
   if (!mode.deep) {
     p();
     p('  ┌─ READ THIS BEFORE TRUSTING THE SCORE ────────────────────────────────┐');
@@ -637,7 +649,17 @@ async function main() {
   const mode = { deep: false, source: '', reason: '' };
   let raw = [];
 
-  if (REPOS_FILE) {
+  if (ONLY.length) {
+    const bad = ONLY.filter(n => !/^[^/\s]+\/[^/\s]+$/.test(n));
+    if (bad.length) {
+      console.error(`--only wants owner/name, got: ${bad.join(', ')}`);
+      process.exit(2);
+    }
+    raw = ONLY.map(full_name => ({ full_name }));
+    mode.source = `--only (${raw.length} named repos)`;
+    mode.partial = true;
+    log(`auditing ${raw.length} named repo(s)`);
+  } else if (REPOS_FILE) {
     raw = readReposFile(REPOS_FILE);
     mode.source = `${REPOS_FILE} (${raw.length} entries)`;
     log(`repo list: ${raw.length} from ${REPOS_FILE}`);
@@ -660,7 +682,9 @@ async function main() {
   const repos = raw.map(r => {
     const [owner, name] = r.full_name.split('/');
     return { ...r, owner, name, visibility: r.visibility || (r.private ? 'private' : r.private === false ? 'public' : undefined) };
-  }).filter(r => OWNERS.includes(r.owner));
+    // An explicitly named repo is always audited. Silently dropping it for not matching the
+    // configured owners would answer "nothing to report" to a question about a specific repo.
+  }).filter(r => ONLY.length || OWNERS.includes(r.owner));
 
   if (WANT_DEEP && TOKEN) {
     log(`deep-checking ${repos.length} repos (concurrency ${CONCURRENCY})…`);
