@@ -29,6 +29,13 @@ name: reusable-repo-sync-check
 #     how the Yes-in-a-Day prototype stayed laptop-only for a month)
 # A local-only working tree is caught by the operator-side check in the estate runbook, not here.
 # This lane says so rather than implying full coverage.
+#
+# A branch carrying an OPEN pull request is none of those things. It is live work, already on the
+# remote, already visible to every reviewer — the precise opposite of stranded. Such branches are
+# skipped and counted in a note, never flagged. The lane learned this the hard way: it ran red for
+# days on claude/next-steps-a4rclw, a long-lived branch with five merged PRs behind it and a sixth
+# still open, and the advice it gave — delete the branch — would have destroyed the open PR's work.
+# "A merged PR points at this branch" is not the same question as "is this branch finished."
 
 on:
   workflow_call:
@@ -82,6 +89,9 @@ jobs:
           done < branch_names.txt
           echo "]" >> branches.json
           gh api "repos/$REPO/pulls?state=closed&per_page=100" 2>/dev/null > closed_prs.json || echo "[]" > closed_prs.json
+          # Head refs of OPEN PRs. Guarded exactly like the captures above — an unguarded capture
+          # here would kill the lane under `bash -e` the moment a repo had no open PRs at all.
+          gh api "repos/$REPO/pulls?state=open&per_page=100" --jq '.[].head.ref' 2>/dev/null > open_pr_heads.txt || : > open_pr_heads.txt
           gh api "repos/$REPO/commits?sha=$default_branch&per_page=1" 2>/dev/null > head_commit.json || echo "[]" > head_commit.json
 
           DEFAULT_BRANCH="$default_branch" python3 - <<'PY'
@@ -105,6 +115,11 @@ jobs:
           closed = load("closed_prs.json", [])
           head = load("head_commit.json", [])
 
+          try:
+              open_heads = {l.strip() for l in open("open_pr_heads.txt") if l.strip()}
+          except Exception:
+              open_heads = set()
+
           findings, notes = [], []
 
           # An empty default branch means the repo is a placeholder — whatever it was created to
@@ -120,7 +135,7 @@ jobs:
               if pr.get("merged_at") and pr.get("head", {}).get("ref")
           }
 
-          stale, merged_leftovers = [], []
+          stale, merged_leftovers, active = [], [], []
           for b in branches:
               name = b.get("name", "")
               if name in ignore:
@@ -129,7 +144,12 @@ jobs:
               age = None
               if iso:
                   age = (now - datetime.fromisoformat(iso.replace("Z", "+00:00"))).days
-              if name in merged_unmerged_heads:
+              # An open PR settles it before any other test runs. A branch under review is neither
+              # stranded nor a merged leftover, however many merged PRs sit behind it — and telling
+              # someone to delete it would throw away the work the PR exists to land.
+              if name in open_heads:
+                  active.append((name, age))
+              elif name in merged_unmerged_heads:
                   merged_leftovers.append((name, age))
               elif age is not None and age > max_age:
                   stale.append((name, age))
@@ -147,6 +167,13 @@ jobs:
           if stale:
               worst = ", ".join(f"{n} ({a}d)" for n, a in sorted(stale, key=lambda x: -x[1])[:5])
               notes.append(f"{len(stale)} branch(es) with no commit in {max_age:.0f}+ days: {worst}")
+          # Say what was skipped and why. A silent exclusion is how a lane starts reading green for
+          # reasons nobody can reconstruct six months later.
+          if active:
+              which = ", ".join(f"{n} ({a}d)" if a is not None else n
+                                for n, a in sorted(active, key=lambda x: -(x[1] or 0))[:5])
+              notes.append(f"{len(active)} branch(es) skipped — they carry an open PR, so they are "
+                           f"live work under review, not stranded: {which}")
 
           print(f"repo-sync-check: {len(branches)} branch(es) on {default_branch}\n")
           for n in notes:
