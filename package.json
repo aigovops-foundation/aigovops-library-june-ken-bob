@@ -4,8 +4,11 @@
   "private": true,
   "type": "module",
   "description": "AiGovOps Library — the whole set (demo, design book, blueprint, plan, core).",
+  "license": "Apache-2.0",
   "scripts": {
     "build:docs": "node scripts/build-docs.mjs",
+    "audit:repos": "node scripts/repo-audit.mjs",
+    "audit:repos:offline": "node scripts/repo-audit.mjs --repos-file audit/repos.inventory.json",
     "test": "cd core && node --test"
   },
   "dependencies": {
