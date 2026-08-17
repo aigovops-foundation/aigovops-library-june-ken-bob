@@ -33,6 +33,8 @@
 //   --dormant-days N    archive-candidate line    (default 365)
 //   --include-archived  audit archived repos too  (default: listed, not scored)
 //   --concurrency N     parallel repo fetches     (default 6)
+//   --open              copy the finished report to the clipboard and reveal it in the
+//                       file manager, so the last step is paste rather than hunt for a path
 //   --quiet             no progress on stderr
 //
 // Token: GITHUB_TOKEN or GH_TOKEN. Read-only; never written anywhere. If the token is
@@ -43,6 +45,7 @@
 // report at all. A missing deep tier is never silently green.
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
 
@@ -67,6 +70,7 @@ const DORMANT_DAYS = Number(opt('dormant-days', config.dormantDays ?? 365));
 const CONCURRENCY = Number(opt('concurrency', 6));
 const INCLUDE_ARCHIVED = flag('include-archived');
 const QUIET = flag('quiet');
+const OPEN = flag('open');
 const WANT_DEEP = flag('deep') ? true : flag('no-deep') ? false : Boolean(TOKEN);
 
 const STAMP = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
@@ -727,7 +731,35 @@ async function main() {
   log(`wrote ${JSON_OUT}`);
   const blockers = findings.filter(f => f.severity === 'BLOCKER').length;
   log(`${findings.length} findings — ${blockers} blocker(s)`);
+
+  // A report nobody opens is a report nobody read. Writing a path to stderr and stopping
+  // leaves the last step — actually getting the thing in front of a human — as homework.
+  handoff(OUT);
+
   process.exit(blockers ? 1 : 0);
+}
+
+// Put the finished report where the human can act on it: on the clipboard, and revealed in
+// the file manager. Best-effort by design — a missing pbcopy must never fail an audit that
+// otherwise succeeded, so every failure here is swallowed and the paths are printed instead.
+function handoff(path) {
+  const mac = process.platform === 'darwin';
+  const copy = mac ? ['pbcopy', []] : ['xclip', ['-selection', 'clipboard']];
+  const reveal = mac ? ['open', ['-R', path]] : ['xdg-open', [dirname(path)]];
+
+  if (OPEN) {
+    try {
+      const r = spawnSync(copy[0], copy[1], { input: readFileSync(path), stdio: ['pipe', 'ignore', 'ignore'] });
+      if (!r.error && r.status === 0) log('report copied to the clipboard — paste it straight into chat');
+    } catch { /* no clipboard tool; the printed command below still works */ }
+    try { spawnSync(reveal[0], reveal[1], { stdio: 'ignore' }); } catch { /* no file manager */ }
+  }
+
+  log('');
+  log('  to read it      cat "' + path + '"');
+  log('  to copy it      ' + (mac ? `cat "${path}" | pbcopy` : `cat "${path}" | xclip -selection clipboard`));
+  log('  to reveal it    ' + (mac ? `open -R "${path}"` : `xdg-open "${dirname(path)}"`));
+  log('  (or re-run with --open to do the last two automatically)');
 }
 
 main().catch(err => { console.error(err); process.exit(2); });

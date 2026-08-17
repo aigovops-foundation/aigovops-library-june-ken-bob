@@ -7,8 +7,8 @@
   "license": "Apache-2.0",
   "scripts": {
     "build:docs": "node scripts/build-docs.mjs",
-    "audit:repos": "node scripts/repo-audit.mjs",
-    "audit:repos:offline": "node scripts/repo-audit.mjs --repos-file audit/repos.inventory.json",
+    "audit:repos": "node scripts/repo-audit.mjs --open",
+    "audit:repos:offline": "node scripts/repo-audit.mjs --repos-file audit/repos.inventory.json --open",
     "test": "cd core && node --test"
   },
   "dependencies": {
