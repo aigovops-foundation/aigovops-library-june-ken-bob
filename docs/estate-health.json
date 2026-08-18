@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-18T01:37:04.963Z",
+  "generatedAt": "2026-08-18T02:30:49.837Z",
   "estate": {
     "properties": 7,
     "reporting": 5,
@@ -18,7 +18,7 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-18T01:31:46.803Z",
+      "ranAt": "2026-08-18T02:25:25.456Z",
       "summary": {
         "pages": 26,
         "greenPages": 26,
@@ -266,7 +266,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-18T01:33:34.219Z",
+      "ranAt": "2026-08-18T02:27:17.456Z",
       "summary": {
         "pages": 80,
         "greenPages": 71,
@@ -1666,7 +1666,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-18T01:35:17.072Z",
+      "ranAt": "2026-08-18T02:29:01.670Z",
       "summary": {
         "pages": 80,
         "greenPages": 71,
@@ -3066,7 +3066,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-18T01:35:20.113Z",
+      "ranAt": "2026-08-18T02:29:04.708Z",
       "summary": {
         "pages": 2,
         "greenPages": 0,
@@ -3131,7 +3131,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-18T01:37:04.888Z",
+      "ranAt": "2026-08-18T02:30:49.775Z",
       "summary": {
         "pages": 80,
         "greenPages": 72,
