@@ -166,6 +166,10 @@ const greenOrigins = origins.filter(o => !(o.primary.dead || []).length && !(o.p
 const redIssues = issues.filter(i => i.severity === 'red');
 const pending = (data.sites || []).filter(s => s.gated);
 
+// Stable per-run ids so a founder can answer "fix R2" instead of pasting a URL. Numbered
+// over the red list in display order, so the id in the mail is the id on the page.
+issues.filter(i => i.severity === 'red').forEach((i, n) => { i.id = `R${n + 1}`; });
+
 const stamp = data.generatedAt || new Date().toISOString();
 const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
@@ -175,7 +179,7 @@ const card = (i) => `
   <article class="issue ${i.severity}">
     <div class="issue-head">
       <span class="pill ${i.severity}">${i.severity === 'red' ? 'Fix now' : i.severity === 'amber' ? 'Decide' : 'Noise'}</span>
-      <h3>${esc(i.title)}</h3>
+      <h3>${i.id ? `<span class="rid">${i.id}</span> ` : ''}${esc(i.title)}</h3>
     </div>
     <p class="where">${esc(i.where)}</p>
     <p class="plain">${esc(i.plain)}</p>
@@ -227,6 +231,8 @@ const html = `<!doctype html>
   .pill.amber{background:#f7eeda;color:var(--amber)}
   .pill.note{background:#eeeae0;color:var(--muted)}
   .where{color:var(--muted);font-size:.9rem;margin:.1rem 0 .9rem}
+  .rid{font:600 .8rem/1 "IBM Plex Mono",monospace;color:var(--red);
+       background:#f6e5e0;padding:.2rem .4rem;border-radius:4px;margin-right:.3rem}
   .plain{margin:0 0 1.1rem}
   .fix{background:#f4f1e7;border-radius:8px;padding:1rem 1.2rem}
   .fix h4{font:600 .78rem/1 "IBM Plex Mono",monospace;text-transform:uppercase;
@@ -302,11 +308,87 @@ mkdirSync(dirname(HTML_OUT), { recursive: true });
 writeFileSync(HTML_OUT, html, 'utf8');
 console.error(`wrote ${HTML_OUT}`);
 
+/* ── markdown, for the pinned issue and the founders' mail ─────────────────
+   The raw crawl dump ran to hundreds of near-identical lines, so nobody read past the
+   first screen. This is the same information at one line per cause, each carrying the fix
+   and a reply the founders can actually send back. */
+
+const reds = issues.filter(i => i.severity === 'red');
+const ambers = issues.filter(i => i.severity === 'amber');
+const md = [];
+md.push(`## ${reds.length ? '🔴' : '🟢'} Estate health — ${reds.length} thing${reds.length === 1 ? '' : 's'} to fix`);
+md.push('');
+md.push(`_Crawled ${stamp}. The raw crawl counted **${rawDead} dead controls**; that is **${uniqueDead}** counted once per mirrored property. Grouped by cause, here is the whole estate._`);
+md.push('');
+if (reds.length) {
+  md.push('### 🔴 Red — one line each, with the fix');
+  md.push('');
+  for (const i of reds) {
+    md.push(`**${i.id} · ${i.title}**  `);
+    md.push(`↳ _${i.where}_  `);
+    md.push(`↳ **Fix:** ${i.fix}  `);
+    md.push(`↳ ${i.canFix ? `Reply **\`fix ${i.id}\`** and Claude prepares it as a pull request for you to merge.` : '_Needs a human decision first._'}`);
+    md.push('');
+  }
+} else {
+  md.push('### 🟢 Nothing red. Every control on every crawled page works.');
+  md.push('');
+}
+if (ambers.length) {
+  md.push('### 🟠 Waiting on a decision from you');
+  md.push('');
+  for (const i of ambers) md.push(`- **${i.title}** — ${i.where}. ${i.fix}`);
+  md.push('');
+}
+md.push('### 🟢 Green');
+md.push('');
+for (const o of greenOrigins) md.push(`- **${o.primary.name}** — ${o.primary.summary?.greenPages ?? 0} pages, every control working`);
+for (const o of origins.filter(o => !greenOrigins.includes(o))) {
+  md.push(`- **${o.primary.name}** — ${o.primary.summary?.greenPages ?? 0} pages green${o.mirrors.length ? ` (mirrored by ${o.mirrors.join(', ')})` : ''}`);
+}
+if (pending.length) {
+  md.push('');
+  md.push(`_Not checked: ${pending.map(s => s.name).join(', ')} — gated, needs an authenticated crawl. Silence there means nobody looked._`);
+}
+md.push('');
+md.push('_Full evidence: `docs/estate-health.html`. Formatted HTML and PDF are attached to this run._');
+md.push('<!-- estate-health-digest -->');
+
+const MD_OUT = resolve(opt('markdown', join(ROOT, 'audit', 'estate-exec.md')));
+mkdirSync(dirname(MD_OUT), { recursive: true });
+writeFileSync(MD_OUT, md.join('\n'), 'utf8');
+console.error(`wrote ${MD_OUT}`);
+
+// A fingerprint of the CAUSES, not the counts. The hourly job mails and comments only when
+// this changes, so a red that is already known and already reported stops re-notifying every
+// hour — the behaviour that taught everyone to ignore the digest. A new cause, a fixed
+// cause, or a flip to green all change it; another hour of the same thing does not.
+if (argv.includes('--fingerprint')) {
+  const key = issues.filter(i => i.severity === 'red')
+    .map(i => `${i.title}|${i.where}`).sort().join('\n');
+  let h = 5381;
+  for (let n = 0; n < key.length; n++) h = ((h * 33) ^ key.charCodeAt(n)) >>> 0;
+  process.stdout.write(key ? h.toString(16).padStart(8, '0') : 'allgreen');
+  process.exit(0);
+}
+
+if (argv.includes('--status')) {
+  process.stdout.write(reds.length ? 'red' : 'green');
+  process.exit(0);
+}
+
 /* ── PDF, or a clear statement that there isn't one ─────────────────────── */
 
 let pdfOk = false;
 try {
-  const { chromium } = await import('playwright-core');
+  // The hourly workflow installs `playwright`; a local dev box may only have
+  // `playwright-core`. Try both rather than silently skipping the PDF every hour because
+  // of which package name happened to be installed.
+  let chromium;
+  for (const pkg of ['playwright', 'playwright-core']) {
+    try { ({ chromium } = await import(pkg)); break; } catch { /* try the next */ }
+  }
+  if (!chromium) throw new Error('neither playwright nor playwright-core is installed');
   const browser = await chromium.launch({ executablePath: process.env.PW_EXECUTABLE_PATH || undefined });
   const page = await browser.newPage();
   await page.goto('file://' + HTML_OUT, { waitUntil: 'load' });

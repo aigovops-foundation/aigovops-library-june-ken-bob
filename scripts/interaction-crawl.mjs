@@ -59,9 +59,22 @@ const ORIGIN = new URL(BASE).origin;
 
 // ---- helpers ----------------------------------------------------------------
 const sameOrigin = (u) => { try { return new URL(u, ORIGIN).origin === ORIGIN; } catch { return false; } };
+// ALLOW-LIST the extensions a browser renders as a page, rather than deny-listing the ones
+// it does not. The deny-list was the wrong shape: it named png/pdf/zip and missed .rego,
+// .xlsx and .pptx, so those downloads were queued as PAGES. page.goto() on a download
+// aborts the navigation, the abort was recorded as a load error, and three working
+// downloads were reported as three red pages on every property, every hour. A deny-list
+// silently mis-handles every file type nobody thought of; an allow-list fails closed.
+//
+// Excluding them here costs no coverage: every linked target, asset or not, is still
+// fetched and status-checked below, so a genuinely broken download is still caught as a
+// BROKEN link. It simply stops being rendered, and stops being a fake red page.
 const isHtmlPath = (u) => {
-  try { const p = new URL(u, ORIGIN).pathname; return !/\.(png|jpe?g|svg|webp|gif|css|js|json|xml|ico|pdf|zip|woff2?|ttf|mp4|webm)$/i.test(p); }
-  catch { return false; }
+  try {
+    const p = new URL(u, ORIGIN).pathname;
+    const ext = (p.match(/\.([a-z0-9]+)$/i) || [, ''])[1].toLowerCase();
+    return ext === '' || ext === 'html' || ext === 'htm' || ext === 'xhtml';
+  } catch { return false; }
 };
 const stripHash = (u) => { try { const x = new URL(u, ORIGIN); x.hash = ''; return x.href; } catch { return u; } };
 
