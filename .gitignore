@@ -53,3 +53,7 @@ docs/audio/onboarding/.build/
 
 # the rendered tour video — too large for git/Pages; host on YouTube/Vimeo
 docs/audio/onboarding/*.mp4
+
+# exec digest renders (regenerated from estate-health.json, not source)
+docs/estate-exec.html
+docs/estate-exec.pdf
