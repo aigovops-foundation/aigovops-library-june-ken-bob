@@ -1,0 +1,93 @@
+name: estate-fix-request
+
+# Lets a founder answer the hourly digest with `fix R1` and have the work picked up.
+#
+# WHAT THIS DOES AND DELIBERATELY DOES NOT DO. It acknowledges the request, records it as a
+# tracked issue with the exact defect and proposed fix, and assigns it. It does NOT edit a
+# live site. Every red in the digest lives in a different repository and reaches real
+# visitors; a comment is not the place from which a site silently changes. Prepare and
+# propose; a human merges. So this turns a one-word reply into a scoped, assigned piece of
+# work — which is the slow part — and leaves shipping where it belongs.
+#
+# Only the founders can trigger it. Anyone can comment on a public repo, and "reply to make
+# the estate change" is exactly the shape you do not want open to the internet.
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  issues: write
+
+jobs:
+  handle:
+    # Cheap guards first so the job does not even start on ordinary chatter.
+    if: |
+      github.event.issue.state == 'open'
+      && contains(github.event.issue.labels.*.name, 'estate-health')
+      && startsWith(github.event.comment.body, 'fix ')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check the commenter is a founder
+        id: who
+        env:
+          ACTOR: ${{ github.event.comment.user.login }}
+        run: |
+          # founders.json is the single roster the estate already uses for the digest, so
+          # there is one list to keep current rather than a second copy living in CI.
+          # EXACT match against handles[] — not a substring search over the whole file. This
+          # is an authorization gate: a login like "ken" would substring-match an unrelated
+          # name or email, and "close enough" is not a basis for letting someone direct work.
+          if node -e "
+            const f = require('./founders.json');
+            const handles = (f.handles || []).map(h => String(h).replace(/^@/, '').toLowerCase());
+            process.exit(handles.includes(process.env.ACTOR.toLowerCase()) ? 0 : 1);
+          "; then echo "ok=1" >> "$GITHUB_OUTPUT"; else echo "ok=0" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Acknowledge and open the work
+        if: steps.who.outputs.ok == '1'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const comment = context.payload.comment.body.trim();
+            const id = (comment.match(/^fix\s+(R\d+)/i) || [])[1];
+            const issueNumber = context.payload.issue.number;
+            if (!id) {
+              await github.rest.issues.createComment({ owner, repo, issue_number: issueNumber,
+                body: 'I could not read a red id in that. Reply `fix R1` (the id is on each red line of the digest).' });
+              return;
+            }
+            // Pull the named red straight out of the digest body, so the tracked issue quotes
+            // what the founder actually saw rather than a paraphrase of it.
+            const body = context.payload.issue.body || '';
+            const line = body.split('\n').find(l => l.includes(`**${id} ·`)) || '';
+            const title = line.replace(/\*\*/g, '').replace(/^.*?·\s*/, '').trim() || `Estate red ${id}`;
+            const block = body.split('\n').filter(l => l.includes(`**${id} ·`) || (l.startsWith('↳') && body.indexOf(l) > body.indexOf(`**${id} ·`)))
+              .slice(0, 4).join('\n');
+            const created = await github.rest.issues.create({
+              owner, repo,
+              title: `fix(estate): ${title}`.slice(0, 120),
+              labels: ['estate-health', 'requested-fix'],
+              assignees: [context.payload.comment.user.login],
+              body: [
+                `Requested by @${context.payload.comment.user.login} from the hourly digest (#${issueNumber}).`,
+                '', '### The red, as reported', '', block || `_${id} — see #${issueNumber}._`,
+                '', '### Boundary', '',
+                'This issue is the request. The fix ships as a pull request for a human to merge —',
+                'nothing here changes a live site on its own.',
+              ].join('\n'),
+            });
+            await github.rest.issues.createComment({ owner, repo, issue_number: issueNumber,
+              body: `👍 Picked up **${id}** → #${created.data.number}, assigned to you. It ships as a PR to merge, not straight to the site.` });
+
+      - name: Decline politely if not a founder
+        if: steps.who.outputs.ok != '1'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            await github.rest.issues.createComment({ owner, repo, issue_number: context.payload.issue.number,
+              body: `Thanks — fix requests are limited to the founders listed in \`founders.json\`. Please raise an issue instead and it will be triaged.` });
