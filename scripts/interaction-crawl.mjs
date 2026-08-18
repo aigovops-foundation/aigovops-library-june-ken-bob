@@ -119,7 +119,31 @@ const COLLECT = `(() => {
     const forId = el.getAttribute('for');
     const labelTargetOk = forId ? !!document.getElementById(forId) : null;
     let anchorTargetOk = null;
-    if (rawHref && rawHref.startsWith('#')) anchorTargetOk = rawHref === '#' ? false : !!document.querySelector(rawHref) || !!document.getElementsByName(rawHref.slice(1)).length;
+    // Resolve #fragments by ID, never by querySelector(rawHref). An href like
+    // "#aigovops_lantern.bundle.BundleError" is a perfectly legal ID, but as a CSS
+    // SELECTOR it reads as id=aigovops_lantern with classes bundle and BundleError —
+    // so querySelector returns null and a working permalink is reported DEAD. Worse,
+    // a fragment containing "(" or ")" (mkdocstrings emits those) makes the selector
+    // INVALID and querySelector THROWS, which killed the whole page.evaluate and left
+    // the page red with zero elements collected. Both symptoms hit the Lantern API
+    // docs at once: 32 dead anchors across 4 pages, 14 of them Material's own heading
+    // permalinks, which link to the heading they sit inside and cannot be dead.
+    // getElementById takes a literal ID — no CSS parsing, and it cannot throw.
+    if (rawHref && rawHref.startsWith('#')) {
+      if (rawHref === '#') anchorTargetOk = false;
+      else {
+        let frag = rawHref.slice(1);
+        try { frag = decodeURIComponent(frag); } catch { /* keep raw */ }
+        anchorTargetOk = !!document.getElementById(frag)
+          || !!document.getElementsByName(frag).length
+          // "#top" (and "#") are browser built-ins meaning "scroll to the document top";
+          // there is no element to find, and the control genuinely works.
+          || frag.toLowerCase() === 'top';
+        if (!anchorTargetOk) {
+          try { anchorTargetOk = !!document.querySelector('#' + CSS.escape(frag)); } catch { /* not a resolvable id */ }
+        }
+      }
+    }
     out.push({
       tag,
       role: el.getAttribute('role') || null,
