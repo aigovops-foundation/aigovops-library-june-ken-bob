@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-08-18T13:24:43.517Z",
+  "generatedAt": "2026-08-18T14:18:58.051Z",
   "estate": {
     "properties": 7,
     "reporting": 5,
     "healthy": 1,
     "red": 4,
-    "greenPages": 247,
-    "redPages": 24,
+    "greenPages": 246,
+    "redPages": 26,
     "dead": 365,
-    "broken": 0,
+    "broken": 4,
     "consoleErrorPages": 0,
-    "score": 91
+    "score": 90
   },
   "sites": [
     {
@@ -18,7 +18,7 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-18T13:19:09.815Z",
+      "ranAt": "2026-08-18T14:12:57.096Z",
       "summary": {
         "pages": 26,
         "greenPages": 26,
@@ -266,20 +266,36 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-18T13:20:59.218Z",
+      "ranAt": "2026-08-18T14:14:55.245Z",
       "summary": {
-        "pages": 78,
-        "greenPages": 72,
-        "redPages": 6,
-        "ok": 3895,
+        "pages": 79,
+        "greenPages": 71,
+        "redPages": 8,
+        "ok": 3842,
         "dead": 105,
-        "broken": 0,
-        "external": 1622,
+        "broken": 4,
+        "external": 1417,
         "delegated": 15,
         "consoleErrorPages": 0,
         "healthy": false
       },
       "pageHealth": [
+        {
+          "path": "/",
+          "dead": 0,
+          "broken": 2,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-beacon/index.html",
+          "dead": 0,
+          "broken": 2,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": null
+        },
         {
           "path": "/aigovops-beacon/lab-100.html",
           "dead": 21,
@@ -362,14 +378,6 @@
         },
         {
           "path": "/aigovops-beacon/howibuilt.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-beacon/index.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1642,7 +1650,32 @@
           "reason": "clickable affordance with no link and no handler"
         }
       ],
-      "broken": [],
+      "broken": [
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-beacon/index.html",
+          "text": "",
+          "href": "https://aigovops-foundation.github.io/",
+          "reason": "internal link → HTTP 404"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-beacon/index.html",
+          "text": "",
+          "href": "https://aigovops-foundation.github.io/",
+          "reason": "internal link → HTTP 404"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/",
+          "text": "",
+          "href": "https://aigovops-foundation.github.io/",
+          "reason": "internal link → HTTP 404"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/",
+          "text": "",
+          "href": "https://aigovops-foundation.github.io/",
+          "reason": "internal link → HTTP 404"
+        }
+      ],
       "consoleErrors": []
     },
     {
@@ -1650,7 +1683,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-18T13:22:44.159Z",
+      "ranAt": "2026-08-18T14:16:47.175Z",
       "summary": {
         "pages": 78,
         "greenPages": 72,
@@ -3034,7 +3067,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-18T13:22:59.253Z",
+      "ranAt": "2026-08-18T14:17:02.690Z",
       "summary": {
         "pages": 11,
         "greenPages": 5,
@@ -3371,7 +3404,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-18T13:24:43.442Z",
+      "ranAt": "2026-08-18T14:18:57.975Z",
       "summary": {
         "pages": 78,
         "greenPages": 72,
