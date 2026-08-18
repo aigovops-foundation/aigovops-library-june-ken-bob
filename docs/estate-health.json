@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-08-18T02:30:49.837Z",
+  "generatedAt": "2026-08-18T03:21:11.991Z",
   "estate": {
     "properties": 7,
     "reporting": 5,
     "healthy": 1,
     "red": 4,
-    "greenPages": 240,
-    "redPages": 28,
-    "dead": 315,
-    "broken": 4,
+    "greenPages": 246,
+    "redPages": 25,
+    "dead": 365,
+    "broken": 0,
     "consoleErrorPages": 0,
-    "score": 90
+    "score": 91
   },
   "sites": [
     {
@@ -18,30 +18,30 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-18T02:25:25.456Z",
+      "ranAt": "2026-08-18T03:14:57.864Z",
       "summary": {
         "pages": 26,
-        "greenPages": 26,
-        "redPages": 0,
-        "ok": 607,
+        "greenPages": 25,
+        "redPages": 1,
+        "ok": 605,
         "dead": 0,
         "broken": 0,
-        "external": 192,
+        "external": 184,
         "delegated": 14,
         "consoleErrorPages": 0,
         "healthy": true
       },
       "pageHealth": [
         {
-          "path": "/",
+          "path": "/alpha.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
-          "status": "green",
-          "loadError": null
+          "status": "red",
+          "loadError": "Error: page.goto: net::ERR_ABORTED at https://www.aigovops-foundation.com/alpha.html\nCall log:\n  - navigating to \"https://www.aigovops-foundation.com/alpha.html\", waiting until \"domcontentloaded\"\n"
         },
         {
-          "path": "/alpha.html",
+          "path": "/",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -266,44 +266,20 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-18T02:27:17.456Z",
+      "ranAt": "2026-08-18T03:16:58.531Z",
       "summary": {
-        "pages": 80,
-        "greenPages": 71,
-        "redPages": 9,
-        "ok": 3570,
+        "pages": 78,
+        "greenPages": 72,
+        "redPages": 6,
+        "ok": 3895,
         "dead": 105,
         "broken": 0,
-        "external": 1551,
+        "external": 1622,
         "delegated": 15,
         "consoleErrorPages": 0,
         "healthy": false
       },
       "pageHealth": [
-        {
-          "path": "/aigovops-beacon/blueprint/artifacts/example.rego",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": "Error: page.goto: Download is starting\nCall log:\n  - navigating to \"https://aigovops-foundation.github.io/aigovops-beacon/blueprint/artifacts/example.rego\", waiting until \"domcontentloaded\"\n"
-        },
-        {
-          "path": "/aigovops-beacon/downloads/AI_Model_Inventory_Template.xlsx",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": "Error: page.goto: Download is starting\nCall log:\n  - navigating to \"https://aigovops-foundation.github.io/aigovops-beacon/downloads/AI_Model_Inventory_Template.xlsx\", waiting until \"domcontentloaded\"\n"
-        },
-        {
-          "path": "/aigovops-beacon/downloads/AIGovOps_Beacon_Pitch.pptx",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": "Error: page.goto: Download is starting\nCall log:\n  - navigating to \"https://aigovops-foundation.github.io/aigovops-beacon/downloads/AIGovOps_Beacon_Pitch.pptx\", waiting until \"domcontentloaded\"\n"
-        },
         {
           "path": "/aigovops-beacon/lab-100.html",
           "dead": 21,
@@ -370,38 +346,6 @@
         },
         {
           "path": "/aigovops-beacon/blueprint/artifacts/",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-beacon/blueprint/artifacts/blueprint.md",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-beacon/blueprint/artifacts/crosswalk.nist-ai-rmf.yaml",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-beacon/blueprint/artifacts/gate.example.yaml",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-beacon/blueprint/artifacts/govern.yml",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -537,7 +481,15 @@
           "loadError": null
         },
         {
-          "path": "/aigovops-ncw-ai-camp/downloads/hint-logs-spec.md",
+          "path": "/aigovops-ncw-ai-camp/es/checklist.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/es/community-resources.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -585,6 +537,22 @@
           "loadError": null
         },
         {
+          "path": "/aigovops-ncw-ai-camp/kit/failure-cards.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/harms-worksheet.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/aigovops-ncw-ai-camp/kit/helpers.html",
           "dead": 0,
           "broken": 0,
@@ -609,7 +577,23 @@
           "loadError": null
         },
         {
+          "path": "/aigovops-ncw-ai-camp/kit/layers-placemat.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/aigovops-ncw-ai-camp/kit/prompts.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/scout-deep-dive.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1666,44 +1650,20 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-18T02:29:01.670Z",
+      "ranAt": "2026-08-18T03:18:55.651Z",
       "summary": {
-        "pages": 80,
-        "greenPages": 71,
-        "redPages": 9,
-        "ok": 3570,
+        "pages": 78,
+        "greenPages": 72,
+        "redPages": 6,
+        "ok": 3895,
         "dead": 105,
         "broken": 0,
-        "external": 1551,
+        "external": 1622,
         "delegated": 15,
         "consoleErrorPages": 0,
         "healthy": false
       },
       "pageHealth": [
-        {
-          "path": "/aigovops-beacon/blueprint/artifacts/example.rego",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": "Error: page.goto: Download is starting\nCall log:\n  - navigating to \"https://aigovops-foundation.github.io/aigovops-beacon/blueprint/artifacts/example.rego\", waiting until \"domcontentloaded\"\n"
-        },
-        {
-          "path": "/aigovops-beacon/downloads/AI_Model_Inventory_Template.xlsx",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": "Error: page.goto: Download is starting\nCall log:\n  - navigating to \"https://aigovops-foundation.github.io/aigovops-beacon/downloads/AI_Model_Inventory_Template.xlsx\", waiting until \"domcontentloaded\"\n"
-        },
-        {
-          "path": "/aigovops-beacon/downloads/AIGovOps_Beacon_Pitch.pptx",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": "Error: page.goto: Download is starting\nCall log:\n  - navigating to \"https://aigovops-foundation.github.io/aigovops-beacon/downloads/AIGovOps_Beacon_Pitch.pptx\", waiting until \"domcontentloaded\"\n"
-        },
         {
           "path": "/aigovops-beacon/lab-100.html",
           "dead": 21,
@@ -1770,38 +1730,6 @@
         },
         {
           "path": "/aigovops-beacon/blueprint/artifacts/",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-beacon/blueprint/artifacts/blueprint.md",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-beacon/blueprint/artifacts/crosswalk.nist-ai-rmf.yaml",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-beacon/blueprint/artifacts/gate.example.yaml",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-beacon/blueprint/artifacts/govern.yml",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1937,7 +1865,15 @@
           "loadError": null
         },
         {
-          "path": "/aigovops-ncw-ai-camp/downloads/hint-logs-spec.md",
+          "path": "/aigovops-ncw-ai-camp/es/checklist.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/es/community-resources.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1985,6 +1921,22 @@
           "loadError": null
         },
         {
+          "path": "/aigovops-ncw-ai-camp/kit/failure-cards.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/harms-worksheet.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/aigovops-ncw-ai-camp/kit/helpers.html",
           "dead": 0,
           "broken": 0,
@@ -2009,7 +1961,23 @@
           "loadError": null
         },
         {
+          "path": "/aigovops-ncw-ai-camp/kit/layers-placemat.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/aigovops-ncw-ai-camp/kit/prompts.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/scout-deep-dive.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -3066,24 +3034,64 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-18T02:29:04.708Z",
+      "ranAt": "2026-08-18T03:19:11.637Z",
       "summary": {
-        "pages": 2,
-        "greenPages": 0,
-        "redPages": 2,
-        "ok": 0,
-        "dead": 0,
-        "broken": 4,
-        "external": 6,
+        "pages": 11,
+        "greenPages": 5,
+        "redPages": 6,
+        "ok": 420,
+        "dead": 50,
+        "broken": 0,
+        "external": 41,
         "delegated": 0,
         "consoleErrorPages": 0,
         "healthy": false
       },
       "pageHealth": [
         {
-          "path": "/",
+          "path": "/aigovops-lantern/api/data-model/",
           "dead": 0,
-          "broken": 2,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": "collect: Error: page.evaluate: SyntaxError: Failed to execute 'querySelector' on 'Document': '#1-beacon-evidence-bundle' is not a valid selector.\n    at eval ("
+        },
+        {
+          "path": "/aigovops-lantern/api/flows/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": "collect: Error: page.evaluate: SyntaxError: Failed to execute 'querySelector' on 'Document': '#1-read-a-bundle-cli-today-web-in-v02' is not a valid selector.\n "
+        },
+        {
+          "path": "/aigovops-lantern/python/bundle/",
+          "dead": 11,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-lantern/python/cli/",
+          "dead": 7,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-lantern/python/render/",
+          "dead": 7,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-lantern/python/ucid/",
+          "dead": 7,
+          "broken": 0,
           "jsErrors": 0,
           "status": "red",
           "loadError": null
@@ -3091,39 +3099,271 @@
         {
           "path": "/aigovops-lantern/",
           "dead": 0,
-          "broken": 2,
+          "broken": 0,
           "jsErrors": 0,
-          "status": "red",
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-lantern/api/actions/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-lantern/api/openapi/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-lantern/cli/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-lantern/roadmap/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
           "loadError": null
         }
       ],
-      "dead": [],
-      "broken": [
+      "dead": [
         {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/",
-          "text": "",
-          "href": "https://aigovops-foundation.github.io/",
-          "reason": "internal link → HTTP 404"
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
+          "tag": "a",
+          "text": "bundle",
+          "cls": "md-nav__link",
+          "reason": "anchor \"#aigovops_lantern.bundle\" has no matching target"
         },
         {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/",
-          "text": "",
-          "href": "https://aigovops-foundation.github.io/",
-          "reason": "internal link → HTTP 404"
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
+          "tag": "a",
+          "text": "BundleError",
+          "cls": "md-nav__link",
+          "reason": "anchor \"#aigovops_lantern.bundle.BundleError\" has no matching target"
         },
         {
-          "page": "https://aigovops-foundation.github.io/",
-          "text": "",
-          "href": "https://aigovops-foundation.github.io/",
-          "reason": "internal link → HTTP 404"
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
+          "tag": "a",
+          "text": "Receipt",
+          "cls": "md-nav__link",
+          "reason": "anchor \"#aigovops_lantern.bundle.Receipt\" has no matching target"
         },
         {
-          "page": "https://aigovops-foundation.github.io/",
-          "text": "",
-          "href": "https://aigovops-foundation.github.io/",
-          "reason": "internal link → HTTP 404"
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
+          "tag": "a",
+          "text": "is_signed",
+          "cls": "md-nav__link",
+          "reason": "anchor \"#aigovops_lantern.bundle.Receipt.is_signed\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
+          "tag": "a",
+          "text": "Bundle",
+          "cls": "md-nav__link",
+          "reason": "anchor \"#aigovops_lantern.bundle.Bundle\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
+          "tag": "a",
+          "text": "load",
+          "cls": "md-nav__link",
+          "reason": "anchor \"#aigovops_lantern.bundle.load\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
+          "tag": "a",
+          "text": "¶",
+          "cls": "headerlink",
+          "reason": "anchor \"#aigovops_lantern.bundle.BundleError\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
+          "tag": "a",
+          "text": "¶",
+          "cls": "headerlink",
+          "reason": "anchor \"#aigovops_lantern.bundle.Receipt\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
+          "tag": "a",
+          "text": "¶",
+          "cls": "headerlink",
+          "reason": "anchor \"#aigovops_lantern.bundle.Receipt.is_signed\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
+          "tag": "a",
+          "text": "¶",
+          "cls": "headerlink",
+          "reason": "anchor \"#aigovops_lantern.bundle.Bundle\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
+          "tag": "a",
+          "text": "¶",
+          "cls": "headerlink",
+          "reason": "anchor \"#aigovops_lantern.bundle.load\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/render/",
+          "tag": "a",
+          "text": "render",
+          "cls": "md-nav__link",
+          "reason": "anchor \"#aigovops_lantern.render\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/render/",
+          "tag": "a",
+          "text": "render_bundle",
+          "cls": "md-nav__link",
+          "reason": "anchor \"#aigovops_lantern.render.render_bundle\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/render/",
+          "tag": "a",
+          "text": "render_diff",
+          "cls": "md-nav__link",
+          "reason": "anchor \"#aigovops_lantern.render.render_diff\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/render/",
+          "tag": "a",
+          "text": "receipt_oneliner",
+          "cls": "md-nav__link",
+          "reason": "anchor \"#aigovops_lantern.render.receipt_oneliner\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/render/",
+          "tag": "a",
+          "text": "¶",
+          "cls": "headerlink",
+          "reason": "anchor \"#aigovops_lantern.render.render_bundle\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/render/",
+          "tag": "a",
+          "text": "¶",
+          "cls": "headerlink",
+          "reason": "anchor \"#aigovops_lantern.render.render_diff\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/render/",
+          "tag": "a",
+          "text": "¶",
+          "cls": "headerlink",
+          "reason": "anchor \"#aigovops_lantern.render.receipt_oneliner\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/ucid/",
+          "tag": "a",
+          "text": "ucid",
+          "cls": "md-nav__link",
+          "reason": "anchor \"#aigovops_lantern.ucid\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/ucid/",
+          "tag": "a",
+          "text": "UcidError",
+          "cls": "md-nav__link",
+          "reason": "anchor \"#aigovops_lantern.ucid.UcidError\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/ucid/",
+          "tag": "a",
+          "text": "Ucid",
+          "cls": "md-nav__link",
+          "reason": "anchor \"#aigovops_lantern.ucid.Ucid\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/ucid/",
+          "tag": "a",
+          "text": "load_registry",
+          "cls": "md-nav__link",
+          "reason": "anchor \"#aigovops_lantern.ucid.load_registry\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/ucid/",
+          "tag": "a",
+          "text": "¶",
+          "cls": "headerlink",
+          "reason": "anchor \"#aigovops_lantern.ucid.UcidError\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/ucid/",
+          "tag": "a",
+          "text": "¶",
+          "cls": "headerlink",
+          "reason": "anchor \"#aigovops_lantern.ucid.Ucid\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/ucid/",
+          "tag": "a",
+          "text": "¶",
+          "cls": "headerlink",
+          "reason": "anchor \"#aigovops_lantern.ucid.load_registry\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/cli/",
+          "tag": "a",
+          "text": "cli",
+          "cls": "md-nav__link",
+          "reason": "anchor \"#aigovops_lantern.cli\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/cli/",
+          "tag": "a",
+          "text": "cmd_read",
+          "cls": "md-nav__link",
+          "reason": "anchor \"#aigovops_lantern.cli.cmd_read\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/cli/",
+          "tag": "a",
+          "text": "cmd_diff",
+          "cls": "md-nav__link",
+          "reason": "anchor \"#aigovops_lantern.cli.cmd_diff\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/cli/",
+          "tag": "a",
+          "text": "cmd_explain",
+          "cls": "md-nav__link",
+          "reason": "anchor \"#aigovops_lantern.cli.cmd_explain\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/cli/",
+          "tag": "a",
+          "text": "¶",
+          "cls": "headerlink",
+          "reason": "anchor \"#aigovops_lantern.cli.cmd_read\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/cli/",
+          "tag": "a",
+          "text": "¶",
+          "cls": "headerlink",
+          "reason": "anchor \"#aigovops_lantern.cli.cmd_diff\" has no matching target"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/cli/",
+          "tag": "a",
+          "text": "¶",
+          "cls": "headerlink",
+          "reason": "anchor \"#aigovops_lantern.cli.cmd_explain\" has no matching target"
         }
       ],
+      "broken": [],
       "consoleErrors": []
     },
     {
@@ -3131,36 +3371,20 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-18T02:30:49.775Z",
+      "ranAt": "2026-08-18T03:21:11.929Z",
       "summary": {
-        "pages": 80,
+        "pages": 78,
         "greenPages": 72,
-        "redPages": 8,
-        "ok": 3881,
+        "redPages": 6,
+        "ok": 3895,
         "dead": 105,
         "broken": 0,
-        "external": 1610,
+        "external": 1622,
         "delegated": 15,
         "consoleErrorPages": 0,
         "healthy": false
       },
       "pageHealth": [
-        {
-          "path": "/aigovops-beacon/downloads/AI_Model_Inventory_Template.xlsx",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": "Error: page.goto: Download is starting\nCall log:\n  - navigating to \"https://aigovops-foundation.github.io/aigovops-beacon/downloads/AI_Model_Inventory_Template.xlsx\", waiting until \"domcontentloaded\"\n"
-        },
-        {
-          "path": "/aigovops-beacon/downloads/AIGovOps_Beacon_Pitch.pptx",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": "Error: page.goto: Download is starting\nCall log:\n  - navigating to \"https://aigovops-foundation.github.io/aigovops-beacon/downloads/AIGovOps_Beacon_Pitch.pptx\", waiting until \"domcontentloaded\"\n"
-        },
         {
           "path": "/aigovops-beacon/lab-100.html",
           "dead": 21,
@@ -3234,14 +3458,6 @@
           "loadError": null
         },
         {
-          "path": "/aigovops-beacon/blueprint/artifacts/govern.yml",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
           "path": "/aigovops-beacon/draft-v0.2-glacis.html",
           "dead": 0,
           "broken": 0,
@@ -3267,6 +3483,22 @@
         },
         {
           "path": "/aigovops-beacon/lab.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-beacon/lab/worksheet-100.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-beacon/lab/worksheet-200.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -3347,14 +3579,6 @@
         },
         {
           "path": "/aigovops-ncw-ai-camp/demos.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/downloads/hint-logs-spec.md",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
