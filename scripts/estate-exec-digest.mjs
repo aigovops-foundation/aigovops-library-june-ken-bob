@@ -95,12 +95,19 @@ for (const origin of origins) {
     });
   }
 
-  // Inert clickable affordances: real, but a design question rather than a broken link.
+  // A CONTROL THAT DOES NOTHING IS RED, NOT AMBER. This was filed as "a design question
+  // rather than a broken link" and therefore amber. That was survivable while amber still
+  // appeared in the mail; once the mail became red-only (2026-08-19) it meant 105 dead
+  // controls on Beacon produced the subject line "all green" — in the same run whose own
+  // verdict step failed with "Estate has red pages". A visitor who clicks a quiz option and
+  // gets nothing has hit the same defect as one who clicks a dead anchor, and the anchor case
+  // was always red. Same symptom, same severity. The fix is still a decision (wire it, or stop
+  // styling it as a button), which is what canFix:false already says.
   const inert = (s.dead || []).filter(e => /no link and no handler/.test(e.reason || ''));
   if (inert.length) {
     const tags = tally(inert.map(e => e.tag));
     issues.push({
-      severity: 'amber', where, count: inert.length,
+      severity: 'red', where, count: inert.length,
       title: `${inert.length} elements look clickable but do nothing`,
       plain: `Mostly quiz options and numbered step chips (${tags}). They are styled to invite a click and no click is wired. Either they were meant to be interactive and the handler was lost, or they are decorative and should stop looking like buttons.`,
       fix: 'Decide per group: wire the handler, or drop the pointer cursor and button styling so they read as text. A quiz option that does not respond is worse than a plain list.',
@@ -314,6 +321,17 @@ console.error(`wrote ${HTML_OUT}`);
    and a reply the founders can actually send back. */
 
 const reds = issues.filter(i => i.severity === 'red');
+
+// THE MAIL MAY NOT CLAIM GREEN WHILE THE CRAWL COUNTED DEAD CONTROLS. Severity is assigned
+// per issue-type above, so a future type added as amber would silently reintroduce exactly the
+// "all green with 105 dead controls" mail this guard exists to stop. This compares the two
+// numbers that must agree and fails the digest loudly rather than sending a comfortable lie.
+if (!reds.length && (uniqueDead || uniqueBroken)) {
+  console.error(`digest refuses to report green: ${uniqueDead} dead + ${uniqueBroken} broken control(s) ` +
+                'are counted but no issue is red — a severity mapping is wrong. Fix the mapping, not this check.');
+  process.exit(2);
+}
+
 const md = [];
 
 // RED AND THE FIX. NOTHING ELSE. This mail used to carry an amber "waiting on a decision"
