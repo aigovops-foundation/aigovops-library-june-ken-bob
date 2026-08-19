@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-08-19T23:12:32.941Z",
+  "generatedAt": "2026-08-19T23:34:16.800Z",
   "estate": {
     "properties": 7,
     "reporting": 5,
-    "healthy": 1,
-    "red": 4,
-    "greenPages": 247,
-    "redPages": 24,
-    "dead": 365,
+    "healthy": 2,
+    "red": 3,
+    "greenPages": 253,
+    "redPages": 18,
+    "dead": 315,
     "broken": 0,
     "consoleErrorPages": 0,
-    "score": 91
+    "score": 93
   },
   "sites": [
     {
@@ -18,7 +18,7 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-19T23:06:38.544Z",
+      "ranAt": "2026-08-19T23:28:01.871Z",
       "summary": {
         "pages": 26,
         "greenPages": 26,
@@ -266,7 +266,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-19T23:08:32.261Z",
+      "ranAt": "2026-08-19T23:30:09.087Z",
       "summary": {
         "pages": 78,
         "greenPages": 72,
@@ -1650,7 +1650,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-19T23:10:27.258Z",
+      "ranAt": "2026-08-19T23:32:11.647Z",
       "summary": {
         "pages": 78,
         "greenPages": 72,
@@ -3033,69 +3033,21 @@
       "name": "Lantern",
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
-      "status": "red",
-      "ranAt": "2026-08-19T23:10:42.800Z",
+      "status": "green",
+      "ranAt": "2026-08-19T23:32:27.518Z",
       "summary": {
         "pages": 11,
-        "greenPages": 5,
-        "redPages": 6,
-        "ok": 420,
-        "dead": 50,
+        "greenPages": 11,
+        "redPages": 0,
+        "ok": 582,
+        "dead": 0,
         "broken": 0,
-        "external": 41,
+        "external": 52,
         "delegated": 0,
         "consoleErrorPages": 0,
-        "healthy": false
+        "healthy": true
       },
       "pageHealth": [
-        {
-          "path": "/aigovops-lantern/api/data-model/",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": "collect: Error: page.evaluate: SyntaxError: Failed to execute 'querySelector' on 'Document': '#1-beacon-evidence-bundle' is not a valid selector.\n    at eval ("
-        },
-        {
-          "path": "/aigovops-lantern/api/flows/",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": "collect: Error: page.evaluate: SyntaxError: Failed to execute 'querySelector' on 'Document': '#1-read-a-bundle-cli-today-web-in-v02' is not a valid selector.\n "
-        },
-        {
-          "path": "/aigovops-lantern/python/bundle/",
-          "dead": 11,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-lantern/python/cli/",
-          "dead": 7,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-lantern/python/render/",
-          "dead": 7,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-lantern/python/ucid/",
-          "dead": 7,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
         {
           "path": "/aigovops-lantern/",
           "dead": 0,
@@ -3106,6 +3058,22 @@
         },
         {
           "path": "/aigovops-lantern/api/actions/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-lantern/api/data-model/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-lantern/api/flows/",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -3129,6 +3097,38 @@
           "loadError": null
         },
         {
+          "path": "/aigovops-lantern/python/bundle/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-lantern/python/cli/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-lantern/python/render/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-lantern/python/ucid/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/aigovops-lantern/roadmap/",
           "dead": 0,
           "broken": 0,
@@ -3137,232 +3137,7 @@
           "loadError": null
         }
       ],
-      "dead": [
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
-          "tag": "a",
-          "text": "bundle",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.bundle\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
-          "tag": "a",
-          "text": "BundleError",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.bundle.BundleError\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
-          "tag": "a",
-          "text": "Receipt",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.bundle.Receipt\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
-          "tag": "a",
-          "text": "is_signed",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.bundle.Receipt.is_signed\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
-          "tag": "a",
-          "text": "Bundle",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.bundle.Bundle\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
-          "tag": "a",
-          "text": "load",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.bundle.load\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.bundle.BundleError\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.bundle.Receipt\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.bundle.Receipt.is_signed\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.bundle.Bundle\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.bundle.load\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/render/",
-          "tag": "a",
-          "text": "render",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.render\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/render/",
-          "tag": "a",
-          "text": "render_bundle",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.render.render_bundle\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/render/",
-          "tag": "a",
-          "text": "render_diff",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.render.render_diff\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/render/",
-          "tag": "a",
-          "text": "receipt_oneliner",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.render.receipt_oneliner\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/render/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.render.render_bundle\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/render/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.render.render_diff\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/render/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.render.receipt_oneliner\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/ucid/",
-          "tag": "a",
-          "text": "ucid",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.ucid\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/ucid/",
-          "tag": "a",
-          "text": "UcidError",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.ucid.UcidError\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/ucid/",
-          "tag": "a",
-          "text": "Ucid",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.ucid.Ucid\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/ucid/",
-          "tag": "a",
-          "text": "load_registry",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.ucid.load_registry\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/ucid/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.ucid.UcidError\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/ucid/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.ucid.Ucid\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/ucid/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.ucid.load_registry\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/cli/",
-          "tag": "a",
-          "text": "cli",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.cli\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/cli/",
-          "tag": "a",
-          "text": "cmd_read",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.cli.cmd_read\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/cli/",
-          "tag": "a",
-          "text": "cmd_diff",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.cli.cmd_diff\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/cli/",
-          "tag": "a",
-          "text": "cmd_explain",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.cli.cmd_explain\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/cli/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.cli.cmd_read\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/cli/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.cli.cmd_diff\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/cli/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.cli.cmd_explain\" has no matching target"
-        }
-      ],
+      "dead": [],
       "broken": [],
       "consoleErrors": []
     },
@@ -3371,7 +3146,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-19T23:12:32.862Z",
+      "ranAt": "2026-08-19T23:34:16.729Z",
       "summary": {
         "pages": 78,
         "greenPages": 72,
