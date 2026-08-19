@@ -119,7 +119,20 @@ const COLLECT = `(() => {
     const forId = el.getAttribute('for');
     const labelTargetOk = forId ? !!document.getElementById(forId) : null;
     let anchorTargetOk = null;
-    if (rawHref && rawHref.startsWith('#')) anchorTargetOk = rawHref === '#' ? false : !!document.querySelector(rawHref) || !!document.getElementsByName(rawHref.slice(1)).length;
+    // ANCHOR TARGETS ARE LOOKED UP BY ID, NOT BY SELECTOR. querySelector('#' + frag) parses the
+    // fragment as CSS, where '.' starts a class and ':' a pseudo-class — so every dotted id
+    // (mkdocstrings names every Python symbol that way: #aigovops_lantern.bundle.Receipt) asked
+    // for "id=aigovops_lantern AND class=bundle AND class=Receipt" and never matched. That single
+    // line reported 18 live anchors on Lantern's API pages as dead on 2026-08-18. getElementById
+    // does an exact string match and cannot be confused by punctuation. The fragment is also
+    // percent-decoded, because href="#caf%C3%A9" targets id="café".
+    if (rawHref && rawHref.startsWith('#')) {
+      const frag = rawHref.slice(1);
+      let id = frag; try { id = decodeURIComponent(frag); } catch (err) { id = frag; }
+      anchorTargetOk = frag === '' ? false
+        : !!(document.getElementById(id) || document.getElementById(frag)
+             || document.getElementsByName(id).length);
+    }
     out.push({
       tag,
       role: el.getAttribute('role') || null,
