@@ -314,44 +314,44 @@ console.error(`wrote ${HTML_OUT}`);
    and a reply the founders can actually send back. */
 
 const reds = issues.filter(i => i.severity === 'red');
-const ambers = issues.filter(i => i.severity === 'amber');
 const md = [];
-md.push(`## ${reds.length ? '🔴' : '🟢'} Estate health — ${reds.length} thing${reds.length === 1 ? '' : 's'} to fix`);
+
+// RED AND THE FIX. NOTHING ELSE. This mail used to carry an amber "waiting on a decision"
+// section and a roster of every green property, so the one or two lines that needed acting on
+// arrived buried under things that did not. Everything removed here is still on the board
+// (docs/estate-health.html), linked at the foot: the board is for browsing, the mail is for
+// acting. Asked for by Bob, 2026-08-19.
+md.push(`## ${reds.length ? '🔴' : '🟢'} Estate health — ${reds.length ? `${reds.length} to fix` : 'all green'}`);
 md.push('');
-md.push(`_Crawled ${stamp}. The raw crawl counted **${rawDead} dead controls**; that is **${uniqueDead}** counted once per mirrored property. Grouped by cause, here is the whole estate._`);
+md.push(`_Crawled ${stamp}._`);
 md.push('');
-if (reds.length) {
-  md.push('### 🔴 Red — one line each, with the fix');
+
+if (!reds.length) {
+  md.push('Nothing red. Every control on every crawled page works.');
   md.push('');
+} else {
   for (const i of reds) {
     md.push(`**${i.id} · ${i.title}**  `);
     md.push(`↳ _${i.where}_  `);
+    // WHERE IT IS, ON THE ROW ITSELF. A finding you cannot locate is a finding you cannot fix.
+    // The 2026-08-18 mail named a 404 and never said which page carried the link, so acting on
+    // the only real item in it began with a repo-wide search.
+    if (i.pages?.length) md.push('↳ ' + i.pages.map(x => '`' + x + '`').join(', ') + '  ');
     md.push(`↳ **Fix:** ${i.fix}  `);
-    md.push(`↳ ${i.canFix ? `Reply **\`fix ${i.id}\`** and Claude prepares it as a pull request for you to merge.` : '_Needs a human decision first._'}`);
+    md.push(i.canFix
+      ? `↳ Reply **\`fix ${i.id}\`** — Claude opens a pull request for you to merge.`
+      : '↳ _Needs a human decision first._');
     md.push('');
   }
-} else {
-  md.push('### 🟢 Nothing red. Every control on every crawled page works.');
-  md.push('');
 }
-if (ambers.length) {
-  md.push('### 🟠 Waiting on a decision from you');
-  md.push('');
-  for (const i of ambers) md.push(`- **${i.title}** — ${i.where}. ${i.fix}`);
-  md.push('');
-}
-md.push('### 🟢 Green');
-md.push('');
-for (const o of greenOrigins) md.push(`- **${o.primary.name}** — ${o.primary.summary?.greenPages ?? 0} pages, every control working`);
-for (const o of origins.filter(o => !greenOrigins.includes(o))) {
-  md.push(`- **${o.primary.name}** — ${o.primary.summary?.greenPages ?? 0} pages green${o.mirrors.length ? ` (mirrored by ${o.mirrors.join(', ')})` : ''}`);
-}
+
+// Gated surfaces are named EVERY time, red or green. This is the one non-red line kept, because
+// dropping it turns "nobody looked" into something that reads as "nothing wrong".
 if (pending.length) {
-  md.push('');
   md.push(`_Not checked: ${pending.map(s => s.name).join(', ')} — gated, needs an authenticated crawl. Silence there means nobody looked._`);
+  md.push('');
 }
-md.push('');
-md.push('_Full evidence: `docs/estate-health.html`. Formatted HTML and PDF are attached to this run._');
+md.push('_Full board — amber, the green roster and every page: `docs/estate-health.html`._');
 md.push('<!-- estate-health-digest -->');
 
 const MD_OUT = resolve(opt('markdown', join(ROOT, 'audit', 'estate-exec.md')));

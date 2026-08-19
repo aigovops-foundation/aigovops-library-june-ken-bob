@@ -118,12 +118,32 @@ jobs:
               await github.rest.issues.createComment({ owner, repo, issue_number: issue.number, body: `${head}\n\n${body}` });
             }
 
-      # SPAM CONTROL. Mail only when the set of causes CHANGES — a new red, a fixed red, or a
-      # flip to green. An hour of the same known red is not news, and mailing it anyway is
-      # precisely what teaches a reader to filter the whole thing away. The pinned issue is
-      # still refreshed every hour, silently, for anyone who wants to look.
-      - name: Email the digest to the founders (only when the causes change)
-        if: steps.digest.outputs.causes != steps.prev.outputs.causes
+      # TWICE A DAY, ON THE CLOCK. The mail used to fire whenever the set of causes changed,
+      # which meant it could arrive at any hour or not for days — you could not tell whether
+      # silence meant "nothing new" or "the job died". Bob asked for 05:00 and 17:00 Pacific,
+      # every day (2026-08-19), so the send is now a fixed appointment and its absence is
+      # itself a signal.
+      #
+      # WHY NO SECOND CRON AND NO UTC ARITHMETIC. The crawl already runs hourly on the hour, so
+      # asking the runner what time it is in America/Los_Angeles hits "05" and "17" exactly once
+      # each per day — and keeps hitting them across both DST changes, because the zone does the
+      # conversion. A UTC cron pinned at 12:00/00:00 would be right for eight months and an hour
+      # early for four. The board and the pinned issue still refresh hourly; only the MAIL is
+      # twice daily, so a red is still visible within the hour to anyone who looks.
+      - name: Is this a founders' send window? (05:00 / 17:00 America/Los_Angeles)
+        id: window
+        run: |
+          h=$(TZ=America/Los_Angeles date +%H)
+          if [ "${{ github.event_name }}" != "schedule" ] || [ "$h" = "05" ] || [ "$h" = "17" ]; then
+            echo "send=true" >> "$GITHUB_OUTPUT"
+            echo "Pacific hour $h — sending."
+          else
+            echo "send=false" >> "$GITHUB_OUTPUT"
+            echo "Pacific hour $h — not a send window; the board still refreshed."
+          fi
+
+      - name: Email the digest to the founders (05:00 and 17:00 Pacific)
+        if: steps.window.outputs.send == 'true'
         env:
           GRAPH_TENANT_ID: ${{ secrets.GRAPH_TENANT_ID }}
           GRAPH_CLIENT_ID: ${{ secrets.GRAPH_CLIENT_ID }}
