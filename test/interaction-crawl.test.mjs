@@ -57,7 +57,14 @@ test('interaction crawler catches planted dead + broken, passes the good ones', 
   // no false positives on the good ones (real link, onclick, addEventListener, submit,
   // covered child, span-in-link, anchor-to-existing, external).
   const badTexts = [...rep.dead, ...rep.broken].map((x) => x.text).join(' | ');
-  for (const good of ['Good internal link', 'Wired via onclick', 'Wired via addEventListener', 'Submit', 'covered child link', 'span inside a link', 'Anchor to existing']) {
+  // The four classes that faked 95% of the 2026-08-19 estate report. Each was reported DEAD by a
+  // crawler looking the wrong way; each is pinned here so the fix cannot silently regress.
+  //   Dotted anchor            — querySelector('#' + frag) parses '.mod' as a CLASS
+  //   onclick property         — el.onclick = fn sets no attribute and no listener
+  //   wrapping label           — a <label> around its input is interactive without for=
+  //   disabled / [data-simulated] — declared non-operable: a depiction, not a defect
+  for (const good of ['Good internal link', 'Wired via onclick', 'Wired via addEventListener', 'Submit', 'covered child link', 'span inside a link', 'Anchor to existing',
+                      'Dotted anchor', 'Wired via onclick property', 'child of a wrapping label', 'Disabled on purpose', 'Depicted button', 'Unfilled placeholder link']) {
     assert.ok(!badTexts.includes(good), `false positive: "${good}" was flagged`);
   }
 });

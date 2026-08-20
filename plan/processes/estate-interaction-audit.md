@@ -62,24 +62,64 @@ drill-down of each defect, colour-coded, auto-refreshing every 30s. It reads
 `docs/estate-health.json`, which the aggregator rewrites on every run. It answers, at a glance,
 *"is the whole estate 100% clickable right now?"*
 
-## The habit — hourly, and Ken & Bob get it
+## The habit — crawl hourly, mail twice a day
 
 Every hour, on the hour, **`estate-interaction-crawl.yml`** runs the whole estate end-to-end and
 scores **every page red or green — green is the goal for each one**. It then:
 
 1. rewrites `docs/estate-health.json` (the live board updates), committing data-only;
-2. builds the digest (`scripts/estate-digest.mjs`) — a per-property table plus every red page
-   named with *why*;
-3. **delivers it to the founders**: it keeps one pinned **Estate Interaction Health** issue whose
-   body always shows the latest crawl, and it **pings** the people in `founders.json` with a new
-   comment only when the estate **flips** red→green or green→red — a heartbeat you can watch, not
-   hourly spam. (Add Ken's GitHub handle to `founders.json` so he gets it too.)
+2. builds the founders' digest (`scripts/estate-exec-digest.mjs`) — deduped across mirrored
+   properties and grouped by **cause**, not by symptom;
+3. keeps one pinned **Estate Interaction Health** issue whose body always shows the latest crawl,
+   commenting when the set of causes changes;
+4. **mails the founders at 05:00 and 17:00 America/Los_Angeles** (`scripts/send-mail.mjs` →
+   Microsoft Graph; recipients are `founders.json` `emails`).
+
+The crawl stays hourly so the board and the pinned issue still catch a regression within the hour.
+Only the **mail** is twice daily.
+
+### The mail is red and the fix, nothing else
+
+Changed 2026-08-19 at Bob's request. Amber ("waiting on a decision") and the green roster live on
+the board, linked at the foot of every mail; the mail carries only what is red, each row naming the
+**page it was found on**. A finding you cannot locate is a finding you cannot fix — an earlier mail
+reported a 404 without saying which page carried the link. One non-red line is kept deliberately:
+`Not checked:` for the gated surfaces, because dropping it turns "nobody looked" into something
+that reads as "nothing is wrong".
+
+**A dead control is red, not amber.** It was filed amber as "a design question rather than a broken
+link", which was survivable until the mail became red-only — then 105 dead controls on Beacon
+produced the subject line *"all green"* in the same run whose own verdict step failed with *"Estate
+has red pages"*. The digest now **exits non-zero rather than claim green** while any dead or broken
+control is counted; severity is assigned per issue-type, so that guard is what stops a future amber
+type reintroducing the same silence.
+
+### Why the send is a window, not an hour
+
+The send asks **"which window has most recently *opened*, and has it gone out?"** against
+`docs/.estate-last-window` — it does **not** match the Pacific hour. Matching the hour made the mail
+depend on a run existing at that hour, and five of ten consecutive scheduled runs once never
+executed a step: they queued an hour behind a runner backlog and were cancelled when the next hour
+entered the concurrency group. A cancelled run cannot check the time, so the window passed in
+silence — which reads exactly like "nothing is red".
+
+So a lost 12:00Z run is covered by 13:00Z, and a ninety-minute delay still sends. The window is
+recorded **only after a successful send**: a window marked sent before the send succeeds is a window
+that never gets retried. If that push loses a race, the next run sends again — a duplicate digest is
+a far cheaper mistake than a silent miss.
+
+There is **no second cron and no UTC arithmetic**: the hourly run asks the runner for the Pacific
+hour, which lands on `05` and `17` once each per day and keeps doing so across both DST changes. A
+UTC cron pinned at `0 12,0 * * *` is right for eight months and an hour early for four.
+
+The mail also does not depend on housekeeping: it requires only that the digest was **built**. A
+failed board commit or pinned-issue update once skipped every step below it, including the send.
 
 The run **fails red** if any `failOnDead` page has a dead/broken control, so a regression is loud
 in the Actions tab as well as on the board.
 
-> Hourly is deliberate: a dead button on a launch page is an hourly-cadence problem, not a weekly
-> one. The whole-estate crawl is a few minutes of CI per hour.
+> Hourly crawling is deliberate: a dead button on a launch page is an hourly-cadence problem, not a
+> weekly one. The whole-estate crawl is a few minutes of CI per hour.
 
 ## How it runs
 

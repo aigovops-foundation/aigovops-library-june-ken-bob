@@ -11,11 +11,26 @@
   <a href="good.html"><span style="cursor:pointer">span inside a link</span></a>
   <form action="good.html"><button type="submit">Submit</button></form>
 
+  <!-- GOOD: the four false-positive classes that faked 95% of the 2026-08-19 report. Each one
+       was reported DEAD by a crawler that was looking the wrong way; none is a defect. -->
+  <a href="#pkg.mod.Class.method">Dotted anchor</a>          <!-- querySelector reads .mod as a class -->
+  <h3 id="pkg.mod.Class.method">Dotted target</h3>
+  <button id="prop-wired">Wired via onclick property</button> <!-- el.onclick = fn: no attribute, no listener -->
+  <label>Wrapping label<input type="checkbox"><span style="cursor:pointer">child of a wrapping label</span></label>
+  <button disabled>Disabled on purpose</button>               <!-- nobody can press it: not a defect -->
+  <div data-simulated="true">
+    <button>Depicted button</button>                          <!-- a drawing of software -->
+    <a>Unfilled placeholder link</a>
+  </div>
+
   <!-- BAD: planted defects the crawler must catch -->
   <a href="does-not-exist.html">Broken internal link</a>   <!-- BROKEN: 404 -->
   <a href="#nope">Anchor to missing target</a>              <!-- DEAD: no #nope -->
   <button>Dead button (no handler)</button>                 <!-- DEAD -->
   <div class="btn" style="cursor:pointer">Dead card (no handler) &rarr;</div> <!-- DEAD -->
 
-  <script>document.getElementById('js-wired').addEventListener('click', () => {});</script>
+  <script>
+    document.getElementById('js-wired').addEventListener('click', () => {});
+    document.getElementById('prop-wired').onclick = () => {};   // property, not attribute or listener
+  </script>
 </body></html>
