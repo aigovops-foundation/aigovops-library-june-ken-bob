@@ -395,6 +395,15 @@ if (argv.includes('--status')) {
   process.exit(0);
 }
 
+// HOW MANY, for the subject line. --status is a WORD ('red'/'green') because the pinned issue
+// labels with it and the run's verdict step compares against it. Interpolating that word into
+// "{0} to fix" produced the subject "Estate health — red to fix" on 2026-08-20. The subject is
+// the part a founder reads before deciding whether to open anything, so it gets the number.
+if (argv.includes('--count')) {
+  process.stdout.write(String(reds.length));
+  process.exit(0);
+}
+
 /* ── PDF, or a clear statement that there isn't one ─────────────────────── */
 
 let pdfOk = false;
