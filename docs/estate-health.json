@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-08-20T13:26:06.640Z",
+  "generatedAt": "2026-08-20T14:22:30.613Z",
   "estate": {
     "properties": 7,
-    "reporting": 5,
+    "reporting": 6,
     "healthy": 2,
-    "red": 3,
-    "greenPages": 268,
-    "redPages": 3,
+    "red": 4,
+    "greenPages": 323,
+    "redPages": 8,
     "dead": 42,
     "broken": 0,
-    "consoleErrorPages": 0,
-    "score": 99
+    "consoleErrorPages": 5,
+    "score": 98
   },
   "sites": [
     {
@@ -18,7 +18,7 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-20T13:20:27.812Z",
+      "ranAt": "2026-08-20T14:15:01.671Z",
       "summary": {
         "pages": 26,
         "greenPages": 26,
@@ -256,17 +256,545 @@
     {
       "name": "Library (rendered)",
       "base": "https://community.aigovops-foundation.com/library/",
-      "gated": true,
-      "status": "pending",
-      "note": "gated surface — needs an authenticated session to crawl",
-      "summary": null
+      "gated": false,
+      "status": "red",
+      "ranAt": "2026-08-20T14:16:32.298Z",
+      "summary": {
+        "pages": 60,
+        "greenPages": 55,
+        "redPages": 5,
+        "ok": 1532,
+        "dead": 0,
+        "broken": 0,
+        "external": 800,
+        "delegated": 28,
+        "consoleErrorPages": 5,
+        "healthy": false
+      },
+      "pageHealth": [
+        {
+          "path": "/library/demo-e2e.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/library/demo-foundation.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/library/gates.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/library/newsroom.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/library/rooms.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 2,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/api/auth/sso",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/api/auth/sso",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/board.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/certify.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/concierge.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/conduct.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/console.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/experience.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/governance.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/guidelines.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/help.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/join.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/landing.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/aigovops-for-quantum/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/aigovops-for-quantum/index.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/aigovops-for-quantum/quantum-for-beginners.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/blueprint.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/board.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/build-tickets.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/connect.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/control-plane.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/DataCenter-Ai-And-Social-Tradeoffs/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/DataCenter-Ai-And-Social-Tradeoffs/for-more-reading.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/DataCenter-Ai-And-Social-Tradeoffs/index.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/demo-run.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/demo.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/design-book.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/durability-plan.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/f-ai-friday.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/failfest.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/index.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/onboarding.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/plan.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/practitioner.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/pulse.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/tour.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/watch-gates.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/playbooks.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/portal.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/privacy.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/profile.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/protect.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/signin.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/signin.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/standards.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/system-map.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/terms.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/translate.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/transparency.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/try.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/verify.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/welcome.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/whats-new.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        }
+      ],
+      "dead": [],
+      "broken": [],
+      "consoleErrors": [
+        {
+          "page": "https://community.aigovops-foundation.com/library/rooms.html",
+          "errors": [
+            "Access to fetch at 'https://aigovops-library-core.fly.dev/api/skills' from origin 'https://community.aigovops-foundation.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
+            "Access to fetch at 'https://aigovops-library-core.fly.dev/api/verify' from origin 'https://community.aigovops-foundation.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource."
+          ]
+        },
+        {
+          "page": "https://community.aigovops-foundation.com/library/gates.html",
+          "errors": [
+            "Access to fetch at 'https://aigovops-library-core.fly.dev/api/socrates' from origin 'https://community.aigovops-foundation.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource."
+          ]
+        },
+        {
+          "page": "https://community.aigovops-foundation.com/library/demo-e2e.html",
+          "errors": [
+            "Access to fetch at 'https://aigovops-library-core.fly.dev/api/verify' from origin 'https://community.aigovops-foundation.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource."
+          ]
+        },
+        {
+          "page": "https://community.aigovops-foundation.com/library/demo-foundation.html",
+          "errors": [
+            "Access to fetch at 'https://aigovops-library-core.fly.dev/api/ask' from origin 'https://community.aigovops-foundation.com' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource."
+          ]
+        },
+        {
+          "page": "https://community.aigovops-foundation.com/library/newsroom.html",
+          "errors": [
+            "Access to fetch at 'https://aigovops-library-core.fly.dev/api/newsroom' from origin 'https://community.aigovops-foundation.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource."
+          ]
+        }
+      ]
     },
     {
       "name": "Beacon",
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-20T13:22:19.415Z",
+      "ranAt": "2026-08-20T14:18:28.450Z",
       "summary": {
         "pages": 78,
         "greenPages": 77,
@@ -1013,7 +1541,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-20T13:24:05.586Z",
+      "ranAt": "2026-08-20T14:20:20.735Z",
       "summary": {
         "pages": 78,
         "greenPages": 77,
@@ -1760,7 +2288,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-20T13:24:21.126Z",
+      "ranAt": "2026-08-20T14:20:36.164Z",
       "summary": {
         "pages": 11,
         "greenPages": 11,
@@ -1872,7 +2400,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-20T13:26:06.558Z",
+      "ranAt": "2026-08-20T14:22:30.554Z",
       "summary": {
         "pages": 78,
         "greenPages": 77,
