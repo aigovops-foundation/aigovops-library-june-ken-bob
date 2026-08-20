@@ -49,6 +49,14 @@ const OUT = opt('out') || 'interaction-crawl.json';
 const SITE_NAME = opt('site-name') || (BASE ? new URL(BASE).host : 'site');
 const MAX_PAGES = parseInt(opt('max-pages', '80'), 10);
 const FAIL_ON_DEAD = flag('fail-on-dead') || process.env.FAIL_ON_DEAD === 'true';
+
+// A CONSENT DOOR IS NOT AN AUTHENTICATION WALL. The rendered Library sits behind a one-click
+// "I agree to ten rules" page that sets omni_rules=1 — no account, no payment, no secret. It was
+// marked gated and therefore never crawled, so the estate's interaction checks covered five
+// marketing and docs sites and neither member-facing surface. --cookie carries that consent, so
+// the Library is held to the same standard as everything else. NON-SECRET cookies only, by
+// design: anything needing a real session belongs in a signed-in crawl, not a flag here.
+const COOKIE = opt('cookie', process.env.CRAWL_COOKIE || '');
 const NAV_TIMEOUT = parseInt(opt('nav-timeout', '20000'), 10);
 
 if (!BASE) {
@@ -235,6 +243,15 @@ async function main() {
   if (process.env.PW_EXECUTABLE_PATH) launch.executablePath = process.env.PW_EXECUTABLE_PATH;
   const browser = await chromium.launch(launch);
   const context = await browser.newContext({ ignoreHTTPSErrors: true, userAgent: 'AiGovOps-InteractionCrawler/1' });
+  if (COOKIE) {
+    const host = new URL(BASE).hostname;
+    const jar = COOKIE.split(';').map((c) => c.trim()).filter(Boolean).map((c) => {
+      const i = c.indexOf('=');
+      return { name: c.slice(0, i).trim(), value: c.slice(i + 1).trim(), domain: host, path: '/' };
+    });
+    await context.addCookies(jar);
+    console.log(`  consent cookie(s) set for ${host}: ${jar.map((c) => c.name).join(', ')}`);
+  }
   await context.addInitScript(INIT_SCRIPT);
   // Optionally keep the render on-origin (used when proving locally behind an egress
   // proxy): third-party analytics/fonts are aborted so they can't masquerade as errors.
