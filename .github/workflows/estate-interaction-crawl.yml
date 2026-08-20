@@ -223,8 +223,16 @@ jobs:
           git config user.name "aigovops-estate-bot"
           git config user.email "noreply@aigovops-foundation.com"
           printf '%s' '${{ steps.window.outputs.window }}' > docs/.estate-last-window
-          if ! git diff --quiet -- docs/.estate-last-window; then
-            git add docs/.estate-last-window
+          # STAGE FIRST, THEN COMPARE. `git diff` does not see UNTRACKED files, so on the very
+          # first run — when docs/.estate-last-window did not exist in the index yet — this guard
+          # returned "no change", skipped the commit, and the record was never added. Every run
+          # then started from a clean checkout with no memory, decided the window was unsent, and
+          # mailed. Six consecutive hourly sends on 2026-08-20 before it was noticed: the exact
+          # noise this file was written to prevent, caused by the file that prevents it.
+          # `git add` then `--cached` is correct for both cases: staging an untracked file makes
+          # the cached diff non-empty, and staging an unchanged one leaves it empty.
+          git add docs/.estate-last-window
+          if ! git diff --cached --quiet -- docs/.estate-last-window; then
             git commit -m "chore(estate-health): sent window ${{ steps.window.outputs.window }} [automated]"
             for attempt in 1 2 3; do
               git push && exit 0
