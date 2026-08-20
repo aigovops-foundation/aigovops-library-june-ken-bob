@@ -15,8 +15,16 @@ primary_region = "iad"            # pick yours: `flyctl platform regions`
   # keys + ledger live on the mounted volume below, so they persist across deploys
   KEYS_DIR = "/data/keys"
   LEDGER_DIR = "/data/ledger"
-  # CORS allow-list: the public hub plus the deployed app's own origin
-  ALLOWED_ORIGINS = "https://aigovops-foundation.github.io"
+  # CORS allow-list. MUST NAME WHERE THE LIBRARY ACTUALLY SERVES. This listed only the github.io
+  # mirror — which has served nothing but a "the Library has moved" redirect stub since the
+  # membership wall went up. The real Library renders at community.aigovops-foundation.com/library/,
+  # whose origin was absent, so every in-page call to this API was CORS-blocked in the browser:
+  # /api/ask, /api/verify, /api/skills, /api/socrates and /api/newsroom, on connect.html, gates.html,
+  # demo-e2e.html, demo-foundation.html and newsroom.html. Five interactive features, dead for
+  # members, invisible because the rendered Library was marked `gated` and never crawled.
+  # (Same shape as beacon lab-service's allowlist naming bobrapp.github.io after the org move.)
+  # The mirror origin is kept: harmless, and the stub may still be reached from an old link.
+  ALLOWED_ORIGINS = "https://aigovops-foundation.github.io,https://community.aigovops-foundation.com"
   ALLOW_CLOUD = "false"
 
 [http_service]
