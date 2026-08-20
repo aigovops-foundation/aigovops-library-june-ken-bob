@@ -60,6 +60,7 @@ jobs:
         run: |
           node scripts/estate-exec-digest.mjs --markdown digest.md
           echo "state=$(node scripts/estate-exec-digest.mjs --status || true)" >> "$GITHUB_OUTPUT"
+          echo "count=$(node scripts/estate-exec-digest.mjs --count || true)" >> "$GITHUB_OUTPUT"
           echo "causes=$(node scripts/estate-exec-digest.mjs --fingerprint || true)" >> "$GITHUB_OUTPUT"
           echo "score=$(node -e "console.log(JSON.parse(require('fs').readFileSync('docs/estate-health.json')).estate.score ?? '')")" >> "$GITHUB_OUTPUT"
 
@@ -209,7 +210,7 @@ jobs:
           GRAPH_CLIENT_SECRET: ${{ secrets.GRAPH_CLIENT_SECRET }}
           GRAPH_SENDER: ${{ secrets.GRAPH_SENDER }}
           ESTATE_SMTP_URL: ${{ secrets.ESTATE_SMTP_URL }}
-        run: node scripts/send-mail.mjs --subject "🌿 Estate health — ${{ steps.digest.outputs.state == 'green' && 'all green' || format('{0} to fix', steps.digest.outputs.state) }}" --body digest.md
+        run: node scripts/send-mail.mjs --subject "🌿 Estate health — ${{ steps.digest.outputs.state == 'green' && 'all green' || format('{0} to fix', steps.digest.outputs.count) }}" --body digest.md
 
       # RECORD THE WINDOW ONLY AFTER IT ACTUALLY WENT OUT. Written here, not in the window step,
       # because a window marked sent before the send succeeds is a window that never gets retried
