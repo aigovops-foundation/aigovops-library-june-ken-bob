@@ -154,6 +154,17 @@ const COLLECT = `(() => {
       // demo-walkthroughs.html as dead — all of which respond correctly when clicked.
       // (No backticks in this comment: it lives inside a template literal.)
       onclickProp: typeof el.onclick === 'function',
+      // A CONTROL NOBODY CAN OPERATE IS NOT A BROKEN CONTROL. Two cases, both deliberate:
+      // the disabled attribute (the page says this cannot be pressed), and anything inside
+      // [data-simulated] or [inert] (the page says the region is a PICTURE of software, not
+      // software). The NCW
+      // kit's demo-walkthroughs.html is nineteen labelled "SIMULATED — example output for
+      // teaching" screens; its mock quiz buttons and its deliberately unfilled "Official
+      // donation link placeholder" were reported as five dead controls on 2026-08-19. Wiring
+      // them would have destroyed the lesson, which is precisely that the placeholder is
+      // unfilled. Flagging a drawing of a button teaches the reader to distrust the report.
+      disabled: !!el.disabled,
+      simulated: !!el.closest('[data-simulated], [inert]'),
       wired: el.hasAttribute('data-crawl-wired'),
       isSubmit: (tag === 'button' && (type === 'submit' || (!type && inForm))) || type === 'submit',
       labelTargetOk, labelWraps, anchorTargetOk,
@@ -171,6 +182,9 @@ const COLLECT = `(() => {
 
 // ---- classify one element (in Node) ----------------------------------------
 function classify(e, delegation, targetStatus) {
+  // Declared non-operable before anything else: neither is a defect, so neither is a finding.
+  if (e.disabled) return { verdict: 'INERT', reason: 'disabled — cannot be operated by design' };
+  if (e.simulated) return { verdict: 'INERT', reason: 'inside a simulated/inert region — a depiction, not a control' };
   // native affordance?
   const nativeInteractive = ['a','button','summary','label','input','select','textarea'].includes(e.tag)
     || e.role === 'button' || e.onclickAttr || e.onclickProp || e.dataJeeves;
