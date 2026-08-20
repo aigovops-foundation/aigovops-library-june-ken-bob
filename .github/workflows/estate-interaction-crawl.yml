@@ -77,10 +77,29 @@ jobs:
           if ! git diff --quiet -- docs/estate-health.json docs/.estate-notified; then
             git add docs/estate-health.json docs/.estate-notified
             git commit -m "chore(estate-health): hourly interaction board [automated]"
-            git push
+            # RETRY THE PUSH AGAINST A MOVING MAIN. The crawl takes ~7 minutes, and anything
+            # merged during it leaves this push non-fast-forward. On 2026-08-20T00:16Z that is
+            # exactly what happened: two PRs merged mid-crawl, "! [rejected] main -> main
+            # (fetch first)" failed this step, and every step after it — including the founders'
+            # 17:00 mail — was skipped. The board is append-style data on its own two files, so
+            # rebasing onto whatever landed is always the right resolution.
+            pushed=0
+            for attempt in 1 2 3; do
+              if git push; then pushed=1; break; fi
+              echo "push rejected (attempt $attempt) — rebasing onto origin/main and retrying"
+              git pull --rebase --autostash origin main || exit 1
+              sleep $((attempt * 5))
+            done
+            # Three losses of the same race is not a race any more; fail loudly. The founders'
+            # mail no longer depends on this step, so failing here reports the problem without
+            # also cancelling the send.
+            [ "$pushed" = "1" ] || { echo "::error::board push still rejected after 3 rebases"; exit 1; }
           fi
 
       - name: Deliver the digest to the founders (pinned issue + ping on new causes)
+        # Same reasoning as the mail below: the pinned issue is how anyone who looks between
+        # sends finds out what is red, and a failed board push is no reason to stop updating it.
+        if: ${{ !cancelled() && steps.digest.outcome == 'success' }}
         uses: actions/github-script@v7
         with:
           script: |
@@ -132,6 +151,9 @@ jobs:
       # twice daily, so a red is still visible within the hour to anyone who looks.
       - name: Is this a founders' send window? (05:00 / 17:00 America/Los_Angeles)
         id: window
+        # Runs even if the board commit or the pinned-issue update failed — neither has any
+        # bearing on whether it is 05:00 or 17:00 in California.
+        if: ${{ !cancelled() }}
         run: |
           h=$(TZ=America/Los_Angeles date +%H)
           if [ "${{ github.event_name }}" != "schedule" ] || [ "$h" = "05" ] || [ "$h" = "17" ]; then
@@ -142,8 +164,13 @@ jobs:
             echo "Pacific hour $h — not a send window; the board still refreshed."
           fi
 
+      # WHETHER THE FOUNDERS GET THE DIGEST MUST NOT DEPEND ON HOUSEKEEPING. This sat downstream
+      # of the board-commit step with no guard, so a git push race silently cancelled the send —
+      # and a missed fixed appointment reads exactly like "nothing is red". The only real
+      # precondition is that the digest was actually built; committing the board and updating the
+      # pinned issue are bookkeeping, and their failure is visible in the run's own red.
       - name: Email the digest to the founders (05:00 and 17:00 Pacific)
-        if: steps.window.outputs.send == 'true'
+        if: ${{ !cancelled() && steps.digest.outcome == 'success' && steps.window.outputs.send == 'true' }}
         env:
           GRAPH_TENANT_ID: ${{ secrets.GRAPH_TENANT_ID }}
           GRAPH_CLIENT_ID: ${{ secrets.GRAPH_CLIENT_ID }}
