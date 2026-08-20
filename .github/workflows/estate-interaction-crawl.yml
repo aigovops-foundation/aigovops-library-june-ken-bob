@@ -144,9 +144,9 @@ jobs:
               await github.rest.issues.createComment({ owner, repo, issue_number: issue.number, body: `${head}\n\n${body}` });
             }
 
-      # TWICE A DAY, ON THE CLOCK. The mail used to fire whenever the set of causes changed,
+      # ONCE A DAY, ON THE CLOCK. The mail used to fire whenever the set of causes changed,
       # which meant it could arrive at any hour or not for days — you could not tell whether
-      # silence meant "nothing new" or "the job died". Bob asked for 05:00 and 17:00 Pacific,
+      # silence meant "nothing new" or "the job died". Bob asked for 05:00 Pacific,
       # every day (2026-08-19), so the send is now a fixed appointment and its absence is
       # itself a signal.
       #
@@ -156,7 +156,7 @@ jobs:
       # conversion. A UTC cron pinned at 12:00/00:00 would be right for eight months and an hour
       # early for four. The board and the pinned issue still refresh hourly; only the MAIL is
       # twice daily, so a red is still visible within the hour to anyone who looks.
-      - name: Is a founders' window still unsent? (05:00 / 17:00 America/Los_Angeles)
+      - name: Is today's founders' window still unsent? (05:00 America/Los_Angeles)
         id: window
         # Runs even if the board commit or the pinned-issue update failed — neither has any
         # bearing on whether a founder is owed a digest.
@@ -173,11 +173,14 @@ jobs:
         # date rolls the answer over. Sending late is strictly better than not sending, and the
         # digest carries its own crawl timestamp so a late one cannot be mistaken for fresh.
         run: |
+          # ONE WINDOW A DAY, opening at 05:00 Pacific. It was two (05:00 and 17:00) for a few
+          # hours on 2026-08-19; Bob asked for once a day the same evening, on the grounds that a
+          # second identical mail teaches you to stop opening the first. The window id is now just
+          # the Pacific date. Before 05:00, the window that most recently opened is YESTERDAY's,
+          # so a night-time run correctly finds it already sent and stays quiet.
           h=$(( 10#$(TZ=America/Los_Angeles date +%H) ))    # 10# so "05"/"08" are not read as octal
-          today=$(TZ=America/Los_Angeles date +%Y-%m-%d)
-          if   [ "$h" -ge 17 ]; then window="$today-PM"
-          elif [ "$h" -ge 5  ]; then window="$today-AM"
-          else window="$(TZ=America/Los_Angeles date -d yesterday +%Y-%m-%d)-PM"   # before 05:00: the PM window still owns the night
+          if [ "$h" -ge 5 ]; then window="$(TZ=America/Los_Angeles date +%Y-%m-%d)"
+          else window="$(TZ=America/Los_Angeles date -d yesterday +%Y-%m-%d)"
           fi
           echo "window=$window" >> "$GITHUB_OUTPUT"
           last='${{ steps.sent.outputs.window }}'
@@ -197,7 +200,7 @@ jobs:
       # and a missed fixed appointment reads exactly like "nothing is red". The only real
       # precondition is that the digest was actually built; committing the board and updating the
       # pinned issue are bookkeeping, and their failure is visible in the run's own red.
-      - name: Email the digest to the founders (05:00 and 17:00 Pacific)
+      - name: Email the digest to the founders (05:00 Pacific, once a day)
         id: mail
         if: ${{ !cancelled() && steps.digest.outcome == 'success' && steps.window.outputs.send == 'true' }}
         env:
