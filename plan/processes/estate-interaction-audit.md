@@ -62,7 +62,7 @@ drill-down of each defect, colour-coded, auto-refreshing every 30s. It reads
 `docs/estate-health.json`, which the aggregator rewrites on every run. It answers, at a glance,
 *"is the whole estate 100% clickable right now?"*
 
-## The habit — crawl hourly, mail twice a day
+## The habit — crawl hourly, mail once a day
 
 Every hour, on the hour, **`estate-interaction-crawl.yml`** runs the whole estate end-to-end and
 scores **every page red or green — green is the goal for each one**. It then:
@@ -72,11 +72,12 @@ scores **every page red or green — green is the goal for each one**. It then:
    properties and grouped by **cause**, not by symptom;
 3. keeps one pinned **Estate Interaction Health** issue whose body always shows the latest crawl,
    commenting when the set of causes changes;
-4. **mails the founders at 05:00 and 17:00 America/Los_Angeles** (`scripts/send-mail.mjs` →
+4. **mails the founders once a day, in the 05:00 America/Los_Angeles window** (`scripts/send-mail.mjs` →
    Microsoft Graph; recipients are `founders.json` `emails`).
 
 The crawl stays hourly so the board and the pinned issue still catch a regression within the hour.
-Only the **mail** is twice daily.
+Only the **mail** is once daily. It was briefly twice (05:00 and 17:00) on 2026-08-19; a second
+identical mail teaches you to stop opening the first, so it went back to one the same evening.
 
 ### The mail is red and the fix, nothing else
 
@@ -97,19 +98,21 @@ type reintroducing the same silence.
 ### Why the send is a window, not an hour
 
 The send asks **"which window has most recently *opened*, and has it gone out?"** against
-`docs/.estate-last-window` — it does **not** match the Pacific hour. Matching the hour made the mail
+`docs/.estate-last-window` (the Pacific date) — it does **not** match the Pacific hour. Matching the hour made the mail
 depend on a run existing at that hour, and five of ten consecutive scheduled runs once never
 executed a step: they queued an hour behind a runner backlog and were cancelled when the next hour
 entered the concurrency group. A cancelled run cannot check the time, so the window passed in
 silence — which reads exactly like "nothing is red".
 
-So a lost 12:00Z run is covered by 13:00Z, and a ninety-minute delay still sends. The window is
+So a lost 12:00Z run is covered by 13:00Z, and a ninety-minute delay still sends. Before 05:00 the
+window that most recently opened is YESTERDAY's, so a night-time run finds it already sent and stays
+quiet. The window is
 recorded **only after a successful send**: a window marked sent before the send succeeds is a window
 that never gets retried. If that push loses a race, the next run sends again — a duplicate digest is
 a far cheaper mistake than a silent miss.
 
 There is **no second cron and no UTC arithmetic**: the hourly run asks the runner for the Pacific
-hour, which lands on `05` and `17` once each per day and keeps doing so across both DST changes. A
+hour, which lands on `05` once per day and keeps doing so across both DST changes. A
 UTC cron pinned at `0 12,0 * * *` is right for eight months and an hour early for four.
 
 The mail also does not depend on housekeeping: it requires only that the digest was **built**. A
