@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-08-20T01:37:16.180Z",
+  "generatedAt": "2026-08-20T02:32:14.383Z",
   "estate": {
     "properties": 7,
     "reporting": 5,
     "healthy": 2,
     "red": 3,
-    "greenPages": 265,
-    "redPages": 6,
-    "dead": 57,
+    "greenPages": 268,
+    "redPages": 3,
+    "dead": 42,
     "broken": 0,
     "consoleErrorPages": 0,
-    "score": 98
+    "score": 99
   },
   "sites": [
     {
@@ -18,7 +18,7 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-20T01:31:13.176Z",
+      "ranAt": "2026-08-20T02:26:19.553Z",
       "summary": {
         "pages": 26,
         "greenPages": 26,
@@ -266,13 +266,13 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-20T01:33:15.815Z",
+      "ranAt": "2026-08-20T02:28:14.298Z",
       "summary": {
         "pages": 78,
-        "greenPages": 76,
-        "redPages": 2,
+        "greenPages": 77,
+        "redPages": 1,
         "ok": 3922,
-        "dead": 19,
+        "dead": 14,
         "broken": 0,
         "external": 1622,
         "delegated": 0,
@@ -283,14 +283,6 @@
         {
           "path": "/aigovops-ncw-ai-camp/jeeves-demo.html",
           "dead": 14,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "dead": 5,
           "broken": 0,
           "jsErrors": 0,
           "status": "red",
@@ -522,6 +514,14 @@
         },
         {
           "path": "/aigovops-ncw-ai-camp/kit/claim-letter.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -906,41 +906,6 @@
         }
       ],
       "dead": [
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "a",
-          "text": "Official donation link placeholder",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "button",
-          "text": "Known",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "button",
-          "text": "Suspected",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "button",
-          "text": "Rumor",
-          "cls": "selected",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "button",
-          "text": "▶",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
         {
           "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
           "tag": "span",
@@ -1048,13 +1013,13 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-20T01:35:12.953Z",
+      "ranAt": "2026-08-20T02:30:10.104Z",
       "summary": {
         "pages": 78,
-        "greenPages": 76,
-        "redPages": 2,
+        "greenPages": 77,
+        "redPages": 1,
         "ok": 3922,
-        "dead": 19,
+        "dead": 14,
         "broken": 0,
         "external": 1622,
         "delegated": 0,
@@ -1065,14 +1030,6 @@
         {
           "path": "/aigovops-ncw-ai-camp/jeeves-demo.html",
           "dead": 14,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "dead": 5,
           "broken": 0,
           "jsErrors": 0,
           "status": "red",
@@ -1304,6 +1261,14 @@
         },
         {
           "path": "/aigovops-ncw-ai-camp/kit/claim-letter.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1689,41 +1654,6 @@
       ],
       "dead": [
         {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "a",
-          "text": "Official donation link placeholder",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "button",
-          "text": "Known",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "button",
-          "text": "Suspected",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "button",
-          "text": "Rumor",
-          "cls": "selected",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "button",
-          "text": "▶",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
           "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
           "tag": "span",
           "text": "1",
@@ -1830,7 +1760,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-20T01:35:29.837Z",
+      "ranAt": "2026-08-20T02:30:26.428Z",
       "summary": {
         "pages": 11,
         "greenPages": 11,
@@ -1942,13 +1872,13 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-20T01:37:16.109Z",
+      "ranAt": "2026-08-20T02:32:14.286Z",
       "summary": {
         "pages": 78,
-        "greenPages": 76,
-        "redPages": 2,
+        "greenPages": 77,
+        "redPages": 1,
         "ok": 3922,
-        "dead": 19,
+        "dead": 14,
         "broken": 0,
         "external": 1622,
         "delegated": 0,
@@ -1959,14 +1889,6 @@
         {
           "path": "/aigovops-ncw-ai-camp/jeeves-demo.html",
           "dead": 14,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "dead": 5,
           "broken": 0,
           "jsErrors": 0,
           "status": "red",
@@ -2198,6 +2120,14 @@
         },
         {
           "path": "/aigovops-ncw-ai-camp/kit/claim-letter.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -2582,41 +2512,6 @@
         }
       ],
       "dead": [
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "a",
-          "text": "Official donation link placeholder",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "button",
-          "text": "Known",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "button",
-          "text": "Suspected",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "button",
-          "text": "Rumor",
-          "cls": "selected",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "button",
-          "text": "▶",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
         {
           "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
           "tag": "span",
