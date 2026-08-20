@@ -1,135 +1,199 @@
 {
-  "generatedAt": "2026-08-20T17:18:07.025Z",
+  "generatedAt": "2026-08-20T18:16:03.093Z",
   "estate": {
     "properties": 7,
     "reporting": 6,
     "healthy": 2,
-    "red": 3,
-    "greenPages": 328,
-    "redPages": 3,
-    "dead": 44,
-    "broken": 0,
+    "red": 4,
+    "greenPages": 308,
+    "redPages": 23,
+    "dead": 42,
+    "broken": 30,
     "consoleErrorPages": 0,
-    "score": 99
+    "score": 93
   },
   "sites": [
     {
       "name": "Foundation site",
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
-      "status": "green",
-      "ranAt": "2026-08-20T17:09:30.980Z",
+      "status": "red",
+      "ranAt": "2026-08-20T18:08:52.373Z",
       "summary": {
         "pages": 26,
-        "greenPages": 26,
-        "redPages": 0,
-        "ok": 622,
+        "greenPages": 6,
+        "redPages": 20,
+        "ok": 592,
         "dead": 0,
-        "broken": 0,
+        "broken": 30,
         "external": 191,
         "delegated": 0,
         "consoleErrorPages": 0,
-        "healthy": true
+        "healthy": false
       },
       "pageHealth": [
         {
           "path": "/",
           "dead": 0,
-          "broken": 0,
+          "broken": 1,
           "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/alpha.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
+          "status": "red",
           "loadError": null
         },
         {
           "path": "/blog.html",
           "dead": 0,
-          "broken": 0,
+          "broken": 1,
           "jsErrors": 0,
-          "status": "green",
+          "status": "red",
           "loadError": null
         },
         {
           "path": "/blog/agentic-frontiers-retrospective.html",
           "dead": 0,
-          "broken": 0,
+          "broken": 2,
           "jsErrors": 0,
-          "status": "green",
+          "status": "red",
           "loadError": null
         },
         {
           "path": "/blog/agentic-hell.html",
           "dead": 0,
-          "broken": 0,
+          "broken": 2,
           "jsErrors": 0,
-          "status": "green",
+          "status": "red",
           "loadError": null
         },
         {
           "path": "/blog/eu-ai-act-90-day-roadmap.html",
           "dead": 0,
-          "broken": 0,
+          "broken": 2,
           "jsErrors": 0,
-          "status": "green",
+          "status": "red",
           "loadError": null
         },
         {
           "path": "/blog/flow-to-trust-loop.html",
           "dead": 0,
-          "broken": 0,
+          "broken": 2,
           "jsErrors": 0,
-          "status": "green",
+          "status": "red",
           "loadError": null
         },
         {
           "path": "/blog/healthcare-ai-governance-spring-2026.html",
           "dead": 0,
-          "broken": 0,
+          "broken": 2,
           "jsErrors": 0,
-          "status": "green",
+          "status": "red",
           "loadError": null
         },
         {
           "path": "/blog/nist-ai-rmf-vs-real-world.html",
           "dead": 0,
-          "broken": 0,
+          "broken": 2,
           "jsErrors": 0,
-          "status": "green",
+          "status": "red",
           "loadError": null
         },
         {
           "path": "/blog/no-more-anonymous-ghosts.html",
           "dead": 0,
-          "broken": 0,
+          "broken": 2,
           "jsErrors": 0,
-          "status": "green",
+          "status": "red",
           "loadError": null
         },
         {
           "path": "/blog/stop-writing-for-humans.html",
           "dead": 0,
-          "broken": 0,
+          "broken": 2,
           "jsErrors": 0,
-          "status": "green",
+          "status": "red",
           "loadError": null
         },
         {
           "path": "/blog/what-is-aigovops.html",
           "dead": 0,
-          "broken": 0,
+          "broken": 2,
           "jsErrors": 0,
-          "status": "green",
+          "status": "red",
           "loadError": null
         },
         {
           "path": "/community.html",
+          "dead": 0,
+          "broken": 1,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/founders.html",
+          "dead": 0,
+          "broken": 1,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/frameworks.html",
+          "dead": 0,
+          "broken": 1,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/get-to-yes.html",
+          "dead": 0,
+          "broken": 2,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/index.html",
+          "dead": 0,
+          "broken": 1,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/press.html",
+          "dead": 0,
+          "broken": 1,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/recover-to-yes.html",
+          "dead": 0,
+          "broken": 1,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/stay-at-yes.html",
+          "dead": 0,
+          "broken": 1,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/support.html",
+          "dead": 0,
+          "broken": 1,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/alpha.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -146,38 +210,6 @@
         },
         {
           "path": "/f-ai-friday.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/founders.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/frameworks.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/get-to-yes.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/index.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -207,42 +239,191 @@
           "jsErrors": 0,
           "status": "green",
           "loadError": null
-        },
-        {
-          "path": "/press.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/recover-to-yes.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/stay-at-yes.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/support.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
         }
       ],
       "dead": [],
-      "broken": [],
+      "broken": [
+        {
+          "page": "https://www.aigovops-foundation.com/",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/get-to-yes.html",
+          "text": "Which frameworks apply to you? →",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/get-to-yes.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/stay-at-yes.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/recover-to-yes.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/blog.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/community.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/founders.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/frameworks.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/press.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/support.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/blog/what-is-aigovops.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/blog/what-is-aigovops.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/blog/nist-ai-rmf-vs-real-world.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/blog/nist-ai-rmf-vs-real-world.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/blog/eu-ai-act-90-day-roadmap.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/blog/eu-ai-act-90-day-roadmap.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/blog/healthcare-ai-governance-spring-2026.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/blog/healthcare-ai-governance-spring-2026.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/blog/agentic-frontiers-retrospective.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/blog/agentic-frontiers-retrospective.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/blog/agentic-hell.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/blog/agentic-hell.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/blog/flow-to-trust-loop.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/blog/flow-to-trust-loop.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/blog/stop-writing-for-humans.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/blog/stop-writing-for-humans.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/blog/no-more-anonymous-ghosts.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/blog/no-more-anonymous-ghosts.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        },
+        {
+          "page": "https://www.aigovops-foundation.com/index.html",
+          "text": "Frameworks",
+          "href": "https://www.aigovops-foundation.com/frameworks.html",
+          "reason": "internal link → HTTP 0"
+        }
+      ],
       "consoleErrors": []
     },
     {
@@ -257,19 +438,19 @@
       "name": "Library (rendered)",
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
-      "status": "warn",
-      "ranAt": "2026-08-20T17:11:31.827Z",
+      "status": "green",
+      "ranAt": "2026-08-20T18:10:19.429Z",
       "summary": {
         "pages": 60,
         "greenPages": 60,
         "redPages": 0,
-        "ok": 1527,
-        "dead": 2,
+        "ok": 1545,
+        "dead": 0,
         "broken": 0,
-        "external": 794,
+        "external": 800,
         "delegated": 28,
         "consoleErrorPages": 0,
-        "healthy": false
+        "healthy": true
       },
       "pageHealth": [
         {
@@ -762,7 +943,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-20T17:13:42.993Z",
+      "ranAt": "2026-08-20T18:12:14.195Z",
       "summary": {
         "pages": 78,
         "greenPages": 77,
@@ -1509,7 +1690,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-20T17:15:44.977Z",
+      "ranAt": "2026-08-20T18:14:01.600Z",
       "summary": {
         "pages": 78,
         "greenPages": 77,
@@ -2256,7 +2437,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-20T17:16:02.205Z",
+      "ranAt": "2026-08-20T18:14:17.034Z",
       "summary": {
         "pages": 11,
         "greenPages": 11,
@@ -2368,15 +2549,15 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-20T17:18:06.944Z",
+      "ranAt": "2026-08-20T18:16:03.008Z",
       "summary": {
         "pages": 78,
         "greenPages": 77,
         "redPages": 1,
-        "ok": 3722,
+        "ok": 3922,
         "dead": 14,
         "broken": 0,
-        "external": 1522,
+        "external": 1622,
         "delegated": 0,
         "consoleErrorPages": 0,
         "healthy": false
