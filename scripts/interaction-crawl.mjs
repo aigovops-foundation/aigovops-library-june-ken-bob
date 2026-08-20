@@ -106,7 +106,12 @@ const COLLECT = `(() => {
     if (getComputedStyle(el).cursor === 'pointer') nodes.push(el);
   }
   const out = [];
-  const INT = 'a[href], button, [role="button"], [onclick], [data-crawl-wired], input[type="submit"], input[type="button"], summary, label[for]';
+  // A LABEL THAT WRAPS ITS CONTROL IS INTERACTIVE TOO. This listed only label[for], so the
+  // perfectly ordinary <label><input type=radio><span>…</span></label> was not counted as a
+  // control — and every span inside it, inheriting the label's pointer cursor, was reported as
+  // a dead clickable. That was 43 of the "105 dead controls" on the Beacon lab pages on
+  // 2026-08-19; clicking any of them toggles its radio exactly as intended.
+  const INT = 'a[href], button, [role="button"], [onclick], [data-crawl-wired], input[type="submit"], input[type="button"], summary, label[for], label:has(input), label:has(select), label:has(textarea)';
   for (const el of nodes) {
     if (seen.has(el)) continue; seen.add(el);
     const r = el.getBoundingClientRect();
@@ -118,6 +123,7 @@ const COLLECT = `(() => {
     const inForm = !!el.closest('form');
     const forId = el.getAttribute('for');
     const labelTargetOk = forId ? !!document.getElementById(forId) : null;
+    const labelWraps = tag === 'label' && !!el.querySelector('input, select, textarea');
     let anchorTargetOk = null;
     // ANCHOR TARGETS ARE LOOKED UP BY ID, NOT BY SELECTOR. querySelector('#' + frag) parses the
     // fragment as CSS, where '.' starts a class and ':' a pseudo-class — so every dotted id
@@ -141,9 +147,16 @@ const COLLECT = `(() => {
       href, rawHref: rawHref ?? null,
       type: type || null, inForm,
       onclickAttr: el.hasAttribute('onclick'),
+      // A HANDLER CAN BE A PROPERTY, NOT AN ATTRIBUTE OR A LISTENER. Assigning el.onclick = fn
+      // sets neither an onclick ATTRIBUTE nor an addEventListener registration, so both of the
+      // detectors above are blind to it and the element reads as dead. On 2026-08-19 that
+      // reported the "Reveal debrief" buttons on ksr-cards.html and the quiz options on
+      // demo-walkthroughs.html as dead — all of which respond correctly when clicked.
+      // (No backticks in this comment: it lives inside a template literal.)
+      onclickProp: typeof el.onclick === 'function',
       wired: el.hasAttribute('data-crawl-wired'),
       isSubmit: (tag === 'button' && (type === 'submit' || (!type && inForm))) || type === 'submit',
-      labelTargetOk, anchorTargetOk,
+      labelTargetOk, labelWraps, anchorTargetOk,
       cursorPointer: getComputedStyle(el).cursor === 'pointer',
       visible,
       dataJeeves: el.hasAttribute('data-jeeves-open'),
@@ -160,7 +173,7 @@ const COLLECT = `(() => {
 function classify(e, delegation, targetStatus) {
   // native affordance?
   const nativeInteractive = ['a','button','summary','label','input','select','textarea'].includes(e.tag)
-    || e.role === 'button' || e.onclickAttr || e.dataJeeves;
+    || e.role === 'button' || e.onclickAttr || e.onclickProp || e.dataJeeves;
   const looksClickable = nativeInteractive || e.cursorPointer || /\b(btn|cta|button|card)\b/.test(e.cls);
 
   // 1) real link with an href
@@ -183,9 +196,11 @@ function classify(e, delegation, targetStatus) {
 
   // 2) no href — needs a handler
   if (e.onclickAttr) return { verdict: 'WIRED', reason: 'onclick attribute' };
+  if (e.onclickProp) return { verdict: 'WIRED', reason: 'onclick property (el.onclick = fn)' };
   if (e.isSubmit) return { verdict: 'WIRED', reason: 'form submit' };
   if (e.wired) return { verdict: 'WIRED', reason: 'click/pointer listener attached' };
   if (e.tag === 'label' && e.labelTargetOk) return { verdict: 'WIRED', reason: 'label → control' };
+  if (e.tag === 'label' && e.labelWraps) return { verdict: 'WIRED', reason: 'label wraps its control' };
   if (e.tag === 'summary') return { verdict: 'WIRED', reason: '<details> disclosure' };
   if (e.dataJeeves) return { verdict: 'DEAD', reason: 'data-jeeves-open but widget/handler absent' };
 
