@@ -124,6 +124,42 @@ in the Actions tab as well as on the board.
 > Hourly crawling is deliberate: a dead button on a launch page is an hourly-cadence problem, not a
 > weekly one. The whole-estate crawl is a few minutes of CI per hour.
 
+### Changing the send: verify quiet by watching, not by reading
+
+**A change to notification behaviour is not verified until a real run has been observed doing the
+quiet thing.** Reading the code is not enough, and neither is a green step.
+
+On 2026-08-20 the mail was changed to once a day, recorded in `docs/.estate-last-window`. That file
+was never tracked by git. The recording step guarded its commit with
+`git diff --quiet -- docs/.estate-last-window`, and **`git diff` does not see untracked files** — so
+the guard reported "no change", skipped the commit, and never added the file. Every later run
+started from a clean checkout with no memory, decided the window was unsent, and mailed.
+
+**Six consecutive hourly sends** before anyone noticed. The step reported success the whole time,
+because writing a file and skipping a commit is not an error. The sibling `docs/.estate-notified`
+*is* tracked, so the identical guard three lines above it always worked — which is what made it
+invisible.
+
+It surfaced only when someone asked what the current state was, and the answer was checked against
+the live repo instead of recalled.
+
+So, when you change what gets sent or when:
+
+1. **Watch a real scheduled run afterwards.** Not the code, not the diff, not a dry run.
+2. **Check three signals, not one** — the window decision line, the mail step's conclusion, and the
+   actual count of `send-mail(graph): sent` in the log. A step can be `skipped` for the wrong
+   reason; only the log says whether mail left.
+3. **Confirm the state it depends on is real.** `git ls-files docs/.estate-last-window` should name
+   it, and its contents should equal `TZ=America/Los_Angeles date +%F`. State the mechanism writes
+   but never persists looks identical to state that works, until the next checkout.
+4. **A silent failure and a working control look the same from inside.** The whole point of this
+   file is that silence is not evidence — the same applies to the machinery that produces it.
+
+The other changes made the same day were each proven by execution: the anchor fix by re-crawling
+the live site, the window logic by running the workflow's own shell over 72 simulated hours, the
+test isolation by driving the deployed effector on the droplet. All held. The one verified by
+reading is the one that broke.
+
 ## How it runs
 
 - **`estate-interaction-crawl.yml`** (hourly aggregator, above) — the estate-wide habit + digest.
