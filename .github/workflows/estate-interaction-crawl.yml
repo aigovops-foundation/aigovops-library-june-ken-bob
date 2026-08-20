@@ -32,6 +32,13 @@ jobs:
         id: prev
         run: echo "causes=$(cat docs/.estate-notified 2>/dev/null || echo none)" >> "$GITHUB_OUTPUT"
 
+      # THE LAST WINDOW ACTUALLY SENT — the file that turns a schedule into a guarantee. Written
+      # only after a send succeeds, so it records what reached a founder rather than what was
+      # attempted. Absent on first run, which correctly reads as "nothing sent yet".
+      - name: Read the last window sent
+        id: sent
+        run: echo "window=$(cat docs/.estate-last-window 2>/dev/null || echo none)" >> "$GITHUB_OUTPUT"
+
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
@@ -149,19 +156,40 @@ jobs:
       # conversion. A UTC cron pinned at 12:00/00:00 would be right for eight months and an hour
       # early for four. The board and the pinned issue still refresh hourly; only the MAIL is
       # twice daily, so a red is still visible within the hour to anyone who looks.
-      - name: Is this a founders' send window? (05:00 / 17:00 America/Los_Angeles)
+      - name: Is a founders' window still unsent? (05:00 / 17:00 America/Los_Angeles)
         id: window
         # Runs even if the board commit or the pinned-issue update failed — neither has any
-        # bearing on whether it is 05:00 or 17:00 in California.
+        # bearing on whether a founder is owed a digest.
         if: ${{ !cancelled() }}
+        # ASKS WHETHER THE WINDOW HAS BEEN SENT, NOT WHETHER IT IS EXACTLY 05:00. Matching the
+        # hour meant the send depended on a run existing at that hour, and on 2026-08-19 five of
+        # the ten preceding scheduled runs never executed a step: they queued for an hour behind
+        # a runner backlog and were cancelled by the next hour's run entering the concurrency
+        # group. A cancelled run cannot check the time, so the window passed in silence — which
+        # reads exactly like "nothing is red".
+        #
+        # So the question is now "which window has most recently OPENED, and has it gone out?".
+        # A lost 12:00Z run is covered by 13:00Z; a ninety-minute delay still sends; only the
+        # date rolls the answer over. Sending late is strictly better than not sending, and the
+        # digest carries its own crawl timestamp so a late one cannot be mistaken for fresh.
         run: |
-          h=$(TZ=America/Los_Angeles date +%H)
-          if [ "${{ github.event_name }}" != "schedule" ] || [ "$h" = "05" ] || [ "$h" = "17" ]; then
+          h=$(( 10#$(TZ=America/Los_Angeles date +%H) ))    # 10# so "05"/"08" are not read as octal
+          today=$(TZ=America/Los_Angeles date +%Y-%m-%d)
+          if   [ "$h" -ge 17 ]; then window="$today-PM"
+          elif [ "$h" -ge 5  ]; then window="$today-AM"
+          else window="$(TZ=America/Los_Angeles date -d yesterday +%Y-%m-%d)-PM"   # before 05:00: the PM window still owns the night
+          fi
+          echo "window=$window" >> "$GITHUB_OUTPUT"
+          last='${{ steps.sent.outputs.window }}'
+          if [ "${{ github.event_name }}" != "schedule" ]; then
             echo "send=true" >> "$GITHUB_OUTPUT"
-            echo "Pacific hour $h — sending."
+            echo "manual run — sending regardless of window ($window)"
+          elif [ "$window" != "$last" ]; then
+            echo "send=true" >> "$GITHUB_OUTPUT"
+            echo "window $window has not been sent (last sent: $last) — sending."
           else
             echo "send=false" >> "$GITHUB_OUTPUT"
-            echo "Pacific hour $h — not a send window; the board still refreshed."
+            echo "window $window already sent — nothing owed; the board still refreshed."
           fi
 
       # WHETHER THE FOUNDERS GET THE DIGEST MUST NOT DEPEND ON HOUSEKEEPING. This sat downstream
@@ -170,6 +198,7 @@ jobs:
       # precondition is that the digest was actually built; committing the board and updating the
       # pinned issue are bookkeeping, and their failure is visible in the run's own red.
       - name: Email the digest to the founders (05:00 and 17:00 Pacific)
+        id: mail
         if: ${{ !cancelled() && steps.digest.outcome == 'success' && steps.window.outputs.send == 'true' }}
         env:
           GRAPH_TENANT_ID: ${{ secrets.GRAPH_TENANT_ID }}
@@ -178,6 +207,29 @@ jobs:
           GRAPH_SENDER: ${{ secrets.GRAPH_SENDER }}
           ESTATE_SMTP_URL: ${{ secrets.ESTATE_SMTP_URL }}
         run: node scripts/send-mail.mjs --subject "🌿 Estate health — ${{ steps.digest.outputs.state == 'green' && 'all green' || format('{0} to fix', steps.digest.outputs.state) }}" --body digest.md
+
+      # RECORD THE WINDOW ONLY AFTER IT ACTUALLY WENT OUT. Written here, not in the window step,
+      # because a window marked sent before the send succeeds is a window that never gets retried
+      # — the failure this file exists to prevent, reintroduced one step earlier. If this push
+      # loses a race and cannot recover, the window stays unmarked and the next hourly run sends
+      # again: a duplicate digest, which is a far cheaper mistake than a silent miss.
+      - name: Record the window as sent
+        if: ${{ !cancelled() && steps.mail.outcome == 'success' }}
+        run: |
+          git config user.name "aigovops-estate-bot"
+          git config user.email "noreply@aigovops-foundation.com"
+          printf '%s' '${{ steps.window.outputs.window }}' > docs/.estate-last-window
+          if ! git diff --quiet -- docs/.estate-last-window; then
+            git add docs/.estate-last-window
+            git commit -m "chore(estate-health): sent window ${{ steps.window.outputs.window }} [automated]"
+            for attempt in 1 2 3; do
+              git push && exit 0
+              echo "push rejected (attempt $attempt) — rebasing onto origin/main and retrying"
+              git pull --rebase --autostash origin main || exit 1
+              sleep $((attempt * 5))
+            done
+            echo "::warning::could not record window ${{ steps.window.outputs.window }} — the next run will send it again"
+          fi
 
       - name: Fail the run if any page is red
         if: steps.crawl.outputs.estate_red == '1' || steps.digest.outputs.state == 'red'
