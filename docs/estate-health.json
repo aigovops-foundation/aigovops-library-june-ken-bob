@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-20T14:22:30.613Z",
+  "generatedAt": "2026-08-20T15:19:24.066Z",
   "estate": {
     "properties": 7,
     "reporting": 6,
@@ -18,7 +18,7 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-20T14:15:01.671Z",
+      "ranAt": "2026-08-20T15:12:03.804Z",
       "summary": {
         "pages": 26,
         "greenPages": 26,
@@ -258,7 +258,7 @@
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-20T14:16:32.298Z",
+      "ranAt": "2026-08-20T15:13:31.427Z",
       "summary": {
         "pages": 60,
         "greenPages": 55,
@@ -759,8 +759,8 @@
         {
           "page": "https://community.aigovops-foundation.com/library/rooms.html",
           "errors": [
-            "Access to fetch at 'https://aigovops-library-core.fly.dev/api/skills' from origin 'https://community.aigovops-foundation.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
-            "Access to fetch at 'https://aigovops-library-core.fly.dev/api/verify' from origin 'https://community.aigovops-foundation.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource."
+            "Access to fetch at 'https://aigovops-library-core.fly.dev/api/verify' from origin 'https://community.aigovops-foundation.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
+            "Access to fetch at 'https://aigovops-library-core.fly.dev/api/skills' from origin 'https://community.aigovops-foundation.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource."
           ]
         },
         {
@@ -794,7 +794,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-20T14:18:28.450Z",
+      "ranAt": "2026-08-20T15:15:26.555Z",
       "summary": {
         "pages": 78,
         "greenPages": 77,
@@ -1541,7 +1541,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-20T14:20:20.735Z",
+      "ranAt": "2026-08-20T15:17:19.528Z",
       "summary": {
         "pages": 78,
         "greenPages": 77,
@@ -2288,7 +2288,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-20T14:20:36.164Z",
+      "ranAt": "2026-08-20T15:17:35.526Z",
       "summary": {
         "pages": 11,
         "greenPages": 11,
@@ -2400,7 +2400,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-20T14:22:30.554Z",
+      "ranAt": "2026-08-20T15:19:23.999Z",
       "summary": {
         "pages": 78,
         "greenPages": 77,
