@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-08-21T09:21:20.295Z",
+  "generatedAt": "2026-08-21T10:16:43.550Z",
   "estate": {
     "properties": 7,
     "reporting": 6,
     "healthy": 3,
     "red": 3,
     "greenPages": 328,
-    "redPages": 3,
-    "dead": 42,
-    "broken": 0,
+    "redPages": 4,
+    "dead": 28,
+    "broken": 4,
     "consoleErrorPages": 0,
     "score": 99
   },
@@ -18,7 +18,7 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-21T09:14:03.540Z",
+      "ranAt": "2026-08-21T10:09:29.180Z",
       "summary": {
         "pages": 26,
         "greenPages": 26,
@@ -258,7 +258,7 @@
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-21T09:15:36.561Z",
+      "ranAt": "2026-08-21T10:10:55.531Z",
       "summary": {
         "pages": 60,
         "greenPages": 60,
@@ -762,24 +762,32 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-21T09:17:36.163Z",
+      "ranAt": "2026-08-21T10:12:55.624Z",
       "summary": {
-        "pages": 78,
+        "pages": 79,
         "greenPages": 77,
-        "redPages": 1,
-        "ok": 3922,
-        "dead": 14,
-        "broken": 0,
-        "external": 1622,
+        "redPages": 2,
+        "ok": 3912,
+        "dead": 0,
+        "broken": 4,
+        "external": 1627,
         "delegated": 0,
         "consoleErrorPages": 0,
         "healthy": false
       },
       "pageHealth": [
         {
+          "path": "/",
+          "dead": 0,
+          "broken": 2,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": null
+        },
+        {
           "path": "/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "dead": 14,
-          "broken": 0,
+          "dead": 0,
+          "broken": 2,
           "jsErrors": 0,
           "status": "red",
           "loadError": null
@@ -1401,107 +1409,33 @@
           "loadError": null
         }
       ],
-      "dead": [
+      "dead": [],
+      "broken": [
         {
           "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "1",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
+          "text": "",
+          "href": "https://aigovops-foundation.github.io/",
+          "reason": "internal link → HTTP 404"
         },
         {
           "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "task",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
+          "text": "",
+          "href": "https://aigovops-foundation.github.io/",
+          "reason": "internal link → HTTP 404"
         },
         {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "2",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
+          "page": "https://aigovops-foundation.github.io/",
+          "text": "",
+          "href": "https://aigovops-foundation.github.io/",
+          "reason": "internal link → HTTP 404"
         },
         {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "plan",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "3",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "helpers",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "4",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "check",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "5",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "queue",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "6",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "you say yes",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "7",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "receipt",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
+          "page": "https://aigovops-foundation.github.io/",
+          "text": "",
+          "href": "https://aigovops-foundation.github.io/",
+          "reason": "internal link → HTTP 404"
         }
       ],
-      "broken": [],
       "consoleErrors": []
     },
     {
@@ -1509,7 +1443,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-21T09:19:22.516Z",
+      "ranAt": "2026-08-21T10:14:42.713Z",
       "summary": {
         "pages": 78,
         "greenPages": 77,
@@ -2256,7 +2190,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-21T09:19:38.160Z",
+      "ranAt": "2026-08-21T10:14:59.078Z",
       "summary": {
         "pages": 11,
         "greenPages": 11,
@@ -2368,7 +2302,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-08-21T09:21:20.240Z",
+      "ranAt": "2026-08-21T10:16:43.493Z",
       "summary": {
         "pages": 78,
         "greenPages": 77,
