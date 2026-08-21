@@ -18,6 +18,7 @@
   <button id="prop-wired">Wired via onclick property</button> <!-- el.onclick = fn: no attribute, no listener -->
   <label>Wrapping label<input type="checkbox"><span style="cursor:pointer">child of a wrapping label</span></label>
   <button disabled>Disabled on purpose</button>               <!-- nobody can press it: not a defect -->
+  <div id="prop-chip" style="cursor:pointer"><span class="n">1</span><span>child of a property-wired chip</span></div>
   <div data-simulated="true">
     <button>Depicted button</button>                          <!-- a drawing of software -->
     <a>Unfilled placeholder link</a>
@@ -32,5 +33,10 @@
   <script>
     document.getElementById('js-wired').addEventListener('click', () => {});
     document.getElementById('prop-wired').onclick = () => {};   // property, not attribute or listener
+    // A CONTAINER wired the same way. Its children inherit cursor:pointer but have no handler of
+    // their own — they must read as covered, not dead. NCW's jeeves-demo.html has six such chips;
+    // every chip verified WIRED while its own spans were reported DEAD, 14 findings from six
+    // working controls, because a CSS selector cannot test a JS property.
+    document.getElementById('prop-chip').onclick = () => {};
   </script>
 </body></html>

@@ -64,7 +64,8 @@ test('interaction crawler catches planted dead + broken, passes the good ones', 
   //   wrapping label           — a <label> around its input is interactive without for=
   //   disabled / [data-simulated] — declared non-operable: a depiction, not a defect
   for (const good of ['Good internal link', 'Wired via onclick', 'Wired via addEventListener', 'Submit', 'covered child link', 'span inside a link', 'Anchor to existing',
-                      'Dotted anchor', 'Wired via onclick property', 'child of a wrapping label', 'Disabled on purpose', 'Depicted button', 'Unfilled placeholder link']) {
+                      'Dotted anchor', 'Wired via onclick property', 'child of a wrapping label', 'Disabled on purpose', 'Depicted button', 'Unfilled placeholder link',
+                      'child of a property-wired chip']) {
     assert.ok(!badTexts.includes(good), `false positive: "${good}" was flagged`);
   }
 });
