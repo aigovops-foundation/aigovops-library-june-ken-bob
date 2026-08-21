@@ -119,7 +119,17 @@ const COLLECT = `(() => {
   // control — and every span inside it, inheriting the label's pointer cursor, was reported as
   // a dead clickable. That was 43 of the "105 dead controls" on the Beacon lab pages on
   // 2026-08-19; clicking any of them toggles its radio exactly as intended.
-  const INT = 'a[href], button, [role="button"], [onclick], [data-crawl-wired], input[type="submit"], input[type="button"], summary, label[for], label:has(input), label:has(select), label:has(textarea)';
+  // A CSS SELECTOR CANNOT TEST A JS PROPERTY. An element wired with el.onclick = fn matches
+  // neither [onclick] (that is the ATTRIBUTE) nor [data-crawl-wired] (that is set only by the
+  // addEventListener instrumentation), so it was invisible to the ancestor test below even after
+  // the element-level check learned to see it. Consequence: NCW's jeeves-demo.html has six
+  // process chips wired exactly that way; every chip verified WIRED while its own child spans
+  // were reported DEAD — 14 findings from six working controls. Tag them first so closest()
+  // can find them. (No backticks in this comment: it lives inside a template literal.)
+  for (const el of document.querySelectorAll('*')) {
+    if (typeof el.onclick === 'function') el.setAttribute('data-crawl-onclick', '1');
+  }
+  const INT = 'a[href], button, [role="button"], [onclick], [data-crawl-onclick], [data-crawl-wired], input[type="submit"], input[type="button"], summary, label[for], label:has(input), label:has(select), label:has(textarea)';
   for (const el of nodes) {
     if (seen.has(el)) continue; seen.add(el);
     const r = el.getBoundingClientRect();
