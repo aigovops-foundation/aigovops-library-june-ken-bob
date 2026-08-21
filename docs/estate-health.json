@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-21T16:15:38.775Z",
+  "generatedAt": "2026-08-21T17:16:32.259Z",
   "estate": {
     "properties": 7,
     "reporting": 6,
@@ -18,15 +18,15 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-21T16:08:36.391Z",
+      "ranAt": "2026-08-21T17:09:32.792Z",
       "summary": {
         "pages": 26,
         "greenPages": 26,
         "redPages": 0,
-        "ok": 578,
+        "ok": 622,
         "dead": 0,
         "broken": 0,
-        "external": 172,
+        "external": 191,
         "delegated": 0,
         "consoleErrorPages": 0,
         "healthy": true
@@ -258,7 +258,7 @@
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-21T16:09:58.239Z",
+      "ranAt": "2026-08-21T17:10:55.674Z",
       "summary": {
         "pages": 60,
         "greenPages": 60,
@@ -762,7 +762,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-21T16:11:54.945Z",
+      "ranAt": "2026-08-21T17:12:45.785Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -1410,7 +1410,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-21T16:13:39.897Z",
+      "ranAt": "2026-08-21T17:14:31.802Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2058,7 +2058,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-21T16:13:54.947Z",
+      "ranAt": "2026-08-21T17:14:47.203Z",
       "summary": {
         "pages": 11,
         "greenPages": 11,
@@ -2170,7 +2170,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-21T16:15:38.690Z",
+      "ranAt": "2026-08-21T17:16:32.174Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
