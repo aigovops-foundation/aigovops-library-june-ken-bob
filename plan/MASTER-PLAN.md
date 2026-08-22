@@ -75,15 +75,18 @@ sandbox-privilege call. `help@aigovops.org`, which still cannot receive mail.
 
 We do not have a production problem. **We have a merge-queue problem.**
 
-| PR | Opened | Waiting |
+*Measured 2026-08-22. A dated measurement does not rot; the live version of this table is
+kept current in PR #61's description.*
+
+| PR | Opened | Still open after |
 |---|---|---|
 | #40 — mail-health check + estate-mailer skill | 2026-08-14 | **8 days** |
 | #46 — two crawler defects, one of which stops the heartbeat | 2026-08-18 | **4 days** |
-| #61 — plan + `estate.yaml` + `autonomy.yaml` | 2026-08-22 | today |
+| #61 — the master plan, `estate.yaml`, `autonomy.yaml` | 2026-08-22 | same day |
 
-All three are drafts, all green, all Yellow-class: an agent did the work, a human decides.
-That is the design working exactly as intended — and #46 fixes a hang **in the heartbeat that
-watches the whole estate**, which has now been sitting for four days.
+All green, all Yellow-class: an agent did the work, a human decides. That is the design working
+exactly as intended — and #46 fixes a hang **in the heartbeat that watches the whole estate**,
+which had been sitting eight days when this was written.
 
 No amount of further automation touches this number. The Yellow queue moves at the speed of a
 founder's attention, and that is the honest constraint on everything in section 5. Worth

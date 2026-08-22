@@ -111,14 +111,15 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visibl
 
 <h3>The finding worth reading twice</h3>
 <p>We do not have a production problem. <strong>We have a merge-queue problem.</strong></p>
+<p><em>Measured 2026-08-22. A dated measurement does not rot; the live version of this table is kept current in PR #61's description.</em></p>
 <div class="tablewrap"><table>
-<thead><tr><th>PR</th><th>Opened</th><th>Waiting</th></tr></thead>
+<thead><tr><th>PR</th><th>Opened</th><th>Still open after</th></tr></thead>
 <tbody>
 <tr><td>#40 — mail-health check + estate-mailer skill</td><td>2026-08-14</td><td><strong>8 days</strong></td></tr>
 <tr><td>#46 — two crawler defects, one of which stops the heartbeat</td><td>2026-08-18</td><td><strong>4 days</strong></td></tr>
-<tr><td>#61 — plan + <code>estate.yaml</code> + <code>autonomy.yaml</code></td><td>2026-08-22</td><td>today</td></tr>
+<tr><td>#61 — the master plan, <code>estate.yaml</code>, <code>autonomy.yaml</code></td><td>2026-08-22</td><td>same day</td></tr>
 </tbody></table></div>
-<p>All three are drafts, all green, all Yellow-class: an agent did the work, a human decides. That is the design working exactly as intended — and #46 fixes a hang <strong>in the heartbeat that watches the whole estate</strong>, which has now been sitting for four days.</p>
+<p>All green, all Yellow-class: an agent did the work, a human decides. That is the design working exactly as intended — and #46 fixes a hang <strong>in the heartbeat that watches the whole estate</strong>, which had been sitting eight days when this was written.</p>
 <p>No amount of further automation touches this number. The Yellow queue moves at the speed of a founder's attention, and that is the honest constraint on everything in section 5. Worth deciding, in this same sitting, what the review cadence is — a standing thirty minutes twice a week would clear it.</p>
 
 <h2>3 · The standing rules, in one place</h2>
