@@ -37,3 +37,7 @@ jobs:
       # workflow must be declared, least-privileged, and inside its class; undeclared automation fails.
       - run: node scripts/autonomy-check.mjs
       - run: node --test test/autonomy-check.test.mjs
+      # Plan register gate — MASTER-PLAN.md gives every plan document one job and one status.
+      # A new plan document with no row fails here; an index nobody maintains is worse than none.
+      - run: node scripts/plan-register-check.mjs
+      - run: node --test test/plan-register.test.mjs
