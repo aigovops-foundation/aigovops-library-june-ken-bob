@@ -1,5 +1,9 @@
 ---
 name: op-github-deploy
+principle: P1
+owner: bobrapp
+agent: Deploy
+risk: red
 description: >
   Wire and operate the 1Password → GitHub Actions secret connection for the AiGovOps
   Library repo, and ship workflow/config changes that use it. Use when connecting
