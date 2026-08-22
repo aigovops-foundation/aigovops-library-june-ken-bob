@@ -1,5 +1,9 @@
 name: ci
 on: [push, pull_request]
+
+# Least privilege, declared. An inherited default is an UNKNOWN permission set, and
+# policies/autonomy.yaml treats unknown as not-green. This lane only reads the repo.
+permissions: { contents: read }
 jobs:
   core-tests:
     runs-on: ubuntu-latest
@@ -29,3 +33,7 @@ jobs:
       # and repo-audit.config.json are views of it. --check fails the build when they disagree.
       - run: node scripts/estate-manifest.mjs --check
       - run: node --test test/estate-manifest.test.mjs
+      # Autonomy gate — policies/autonomy.yaml is the irreversibility boundary as data. Every
+      # workflow must be declared, least-privileged, and inside its class; undeclared automation fails.
+      - run: node scripts/autonomy-check.mjs
+      - run: node --test test/autonomy-check.test.mjs

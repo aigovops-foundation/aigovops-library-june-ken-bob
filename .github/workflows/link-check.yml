@@ -13,6 +13,10 @@ on:
     - cron: "0 16 * * 1"   # Mondays 16:00 UTC — link rot is a weekly-cadence problem
   workflow_dispatch:
 
+# The CALLER must grant what the called workflow asks for — a reusable workflow's permissions
+# can only be a SUBSET of its caller's. reusable-link-check.yml asks for `contents: read`.
+permissions: { contents: read }
+
 jobs:
   link-check:
     uses: ./.github/workflows/reusable-link-check.yml

@@ -309,8 +309,15 @@ granting access, or sending mail as Bob or Ken. Retiring a github.io mirror. Any
 touching money.
 
 The mapping is exact: Green = `[auto]`, Yellow = `[auto]` that ends in a PR, Red = `[gate]`.
-Writing it as `policies/autonomy.yaml` means CI can check a workflow's declared class against
-what it actually does — an automated organization that can prove its own limits.
+
+**Drafted, and it caught something on its first run.** `policies/autonomy.yaml` now holds the
+three classes, twenty-eight classified actions, all nineteen workflows, and nine prohibited
+patterns; `scripts/autonomy-check.mjs` enforces it in CI. The first run found **four workflows
+with no `permissions:` block at all** — `ci`, `deploy-validate`, `link-check` and
+`secret-scan` were running on the repository default, which is to say on a permission set
+nobody in this repo had ever stated. All four now declare `contents: read`. That is what
+writing a rule down as data buys: an automated organization that can prove its own limits,
+and finds out where it could not.
 
 ---
 
@@ -388,7 +395,7 @@ named as they will be *after* M1.
 | 3 | M1 | `aigovops/CODEOWNERS` | Both founders required on `policies/`, `skills/`, `.github/`; branch protection on `main` | Yellow (needs D7) |
 | 4 | M1 | `estate.yaml` + `scripts/estate-manifest.mjs` | **Draft shipped.** The manifest, plus a validator that regenerates `estate-sites.json` byte-identically and fails CI on drift against all three proto-manifests. 42 rows still unverified pending D6. Moves to the trunk at M1. | Yellow |
 | 5 | M1 | — | 301 `a-i-gov-ops.com` → canonical; publish the `.org` redirect map | **Red** |
-| 6 | M1 | `aigovops/policies/autonomy.yaml` | Green/Yellow/Red written as data, plus a CI check that a workflow's declared class matches its permissions | Yellow |
+| 6 | M1 | `policies/autonomy.yaml` + `scripts/autonomy-check.mjs` | **Draft shipped.** Green/Yellow/Red as data: 28 classified actions, all 19 workflows declared, 9 prohibited patterns, and a CI gate that fails on undeclared automation, an inherited permission default, or an unbounded write. Found and fixed 4 workflows running on the repo default. Moves to the trunk at M1. | Yellow |
 | 7 | M2 | `aigovops/skills/` | Migrate 13 skills; add `principle:`/`owner:`/`risk:`; CI fails an unprincipled skill | Yellow |
 | 8 | M2 | `aigovops/skills/` | Three fat skills: AI House announcement, sponsorship proposal, editorial voice | Yellow |
 | 9 | M2 | `aigovops/marketplace.json`, `.claude-plugin/` | One-command install; department scoping stub | Yellow |

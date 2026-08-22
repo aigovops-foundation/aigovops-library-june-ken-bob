@@ -11,6 +11,7 @@
     "estate:exec": "node scripts/estate-exec-digest.mjs",
     "estate:check": "node scripts/estate-manifest.mjs --check",
     "estate:regen": "node scripts/estate-manifest.mjs --regen",
+    "autonomy:check": "node scripts/autonomy-check.mjs",
     "audit:repos:offline": "node scripts/repo-audit.mjs --repos-file audit/repos.inventory.json --open",
     "test": "cd core && node --test"
   },

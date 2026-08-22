@@ -19,4 +19,5 @@ Every discipline follows one shape: **trigger → agent does the work → human 
 - [`decision-2026-07-19-ledger-pii`](./decision-2026-07-19-ledger-pii.md) — **Decision record**: document the exception (31 historic records), don't rewrite the chain · Bob
 - [`understanding-the-estate`](./understanding-the-estate.md) — **The estate map**: one page for everything running · estate-map · `jeeves estate`
 - [`estate-manifest`](./estate-manifest.md) — **The estate manifest** (`estate.yaml`): one input, derived views, unknowns counted · steward · `estate:check`
+- [`autonomy`](./autonomy.md) — **The autonomy policy** (`policies/autonomy.yaml`): green acts, yellow proposes, red waits for a human · steward · `autonomy:check`
 - [`disaster-recovery`](./disaster-recovery.md) — **Disaster recovery** (the DR agent) · dr-agent · `jeeves dr` + monthly `dr-rehearse`
