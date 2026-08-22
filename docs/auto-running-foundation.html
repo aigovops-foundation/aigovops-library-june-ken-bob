@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AiGovOps Library — The Auto-Running Foundation</title>
+<meta name="description" content="One repo, one clock, one gate — the twelve-week plan to consolidate the AiGovOps estate into a mono-repo that runs its own bureaucracy while the founders keep every key.">
+<meta property="og:url" content="https://community.aigovops-foundation.com/library/auto-running-foundation.html"/>
+<link rel="canonical" href="https://community.aigovops-foundation.com/library/auto-running-foundation.html"/>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "https://community.aigovops-foundation.com/library/auto-running-foundation.html",
+  "url": "https://community.aigovops-foundation.com/library/auto-running-foundation.html",
+  "name": "AiGovOps Library — The Auto-Running Foundation",
+  "isPartOf": { "@id": "https://community.aigovops-foundation.com/library/#site" },
+  "publisher": { "@id": "https://community.aigovops-foundation.com/library/#org" },
+  "description": "One repo, one clock, one gate — the twelve-week plan to consolidate the AiGovOps estate into a mono-repo that runs its own bureaucracy while the founders keep every key."
+}
+</script>
+<meta property="og:title" content="The Auto-Running Foundation">
+<meta property="og:description" content="Seven decisions, seven milestones, twenty-two PRs. One repo, one clock, one gate.">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Source+Sans+3:ital,wght@0,300..800;1,300..800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* skin: aigovops-july-2026 (garden-warm) — canonical tokens: foundation repo design/aigovops-july-2026/ */
+  :root{--ink:#2B2B28;--ink2:#4C4A42;--green:#2E7D4F;--green2:#1F5E3A;--line:rgba(43,43,40,.14);--card:#fff}
+  body{margin:0;background:#FAF7F0;color:#2B2B28;font-family:'Source Sans 3','Segoe UI',system-ui,sans-serif;line-height:1.6}
+  body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:30;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.17 0 0 0 0 0.16 0 0 0 0 0.13 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E")}
+  a.back{position:fixed;top:14px;left:18px;color:#4C4A42;text-decoration:none;font-size:13px;letter-spacing:.3px}
+  a.back:hover{color:#1F5E3A}
+  .wrap{max-width:820px;margin:0 auto;padding:64px 28px 64px}
+  h1{font-family:'Fraunces',serif;color:#2B2B28;font-weight:600;margin:0 0 6px;font-size:30px;letter-spacing:.3px}
+  h2{font-family:'Fraunces',serif;color:#1F5E3A;font-weight:600;margin:38px 0 10px;font-size:22px}
+  h3{font-family:'Fraunces',serif;color:#9C4E12;font-weight:600;margin:24px 0 6px;font-size:17px}
+  p{margin:10px 0}
+  blockquote{border-left:3px solid #2E7D4F;margin:18px 0;padding:6px 16px;color:#4C4A42;background:#F1EAD8}
+  ul,ol{padding-left:22px;margin:8px 0}
+  li{margin:6px 0}
+  code{font-family:'DM Mono',ui-monospace,monospace;background:#F1EAD8;padding:2px 6px;border-radius:4px;font-size:13px;color:#1F5E3A}
+  pre{font-family:'DM Mono',ui-monospace,monospace;background:#F1EAD8;padding:14px 16px;border-radius:6px;font-size:12.5px;color:#2B2B28;overflow-x:auto;border:1px solid rgba(43,43,40,.14)}
+  pre code{background:none;padding:0;color:inherit}
+  strong{color:#2B2B28}
+  em{color:#4C4A42}
+  hr{border:none;border-top:1px solid rgba(43,43,40,.14);margin:28px 0}
+  .tablewrap{overflow-x:auto;margin:16px 0;border:1px solid rgba(43,43,40,.14);border-radius:6px;background:#fff}
+  table{border-collapse:collapse;width:100%;font-size:14px}
+  th,td{text-align:left;padding:8px 12px;border-bottom:1px solid rgba(43,43,40,.10);vertical-align:top}
+  th{font-family:'Fraunces',serif;font-weight:600;color:#1F5E3A;background:#F7F3E8;font-size:13px}
+  tr:last-child td{border-bottom:none}
+  .red{color:#9C4E12;font-weight:600}
+  .lede{font-size:17px;color:#4C4A42}
+</style><style id="a11y-universal">
+/* a11y-universal: keyboard focus + reduced motion (additive, non-breaking) */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+}
+a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:2px solid currentColor;outline-offset:2px;border-radius:2px
+}
+.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--green,#2ecc71);color:#fff;padding:10px 16px;border-radius:0 0 8px 0;font-weight:600;text-decoration:none}
+.skip-link:focus{left:0}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="back" href="./index.html" data-home>&larr; the Library</a>
+<div class="wrap" id="main" role="main">
+
+<h1>The Auto-Running Foundation</h1>
+<p class="lede"><em>One repo, one clock, one gate. A working plan for Bob and Ken, drafted 2026-08-22 from the Perplexity council review (GPT-5.6 Sol Thinking + Claude Opus 5 Thinking).</em></p>
+
+<blockquote>This is a <strong>proposal</strong>, not a change. Every irreversible move in it — a transfer, a rename, a DNS record, an archive — waits for one of you to make it. Nothing here has been executed. Durable source: <code>plan/auto-running-foundation.md</code>.</blockquote>
+
+<hr>
+
+<h2>1 · How to use this document</h2>
+<p>Read section 3 first — the seven decisions. They take about forty-five minutes between the two of you and they unblock everything else. Sections 4 through 7 are the design; section 8 is the milestone calendar and section 9 the PR ladder an agent can start executing the moment the decisions land. Section 10 is the honest list of what could go wrong.</p>
+<p>The plan runs <strong>twelve weeks</strong>, from Monday 2026-08-24 to Friday 2026-11-13, and it ends with a Foundation that keeps itself current without either of you doing bureaucracy — while still holding every key that matters.</p>
+
+<h2>2 · The thesis, in one paragraph</h2>
+<p>The council's diagnosis is right, and it is not a content problem: the Foundation has more working material than it has canonical ownership. Jeeves, Beacon, Umbrella, Lantern, the governed core, thirteen written skills, a manifesto that reads like a specification, and an hourly interaction crawler — all real, all working, scattered across five domains, two GitHub accounts and eight-plus repositories, with no single place that says what is true. An <strong>auto-running foundation</strong> is not more automation on top of that. It is three things: <strong>one repo</strong> (so there is exactly one source of procedure), <strong>one clock</strong> (so recurring work happens whether or not anyone remembers), and <strong>one gate</strong> (so everything the clock produces arrives as a proposal a human decides). We already have the third — the Yes-Gate is the product. We already have most of the second — see section 6. What we do not have is the first, and that is the twelve weeks.</p>
+
+<h2>3 · The seven decisions (this sitting)</h2>
+<p>Each carries a recommendation. Disagree freely — the point of writing them down is that the argument happens once, here, instead of leaking into every PR for three months.</p>
+
+<h3>D1 — Canonical domain: <code>aigovops-foundation.com</code></h3>
+<p>The two models split on this. Sol read the live <code>.com</code> estate; Claude weighted the <code>.org</code> manifesto and the <em>.org-suits-a-501(c)(3)</em> instinct. Our own repo settles it: every property this repo already monitors is on <code>.com</code> — <code>estate-sites.json</code> lists <code>www.aigovops-foundation.com</code> and <code>community.aigovops-foundation.com</code>, and the Library's own <code>redirect-stub/</code> already points deep links at <code>community.aigovops-foundation.com/library/</code>. The <code>.com</code> is the built estate; moving to <code>.org</code> means re-pointing work we have already done and re-earning the search equity behind it.</p>
+<p><strong>Recommendation:</strong> <code>.com</code> is canonical; every <code>.org</code> variant 301s into it; <code>aigovops.community</code> stays email-only. The Google Ad Grants point holds either way — the requirement is <em>one</em> domain with GA4 and HTTPS, not a particular TLD, and we are disqualified today on the multi-domain rule regardless of which we pick. <span class="red">Needs a founder — Red.</span></p>
+
+<h3>D2 — <code>a-i-gov-ops.com</code>: redirect it this week</h3>
+<p>It is live with competing hero copy. Anyone who meets us at a talk and types the hyphenated name reads a different value proposition than the manifesto. That is a credibility leak in front of exactly the sponsors and standards bodies the Fourth Force targets. 301 it to the canonical domain; do not redesign it, do not keep it as an experiment. <span class="red">Needs a founder — Red.</span></p>
+
+<h3>D3 — The mono-repo trunk: V4-10k, transferred to the org and renamed <code>aigovops</code></h3>
+<p>Bob's instruction — treat these as one mono-repo — overrides both models, who each argued for fewer moving parts in a different direction. It is the right call for the same reason they were both nervous: the disease is <em>canonicity</em>, and a mono-repo is the only structure where "which copy is true" cannot be asked.</p>
+<p>Two candidate trunks. <strong>V4-10k</strong> carries the most code and the longest history (28 workspaces, 188 tests), and making it the trunk resolves the ambiguity the council flagged about its role — monorepo, reference integration, incubator, or predecessor? — by answering <em>monorepo</em>, permanently. <strong>This Library repo</strong> carries the automation spine and the plan tree, but grafting 28 workspaces in here is more work than grafting docs into there.</p>
+<p><strong>Recommendation:</strong> V4-10k is the trunk. Transfer it to <code>aigovops-foundation</code> <em>first</em> (while it is still Bob's to transfer), then rename it <code>aigovops</code> inside the org. GitHub preserves redirects across both moves, so no existing link or clone breaks. Net new repositories created: <strong>zero</strong>. The repo count goes <em>down</em>, which is what the council asked for.</p>
+<p>One standing rule comes with this: <strong>never create a repository at a name we have freed up.</strong> A new repo at an old name silently kills the redirect protecting every existing link. <span class="red">Needs a founder — Red.</span></p>
+
+<h3>D4 — What does <em>not</em> go in the mono-repo</h3>
+<p>Everything that owns people, money, or consent stays where it is: <strong>Circle</strong> owns membership, <strong>Stripe/Zeffy</strong> own donations, the <strong>CRM</strong> owns constituents. Git owns <em>how the Foundation works</em>; transactional systems own <em>what happened to whom</em>. This is not a preference, it is the ledger rule we already run under — the ledger and beacons are metadata-only, no payloads, no PII, ever.</p>
+<p>The one genuine exception worth naming: the durability plan calls for a <strong>daily ledger export to a private repo</strong>. That is one net-new private repo, and the only one this plan proposes. Flagging it rather than sliding it past you.</p>
+
+<h3>D5 — Wordmark: <strong>AiGovOps</strong>, one spelling, everywhere</h3>
+<p>We currently ship four — AiGovOps, AIGovOps, AI GovOps, Aigovops. To anyone doing sponsor or regulator due diligence that reads as four organizations. Pick <code>AiGovOps</code> (the form the manifesto and this repo already use) and add it to the CI content check so it cannot drift back. <em>Yellow — an agent prepares the sweep; you merge it.</em></p>
+
+<h3>D6 — Read-only GitHub connection for the disposition pass</h3>
+<p>Neither model could produce a repository-by-repository disposition matrix, because neither could read the repos. A fine-grained token or GitHub App scoped to <strong>metadata, contents, issues, pull requests and Actions — read only; no administration, no secrets, no workflow write, no delete</strong> — makes that matrix a day's work instead of a guess. A separate, narrowly-scoped write identity comes later and only ever opens PRs. <span class="red">Needs a founder — Red</span>, but it is a <em>read</em> credential: the cheapest possible unblock.</p>
+
+<h3>D7 — Ken's GitHub handle</h3>
+<p><code>founders.json</code> still carries the TODO: we have Ken's email, not his handle. CODEOWNERS cannot require his review until we have it — which means D7 blocks the single most important control in this plan. One line, one minute. <strong>Needs Ken.</strong></p>
+
+<h2>4 · The mono-repo</h2>
+<pre><code>aigovops-foundation/aigovops          ← the trunk (was V4-10k)
+  estate.yaml                         ← the manifest: every domain, repo, form, cost,
+                                        owner, data classification
+  policies/
+    principles.yaml                   ← the 11 Principles, as data
+    autonomy.yaml                     ← Green / Yellow / Red per action class
+    roles.yaml                        ← co-founder / steward / member
+  skills/                             ← every SKILL.md, each with PRINCIPLE: frontmatter
+  .claude-plugin/ + marketplace.json  ← one install and a volunteer has it all
+  core/                               ← the governed core: yesgate, SecretsProvider
+  products/   beacon/ lantern/ umbrella/ library/ vendor-rfi/ ncw-ai-camp/ aiupdates/
+  sites/      foundation/ community/
+  ops/        workflows-source/ runbooks/ crawler/ digests/
+  docs/  plan/</code></pre>
+
+<h3>How things move — history preserved, nothing deleted</h3>
+<p>Each product arrives by <code>git subtree add --prefix=products/&lt;name&gt;</code>, which keeps its full commit history inside the trunk. The source repository is then <strong>archived, not deleted</strong> — archiving keeps its URL, stars, issues and redirects alive and read-only, and it is reversible. Deletion is never on the table; it is Red, and it is also just wrong here.</p>
+<p>The trap to plan around: <strong>an archived repo keeps serving its GitHub Pages site.</strong> Merge a product in and archive its repo, and <code>aigovops-foundation.github.io/&lt;repo&gt;/</code> keeps serving the old copy forever — a second source of truth, which is precisely the disease. So every product merge has a matching Pages disposition: replace the source repo's <code>docs/</code> with the <code>redirect-stub/</code> pattern this repo already ships (deep-link-preserving, <code>noindex, follow</code>) pointing at the canonical domain, <em>then</em> archive. Per the house rule, <strong>retiring a github.io mirror is a steward-shipped move — never autonomous.</strong></p>
+
+<h3>The honest costs of a mono-repo</h3>
+<p>Worth saying out loud before we commit, because they are real and they arrive later than the benefits.</p>
+<ul>
+<li><strong>One Pages site.</strong> A repo publishes one Pages site. Consolidation therefore forces the canonical-domain decision to be real, not aspirational — products get served at <code>aigovops-foundation.com/&lt;product&gt;/</code> or they are not served.</li>
+<li><strong>CI blast radius.</strong> One broken workflow can red every product at once. Mitigation: path filters per product, plus the <code>red-main-watchdog</code> we already run daily.</li>
+<li><strong>CODEOWNERS granularity matters more.</strong> In a mono-repo, <code>policies/</code> and <code>skills/</code> sit beside code a volunteer might touch. The two-founder requirement on those paths is the whole gate — get it in before the first outside contributor, not after.</li>
+<li><strong>Clone size.</strong> 28 workspaces plus seven products plus an MP4 is a large first clone. Tolerable; worth an LFS look before it becomes a complaint.</li>
+<li><strong>Release cadence couples.</strong> If the skills library later outgrows this — past forty entries with its own rhythm — split it out then. Splitting later is cheap; merging later is not, which is the argument for merging now.</li>
+</ul>
+
+<h2>5 · The manifesto as specification</h2>
+<p>The single most valuable idea in either model's review, and it costs one line per file: every skill declares which of the 11 Principles it implements.</p>
+<pre><code>---
+name: estate-health
+principle: P5      # "Observability is non-negotiable. What we can't trace, we can't trust."
+owner: bobrapp
+risk: green
+description: ...
+---</code></pre>
+<p>The council framed this as authoring three new skills. We are further along than that: <strong>thirteen skills already exist</strong> in <code>plan/skills/</code> with frontmatter, procedures, owning agents, and a process index mapping each to a discipline. So the first skills PR is a <em>migration and annotation</em> PR — move the tree to <code>skills/</code>, add <code>principle:</code>, <code>owner:</code> and <code>risk:</code> to thirteen files, and add a CI check that fails on a skill with no principle. That turns the manifesto from a page people read into a spec CI tests against, and nobody else in AI governance can currently claim that.</p>
+<p><strong>Third-party skills are dependencies.</strong> Pin them to reviewed commits, never a floating ref, and read their prose as adversarial input: 84.2% of the vulnerabilities found across the 98,380-skill study lived in documentation, not code. A skill that says "ignore previous instructions" in its procedure body is an exploit with a README.</p>
+<p><strong>No skill edits itself in production.</strong> Improvement arrives as a PR, reviewed under CODEOWNERS, or it does not arrive.</p>
+
+<h2>6 · The clock — most of it already exists</h2>
+<p>This is the part the council could not see from outside, and it changes the shape of the work. The recurring machinery of an auto-running foundation is already built and running <em>in this repo</em>.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Cadence</th><th>What runs today</th><th>Where</th></tr></thead>
+<tbody>
+<tr><td>Hourly</td><td>Estate interaction crawl — every button on every page, in a real browser</td><td><code>estate-interaction-crawl.yml</code></td></tr>
+<tr><td>Daily</td><td>Library test suite; red-main watchdog (15:00 UTC — a working-hours alarm, not a 3am one)</td><td><code>library-tests.yml</code>, <code>red-main-watchdog.yml</code></td></tr>
+<tr><td>Weekly</td><td>Link check (Mon 16:00 UTC); repo-sync check (Mon 13:00 UTC)</td><td><code>link-check.yml</code>, <code>repo-sync-check.yml</code></td></tr>
+<tr><td>Monthly</td><td>Stale sweep (1st, 14:00 UTC)</td><td><code>stale-sweep.yml</code></td></tr>
+<tr><td>Continuous</td><td>Secret scan; dependency triage</td><td><code>secret-scan.yml</code>, <code>reusable-dependency-triage.yml</code></td></tr>
+</tbody></table></div>
+<p>More to the point, <strong>seven of these are already written as reusable workflows</strong> with adoption instructions in their headers — <code>reusable-link-check.yml</code> literally documents how another repo calls it in one line. Exactly one of the seven has actually been adopted cross-repo. Six standing invitations, unaccepted, for reasons that all amount to <em>it is another repo</em>.</p>
+<p><strong>The mono-repo is what makes them run everywhere by default.</strong> Cross-repo adoption becomes a local <code>uses: ./.github/workflows/…</code> in one matrix over <code>estate.yaml</code>. That is the single biggest automation win available, and it is configuration, not invention.</p>
+<p>What is genuinely missing from the clock, and lands in M3:</p>
+<ul>
+<li><strong>A receipt on every scheduled run.</strong> We have Ed25519 signing and JCS canonical form in Beacon already; a hook emitting one signed metadata-only receipt per skill or workflow run is wiring. Then "what has the Foundation done unattended this month" is a query, not a memory.</li>
+<li><strong>A weekly founders' digest</strong> that is one page: what ran, what flipped red↔green, what proposals wait on a human, what drifted from <code>estate.yaml</code>.</li>
+<li><strong>Drift detection against <code>estate.yaml</code></strong> — a property with no live monitor, a repo not in the manifest, a page whose owner left. Drift is what silently un-automates an automated organization.</li>
+</ul>
+
+<h2>7 · Autonomy classes — reconciling two vocabularies</h2>
+<p>The council proposed <code>autonomy.yaml</code> with Green/Yellow/Red. This repo already runs <code>[auto]</code>/<code>[gate]</code> in <code>plan/MILESTONES.md</code>. They are the same idea at different resolutions; <code>autonomy.yaml</code> writes the existing house rule down as data.</p>
+<p><strong>Green — an agent acts unattended.</strong> Reversible, observable, receipt-emitting. Crawls, link checks, test runs, audits, drift reports, digests, drafting a PR. Green work does not ask permission because undoing it costs nothing.</p>
+<p><strong>Yellow — an agent prepares; a human merges.</strong> Every content change, every skill change, every policy edit, every site copy change. The agent does all of the work and none of the deciding. This is the Yes-Gate applied to the Foundation's own bureaucracy, and it is where most of the value lives.</p>
+<p><strong>Red — never autonomous, ever.</strong> DNS and registrar changes. Creating accounts, enrolling keys, entering credentials. Deleting data, force-pushing, rewriting history. Changing access controls, sharing, or repo settings. Committing or pushing to <code>main</code>. Accepting a member, granting access, or sending mail as Bob or Ken. Retiring a github.io mirror. Anything touching money.</p>
+<p>The mapping is exact: Green = <code>[auto]</code>, Yellow = <code>[auto]</code> that ends in a PR, Red = <code>[gate]</code>. Writing it as <code>policies/autonomy.yaml</code> means CI can check a workflow's declared class against what it actually does — an automated organization that can prove its own limits.</p>
+
+<h2>8 · Milestones</h2>
+<p>Dated, each ending in something demonstrable. <strong>[auto]</strong> = an agent can finish it reversibly. <strong>[gate]</strong> = it crosses the irreversibility boundary and waits for Bob or Ken.</p>
+
+<h3>M0 — Decisions · Sat 2026-08-22 → Mon 2026-08-24 · [gate]</h3>
+<p>The seven decisions in section 3. <strong>Done when</strong> each has an answer written into this file and Ken's handle is in <code>founders.json</code>.</p>
+
+<h3>M1 — Consolidation gate · Week 1, Mon 2026-08-24 → Fri 2026-08-28</h3>
+<p>The week with no new code in it. Transfer V4-10k to the org and rename it <code>aigovops</code>; apply for GitHub for Nonprofits; land CODEOWNERS requiring both founders on <code>policies/</code>, <code>skills/</code> and <code>.github/</code>; write <code>estate.yaml</code> from the three proto-manifests we already have (<code>estate-sites.json</code>, <code>founders.json</code>, <code>repo-audit.config.json</code>); 301 <code>a-i-gov-ops.com</code>; publish the redirect map. <strong>Done when</strong> no Foundation production IP sits under a personal account and <code>estate.yaml</code> describes every property we own.</p>
+
+<h3>M2 — Skills as code + the falsification test · Week 2, Mon 2026-08-31 → Fri 2026-09-04</h3>
+<p>Migrate the thirteen existing skills into <code>skills/</code> with <code>principle:</code>/<code>owner:</code>/<code>risk:</code> frontmatter and a CI check that fails an unprincipled skill. Add the three new fat skills (AI House announcement, sponsorship proposal, editorial voice), each with acceptance criteria and an output schema. Wire <code>marketplace.json</code> and the plugin manifest. Then hand it to <strong>one volunteer for one weekend</strong> and read what comes back. <strong>Done when</strong> we can honestly say whether their output is indistinguishable from ours. A no is a result, not a failure — it tells us the skills carry procedure but not voice, which is the cheapest thing to learn now and the most expensive to learn at twenty skills.</p>
+
+<h3>M3 — The clock, everywhere · Weeks 3–4, Mon 2026-09-07 → Fri 2026-09-18</h3>
+<p>Turn six unadopted reusable workflows into one matrix over <code>estate.yaml</code>. Emit a signed Beacon receipt on every scheduled run and every skill run. Ship the weekly founders' digest and the <code>estate.yaml</code> drift check. <strong>Done when</strong> a week passes in which neither founder touched the recurring work and the digest proves it ran.</p>
+
+<h3>M4 — One front door · Weeks 5–6, Mon 2026-09-21 → Fri 2026-10-02</h3>
+<p>Redirects live estate-wide. The Library served on the canonical domain with an <strong>ungated preview</strong> — the funnel currently leaks across three hostnames before any value exchange: search → GitHub Pages → JS redirect → Circle registration. GA4 and HTTPS verified; Google Ad Grants submitted. <strong>Done when</strong> one hostname serves everything and a stranger can read something real before being asked for anything.</p>
+
+<h3>M5 — The skills library proper · Weeks 7–9, Mon 2026-10-05 → Fri 2026-10-23</h3>
+<p>Expand to roughly twenty skills across executive, editorial, events, community, development and governance, with department scoping so the content volunteer never loads finance skills. <strong>Done when</strong> a new volunteer's first day is one install command and a scoped skill set.</p>
+
+<h3>M6 — Skill provenance · Weeks 10–12, Mon 2026-10-26 → Fri 2026-11-13</h3>
+<p>Ship Skill Provenance as a Beacon/Lantern extension — signed skills, verifiable at install, using the Ed25519 + JCS we already have. Publish the repo. Instrument the Circle gate honestly: at $219/month against a gated library, if registration-to-participation stays low after the domain fix, the library belongs on the public site. <strong>Done when</strong> a third party can verify a skill we published came from us, unaltered.</p>
+
+<h3>M7 — Steady state · from Mon 2026-11-16</h3>
+<p>The Foundation runs its own bureaucracy. Quarterly: re-read <code>estate.yaml</code> against reality, re-audit third-party skill pins, rehearse disaster recovery, and re-ask which Yellow items have earned Green.</p>
+
+<h2>9 · The PR ladder</h2>
+<p>Every row is one reviewable PR. <strong>Class</strong> is the autonomy class from section 7 — Green ships itself, Yellow waits for a merge, Red waits for a founder to act outside GitHub. Repos are named as they will be <em>after</em> M1.</p>
+<div class="tablewrap"><table>
+<thead><tr><th>#</th><th>M</th><th>Repo / path</th><th>What</th><th>Class</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>M0</td><td>library → <code>plan/</code>, <code>docs/</code></td><td><strong>This plan</strong> — markdown source, rendered page, hub link</td><td>Yellow</td></tr>
+<tr><td>1</td><td>M1</td><td>—</td><td>Transfer V4-10k to the org; rename to <code>aigovops</code></td><td class="red">Red</td></tr>
+<tr><td>2</td><td>M1</td><td>—</td><td>Apply for GitHub for Nonprofits (free Team)</td><td class="red">Red</td></tr>
+<tr><td>3</td><td>M1</td><td><code>aigovops/CODEOWNERS</code></td><td>Both founders required on <code>policies/</code>, <code>skills/</code>, <code>.github/</code>; branch protection on <code>main</code></td><td>Yellow (needs D7)</td></tr>
+<tr><td>4</td><td>M1</td><td><code>aigovops/estate.yaml</code></td><td>The manifest, generated from the three existing proto-manifests; a <code>make estate</code> that regenerates the old files so nothing breaks</td><td>Yellow</td></tr>
+<tr><td>5</td><td>M1</td><td>—</td><td>301 <code>a-i-gov-ops.com</code> → canonical; publish the <code>.org</code> redirect map</td><td class="red">Red</td></tr>
+<tr><td>6</td><td>M1</td><td><code>aigovops/policies/autonomy.yaml</code></td><td>Green/Yellow/Red as data, plus CI checking a workflow's declared class against its permissions</td><td>Yellow</td></tr>
+<tr><td>7</td><td>M2</td><td><code>aigovops/skills/</code></td><td>Migrate 13 skills; add <code>principle:</code>/<code>owner:</code>/<code>risk:</code>; CI fails an unprincipled skill</td><td>Yellow</td></tr>
+<tr><td>8</td><td>M2</td><td><code>aigovops/skills/</code></td><td>Three fat skills: AI House announcement, sponsorship proposal, editorial voice</td><td>Yellow</td></tr>
+<tr><td>9</td><td>M2</td><td><code>marketplace.json</code>, <code>.claude-plugin/</code></td><td>One-command install; department scoping stub</td><td>Yellow</td></tr>
+<tr><td>10</td><td>M2</td><td><code>aigovops/skills/THIRD-PARTY.md</code></td><td>Pin policy + pinned commit list for any external skill</td><td>Yellow</td></tr>
+<tr><td>11</td><td>M3</td><td><code>aigovops/.github/workflows/</code></td><td>One matrix over <code>estate.yaml</code> calling the six unadopted reusable workflows locally</td><td>Yellow</td></tr>
+<tr><td>12</td><td>M3</td><td><code>aigovops/ops/receipts/</code></td><td>Beacon receipt hook on every scheduled and skill run (metadata only)</td><td>Yellow</td></tr>
+<tr><td>13</td><td>M3</td><td><code>aigovops/ops/digests/</code></td><td>Weekly founders' digest + <code>estate.yaml</code> drift check</td><td>Yellow</td></tr>
+<tr><td>14</td><td>M3</td><td>products (subtree)</td><td><code>git subtree add</code> each product, one PR per product, history preserved</td><td>Yellow</td></tr>
+<tr><td>15</td><td>M3</td><td>old product repos</td><td><code>redirect-stub/</code> into each merged repo's Pages, then archive</td><td class="red">Red (steward-shipped)</td></tr>
+<tr><td>16</td><td>M4</td><td><code>sites/foundation/</code></td><td>Redirect map live; canonical domain serves everything</td><td><span class="red">Red</span> for DNS, Yellow for content</td></tr>
+<tr><td>17</td><td>M4</td><td><code>sites/foundation/library/</code></td><td>Library on the canonical domain with an ungated preview</td><td>Yellow</td></tr>
+<tr><td>18</td><td>M4</td><td>—</td><td>GA4 + HTTPS verified; Ad Grants submitted</td><td class="red">Red</td></tr>
+<tr><td>19</td><td>M5</td><td><code>aigovops/skills/</code></td><td>~20 skills, department-scoped (one PR per department)</td><td>Yellow</td></tr>
+<tr><td>20</td><td>M6</td><td><code>products/beacon/</code>, <code>products/lantern/</code></td><td>Skill Provenance: sign a skill, verify at install</td><td>Yellow</td></tr>
+<tr><td>21</td><td>M6</td><td>—</td><td>Circle instrumentation decision: keep gated, or move the library public</td><td class="red">Red</td></tr>
+</tbody></table></div>
+<p>Green work — the crawls, audits, drift reports and digests — does not appear as PRs. That is the point of Green: it runs, it emits a receipt, and it only reaches you when something flipped.</p>
+
+<h2>10 · What could go wrong</h2>
+<p><strong>The mono-repo migration eats the twelve weeks.</strong> Seven subtree merges, seven Pages dispositions, one CI matrix. Mitigation: M1 and M2 deliver value before a single product moves — the manifest, CODEOWNERS, the skills tree and the falsification test all land first. If the migration stalls, we still have a governed skills library and a canonical domain.</p>
+<p><strong>The falsification test fails and we keep going anyway.</strong> If a volunteer's output is obviously not ours, the honest response is to fix the skills before writing seventeen more, even though M5 is already on the calendar. Write that down now, while it is cheap to agree to.</p>
+<p><strong>CODEOWNERS arrives after the first outside contributor.</strong> Then the gate is theatre. PR 3 is early in the ladder for that reason, and it is blocked only by D7 — one line.</p>
+<p><strong>A stale Pages mirror outlives its merge.</strong> Covered in section 4; it is the most likely concrete way this plan creates a second source of truth while trying to remove one.</p>
+<p><strong>We automate the reporting of work that is not happening.</strong> A weekly digest that always says green is a digest nobody reads. The estate-health rule already has the right instinct — never turn a <code>failOnDead</code> gate off to fake green — and it applies to every new check in M3.</p>
+
+<h2>11 · What we are deliberately not doing</h2>
+<p>No new website. No new repositories beyond the single private ledger archive named in D4. No rewrite of the governed core — it works, and Ticket 0 (<code>SecretsProvider</code> + FileProvider) is already implemented. No self-modifying skills. No agent that accepts a member, sends mail as a founder, moves money, or touches DNS. And no new repos of any kind until the disposition pass is done — the sprawl compounds, and every repo added now makes consolidation more expensive.</p>
+
+<hr>
+<p><em>Reviewed by:</em> <strong>Bob Rapp</strong> ______ · <strong>Ken Johnston</strong> ______ · <em>Date:</em> __________</p>
+<p><em>Decisions D1–D7 recorded on:</em> __________</p>
+
+</div>
+  <script src="https://www.aigovops-foundation.com/jeeves-widget.js" data-jeeves-site="library" defer></script>
+  <script src="./start-here.js" data-estate-id="library" defer></script>
+  <script src="estate-footer.js" defer></script>
+</body></html>
