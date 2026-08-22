@@ -37,6 +37,11 @@ for (const s of registry.sites) {
   }
   const tmp = join(ROOT, `.crawl.${s.name.replace(/\W+/g, '_')}.json`);
   const args = [CRAWLER, '--url', s.base, '--out', tmp, '--site-name', s.name, '--max-pages', String(MAX)];
+  // A CONSENT DOOR IS NOT AN AUTHENTICATION WALL. A site may carry a NON-SECRET cookie that opens
+  // a one-click "I agree" page — the rendered Library's omni_rules=1. Anything needing a real
+  // account still sets `gated` and waits for a signed-in crawl; this only covers doors that open
+  // for anyone who clicks.
+  if (s.cookie) args.push('--cookie', s.cookie);
   if (s.failOnDead) args.push('--fail-on-dead');
   // Bound each property. Without a timeout one wedged site hangs the WHOLE estate crawl,
   // and because the workflow holds a concurrency lock that stalls every following hourly

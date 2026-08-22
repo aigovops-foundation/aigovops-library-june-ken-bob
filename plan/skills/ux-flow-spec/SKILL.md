@@ -1,5 +1,9 @@
 ---
 name: ux-flow-spec
+principle: unknown
+owner: bobrapp
+agent: Maker
+risk: yellow
 description: Specify how a member moves through a room toward Yes — every state, transition, and fallback. Use before building a new journey or interaction. Trigger on "design the flow", "spec the UX", "map the states", "what happens when…".
 run: prose
 ---

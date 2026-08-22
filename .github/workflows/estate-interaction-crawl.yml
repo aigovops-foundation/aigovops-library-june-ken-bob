@@ -33,7 +33,7 @@ jobs:
     # it and a hang self-clears before the next hour's run is due.
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       # What we last MAILED about, so an unchanged red does not re-notify. Committed
       # alongside the board so the state survives between runs; absent on first run, which
@@ -42,7 +42,14 @@ jobs:
         id: prev
         run: echo "causes=$(cat docs/.estate-notified 2>/dev/null || echo none)" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/setup-node@v4
+      # THE LAST WINDOW ACTUALLY SENT — the file that turns a schedule into a guarantee. Written
+      # only after a send succeeds, so it records what reached a founder rather than what was
+      # attempted. Absent on first run, which correctly reads as "nothing sent yet".
+      - name: Read the last window sent
+        id: sent
+        run: echo "window=$(cat docs/.estate-last-window 2>/dev/null || echo none)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: "20"
       - name: Install Playwright + Chromium
@@ -68,11 +75,12 @@ jobs:
         run: |
           node scripts/estate-exec-digest.mjs --markdown digest.md
           echo "state=$(node scripts/estate-exec-digest.mjs --status || true)" >> "$GITHUB_OUTPUT"
+          echo "count=$(node scripts/estate-exec-digest.mjs --count || true)" >> "$GITHUB_OUTPUT"
           echo "causes=$(node scripts/estate-exec-digest.mjs --fingerprint || true)" >> "$GITHUB_OUTPUT"
           echo "score=$(node -e "console.log(JSON.parse(require('fs').readFileSync('docs/estate-health.json')).estate.score ?? '')")" >> "$GITHUB_OUTPUT"
 
       - name: Attach the readable report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: estate-health-report
           path: |
@@ -92,11 +100,30 @@ jobs:
           if ! git diff --quiet -- docs/estate-health.json docs/.estate-notified; then
             git add docs/estate-health.json docs/.estate-notified
             git commit -m "chore(estate-health): hourly interaction board [automated]"
-            git push
+            # RETRY THE PUSH AGAINST A MOVING MAIN. The crawl takes ~7 minutes, and anything
+            # merged during it leaves this push non-fast-forward. On 2026-08-20T00:16Z that is
+            # exactly what happened: two PRs merged mid-crawl, "! [rejected] main -> main
+            # (fetch first)" failed this step, and every step after it — including the founders'
+            # 17:00 mail — was skipped. The board is append-style data on its own two files, so
+            # rebasing onto whatever landed is always the right resolution.
+            pushed=0
+            for attempt in 1 2 3; do
+              if git push; then pushed=1; break; fi
+              echo "push rejected (attempt $attempt) — rebasing onto origin/main and retrying"
+              git pull --rebase --autostash origin main || exit 1
+              sleep $((attempt * 5))
+            done
+            # Three losses of the same race is not a race any more; fail loudly. The founders'
+            # mail no longer depends on this step, so failing here reports the problem without
+            # also cancelling the send.
+            [ "$pushed" = "1" ] || { echo "::error::board push still rejected after 3 rebases"; exit 1; }
           fi
 
       - name: Deliver the digest to the founders (pinned issue + ping on new causes)
-        uses: actions/github-script@v7
+        # Same reasoning as the mail below: the pinned issue is how anyone who looks between
+        # sends finds out what is red, and a failed board push is no reason to stop updating it.
+        if: ${{ !cancelled() && steps.digest.outcome == 'success' }}
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         with:
           script: |
             const fs = require('fs');
@@ -133,19 +160,103 @@ jobs:
               await github.rest.issues.createComment({ owner, repo, issue_number: issue.number, body: `${head}\n\n${body}` });
             }
 
-      # SPAM CONTROL. Mail only when the set of causes CHANGES — a new red, a fixed red, or a
-      # flip to green. An hour of the same known red is not news, and mailing it anyway is
-      # precisely what teaches a reader to filter the whole thing away. The pinned issue is
-      # still refreshed every hour, silently, for anyone who wants to look.
-      - name: Email the digest to the founders (only when the causes change)
-        if: steps.digest.outputs.causes != steps.prev.outputs.causes
+      # ONCE A DAY, ON THE CLOCK. The mail used to fire whenever the set of causes changed,
+      # which meant it could arrive at any hour or not for days — you could not tell whether
+      # silence meant "nothing new" or "the job died". Bob asked for 05:00 Pacific,
+      # every day (2026-08-19), so the send is now a fixed appointment and its absence is
+      # itself a signal.
+      #
+      # WHY NO SECOND CRON AND NO UTC ARITHMETIC. The crawl already runs hourly on the hour, so
+      # asking the runner what time it is in America/Los_Angeles hits "05" and "17" exactly once
+      # each per day — and keeps hitting them across both DST changes, because the zone does the
+      # conversion. A UTC cron pinned at 12:00/00:00 would be right for eight months and an hour
+      # early for four. The board and the pinned issue still refresh hourly; only the MAIL is
+      # twice daily, so a red is still visible within the hour to anyone who looks.
+      - name: Is today's founders' window still unsent? (05:00 America/Los_Angeles)
+        id: window
+        # Runs even if the board commit or the pinned-issue update failed — neither has any
+        # bearing on whether a founder is owed a digest.
+        if: ${{ !cancelled() }}
+        # ASKS WHETHER THE WINDOW HAS BEEN SENT, NOT WHETHER IT IS EXACTLY 05:00. Matching the
+        # hour meant the send depended on a run existing at that hour, and on 2026-08-19 five of
+        # the ten preceding scheduled runs never executed a step: they queued for an hour behind
+        # a runner backlog and were cancelled by the next hour's run entering the concurrency
+        # group. A cancelled run cannot check the time, so the window passed in silence — which
+        # reads exactly like "nothing is red".
+        #
+        # So the question is now "which window has most recently OPENED, and has it gone out?".
+        # A lost 12:00Z run is covered by 13:00Z; a ninety-minute delay still sends; only the
+        # date rolls the answer over. Sending late is strictly better than not sending, and the
+        # digest carries its own crawl timestamp so a late one cannot be mistaken for fresh.
+        run: |
+          # ONE WINDOW A DAY, opening at 05:00 Pacific. It was two (05:00 and 17:00) for a few
+          # hours on 2026-08-19; Bob asked for once a day the same evening, on the grounds that a
+          # second identical mail teaches you to stop opening the first. The window id is now just
+          # the Pacific date. Before 05:00, the window that most recently opened is YESTERDAY's,
+          # so a night-time run correctly finds it already sent and stays quiet.
+          h=$(( 10#$(TZ=America/Los_Angeles date +%H) ))    # 10# so "05"/"08" are not read as octal
+          if [ "$h" -ge 5 ]; then window="$(TZ=America/Los_Angeles date +%Y-%m-%d)"
+          else window="$(TZ=America/Los_Angeles date -d yesterday +%Y-%m-%d)"
+          fi
+          echo "window=$window" >> "$GITHUB_OUTPUT"
+          last='${{ steps.sent.outputs.window }}'
+          if [ "${{ github.event_name }}" != "schedule" ]; then
+            echo "send=true" >> "$GITHUB_OUTPUT"
+            echo "manual run — sending regardless of window ($window)"
+          elif [ "$window" != "$last" ]; then
+            echo "send=true" >> "$GITHUB_OUTPUT"
+            echo "window $window has not been sent (last sent: $last) — sending."
+          else
+            echo "send=false" >> "$GITHUB_OUTPUT"
+            echo "window $window already sent — nothing owed; the board still refreshed."
+          fi
+
+      # WHETHER THE FOUNDERS GET THE DIGEST MUST NOT DEPEND ON HOUSEKEEPING. This sat downstream
+      # of the board-commit step with no guard, so a git push race silently cancelled the send —
+      # and a missed fixed appointment reads exactly like "nothing is red". The only real
+      # precondition is that the digest was actually built; committing the board and updating the
+      # pinned issue are bookkeeping, and their failure is visible in the run's own red.
+      - name: Email the digest to the founders (05:00 Pacific, once a day)
+        id: mail
+        if: ${{ !cancelled() && steps.digest.outcome == 'success' && steps.window.outputs.send == 'true' }}
         env:
           GRAPH_TENANT_ID: ${{ secrets.GRAPH_TENANT_ID }}
           GRAPH_CLIENT_ID: ${{ secrets.GRAPH_CLIENT_ID }}
           GRAPH_CLIENT_SECRET: ${{ secrets.GRAPH_CLIENT_SECRET }}
           GRAPH_SENDER: ${{ secrets.GRAPH_SENDER }}
           ESTATE_SMTP_URL: ${{ secrets.ESTATE_SMTP_URL }}
-        run: node scripts/send-mail.mjs --subject "🌿 Estate health — ${{ steps.digest.outputs.state == 'green' && 'all green' || format('{0} to fix', steps.digest.outputs.state) }}" --body digest.md
+        run: node scripts/send-mail.mjs --subject "🌿 Estate health — ${{ steps.digest.outputs.state == 'green' && 'all green' || format('{0} to fix', steps.digest.outputs.count) }}" --body digest.md
+
+      # RECORD THE WINDOW ONLY AFTER IT ACTUALLY WENT OUT. Written here, not in the window step,
+      # because a window marked sent before the send succeeds is a window that never gets retried
+      # — the failure this file exists to prevent, reintroduced one step earlier. If this push
+      # loses a race and cannot recover, the window stays unmarked and the next hourly run sends
+      # again: a duplicate digest, which is a far cheaper mistake than a silent miss.
+      - name: Record the window as sent
+        if: ${{ !cancelled() && steps.mail.outcome == 'success' }}
+        run: |
+          git config user.name "aigovops-estate-bot"
+          git config user.email "noreply@aigovops-foundation.com"
+          printf '%s' '${{ steps.window.outputs.window }}' > docs/.estate-last-window
+          # STAGE FIRST, THEN COMPARE. `git diff` does not see UNTRACKED files, so on the very
+          # first run — when docs/.estate-last-window did not exist in the index yet — this guard
+          # returned "no change", skipped the commit, and the record was never added. Every run
+          # then started from a clean checkout with no memory, decided the window was unsent, and
+          # mailed. Six consecutive hourly sends on 2026-08-20 before it was noticed: the exact
+          # noise this file was written to prevent, caused by the file that prevents it.
+          # `git add` then `--cached` is correct for both cases: staging an untracked file makes
+          # the cached diff non-empty, and staging an unchanged one leaves it empty.
+          git add docs/.estate-last-window
+          if ! git diff --cached --quiet -- docs/.estate-last-window; then
+            git commit -m "chore(estate-health): sent window ${{ steps.window.outputs.window }} [automated]"
+            for attempt in 1 2 3; do
+              git push && exit 0
+              echo "push rejected (attempt $attempt) — rebasing onto origin/main and retrying"
+              git pull --rebase --autostash origin main || exit 1
+              sleep $((attempt * 5))
+            done
+            echo "::warning::could not record window ${{ steps.window.outputs.window }} — the next run will send it again"
+          fi
 
       - name: Fail the run if any page is red
         if: steps.crawl.outputs.estate_red == '1' || steps.digest.outputs.state == 'red'

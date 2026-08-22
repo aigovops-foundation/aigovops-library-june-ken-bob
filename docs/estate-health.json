@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-08-18T03:21:11.991Z",
+  "generatedAt": "2026-08-22T22:11:53.583Z",
   "estate": {
     "properties": 7,
-    "reporting": 5,
-    "healthy": 1,
-    "red": 4,
-    "greenPages": 246,
-    "redPages": 25,
-    "dead": 365,
+    "reporting": 6,
+    "healthy": 6,
+    "red": 0,
+    "greenPages": 331,
+    "redPages": 0,
+    "dead": 0,
     "broken": 0,
     "consoleErrorPages": 0,
-    "score": 91
+    "score": 100
   },
   "sites": [
     {
@@ -18,30 +18,30 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-18T03:14:57.864Z",
+      "ranAt": "2026-08-22T22:04:51.582Z",
       "summary": {
         "pages": 26,
-        "greenPages": 25,
-        "redPages": 1,
-        "ok": 605,
+        "greenPages": 26,
+        "redPages": 0,
+        "ok": 622,
         "dead": 0,
         "broken": 0,
-        "external": 184,
-        "delegated": 14,
+        "external": 192,
+        "delegated": 0,
         "consoleErrorPages": 0,
         "healthy": true
       },
       "pageHealth": [
         {
-          "path": "/alpha.html",
+          "path": "/",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
-          "status": "red",
-          "loadError": "Error: page.goto: net::ERR_ABORTED at https://www.aigovops-foundation.com/alpha.html\nCall log:\n  - navigating to \"https://www.aigovops-foundation.com/alpha.html\", waiting until \"domcontentloaded\"\n"
+          "status": "green",
+          "loadError": null
         },
         {
-          "path": "/",
+          "path": "/alpha.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -256,78 +256,526 @@
     {
       "name": "Library (rendered)",
       "base": "https://community.aigovops-foundation.com/library/",
-      "gated": true,
-      "status": "pending",
-      "note": "gated surface — needs an authenticated session to crawl",
-      "summary": null
+      "gated": false,
+      "status": "green",
+      "ranAt": "2026-08-22T22:06:15.991Z",
+      "summary": {
+        "pages": 60,
+        "greenPages": 60,
+        "redPages": 0,
+        "ok": 1545,
+        "dead": 0,
+        "broken": 0,
+        "external": 802,
+        "delegated": 10,
+        "consoleErrorPages": 0,
+        "healthy": true
+      },
+      "pageHealth": [
+        {
+          "path": "/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/api/auth/sso",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/api/auth/sso",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/board.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/certify.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/concierge.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/conduct.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/console.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/experience.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/governance.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/guidelines.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/help.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/join.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/landing.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/aigovops-for-quantum/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/aigovops-for-quantum/index.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/aigovops-for-quantum/quantum-for-beginners.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/blueprint.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/board.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/build-tickets.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/connect.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/control-plane.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/DataCenter-Ai-And-Social-Tradeoffs/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/DataCenter-Ai-And-Social-Tradeoffs/for-more-reading.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/DataCenter-Ai-And-Social-Tradeoffs/index.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/demo-e2e.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/demo-foundation.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/demo-run.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/demo.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/design-book.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/durability-plan.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/f-ai-friday.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/failfest.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/gates.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/index.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/newsroom.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/onboarding.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/plan.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/practitioner.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/pulse.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/rooms.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/tour.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/watch-gates.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/playbooks.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/portal.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/privacy.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/profile.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/protect.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/signin.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/signin.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/standards.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/system-map.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/terms.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/translate.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/transparency.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/try.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/verify.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/welcome.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/whats-new.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        }
+      ],
+      "dead": [],
+      "broken": [],
+      "consoleErrors": []
     },
     {
       "name": "Beacon",
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
-      "status": "red",
-      "ranAt": "2026-08-18T03:16:58.531Z",
+      "status": "green",
+      "ranAt": "2026-08-22T22:08:08.612Z",
       "summary": {
         "pages": 78,
-        "greenPages": 72,
-        "redPages": 6,
-        "ok": 3895,
-        "dead": 105,
+        "greenPages": 78,
+        "redPages": 0,
+        "ok": 3922,
+        "dead": 0,
         "broken": 0,
         "external": 1622,
-        "delegated": 15,
+        "delegated": 0,
         "consoleErrorPages": 0,
-        "healthy": false
+        "healthy": true
       },
       "pageHealth": [
-        {
-          "path": "/aigovops-beacon/lab-100.html",
-          "dead": 21,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-beacon/lab-200.html",
-          "dead": 49,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "dead": 23,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/claim-letter.html",
-          "dead": 1,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "dead": 5,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/ksr-cards.html",
-          "dead": 6,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
         {
           "path": "/aigovops-beacon/",
           "dead": 0,
@@ -370,6 +818,22 @@
         },
         {
           "path": "/aigovops-beacon/index.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-beacon/lab-100.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-beacon/lab-200.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -521,6 +985,14 @@
           "loadError": null
         },
         {
+          "path": "/aigovops-ncw-ai-camp/jeeves-demo.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/aigovops-ncw-ai-camp/kit/attendee-guide.html",
           "dead": 0,
           "broken": 0,
@@ -530,6 +1002,22 @@
         },
         {
           "path": "/aigovops-ncw-ai-camp/kit/checklist-card.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/claim-letter.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -562,6 +1050,14 @@
         },
         {
           "path": "/aigovops-ncw-ai-camp/kit/index.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/ksr-cards.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -905,743 +1401,7 @@
           "loadError": null
         }
       ],
-      "dead": [
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "That the dashboard was up at the time.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "A portable, signed, challengeable claim about what happened, when, and under who",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "That the auditor signed off in a meeting.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "What network are we looking at?",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "Beacon is looking.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "Pick what matters.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "Pick your guardrails.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "Approve the deployment.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "Just the dashboard URL and the bundle hash.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "Manifest, signed receipt NDJSON, public key, policy YAML, checklists, and a one-",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "A PDF screenshot of the meeting where the audit happened.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "Random fault injection at training time.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "A checklist receipt requiring explicit sign-off on the safety-critical control-l",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "A faster CI/CD pipeline.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "You can't — verification requires Beacon to be running.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "Use openssl with the included VERIFY.md, or run python -m src.audit_log verify i",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "You email Beacon support and they verify it for you.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "1. I can show what AI is in scope.",
-          "cls": "attest-item-text",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "2. I can point to a signed receipt and explain it.",
-          "cls": "attest-item-text",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "3. I can hand an auditor a verifiable bundle.",
-          "cls": "attest-item-text",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "4. I can map one real failure to missing governance evidence.",
-          "cls": "attest-item-text",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 1 First receipt 15 min · `docker compose up` Make a real decision in Studio ",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 1",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "15 min · `docker compose up`",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 2 Discover models in your browser 20 min · MV3 extension Load the unpacked e",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 2",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "20 min · MV3 extension",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 3 Tail a DNS log 15 min · scripts/tail_dns.py Drop a DNS query CSV in the wa",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 3",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "15 min · scripts/tail_dns.py",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 4 Score a framework 20 min · nist-ai-rmf-1.0 Pick a framework. Walk the 23-c",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 4",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "20 min · nist-ai-rmf-1.0",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 5 Replay a failure 15 min · Studio › Failures Pick a case (e.g., iTutorGroup",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 5",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "15 min · Studio › Failures",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 6 MCP attest 20 min · Claude Desktop Add the MCP config snippet to Claude De",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 6",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "20 min · Claude Desktop",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 7 Bundle for auditor 15 min · Studio › Bundle Pick a date range, framework, ",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 7",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "15 min · Studio › Bundle",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 8 Offline walkthrough on a USB stick 10 min · v2.3 Copy docs/walkthrough/ to",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 8",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "10 min · v2.3",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 9 Hosted MCP + restricted agent 20 min · v2.3 Run the hosted MCP on a free R",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 9",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "20 min · v2.3",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "npm install && npm start",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "docker compose -f deploy/lab.yml up -d",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "terraform apply ./suitcase",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "All nine variants in order.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "Lab 2 (browser discovery) plus Lab 6 (MCP attest).",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "Lab 1 (first receipt), Lab 4 (score a framework), Lab 7 (bundle for auditor).",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "Just a PDF of the checklist.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "Gate YAML, OPA Rego, a Governance Decision Record, and a signed bundle.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "A Slack notification to the auditor.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "POST /api/auditor",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "POST /receipts",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "POST /api/v1/receipts",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "An MCP tool for filing welfare claims.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "A pre-deployment governance gate requiring legal sign-off, plus per-decision rec",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "A faster DNS log tail.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "It uses less power than Docker.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "It's faster than the hosted MCP.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "It's the smallest unit of governance evidence you can hand someone in one click ",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "1. I can launch the Suitcase Lab and confirm it's signing receipts.",
-          "cls": "attest-item-text",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "2. I can choose 4-9 lab variants for a specific workshop length and audience.",
-          "cls": "attest-item-text",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "3. I can emit Policy-as-Code (gate YAML + Rego) from a checklist outcome and exp",
-          "cls": "attest-item-text",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "4. I can cross-reference any case in the 100-failure dataset to the framework co",
-          "cls": "attest-item-text",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "a",
-          "text": "Official donation link placeholder",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "button",
-          "text": "Known",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "button",
-          "text": "Suspected",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "button",
-          "text": "Rumor",
-          "cls": "selected",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "button",
-          "text": "▶",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "button",
-          "text": "pause",
-          "cls": "b primary",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "button",
-          "text": "restart",
-          "cls": "b",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "div",
-          "text": "1 task",
-          "cls": "chip on",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "1",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "task",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "div",
-          "text": "2 plan",
-          "cls": "chip",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "2",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "plan",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "div",
-          "text": "3 helpers",
-          "cls": "chip",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "3",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "helpers",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "div",
-          "text": "4 check",
-          "cls": "chip",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "4",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "check",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "div",
-          "text": "5 queue",
-          "cls": "chip",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "5",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "queue",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "div",
-          "text": "6 you say yes",
-          "cls": "chip",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "6",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "you say yes",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "div",
-          "text": "7 receipt",
-          "cls": "chip",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "7",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "receipt",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/ksr-cards.html",
-          "tag": "button",
-          "text": "Reveal debrief",
-          "cls": "row-toggle",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/ksr-cards.html",
-          "tag": "button",
-          "text": "Reveal debrief",
-          "cls": "row-toggle",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/ksr-cards.html",
-          "tag": "button",
-          "text": "Reveal debrief",
-          "cls": "row-toggle",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/ksr-cards.html",
-          "tag": "button",
-          "text": "Reveal debrief",
-          "cls": "row-toggle",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/ksr-cards.html",
-          "tag": "button",
-          "text": "Reveal debrief",
-          "cls": "row-toggle",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/ksr-cards.html",
-          "tag": "button",
-          "text": "Reveal debrief",
-          "cls": "row-toggle",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/claim-letter.html",
-          "tag": "button",
-          "text": "Reveal hidden text",
-          "cls": "row-toggle",
-          "reason": "clickable affordance with no link and no handler"
-        }
-      ],
+      "dead": [],
       "broken": [],
       "consoleErrors": []
     },
@@ -1649,69 +1409,21 @@
       "name": "Umbrella",
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
-      "status": "red",
-      "ranAt": "2026-08-18T03:18:55.651Z",
+      "status": "green",
+      "ranAt": "2026-08-22T22:09:54.201Z",
       "summary": {
         "pages": 78,
-        "greenPages": 72,
-        "redPages": 6,
-        "ok": 3895,
-        "dead": 105,
+        "greenPages": 78,
+        "redPages": 0,
+        "ok": 3922,
+        "dead": 0,
         "broken": 0,
         "external": 1622,
-        "delegated": 15,
+        "delegated": 0,
         "consoleErrorPages": 0,
-        "healthy": false
+        "healthy": true
       },
       "pageHealth": [
-        {
-          "path": "/aigovops-beacon/lab-100.html",
-          "dead": 21,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-beacon/lab-200.html",
-          "dead": 49,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "dead": 23,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/claim-letter.html",
-          "dead": 1,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "dead": 5,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/ksr-cards.html",
-          "dead": 6,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
         {
           "path": "/aigovops-beacon/",
           "dead": 0,
@@ -1754,6 +1466,22 @@
         },
         {
           "path": "/aigovops-beacon/index.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-beacon/lab-100.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-beacon/lab-200.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1905,6 +1633,14 @@
           "loadError": null
         },
         {
+          "path": "/aigovops-ncw-ai-camp/jeeves-demo.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/aigovops-ncw-ai-camp/kit/attendee-guide.html",
           "dead": 0,
           "broken": 0,
@@ -1914,6 +1650,22 @@
         },
         {
           "path": "/aigovops-ncw-ai-camp/kit/checklist-card.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/claim-letter.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1946,6 +1698,14 @@
         },
         {
           "path": "/aigovops-ncw-ai-camp/kit/index.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/ksr-cards.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -2289,743 +2049,7 @@
           "loadError": null
         }
       ],
-      "dead": [
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "That the dashboard was up at the time.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "A portable, signed, challengeable claim about what happened, when, and under who",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "That the auditor signed off in a meeting.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "What network are we looking at?",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "Beacon is looking.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "Pick what matters.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "Pick your guardrails.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "Approve the deployment.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "Just the dashboard URL and the bundle hash.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "Manifest, signed receipt NDJSON, public key, policy YAML, checklists, and a one-",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "A PDF screenshot of the meeting where the audit happened.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "Random fault injection at training time.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "A checklist receipt requiring explicit sign-off on the safety-critical control-l",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "A faster CI/CD pipeline.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "You can't — verification requires Beacon to be running.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "Use openssl with the included VERIFY.md, or run python -m src.audit_log verify i",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "You email Beacon support and they verify it for you.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "1. I can show what AI is in scope.",
-          "cls": "attest-item-text",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "2. I can point to a signed receipt and explain it.",
-          "cls": "attest-item-text",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "3. I can hand an auditor a verifiable bundle.",
-          "cls": "attest-item-text",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "4. I can map one real failure to missing governance evidence.",
-          "cls": "attest-item-text",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 1 First receipt 15 min · `docker compose up` Make a real decision in Studio ",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 1",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "15 min · `docker compose up`",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 2 Discover models in your browser 20 min · MV3 extension Load the unpacked e",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 2",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "20 min · MV3 extension",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 3 Tail a DNS log 15 min · scripts/tail_dns.py Drop a DNS query CSV in the wa",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 3",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "15 min · scripts/tail_dns.py",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 4 Score a framework 20 min · nist-ai-rmf-1.0 Pick a framework. Walk the 23-c",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 4",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "20 min · nist-ai-rmf-1.0",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 5 Replay a failure 15 min · Studio › Failures Pick a case (e.g., iTutorGroup",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 5",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "15 min · Studio › Failures",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 6 MCP attest 20 min · Claude Desktop Add the MCP config snippet to Claude De",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 6",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "20 min · Claude Desktop",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 7 Bundle for auditor 15 min · Studio › Bundle Pick a date range, framework, ",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 7",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "15 min · Studio › Bundle",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 8 Offline walkthrough on a USB stick 10 min · v2.3 Copy docs/walkthrough/ to",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 8",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "10 min · v2.3",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 9 Hosted MCP + restricted agent 20 min · v2.3 Run the hosted MCP on a free R",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 9",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "20 min · v2.3",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "npm install && npm start",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "docker compose -f deploy/lab.yml up -d",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "terraform apply ./suitcase",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "All nine variants in order.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "Lab 2 (browser discovery) plus Lab 6 (MCP attest).",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "Lab 1 (first receipt), Lab 4 (score a framework), Lab 7 (bundle for auditor).",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "Just a PDF of the checklist.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "Gate YAML, OPA Rego, a Governance Decision Record, and a signed bundle.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "A Slack notification to the auditor.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "POST /api/auditor",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "POST /receipts",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "POST /api/v1/receipts",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "An MCP tool for filing welfare claims.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "A pre-deployment governance gate requiring legal sign-off, plus per-decision rec",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "A faster DNS log tail.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "It uses less power than Docker.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "It's faster than the hosted MCP.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "It's the smallest unit of governance evidence you can hand someone in one click ",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "1. I can launch the Suitcase Lab and confirm it's signing receipts.",
-          "cls": "attest-item-text",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "2. I can choose 4-9 lab variants for a specific workshop length and audience.",
-          "cls": "attest-item-text",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "3. I can emit Policy-as-Code (gate YAML + Rego) from a checklist outcome and exp",
-          "cls": "attest-item-text",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "4. I can cross-reference any case in the 100-failure dataset to the framework co",
-          "cls": "attest-item-text",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "a",
-          "text": "Official donation link placeholder",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "button",
-          "text": "Known",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "button",
-          "text": "Suspected",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "button",
-          "text": "Rumor",
-          "cls": "selected",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "button",
-          "text": "▶",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "button",
-          "text": "pause",
-          "cls": "b primary",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "button",
-          "text": "restart",
-          "cls": "b",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "div",
-          "text": "1 task",
-          "cls": "chip on",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "1",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "task",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "div",
-          "text": "2 plan",
-          "cls": "chip",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "2",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "plan",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "div",
-          "text": "3 helpers",
-          "cls": "chip",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "3",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "helpers",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "div",
-          "text": "4 check",
-          "cls": "chip",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "4",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "check",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "div",
-          "text": "5 queue",
-          "cls": "chip",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "5",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "queue",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "div",
-          "text": "6 you say yes",
-          "cls": "chip",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "6",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "you say yes",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "div",
-          "text": "7 receipt",
-          "cls": "chip",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "7",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "receipt",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/ksr-cards.html",
-          "tag": "button",
-          "text": "Reveal debrief",
-          "cls": "row-toggle",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/ksr-cards.html",
-          "tag": "button",
-          "text": "Reveal debrief",
-          "cls": "row-toggle",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/ksr-cards.html",
-          "tag": "button",
-          "text": "Reveal debrief",
-          "cls": "row-toggle",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/ksr-cards.html",
-          "tag": "button",
-          "text": "Reveal debrief",
-          "cls": "row-toggle",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/ksr-cards.html",
-          "tag": "button",
-          "text": "Reveal debrief",
-          "cls": "row-toggle",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/ksr-cards.html",
-          "tag": "button",
-          "text": "Reveal debrief",
-          "cls": "row-toggle",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/claim-letter.html",
-          "tag": "button",
-          "text": "Reveal hidden text",
-          "cls": "row-toggle",
-          "reason": "clickable affordance with no link and no handler"
-        }
-      ],
+      "dead": [],
       "broken": [],
       "consoleErrors": []
     },
@@ -3033,69 +2057,21 @@
       "name": "Lantern",
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
-      "status": "red",
-      "ranAt": "2026-08-18T03:19:11.637Z",
+      "status": "green",
+      "ranAt": "2026-08-22T22:10:09.513Z",
       "summary": {
         "pages": 11,
-        "greenPages": 5,
-        "redPages": 6,
-        "ok": 420,
-        "dead": 50,
+        "greenPages": 11,
+        "redPages": 0,
+        "ok": 582,
+        "dead": 0,
         "broken": 0,
-        "external": 41,
+        "external": 52,
         "delegated": 0,
         "consoleErrorPages": 0,
-        "healthy": false
+        "healthy": true
       },
       "pageHealth": [
-        {
-          "path": "/aigovops-lantern/api/data-model/",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": "collect: Error: page.evaluate: SyntaxError: Failed to execute 'querySelector' on 'Document': '#1-beacon-evidence-bundle' is not a valid selector.\n    at eval ("
-        },
-        {
-          "path": "/aigovops-lantern/api/flows/",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": "collect: Error: page.evaluate: SyntaxError: Failed to execute 'querySelector' on 'Document': '#1-read-a-bundle-cli-today-web-in-v02' is not a valid selector.\n "
-        },
-        {
-          "path": "/aigovops-lantern/python/bundle/",
-          "dead": 11,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-lantern/python/cli/",
-          "dead": 7,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-lantern/python/render/",
-          "dead": 7,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-lantern/python/ucid/",
-          "dead": 7,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
         {
           "path": "/aigovops-lantern/",
           "dead": 0,
@@ -3106,6 +2082,22 @@
         },
         {
           "path": "/aigovops-lantern/api/actions/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-lantern/api/data-model/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-lantern/api/flows/",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -3129,6 +2121,38 @@
           "loadError": null
         },
         {
+          "path": "/aigovops-lantern/python/bundle/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-lantern/python/cli/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-lantern/python/render/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-lantern/python/ucid/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/aigovops-lantern/roadmap/",
           "dead": 0,
           "broken": 0,
@@ -3137,232 +2161,7 @@
           "loadError": null
         }
       ],
-      "dead": [
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
-          "tag": "a",
-          "text": "bundle",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.bundle\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
-          "tag": "a",
-          "text": "BundleError",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.bundle.BundleError\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
-          "tag": "a",
-          "text": "Receipt",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.bundle.Receipt\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
-          "tag": "a",
-          "text": "is_signed",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.bundle.Receipt.is_signed\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
-          "tag": "a",
-          "text": "Bundle",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.bundle.Bundle\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
-          "tag": "a",
-          "text": "load",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.bundle.load\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.bundle.BundleError\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.bundle.Receipt\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.bundle.Receipt.is_signed\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.bundle.Bundle\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.bundle.load\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/render/",
-          "tag": "a",
-          "text": "render",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.render\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/render/",
-          "tag": "a",
-          "text": "render_bundle",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.render.render_bundle\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/render/",
-          "tag": "a",
-          "text": "render_diff",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.render.render_diff\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/render/",
-          "tag": "a",
-          "text": "receipt_oneliner",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.render.receipt_oneliner\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/render/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.render.render_bundle\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/render/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.render.render_diff\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/render/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.render.receipt_oneliner\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/ucid/",
-          "tag": "a",
-          "text": "ucid",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.ucid\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/ucid/",
-          "tag": "a",
-          "text": "UcidError",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.ucid.UcidError\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/ucid/",
-          "tag": "a",
-          "text": "Ucid",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.ucid.Ucid\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/ucid/",
-          "tag": "a",
-          "text": "load_registry",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.ucid.load_registry\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/ucid/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.ucid.UcidError\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/ucid/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.ucid.Ucid\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/ucid/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.ucid.load_registry\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/cli/",
-          "tag": "a",
-          "text": "cli",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.cli\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/cli/",
-          "tag": "a",
-          "text": "cmd_read",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.cli.cmd_read\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/cli/",
-          "tag": "a",
-          "text": "cmd_diff",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.cli.cmd_diff\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/cli/",
-          "tag": "a",
-          "text": "cmd_explain",
-          "cls": "md-nav__link",
-          "reason": "anchor \"#aigovops_lantern.cli.cmd_explain\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/cli/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.cli.cmd_read\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/cli/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.cli.cmd_diff\" has no matching target"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/cli/",
-          "tag": "a",
-          "text": "¶",
-          "cls": "headerlink",
-          "reason": "anchor \"#aigovops_lantern.cli.cmd_explain\" has no matching target"
-        }
-      ],
+      "dead": [],
       "broken": [],
       "consoleErrors": []
     },
@@ -3370,69 +2169,21 @@
       "name": "NCW AI Camp",
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
-      "status": "red",
-      "ranAt": "2026-08-18T03:21:11.929Z",
+      "status": "green",
+      "ranAt": "2026-08-22T22:11:53.487Z",
       "summary": {
         "pages": 78,
-        "greenPages": 72,
-        "redPages": 6,
-        "ok": 3895,
-        "dead": 105,
+        "greenPages": 78,
+        "redPages": 0,
+        "ok": 3922,
+        "dead": 0,
         "broken": 0,
         "external": 1622,
-        "delegated": 15,
+        "delegated": 0,
         "consoleErrorPages": 0,
-        "healthy": false
+        "healthy": true
       },
       "pageHealth": [
-        {
-          "path": "/aigovops-beacon/lab-100.html",
-          "dead": 21,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-beacon/lab-200.html",
-          "dead": 49,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "dead": 23,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/claim-letter.html",
-          "dead": 1,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "dead": 5,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/ksr-cards.html",
-          "dead": 6,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
         {
           "path": "/aigovops-beacon/",
           "dead": 0,
@@ -3475,6 +2226,22 @@
         },
         {
           "path": "/aigovops-beacon/index.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-beacon/lab-100.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-beacon/lab-200.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -3626,6 +2393,14 @@
           "loadError": null
         },
         {
+          "path": "/aigovops-ncw-ai-camp/jeeves-demo.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/aigovops-ncw-ai-camp/kit/attendee-guide.html",
           "dead": 0,
           "broken": 0,
@@ -3635,6 +2410,22 @@
         },
         {
           "path": "/aigovops-ncw-ai-camp/kit/checklist-card.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/claim-letter.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -3667,6 +2458,14 @@
         },
         {
           "path": "/aigovops-ncw-ai-camp/kit/index.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/ksr-cards.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -4010,743 +2809,7 @@
           "loadError": null
         }
       ],
-      "dead": [
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "a",
-          "text": "Official donation link placeholder",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "button",
-          "text": "Known",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "button",
-          "text": "Suspected",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "button",
-          "text": "Rumor",
-          "cls": "selected",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "tag": "button",
-          "text": "▶",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "button",
-          "text": "pause",
-          "cls": "b primary",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "button",
-          "text": "restart",
-          "cls": "b",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "div",
-          "text": "1 task",
-          "cls": "chip on",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "1",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "task",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "div",
-          "text": "2 plan",
-          "cls": "chip",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "2",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "plan",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "div",
-          "text": "3 helpers",
-          "cls": "chip",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "3",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "helpers",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "div",
-          "text": "4 check",
-          "cls": "chip",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "4",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "check",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "div",
-          "text": "5 queue",
-          "cls": "chip",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "5",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "queue",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "div",
-          "text": "6 you say yes",
-          "cls": "chip",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "6",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "you say yes",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "div",
-          "text": "7 receipt",
-          "cls": "chip",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "7",
-          "cls": "n",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "tag": "span",
-          "text": "receipt",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/ksr-cards.html",
-          "tag": "button",
-          "text": "Reveal debrief",
-          "cls": "row-toggle",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/ksr-cards.html",
-          "tag": "button",
-          "text": "Reveal debrief",
-          "cls": "row-toggle",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/ksr-cards.html",
-          "tag": "button",
-          "text": "Reveal debrief",
-          "cls": "row-toggle",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/ksr-cards.html",
-          "tag": "button",
-          "text": "Reveal debrief",
-          "cls": "row-toggle",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/ksr-cards.html",
-          "tag": "button",
-          "text": "Reveal debrief",
-          "cls": "row-toggle",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/ksr-cards.html",
-          "tag": "button",
-          "text": "Reveal debrief",
-          "cls": "row-toggle",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/claim-letter.html",
-          "tag": "button",
-          "text": "Reveal hidden text",
-          "cls": "row-toggle",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "That the dashboard was up at the time.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "A portable, signed, challengeable claim about what happened, when, and under who",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "That the auditor signed off in a meeting.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "What network are we looking at?",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "Beacon is looking.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "Pick what matters.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "Pick your guardrails.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "Approve the deployment.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "Just the dashboard URL and the bundle hash.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "Manifest, signed receipt NDJSON, public key, policy YAML, checklists, and a one-",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "A PDF screenshot of the meeting where the audit happened.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "Random fault injection at training time.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "A checklist receipt requiring explicit sign-off on the safety-critical control-l",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "A faster CI/CD pipeline.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "You can't — verification requires Beacon to be running.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "Use openssl with the included VERIFY.md, or run python -m src.audit_log verify i",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "You email Beacon support and they verify it for you.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "1. I can show what AI is in scope.",
-          "cls": "attest-item-text",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "2. I can point to a signed receipt and explain it.",
-          "cls": "attest-item-text",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "3. I can hand an auditor a verifiable bundle.",
-          "cls": "attest-item-text",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "tag": "span",
-          "text": "4. I can map one real failure to missing governance evidence.",
-          "cls": "attest-item-text",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 1 First receipt 15 min · `docker compose up` Make a real decision in Studio ",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 1",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "15 min · `docker compose up`",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 2 Discover models in your browser 20 min · MV3 extension Load the unpacked e",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 2",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "20 min · MV3 extension",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 3 Tail a DNS log 15 min · scripts/tail_dns.py Drop a DNS query CSV in the wa",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 3",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "15 min · scripts/tail_dns.py",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 4 Score a framework 20 min · nist-ai-rmf-1.0 Pick a framework. Walk the 23-c",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 4",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "20 min · nist-ai-rmf-1.0",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 5 Replay a failure 15 min · Studio › Failures Pick a case (e.g., iTutorGroup",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 5",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "15 min · Studio › Failures",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 6 MCP attest 20 min · Claude Desktop Add the MCP config snippet to Claude De",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 6",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "20 min · Claude Desktop",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 7 Bundle for auditor 15 min · Studio › Bundle Pick a date range, framework, ",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 7",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "15 min · Studio › Bundle",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 8 Offline walkthrough on a USB stick 10 min · v2.3 Copy docs/walkthrough/ to",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 8",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "10 min · v2.3",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "article",
-          "text": "Lab 9 Hosted MCP + restricted agent 20 min · v2.3 Run the hosted MCP on a free R",
-          "cls": "variant-card",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "Lab 9",
-          "cls": "variant-num",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "div",
-          "text": "20 min · v2.3",
-          "cls": "variant-time",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "npm install && npm start",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "docker compose -f deploy/lab.yml up -d",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "terraform apply ./suitcase",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "All nine variants in order.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "Lab 2 (browser discovery) plus Lab 6 (MCP attest).",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "Lab 1 (first receipt), Lab 4 (score a framework), Lab 7 (bundle for auditor).",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "Just a PDF of the checklist.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "Gate YAML, OPA Rego, a Governance Decision Record, and a signed bundle.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "A Slack notification to the auditor.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "POST /api/auditor",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "POST /receipts",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "POST /api/v1/receipts",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "An MCP tool for filing welfare claims.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "A pre-deployment governance gate requiring legal sign-off, plus per-decision rec",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "A faster DNS log tail.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "It uses less power than Docker.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "It's faster than the hosted MCP.",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "It's the smallest unit of governance evidence you can hand someone in one click ",
-          "cls": "",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "1. I can launch the Suitcase Lab and confirm it's signing receipts.",
-          "cls": "attest-item-text",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "2. I can choose 4-9 lab variants for a specific workshop length and audience.",
-          "cls": "attest-item-text",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "3. I can emit Policy-as-Code (gate YAML + Rego) from a checklist outcome and exp",
-          "cls": "attest-item-text",
-          "reason": "clickable affordance with no link and no handler"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "tag": "span",
-          "text": "4. I can cross-reference any case in the 100-failure dataset to the framework co",
-          "cls": "attest-item-text",
-          "reason": "clickable affordance with no link and no handler"
-        }
-      ],
+      "dead": [],
       "broken": [],
       "consoleErrors": []
     }

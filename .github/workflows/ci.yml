@@ -1,5 +1,9 @@
 name: ci
 on: [push, pull_request]
+
+# Least privilege, declared. An inherited default is an UNKNOWN permission set, and
+# policies/autonomy.yaml treats unknown as not-green. This lane only reads the repo.
+permissions: { contents: read }
 jobs:
   core-tests:
     runs-on: ubuntu-latest
@@ -25,3 +29,21 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with: { node-version: 20 }
       - run: node scripts/runbooks/seo-drift-check.mjs
+      # Estate manifest gate — estate.yaml is the one input; estate-sites.json, founders.json
+      # and repo-audit.config.json are views of it. --check fails the build when they disagree.
+      - run: node scripts/estate-manifest.mjs --check
+      - run: node --test test/estate-manifest.test.mjs
+      # Autonomy gate — policies/autonomy.yaml is the irreversibility boundary as data. Every
+      # workflow must be declared, least-privileged, and inside its class; undeclared automation fails.
+      - run: node scripts/autonomy-check.mjs
+      - run: node --test test/autonomy-check.test.mjs
+      # Plan register gate — MASTER-PLAN.md gives every plan document one job and one status.
+      # A new plan document with no row fails here; an index nobody maintains is worse than none.
+      - run: node scripts/plan-register-check.mjs
+      - run: node --test test/plan-register.test.mjs
+      # Skills-as-code gate — every skill declares which of the 11 Principles it implements,
+      # who owns it, and how far it may run alone. An unverifiable claim fails; an honest
+      # `principle: unknown` passes and is printed.
+      - run: node scripts/skills-check.mjs
+      - run: node --test test/skills-check.test.mjs
+      - run: node --test test/founders-digest.test.mjs

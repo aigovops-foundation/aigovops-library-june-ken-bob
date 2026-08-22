@@ -95,12 +95,19 @@ for (const origin of origins) {
     });
   }
 
-  // Inert clickable affordances: real, but a design question rather than a broken link.
+  // A CONTROL THAT DOES NOTHING IS RED, NOT AMBER. This was filed as "a design question
+  // rather than a broken link" and therefore amber. That was survivable while amber still
+  // appeared in the mail; once the mail became red-only (2026-08-19) it meant 105 dead
+  // controls on Beacon produced the subject line "all green" — in the same run whose own
+  // verdict step failed with "Estate has red pages". A visitor who clicks a quiz option and
+  // gets nothing has hit the same defect as one who clicks a dead anchor, and the anchor case
+  // was always red. Same symptom, same severity. The fix is still a decision (wire it, or stop
+  // styling it as a button), which is what canFix:false already says.
   const inert = (s.dead || []).filter(e => /no link and no handler/.test(e.reason || ''));
   if (inert.length) {
     const tags = tally(inert.map(e => e.tag));
     issues.push({
-      severity: 'amber', where, count: inert.length,
+      severity: 'red', where, count: inert.length,
       title: `${inert.length} elements look clickable but do nothing`,
       plain: `Mostly quiz options and numbered step chips (${tags}). They are styled to invite a click and no click is wired. Either they were meant to be interactive and the handler was lost, or they are decorative and should stop looking like buttons.`,
       fix: 'Decide per group: wire the handler, or drop the pointer cursor and button styling so they read as text. A quiz option that does not respond is worse than a plain list.',
@@ -314,44 +321,55 @@ console.error(`wrote ${HTML_OUT}`);
    and a reply the founders can actually send back. */
 
 const reds = issues.filter(i => i.severity === 'red');
-const ambers = issues.filter(i => i.severity === 'amber');
+
+// THE MAIL MAY NOT CLAIM GREEN WHILE THE CRAWL COUNTED DEAD CONTROLS. Severity is assigned
+// per issue-type above, so a future type added as amber would silently reintroduce exactly the
+// "all green with 105 dead controls" mail this guard exists to stop. This compares the two
+// numbers that must agree and fails the digest loudly rather than sending a comfortable lie.
+if (!reds.length && (uniqueDead || uniqueBroken)) {
+  console.error(`digest refuses to report green: ${uniqueDead} dead + ${uniqueBroken} broken control(s) ` +
+                'are counted but no issue is red — a severity mapping is wrong. Fix the mapping, not this check.');
+  process.exit(2);
+}
+
 const md = [];
-md.push(`## ${reds.length ? '🔴' : '🟢'} Estate health — ${reds.length} thing${reds.length === 1 ? '' : 's'} to fix`);
+
+// RED AND THE FIX. NOTHING ELSE. This mail used to carry an amber "waiting on a decision"
+// section and a roster of every green property, so the one or two lines that needed acting on
+// arrived buried under things that did not. Everything removed here is still on the board
+// (docs/estate-health.html), linked at the foot: the board is for browsing, the mail is for
+// acting. Asked for by Bob, 2026-08-19.
+md.push(`## ${reds.length ? '🔴' : '🟢'} Estate health — ${reds.length ? `${reds.length} to fix` : 'all green'}`);
 md.push('');
-md.push(`_Crawled ${stamp}. The raw crawl counted **${rawDead} dead controls**; that is **${uniqueDead}** counted once per mirrored property. Grouped by cause, here is the whole estate._`);
+md.push(`_Crawled ${stamp}._`);
 md.push('');
-if (reds.length) {
-  md.push('### 🔴 Red — one line each, with the fix');
+
+if (!reds.length) {
+  md.push('Nothing red. Every control on every crawled page works.');
   md.push('');
+} else {
   for (const i of reds) {
     md.push(`**${i.id} · ${i.title}**  `);
     md.push(`↳ _${i.where}_  `);
+    // WHERE IT IS, ON THE ROW ITSELF. A finding you cannot locate is a finding you cannot fix.
+    // The 2026-08-18 mail named a 404 and never said which page carried the link, so acting on
+    // the only real item in it began with a repo-wide search.
+    if (i.pages?.length) md.push('↳ ' + i.pages.map(x => '`' + x + '`').join(', ') + '  ');
     md.push(`↳ **Fix:** ${i.fix}  `);
-    md.push(`↳ ${i.canFix ? `Reply **\`fix ${i.id}\`** and Claude prepares it as a pull request for you to merge.` : '_Needs a human decision first._'}`);
+    md.push(i.canFix
+      ? `↳ Reply **\`fix ${i.id}\`** — Claude opens a pull request for you to merge.`
+      : '↳ _Needs a human decision first._');
     md.push('');
   }
-} else {
-  md.push('### 🟢 Nothing red. Every control on every crawled page works.');
-  md.push('');
 }
-if (ambers.length) {
-  md.push('### 🟠 Waiting on a decision from you');
-  md.push('');
-  for (const i of ambers) md.push(`- **${i.title}** — ${i.where}. ${i.fix}`);
-  md.push('');
-}
-md.push('### 🟢 Green');
-md.push('');
-for (const o of greenOrigins) md.push(`- **${o.primary.name}** — ${o.primary.summary?.greenPages ?? 0} pages, every control working`);
-for (const o of origins.filter(o => !greenOrigins.includes(o))) {
-  md.push(`- **${o.primary.name}** — ${o.primary.summary?.greenPages ?? 0} pages green${o.mirrors.length ? ` (mirrored by ${o.mirrors.join(', ')})` : ''}`);
-}
+
+// Gated surfaces are named EVERY time, red or green. This is the one non-red line kept, because
+// dropping it turns "nobody looked" into something that reads as "nothing wrong".
 if (pending.length) {
-  md.push('');
   md.push(`_Not checked: ${pending.map(s => s.name).join(', ')} — gated, needs an authenticated crawl. Silence there means nobody looked._`);
+  md.push('');
 }
-md.push('');
-md.push('_Full evidence: `docs/estate-health.html`. Formatted HTML and PDF are attached to this run._');
+md.push('_Full board — amber, the green roster and every page: `docs/estate-health.html`._');
 md.push('<!-- estate-health-digest -->');
 
 const MD_OUT = resolve(opt('markdown', join(ROOT, 'audit', 'estate-exec.md')));
@@ -374,6 +392,15 @@ if (argv.includes('--fingerprint')) {
 
 if (argv.includes('--status')) {
   process.stdout.write(reds.length ? 'red' : 'green');
+  process.exit(0);
+}
+
+// HOW MANY, for the subject line. --status is a WORD ('red'/'green') because the pinned issue
+// labels with it and the run's verdict step compares against it. Interpolating that word into
+// "{0} to fix" produced the subject "Estate health — red to fix" on 2026-08-20. The subject is
+// the part a founder reads before deciding whether to open anything, so it gets the number.
+if (argv.includes('--count')) {
+  process.stdout.write(String(reds.length));
   process.exit(0);
 }
 

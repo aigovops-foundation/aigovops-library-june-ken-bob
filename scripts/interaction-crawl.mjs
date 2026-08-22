@@ -49,6 +49,14 @@ const OUT = opt('out') || 'interaction-crawl.json';
 const SITE_NAME = opt('site-name') || (BASE ? new URL(BASE).host : 'site');
 const MAX_PAGES = parseInt(opt('max-pages', '80'), 10);
 const FAIL_ON_DEAD = flag('fail-on-dead') || process.env.FAIL_ON_DEAD === 'true';
+
+// A CONSENT DOOR IS NOT AN AUTHENTICATION WALL. The rendered Library sits behind a one-click
+// "I agree to ten rules" page that sets omni_rules=1 — no account, no payment, no secret. It was
+// marked gated and therefore never crawled, so the estate's interaction checks covered five
+// marketing and docs sites and neither member-facing surface. --cookie carries that consent, so
+// the Library is held to the same standard as everything else. NON-SECRET cookies only, by
+// design: anything needing a real session belongs in a signed-in crawl, not a flag here.
+const COOKIE = opt('cookie', process.env.CRAWL_COOKIE || '');
 const NAV_TIMEOUT = parseInt(opt('nav-timeout', '20000'), 10);
 
 if (!BASE) {
@@ -106,7 +114,22 @@ const COLLECT = `(() => {
     if (getComputedStyle(el).cursor === 'pointer') nodes.push(el);
   }
   const out = [];
-  const INT = 'a[href], button, [role="button"], [onclick], [data-crawl-wired], input[type="submit"], input[type="button"], summary, label[for]';
+  // A LABEL THAT WRAPS ITS CONTROL IS INTERACTIVE TOO. This listed only label[for], so the
+  // perfectly ordinary <label><input type=radio><span>…</span></label> was not counted as a
+  // control — and every span inside it, inheriting the label's pointer cursor, was reported as
+  // a dead clickable. That was 43 of the "105 dead controls" on the Beacon lab pages on
+  // 2026-08-19; clicking any of them toggles its radio exactly as intended.
+  // A CSS SELECTOR CANNOT TEST A JS PROPERTY. An element wired with el.onclick = fn matches
+  // neither [onclick] (that is the ATTRIBUTE) nor [data-crawl-wired] (that is set only by the
+  // addEventListener instrumentation), so it was invisible to the ancestor test below even after
+  // the element-level check learned to see it. Consequence: NCW's jeeves-demo.html has six
+  // process chips wired exactly that way; every chip verified WIRED while its own child spans
+  // were reported DEAD — 14 findings from six working controls. Tag them first so closest()
+  // can find them. (No backticks in this comment: it lives inside a template literal.)
+  for (const el of document.querySelectorAll('*')) {
+    if (typeof el.onclick === 'function') el.setAttribute('data-crawl-onclick', '1');
+  }
+  const INT = 'a[href], button, [role="button"], [onclick], [data-crawl-onclick], [data-crawl-wired], input[type="submit"], input[type="button"], summary, label[for], label:has(input), label:has(select), label:has(textarea)';
   for (const el of nodes) {
     if (seen.has(el)) continue; seen.add(el);
     const r = el.getBoundingClientRect();
@@ -118,30 +141,36 @@ const COLLECT = `(() => {
     const inForm = !!el.closest('form');
     const forId = el.getAttribute('for');
     const labelTargetOk = forId ? !!document.getElementById(forId) : null;
+    const labelWraps = tag === 'label' && !!el.querySelector('input, select, textarea');
     let anchorTargetOk = null;
-    // Resolve #fragments by ID, never by querySelector(rawHref). An href like
-    // "#aigovops_lantern.bundle.BundleError" is a perfectly legal ID, but as a CSS
-    // SELECTOR it reads as id=aigovops_lantern with classes bundle and BundleError —
-    // so querySelector returns null and a working permalink is reported DEAD. Worse,
-    // a fragment containing "(" or ")" (mkdocstrings emits those) makes the selector
-    // INVALID and querySelector THROWS, which killed the whole page.evaluate and left
-    // the page red with zero elements collected. Both symptoms hit the Lantern API
-    // docs at once: 32 dead anchors across 4 pages, 14 of them Material's own heading
-    // permalinks, which link to the heading they sit inside and cannot be dead.
-    // getElementById takes a literal ID — no CSS parsing, and it cannot throw.
+    // ANCHOR TARGETS ARE LOOKED UP BY ID, NEVER AS A CSS SELECTOR. querySelector('#' + frag)
+    // parses the fragment as CSS, where '.' starts a class, ':' a pseudo-class, and '(' is
+    // outright invalid. mkdocstrings names every Python symbol that way, so Lantern's API docs
+    // broke it two different ways at once on 2026-08-18:
+    //   - a dotted id (#aigovops_lantern.bundle.Receipt) read as "id=aigovops_lantern AND
+    //     class=bundle AND class=Receipt" and never matched — live permalinks reported DEAD;
+    //   - a parenthesised id (#render_bundle(path)) made the selector INVALID, so querySelector
+    //     THREW, which killed the whole page.evaluate and left the page red with zero elements
+    //     collected. That reads as dead=0 because nothing was ever measured.
+    //
+    // getElementById does an exact string match and cannot throw. Both the decoded and the raw
+    // fragment are tried: href="#caf%C3%A9" targets id="café", while an id may itself contain a
+    // literal percent sequence. getElementsByName covers old-style <a name>.
     if (rawHref && rawHref.startsWith('#')) {
-      if (rawHref === '#') anchorTargetOk = false;
-      else {
-        let frag = rawHref.slice(1);
-        try { frag = decodeURIComponent(frag); } catch { /* keep raw */ }
-        anchorTargetOk = !!document.getElementById(frag)
-          || !!document.getElementsByName(frag).length
-          // "#top" (and "#") are browser built-ins meaning "scroll to the document top";
-          // there is no element to find, and the control genuinely works.
-          || frag.toLowerCase() === 'top';
-        if (!anchorTargetOk) {
-          try { anchorTargetOk = !!document.querySelector('#' + CSS.escape(frag)); } catch { /* not a resolvable id */ }
-        }
+      const frag = rawHref.slice(1);
+      let id = frag; try { id = decodeURIComponent(frag); } catch (err) { id = frag; }
+      anchorTargetOk = frag === '' ? false
+        : !!(document.getElementById(id) || document.getElementById(frag)
+             || document.getElementsByName(id).length
+             // '#top' is a browser built-in meaning "scroll to the document top": there is no
+             // element to find and the control genuinely works, so calling it dead is a false
+             // positive of exactly the kind this block exists to remove.
+             || id.toLowerCase() === 'top');
+      if (!anchorTargetOk && frag !== '') {
+        // Last resort for an id findable as an escaped selector but not by the lookups above.
+        // CSS.escape makes the fragment literal, and the try/catch means even a pathological
+        // fragment cannot throw out of page.evaluate — the failure that blanked whole pages.
+        try { anchorTargetOk = !!document.querySelector('#' + CSS.escape(id)); } catch (err) { /* not resolvable */ }
       }
     }
     out.push({
@@ -152,9 +181,27 @@ const COLLECT = `(() => {
       href, rawHref: rawHref ?? null,
       type: type || null, inForm,
       onclickAttr: el.hasAttribute('onclick'),
+      // A HANDLER CAN BE A PROPERTY, NOT AN ATTRIBUTE OR A LISTENER. Assigning el.onclick = fn
+      // sets neither an onclick ATTRIBUTE nor an addEventListener registration, so both of the
+      // detectors above are blind to it and the element reads as dead. On 2026-08-19 that
+      // reported the "Reveal debrief" buttons on ksr-cards.html and the quiz options on
+      // demo-walkthroughs.html as dead — all of which respond correctly when clicked.
+      // (No backticks in this comment: it lives inside a template literal.)
+      onclickProp: typeof el.onclick === 'function',
+      // A CONTROL NOBODY CAN OPERATE IS NOT A BROKEN CONTROL. Two cases, both deliberate:
+      // the disabled attribute (the page says this cannot be pressed), and anything inside
+      // [data-simulated] or [inert] (the page says the region is a PICTURE of software, not
+      // software). The NCW
+      // kit's demo-walkthroughs.html is nineteen labelled "SIMULATED — example output for
+      // teaching" screens; its mock quiz buttons and its deliberately unfilled "Official
+      // donation link placeholder" were reported as five dead controls on 2026-08-19. Wiring
+      // them would have destroyed the lesson, which is precisely that the placeholder is
+      // unfilled. Flagging a drawing of a button teaches the reader to distrust the report.
+      disabled: !!el.disabled,
+      simulated: !!el.closest('[data-simulated], [inert]'),
       wired: el.hasAttribute('data-crawl-wired'),
       isSubmit: (tag === 'button' && (type === 'submit' || (!type && inForm))) || type === 'submit',
-      labelTargetOk, anchorTargetOk,
+      labelTargetOk, labelWraps, anchorTargetOk,
       cursorPointer: getComputedStyle(el).cursor === 'pointer',
       visible,
       dataJeeves: el.hasAttribute('data-jeeves-open'),
@@ -169,9 +216,12 @@ const COLLECT = `(() => {
 
 // ---- classify one element (in Node) ----------------------------------------
 function classify(e, delegation, targetStatus) {
+  // Declared non-operable before anything else: neither is a defect, so neither is a finding.
+  if (e.disabled) return { verdict: 'INERT', reason: 'disabled — cannot be operated by design' };
+  if (e.simulated) return { verdict: 'INERT', reason: 'inside a simulated/inert region — a depiction, not a control' };
   // native affordance?
   const nativeInteractive = ['a','button','summary','label','input','select','textarea'].includes(e.tag)
-    || e.role === 'button' || e.onclickAttr || e.dataJeeves;
+    || e.role === 'button' || e.onclickAttr || e.onclickProp || e.dataJeeves;
   const looksClickable = nativeInteractive || e.cursorPointer || /\b(btn|cta|button|card)\b/.test(e.cls);
 
   // 1) real link with an href
@@ -194,9 +244,11 @@ function classify(e, delegation, targetStatus) {
 
   // 2) no href — needs a handler
   if (e.onclickAttr) return { verdict: 'WIRED', reason: 'onclick attribute' };
+  if (e.onclickProp) return { verdict: 'WIRED', reason: 'onclick property (el.onclick = fn)' };
   if (e.isSubmit) return { verdict: 'WIRED', reason: 'form submit' };
   if (e.wired) return { verdict: 'WIRED', reason: 'click/pointer listener attached' };
   if (e.tag === 'label' && e.labelTargetOk) return { verdict: 'WIRED', reason: 'label → control' };
+  if (e.tag === 'label' && e.labelWraps) return { verdict: 'WIRED', reason: 'label wraps its control' };
   if (e.tag === 'summary') return { verdict: 'WIRED', reason: '<details> disclosure' };
   if (e.dataJeeves) return { verdict: 'DEAD', reason: 'data-jeeves-open but widget/handler absent' };
 
@@ -217,6 +269,15 @@ async function main() {
   if (process.env.PW_EXECUTABLE_PATH) launch.executablePath = process.env.PW_EXECUTABLE_PATH;
   const browser = await chromium.launch(launch);
   const context = await browser.newContext({ ignoreHTTPSErrors: true, userAgent: 'AiGovOps-InteractionCrawler/1' });
+  if (COOKIE) {
+    const host = new URL(BASE).hostname;
+    const jar = COOKIE.split(';').map((c) => c.trim()).filter(Boolean).map((c) => {
+      const i = c.indexOf('=');
+      return { name: c.slice(0, i).trim(), value: c.slice(i + 1).trim(), domain: host, path: '/' };
+    });
+    await context.addCookies(jar);
+    console.log(`  consent cookie(s) set for ${host}: ${jar.map((c) => c.name).join(', ')}`);
+  }
   await context.addInitScript(INIT_SCRIPT);
   // Optionally keep the render on-origin (used when proving locally behind an egress
   // proxy): third-party analytics/fonts are aborted so they can't masquerade as errors.
