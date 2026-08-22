@@ -13,6 +13,7 @@
     "estate:regen": "node scripts/estate-manifest.mjs --regen",
     "autonomy:check": "node scripts/autonomy-check.mjs",
     "plan:check": "node scripts/plan-register-check.mjs",
+    "skills:check": "node scripts/skills-check.mjs",
     "audit:repos:offline": "node scripts/repo-audit.mjs --repos-file audit/repos.inventory.json --open",
     "test": "cd core && node --test"
   },
