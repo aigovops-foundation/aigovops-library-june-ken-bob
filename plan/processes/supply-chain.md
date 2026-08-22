@@ -74,10 +74,9 @@ pinned: <40-character commit SHA>    # the exact commit that was read
 reviewed: 2026-08-22                 # by a human, on this date
 ```
 
-**We have none today**, which is the cheapest possible moment to write the rule. Enforcement
-lands in `scripts/skills-check.mjs` as a one-line addition once the skills-as-code row (#62)
-merges — it is written and tested there, and deliberately not stacked onto this PR so each
-stays independently reviewable.
+**We have none today**, which is the cheapest possible moment to write the rule — and
+`scripts/skills-check.mjs` enforces it now, so the first third-party skill anyone adds meets
+the bar on its way in rather than after an incident.
 
 ---
 

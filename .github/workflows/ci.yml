@@ -41,3 +41,8 @@ jobs:
       # A new plan document with no row fails here; an index nobody maintains is worse than none.
       - run: node scripts/plan-register-check.mjs
       - run: node --test test/plan-register.test.mjs
+      # Skills-as-code gate — every skill declares which of the 11 Principles it implements,
+      # who owns it, and how far it may run alone. An unverifiable claim fails; an honest
+      # `principle: unknown` passes and is printed.
+      - run: node scripts/skills-check.mjs
+      - run: node --test test/skills-check.test.mjs
