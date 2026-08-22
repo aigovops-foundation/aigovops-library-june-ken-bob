@@ -84,14 +84,26 @@ the plan tree, but grafting 28 workspaces in here is more work than grafting doc
 there.
 
 **Recommendation:** V4-10k is the trunk. Transfer it to `aigovops-foundation` **first**
-(while it is still Bob's to transfer), then rename it to `aigovops` inside the org. GitHub
-preserves redirects across both moves, so no existing link or clone breaks. Net new
+(while it is still Bob's to transfer), then rename it to `aigovops` inside the org. Net new
 repositories created: **zero**. The repo count goes *down*, which is what the council asked
 for.
 
+**Correction to draft one, and it changes the sequencing.** I wrote that redirects mean no
+existing link breaks. That is true for `github.com/...` URLs and for git remotes; it is
+**false for GitHub Pages**. Our own 2026-07-19 estate review found exactly this failure:
+`bobrapp.github.io/{aigovops-beacon,umbrella-govops}` both 404'd after the org move, because
+**Pages does not follow the repo-rename redirects that github.com does** — 138 references
+pointed at nothing, including a QR code printed on a presentation slide, while the
+`github.com/...` links beside them silently resolved.
+
+So the rename in D3 will kill `bobrapp.github.io/Aigovops-Foundation-Open-Source-V4-10k/`,
+which **the Library hub links today** (the "Open Source v4" card in `docs/index.html`). The
+pre-step is not optional: repoint every reference to that Pages URL *before* the rename, and
+sweep the estate for others afterwards. `estate.yaml` now records that link and its fate.
+
 One standing rule that comes with this: **never create a repository at a name we have freed
 up.** A new repo at an old name silently kills the redirect that was protecting every
-existing link.
+existing github.com link.
 
 **Needs a founder:** yes — transfer and rename are Red.
 
@@ -370,10 +382,11 @@ named as they will be *after* M1.
 | # | M | Repo / path | What | Class |
 |---|---|---|---|---|
 | 0 | M0 | library → `plan/`, `docs/` | **This plan** — markdown source, rendered page, hub link | Yellow |
-| 1 | M1 | — | Transfer V4-10k to the org; rename to `aigovops` | **Red** |
+| 1a | M1 | library + estate | Repoint every reference to `bobrapp.github.io/Aigovops-Foundation-Open-Source-V4-10k/` — Pages does not survive a rename | Yellow |
+| 1b | M1 | — | Transfer V4-10k to the org; rename to `aigovops` | **Red** |
 | 2 | M1 | — | Apply for GitHub for Nonprofits (free Team) | **Red** |
 | 3 | M1 | `aigovops/CODEOWNERS` | Both founders required on `policies/`, `skills/`, `.github/`; branch protection on `main` | Yellow (needs D7) |
-| 4 | M1 | `aigovops/estate.yaml` | The manifest, generated from the three existing proto-manifests; a `make estate` that regenerates the old files from it so nothing breaks | Yellow |
+| 4 | M1 | `estate.yaml` + `scripts/estate-manifest.mjs` | **Draft shipped.** The manifest, plus a validator that regenerates `estate-sites.json` byte-identically and fails CI on drift against all three proto-manifests. 42 rows still unverified pending D6. Moves to the trunk at M1. | Yellow |
 | 5 | M1 | — | 301 `a-i-gov-ops.com` → canonical; publish the `.org` redirect map | **Red** |
 | 6 | M1 | `aigovops/policies/autonomy.yaml` | Green/Yellow/Red written as data, plus a CI check that a workflow's declared class matches its permissions | Yellow |
 | 7 | M2 | `aigovops/skills/` | Migrate 13 skills; add `principle:`/`owner:`/`risk:`; CI fails an unprincipled skill | Yellow |
@@ -412,6 +425,10 @@ to.
 
 **CODEOWNERS arrives after the first outside contributor.** Then the gate is theatre. PR 3
 is early in the ladder for that reason, and it is blocked only by D7 — one line.
+
+**A Pages URL dies on a rename and nobody notices.** Not hypothetical — it already happened
+once, to 138 references. Every rename and every archive in this plan needs a link sweep
+before and after, not just a redirect assumption.
 
 **A stale Pages mirror outlives its merge.** Covered in section 4; it is the most likely
 concrete way this plan creates a second source of truth while trying to remove one.

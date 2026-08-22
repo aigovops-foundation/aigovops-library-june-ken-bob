@@ -1,0 +1,523 @@
+# estate.yaml — the AiGovOps estate manifest
+#
+# ONE INPUT. Every domain, repository, served site, running service, outside vendor, data
+# store and person, in one place, with an owner and a data classification on every row.
+# The three files that used to hold slices of this — estate-sites.json, founders.json,
+# repo-audit.config.json — become derived views. `node scripts/estate-manifest.mjs --check`
+# fails the build the moment they disagree with this file.
+#
+# THE HONESTY RULE. Every row carries `verified:`. `verified: false` means the row was read
+# out of our own documents, not confirmed against the live system or the GitHub API — which
+# cannot happen until decision D6 (the read-only connection) is made. Unverified rows are
+# counted and printed on every run. Per the 2026-07-19 estate review: a check that could not
+# run reads as UNKNOWN, never as green. "Everything is fine" needs zero problems AND zero
+# unknowns, and this manifest is a long way from that today. That is the point of it.
+#
+# STATUS: DRAFT. Not ratified. `canonical_domain` is empty because decision D1 has not been
+# made. Nothing in this file causes an action; it describes what we believe we have.
+# Plan of record: plan/auto-running-foundation.md · Rule of record: plan/processes/estate-manifest.md
+
+version: 1
+status: unknown
+drafted: "2026-08-22"
+ratified_by: null
+canonical_domain: null            # pending D1 — recommendation is aigovops-foundation.com
+notes: "Draft one. Sources are this repo's own files and the 2026-07-19 estate review; nothing here was confirmed against a live API."
+
+# ── Domains ───────────────────────────────────────────────────────────────────────
+# role: canonical | redirect-to-canonical | email-only | pages-host | pending-decision
+domains:
+  - id: aigovops-foundation.com
+    role: pending-decision
+    status: live
+    owner: bobrapp
+    registrar: Hostinger
+    serves: "The Foundation site — the porch, and the community subdomain"
+    verified: false
+    source: "plan/estate-review-2026-07-19.md; estate-sites.json"
+    note: "Recommended canonical (D1). The built estate is here: this repo's crawler already monitors it and community. below it."
+
+  - id: aigovops-foundation.org
+    role: pending-decision
+    status: unknown
+    owner: unknown
+    registrar: unknown
+    serves: "A second Foundation site with its own hero copy"
+    verified: false
+    source: "council review 2026-08 (Perplexity); not reachable from this repo"
+    note: "If D1 picks .com, this 301s into it. Nobody here has confirmed who holds the registration."
+
+  - id: a-i-gov-ops.com
+    role: pending-decision
+    status: unknown
+    owner: unknown
+    registrar: unknown
+    serves: "A live page with competing hero copy"
+    verified: false
+    source: "council review 2026-08 (Perplexity)"
+    note: "D2 — redirect or take down this week. Anyone who types the hyphenated name after a talk reads a different value proposition than the manifesto."
+
+  - id: aigovops.community
+    role: email-only
+    status: live
+    owner: bobrapp
+    registrar: unknown
+    serves: "Founder and steward mail, on Microsoft 365"
+    verified: false
+    source: "founders.json (both founder addresses are @aigovops.community); plan/estate-review-2026-07-19.md"
+
+  - id: aigovops.org
+    role: pending-decision
+    status: pending-founder
+    owner: "Ken Johnston"
+    registrar: unknown
+    serves: "Nothing — no MX record, so help@ and ken@ cannot receive mail"
+    verified: false
+    source: "plan/estate-review-2026-07-19.md (W3, still-human-only)"
+    note: "Named on published pages while unable to receive mail. Deliverable domains are aigovops-foundation.com and aigovops.community; choosing the destination decides who gets members' help mail, so it waits for a founder."
+
+  - id: aigovops-foundation.github.io
+    role: pages-host
+    status: live
+    owner: aigovops-foundation
+    registrar: GitHub
+    serves: "Beacon, Umbrella, Lantern, NCW AI Camp, and this repo's redirect doorstep"
+    verified: true
+    source: "estate-sites.json"
+
+  - id: bobrapp.github.io
+    role: pages-host
+    status: live
+    owner: bobrapp
+    registrar: GitHub
+    serves: "Glean-Mastery training, and the V4 platform page linked from the Library hub"
+    verified: false
+    source: "docs/index.html card links"
+    note: "GitHub Pages does NOT follow repo-rename redirects — see repos/ below. Any rename here breaks a live link."
+
+# ── Repositories ──────────────────────────────────────────────────────────────────
+# disposition: trunk | subtree-into-trunk | keep-separate | pending-disposition
+repos:
+  - id: Aigovops-Foundation-Open-Source-V4-10k
+    account: bobrapp
+    role: "The platform — Jeeves, Beacon, Umbrella, Lantern together (28 workspaces, 188 tests)"
+    visibility: public
+    disposition: trunk
+    pages_url: "https://bobrapp.github.io/Aigovops-Foundation-Open-Source-V4-10k/"
+    verified: false
+    source: "council review 2026-08; linked from docs/index.html"
+    risk: "Foundation production IP in a personal account — the highest-severity item both council models agreed on."
+    note: "D3 — transfer to the org, then rename to `aigovops`. The rename WILL break the Pages URL above, which the Library hub links today. Repoint the card first."
+
+  - id: aigovops-library-june-ken-bob
+    account: aigovops-foundation
+    role: "This repo — the Library: docs, the plan tree, the skills tree, the governed core, and the estate automation"
+    visibility: public
+    disposition: subtree-into-trunk
+    pages_url: "https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/"
+    verified: true
+    source: "this working copy"
+    note: "Pages serves redirect-stub only; the Library itself is served behind the membership wall."
+
+  - id: aigovops-beacon
+    account: aigovops-foundation
+    role: "Signed evidence receipts — Ed25519 + JCS canonical form"
+    visibility: public
+    disposition: subtree-into-trunk
+    pages_url: "https://aigovops-foundation.github.io/aigovops-beacon/"
+    verified: true
+    source: "estate-sites.json"
+    note: "Carries the signing primitives the Skill Provenance work (M6) builds on."
+
+  - id: umbrella-govops
+    account: aigovops-foundation
+    role: "Conformance gates"
+    visibility: public
+    disposition: subtree-into-trunk
+    pages_url: "https://aigovops-foundation.github.io/umbrella-govops/"
+    verified: true
+    source: "estate-sites.json"
+
+  - id: aigovops-lantern
+    account: aigovops-foundation
+    role: "Framework mapping and the reading surface"
+    visibility: public
+    disposition: subtree-into-trunk
+    pages_url: "https://aigovops-foundation.github.io/aigovops-lantern/"
+    verified: true
+    source: "estate-sites.json"
+
+  - id: aigovops-ncw-ai-camp
+    account: aigovops-foundation
+    role: "The NCW AI Camp property"
+    visibility: public
+    disposition: subtree-into-trunk
+    pages_url: "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/"
+    verified: true
+    source: "estate-sites.json"
+
+  - id: aigovops-vendor-rfi
+    account: aigovops-foundation
+    role: "Open-source vendor RFI + audit questionnaire"
+    visibility: public
+    disposition: subtree-into-trunk
+    pages_url: unknown
+    verified: false
+    source: "plan/estate-simplification.md (footer rollout list)"
+
+  - id: aigovops-foundation-site-redesign-June2026-ken-and-bob
+    account: aigovops-foundation
+    role: "The Foundation site — the porch. Ships via PR + the Cloud-Mary battery, not direct-to-main."
+    visibility: public
+    disposition: subtree-into-trunk
+    pages_url: "https://www.aigovops-foundation.com"
+    verified: false
+    source: ".claude skill aigovops-deploy-workflow"
+    note: "Different release discipline from this repo. If it joins the trunk, its PR + Cloud-Mary gate has to survive the move."
+
+  - id: Omni-Rapp-June-2026
+    account: bobrapp
+    role: "Omni — the community platform and control room (51 pages + signin) on droplet A"
+    visibility: unknown
+    disposition: pending-disposition
+    pages_url: none
+    verified: false
+    source: "plan/estate-simplification.md; plan/processes/understanding-the-estate.md"
+    risk: "Holds member records and session state, so it is the one repo where consolidation is NOT obviously right — see D4."
+
+  - id: aiupdates
+    account: bobrapp
+    role: unknown
+    visibility: unknown
+    disposition: pending-disposition
+    pages_url: unknown
+    verified: false
+    source: "council review 2026-08 (Perplexity)"
+    risk: "Foundation work in a personal account; nobody in this repo has described what it does."
+
+  - id: Glean-ia-acs
+    account: bobrapp
+    role: "Glean-Mastery — a 56-lesson governed training curriculum"
+    visibility: public
+    disposition: keep-separate
+    pages_url: "https://bobrapp.github.io/Glean-Mastery/"
+    verified: false
+    source: "plan/MILESTONES.md M9; docs/index.html card"
+    note: "Repo name and Pages path differ. Personal-account training material, not Foundation IP — keep-separate unless a founder says otherwise."
+
+# ── Served sites ──────────────────────────────────────────────────────────────────
+# `crawl:` is the hourly interaction audit's view. estate-sites.json is generated from it.
+sites:
+  - id: foundation-site
+    name: "Foundation site"
+    base: "https://www.aigovops-foundation.com"
+    repo: aigovops-foundation-site-redesign-June2026-ken-and-bob
+    classification: public
+    status: live
+    verified: true
+    source: "estate-sites.json"
+    crawl:
+      enabled: true
+      failOnDead: true
+      gated: false
+
+  - id: community-platform
+    name: "Community platform"
+    base: "https://community.aigovops-foundation.com"
+    repo: Omni-Rapp-June-2026
+    classification: personal
+    status: live
+    verified: true
+    source: "estate-sites.json"
+    crawl:
+      enabled: true
+      failOnDead: false
+      gated: true
+
+  - id: library-rendered
+    name: "Library (rendered)"
+    base: "https://community.aigovops-foundation.com/library/"
+    repo: aigovops-library-june-ken-bob
+    classification: public
+    status: live
+    verified: true
+    source: "estate-sites.json"
+    crawl:
+      enabled: true
+      failOnDead: false
+      cookie: "omni_rules=1"
+      note: "Opened with the one-click consent cookie (omni_rules=1) — no account, no payment, no secret. Was `gated` and therefore never crawled; the first run behind the door found five CORS-blocked API calls that had been dead for members since the membership wall went up."
+
+  - id: beacon-pages
+    name: "Beacon"
+    base: "https://aigovops-foundation.github.io/aigovops-beacon/"
+    repo: aigovops-beacon
+    classification: public
+    status: live
+    verified: true
+    source: "estate-sites.json"
+    crawl:
+      enabled: true
+      failOnDead: true
+      gated: false
+
+  - id: umbrella-pages
+    name: "Umbrella"
+    base: "https://aigovops-foundation.github.io/umbrella-govops/"
+    repo: umbrella-govops
+    classification: public
+    status: live
+    verified: true
+    source: "estate-sites.json"
+    crawl:
+      enabled: true
+      failOnDead: true
+      gated: false
+
+  - id: lantern-pages
+    name: "Lantern"
+    base: "https://aigovops-foundation.github.io/aigovops-lantern/"
+    repo: aigovops-lantern
+    classification: public
+    status: live
+    verified: true
+    source: "estate-sites.json"
+    crawl:
+      enabled: true
+      failOnDead: true
+      gated: false
+
+  - id: ncw-ai-camp-pages
+    name: "NCW AI Camp"
+    base: "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/"
+    repo: aigovops-ncw-ai-camp
+    classification: public
+    status: live
+    verified: true
+    source: "estate-sites.json"
+    crawl:
+      enabled: true
+      failOnDead: true
+      gated: false
+
+  - id: library-doorstep
+    name: "Library doorstep (redirect stub)"
+    base: "https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/"
+    repo: aigovops-library-june-ken-bob
+    classification: public
+    status: live
+    verified: true
+    source: ".github/workflows/library-tests.yml"
+    crawl:
+      enabled: false
+      note: "Checked nightly by test-redirect-stub.mjs instead of the interaction crawler — the three things that matter are that the doorstep serves, the destination is alive, and the wall is up."
+
+  - id: glean-mastery
+    name: "Glean-Mastery"
+    base: "https://bobrapp.github.io/Glean-Mastery/"
+    repo: Glean-ia-acs
+    classification: public
+    status: live
+    verified: false
+    source: "docs/index.html card; plan/MILESTONES.md M9"
+    crawl:
+      enabled: false
+      note: "Linked from the Library hub but never crawled — a live link nothing watches. Candidate for the M3 matrix."
+
+  - id: v4-platform-page
+    name: "Open Source v4 platform page"
+    base: "https://bobrapp.github.io/Aigovops-Foundation-Open-Source-V4-10k/"
+    repo: Aigovops-Foundation-Open-Source-V4-10k
+    classification: public
+    status: unknown
+    verified: false
+    source: "docs/index.html card"
+    crawl:
+      enabled: false
+      note: "Linked from the Library hub, never crawled, and it dies the moment D3's rename happens — GitHub Pages does not follow repo-rename redirects."
+
+# ── Running services ──────────────────────────────────────────────────────────────
+services:
+  - id: omni-droplet-a
+    kind: "Application host"
+    host: "DigitalOcean droplet A (nyc1)"
+    status: live
+    runs: "Omni — the portal, signin, member store, scheduler, and the signed ledger"
+    classification: personal
+    verified: false
+    source: "plan/estate-review-2026-07-19.md; plan/estate-simplification.md"
+
+  - id: droplet-b
+    kind: "Preprod / watchdog host"
+    host: "DigitalOcean droplet B (nyc1)"
+    status: live
+    runs: "Preprod Postgres, the outside watchdog, and the gVisor enclave work"
+    classification: operational
+    verified: false
+    source: "plan/estate-review-2026-07-19.md; plan/MILESTONES.md M2"
+    risk: "Both droplets are in nyc1 — the watchdog and the thing it watches share a datacenter, and B cannot take ingress (no tunnel). RTO, not RPO."
+
+  - id: library-core-fly
+    kind: "API / governed core"
+    host: "Fly.io (iad)"
+    status: unknown
+    runs: "aigovops-library-core — the Yes-Gate API, OAuth, and the Beacon-signed ledger"
+    classification: operational
+    verified: false
+    source: "fly.toml; docs/durability-plan.html"
+    risk: "The repo disagrees with itself: fly.toml says prepared-not-deployed, the durability plan describes it as running with scale-to-zero. Exactly the kind of contradiction this manifest exists to surface."
+
+  - id: github-actions
+    kind: "Automation"
+    host: "GitHub Actions"
+    status: live
+    runs: "The clock — hourly interaction crawl, daily tests and red-main watchdog, weekly link and repo-sync checks, monthly stale sweep, continuous secret scan"
+    classification: operational
+    verified: true
+    source: ".github/workflows/"
+
+# ── Outside — the companies we do not own ─────────────────────────────────────────
+outside:
+  - id: github
+    what: "Repositories, Pages, Actions, and the org itself"
+    cost: unknown
+    owner: bobrapp
+    breaks_without_it: "Everything — source, the clock, and four published sites"
+    verified: false
+    source: "self-evident from .github/"
+    note: "Nonprofit Team (free) not yet applied for — PR 2 in the plan."
+
+  - id: hostinger
+    what: "DNS and hosting for aigovops-foundation.com"
+    cost: unknown
+    owner: bobrapp
+    breaks_without_it: "The porch and every mail address on the .com"
+    verified: false
+    source: "plan/estate-review-2026-07-19.md"
+
+  - id: microsoft-365
+    what: "Mail for aigovops.community"
+    cost: unknown
+    owner: bobrapp
+    breaks_without_it: "Both founders' addresses"
+    verified: false
+    source: "plan/estate-review-2026-07-19.md"
+
+  - id: digitalocean
+    what: "Droplets A and B, both nyc1"
+    cost: unknown
+    owner: bobrapp
+    breaks_without_it: "The community platform, the member store, and the ledger"
+    verified: false
+    source: "plan/estate-review-2026-07-19.md"
+
+  - id: fly-io
+    what: "aigovops-library-core"
+    cost: unknown
+    owner: bobrapp
+    breaks_without_it: "The Library's live demo degrades to its offline badge"
+    verified: false
+    source: "fly.toml; docs/durability-plan.html"
+
+  - id: 1password
+    what: "The secrets broker — the canonical secret store for the estate"
+    cost: unknown
+    owner: bobrapp
+    breaks_without_it: "Every deploy and every brokered tool call"
+    verified: false
+    source: "plan/MILESTONES.md M1/M3; .github/workflows/op-secrets-check.yml"
+    risk: "A service-account token with vault scope reaches CI. The 2026-07-19 review found the 1Password action pinned to a mutable tag; SHA-pinning was the fix."
+
+  - id: circle
+    what: "Membership community"
+    cost: "219 USD/month (reported, unconfirmed)"
+    owner: unknown
+    breaks_without_it: "Member registration and the gated library experience"
+    verified: false
+    source: "council review 2026-08 (Perplexity)"
+    note: "Largest reported line item and the only one with a number attached. M6 instruments the gate honestly: if registration-to-participation stays low after the domain fix, the library belongs on the public site."
+
+  - id: stripe
+    what: "The giving rail"
+    cost: "per-transaction (unconfirmed)"
+    owner: bobrapp
+    breaks_without_it: "Donations"
+    verified: false
+    source: "plan/estate-simplification.md — the $500 checkout is live; Ken's three tier links still pending"
+
+  - id: telegram
+    what: "Outage alerting from droplet B's watchdog"
+    cost: unknown
+    owner: bobrapp
+    breaks_without_it: "Nobody hears about a full outage"
+    verified: false
+    source: "plan/estate-review-2026-07-19.md W2-5"
+
+# ── Data stores — the rows that decide what we may say in public ──────────────────
+data_stores:
+  - id: signed-ledger
+    where: "Omni (droplet A) — append-only NDJSON, moving to Postgres"
+    classification: operational
+    contains: "Metadata-only receipts — op, scope, decision, timestamps. No payloads."
+    verified: false
+    source: "CLAUDE.md; plan/processes/decision-2026-07-19-ledger-pii.md"
+    risk: "Documented exception: 31 historic records contain PII (emails, names, question texts). The decision of record is to document the exception, not rewrite an append-only chain. New writes are metadata-only."
+
+  - id: member-store
+    where: "Omni (droplet A)"
+    classification: personal
+    contains: "Member records — names, emails, membership state"
+    verified: false
+    source: "plan/estate-review-2026-07-19.md Wave 4"
+    risk: "The member directory was public once already, and a page nobody had classified defaulted to PUBLIC. This manifest defaults to unknown instead, which is why unknown is never treated as safe."
+
+  - id: session-state
+    where: "Omni (droplet A) — sessions.json, magic_links.json"
+    classification: secret
+    contains: "Live session ids and magic links. A session id is the account."
+    verified: false
+    source: "plan/estate-review-2026-07-19.md Wave 0 finding 2"
+
+  - id: beacon-keys
+    where: "core/keys/ (gitignored) and the Fly/1Password secret stores"
+    classification: secret
+    contains: "Ed25519 signing keys"
+    verified: true
+    source: "CLAUDE.md; .gitignore"
+    risk: "A dev keypair sat in HEAD of a public repo for six weeks in June 2026 because the ignore rule covered only core/keys/. Rotated; the ignore rule now covers the whole pattern."
+
+  - id: offsite-backup
+    where: "unknown"
+    classification: unknown
+    contains: "Ledger and member-store snapshots — if it is running at all"
+    verified: false
+    source: "plan/estate-review-2026-07-19.md W1-2"
+    risk: "Reported success daily while copying nothing. The control now reads red when the remote is unset. Whether a restorable copy exists off nyc1 today is still unknown, and that is the single most important unknown in this file."
+
+  - id: audit-reports
+    where: "audit/ — gitignored on purpose"
+    classification: operational
+    contains: "Repo audit output naming private repositories"
+    verified: true
+    source: "plan/processes/repo-audit.md"
+
+# ── People ────────────────────────────────────────────────────────────────────────
+# Roles are a set; permission is the union. No PII beyond what founders.json already holds.
+people:
+  - id: bob
+    name: "Bob Rapp"
+    roles:
+      - co-founder
+      - steward
+    email: "bob.rapp@aigovops.community"
+    github: bobrapp
+    holds: "Kill switch, role administration, registrar, and every credential"
+
+  - id: ken
+    name: "Ken Johnston"
+    roles:
+      - co-founder
+      - steward
+    email: "ken.johnston@aigovops.community"
+    holds: "Kill switch, role administration, and the aigovops.org registration"
+    note: "D7 — no GitHub handle on record, which is why founders.json still carries its TODO and why CODEOWNERS cannot require his review yet. One line, one minute, and it unblocks the most important control in the plan."

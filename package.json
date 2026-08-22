@@ -3,12 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "AiGovOps Library — the whole set (demo, design book, blueprint, plan, core).",
+  "description": "AiGovOps Library \u2014 the whole set (demo, design book, blueprint, plan, core).",
   "license": "Apache-2.0",
   "scripts": {
     "build:docs": "node scripts/build-docs.mjs",
     "audit:repos": "node scripts/repo-audit.mjs --open",
     "estate:exec": "node scripts/estate-exec-digest.mjs",
+    "estate:check": "node scripts/estate-manifest.mjs --check",
+    "estate:regen": "node scripts/estate-manifest.mjs --regen",
     "audit:repos:offline": "node scripts/repo-audit.mjs --repos-file audit/repos.inventory.json --open",
     "test": "cd core && node --test"
   },

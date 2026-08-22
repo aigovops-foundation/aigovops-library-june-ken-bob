@@ -25,3 +25,7 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with: { node-version: 20 }
       - run: node scripts/runbooks/seo-drift-check.mjs
+      # Estate manifest gate — estate.yaml is the one input; estate-sites.json, founders.json
+      # and repo-audit.config.json are views of it. --check fails the build when they disagree.
+      - run: node scripts/estate-manifest.mjs --check
+      - run: node --test test/estate-manifest.test.mjs
