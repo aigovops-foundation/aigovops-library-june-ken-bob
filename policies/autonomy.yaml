@@ -216,6 +216,13 @@ workflows:
       issues: write
     note: "Turns a red page into an issue. A message, not an effect."
 
+  - file: founders-digest.yml
+    class: green
+    permissions:
+      contents: read
+      issues: write
+    note: "Weekly, Mondays. Renders one page — drift, what waits on a human, and the state of the gates — and edits ONE issue in place rather than opening a new one each week. Mail only if a founder has armed ESTATE_SMTP_URL."
+
   - file: estate-interaction-crawl.yml
     class: green
     permissions:

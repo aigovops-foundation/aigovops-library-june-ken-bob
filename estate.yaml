@@ -310,6 +310,7 @@ sites:
     source: ".github/workflows/library-tests.yml"
     crawl:
       enabled: false
+      watched_by: "scripts/test-redirect-stub.mjs — nightly, via library-tests.yml"
       note: "Checked nightly by test-redirect-stub.mjs instead of the interaction crawler — the three things that matter are that the doorstep serves, the destination is alive, and the wall is up."
 
   - id: glean-mastery
