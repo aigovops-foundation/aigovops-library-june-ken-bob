@@ -46,3 +46,4 @@ jobs:
       # `principle: unknown` passes and is printed.
       - run: node scripts/skills-check.mjs
       - run: node --test test/skills-check.test.mjs
+      - run: node --test test/founders-digest.test.mjs

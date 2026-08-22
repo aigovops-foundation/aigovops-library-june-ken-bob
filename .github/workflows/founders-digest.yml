@@ -1,0 +1,80 @@
+name: founders-digest
+
+# One page, once a week, for Bob and Ken: what ran, what drifted, and what waits on a human.
+#
+# It is NOT another estate-health report. estate-interaction-crawl.yml already reports every
+# page hourly and estate-exec-digest groups the defects by root cause. This takes one line of
+# headline from that board and adds the three things no existing report covers: drift between
+# estate.yaml and reality, the list of things waiting on a founder, and whether the five gates
+# that keep the estate honest are themselves green.
+#
+# It posts into ONE issue and edits it in place, so the founders have a single durable URL
+# rather than a new issue every Monday that nobody subscribes to. Email delivery is
+# credential-gated: send-digest-email.mjs does nothing unless ESTATE_SMTP_URL is set, which is
+# the prepare-don't-send boundary in code — CI wires it, a human's credential arms it.
+#
+# Autonomy class: green (policies/autonomy.yaml). An issue is a message, not an effect.
+
+on:
+  schedule:
+    - cron: "0 14 * * 1"   # Mondays 14:00 UTC (07:00 PT) — before the week's work piles up
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency: { group: founders-digest, cancel-in-progress: true }
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: { node-version: 20 }
+
+      - name: Render the digest
+        id: render
+        run: |
+          node scripts/founders-digest.mjs > digest.md
+          echo "--- digest ---"; cat digest.md
+          # `--waiting` exits 1 when something needs a founder. That is information, not a
+          # failure: the digest must still be delivered, so never let it fail the job.
+          node scripts/founders-digest.mjs --waiting > waiting.txt || true
+          echo "waiting=$(wc -l < waiting.txt | tr -d ' ')" >> "$GITHUB_OUTPUT"
+
+      - name: Upsert the founders' digest issue
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('digest.md', 'utf8');
+            const title = 'Founders’ digest — what waits on you';
+            const { owner, repo } = context.repo;
+
+            const found = await github.rest.search.issuesAndPullRequests({
+              q: `repo:${owner}/${repo} is:issue is:open in:title "Founders’ digest"`,
+              per_page: 5,
+            });
+            const existing = found.data.items.find(i => i.title === title);
+
+            let mentions = '';
+            try {
+              const f = JSON.parse(fs.readFileSync('founders.json', 'utf8'));
+              if (f.handles?.length) mentions = `\n\ncc ${f.handles.map(h => '@' + h).join(' ')}`;
+            } catch {}
+
+            if (existing) {
+              await github.rest.issues.update({ owner, repo, issue_number: existing.number, body: body + mentions });
+              core.notice(`Updated the founders' digest: #${existing.number}`);
+            } else {
+              const made = await github.rest.issues.create({ owner, repo, title, body: body + mentions });
+              core.notice(`Opened the founders' digest: #${made.data.number}`);
+            }
+
+      - name: Mail it, if a founder has armed the sender
+        if: ${{ env.ESTATE_SMTP_URL != '' }}
+        env:
+          ESTATE_SMTP_URL: ${{ secrets.ESTATE_SMTP_URL }}
+        run: node scripts/send-digest-email.mjs --subject "AiGovOps — the founders' digest" --body digest.md

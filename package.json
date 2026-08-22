@@ -14,6 +14,8 @@
     "autonomy:check": "node scripts/autonomy-check.mjs",
     "plan:check": "node scripts/plan-register-check.mjs",
     "skills:check": "node scripts/skills-check.mjs",
+    "digest": "node scripts/founders-digest.mjs",
+    "digest:waiting": "node scripts/founders-digest.mjs --waiting",
     "audit:repos:offline": "node scripts/repo-audit.mjs --repos-file audit/repos.inventory.json --open",
     "test": "cd core && node --test"
   },
