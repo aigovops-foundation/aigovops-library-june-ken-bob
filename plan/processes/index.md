@@ -21,4 +21,5 @@ Every discipline follows one shape: **trigger → agent does the work → human 
 - [`estate-manifest`](./estate-manifest.md) — **The estate manifest** (`estate.yaml`): one input, derived views, unknowns counted · steward · `estate:check`
 - [`autonomy`](./autonomy.md) — **The autonomy policy** (`policies/autonomy.yaml`): green acts, yellow proposes, red waits for a human · steward · `autonomy:check`
 - [`skills-as-code`](./skills-as-code.md) — **Skills as code** (`principle:` frontmatter): the manifesto as a spec CI checks · steward · `skills:check`
+- [`supply-chain`](./supply-chain.md) — **The supply chain**: every third-party action and skill pinned to a reviewed commit · steward · `autonomy:check`
 - [`disaster-recovery`](./disaster-recovery.md) — **Disaster recovery** (the DR agent) · dr-agent · `jeeves dr` + monthly `dr-rehearse`

@@ -32,6 +32,11 @@ import { parseYaml, ManifestError } from "./estate-manifest.mjs";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SKILLS = join(ROOT, "plan", "skills");
 const REQUIRED = ["name", "principle", "owner", "agent", "risk"];
+// A skill carrying `source:` came from outside this repo. It is a dependency, and its prose is
+// read as adversarial input: 84.2% of the vulnerabilities found across the 98,380-skill study
+// lived in documentation, not code. So it names the exact commit reviewed, and when.
+// Rule of record: plan/processes/supply-chain.md
+const THIRD_PARTY_REQUIRED = ["pinned", "reviewed"];
 
 // Frontmatter only — the procedure body is prose and is not parsed. Values are read as plain
 // strings so a JSON-schema line (inputs:/outputs:) never reaches the YAML subset parser.
@@ -64,6 +69,18 @@ export function check(skills, principles, riskClasses) {
 
     if (fm.risk && !riskClasses.includes(fm.risk)) {
       problems.push(`${id}: risk "${fm.risk}" is not one of ${riskClasses.join(", ")}`);
+    }
+
+    if (fm.source) {
+      for (const f of THIRD_PARTY_REQUIRED) {
+        if (!fm[f]) problems.push(`${id}: has "source: ${fm.source}" but no "${f}:" — a third-party skill is a dependency and must name the commit that was reviewed, and when`);
+      }
+      if (fm.pinned && !/^[0-9a-f]{40}$/.test(fm.pinned)) {
+        problems.push(`${id}: "pinned: ${fm.pinned}" is not a 40-character commit SHA — a mutable ref can be re-pointed under us`);
+      }
+      if (fm.reviewed && !/^\d{4}-\d{2}-\d{2}$/.test(fm.reviewed)) {
+        problems.push(`${id}: "reviewed: ${fm.reviewed}" is not a YYYY-MM-DD date`);
+      }
     }
 
     const p = fm.principle;

@@ -80,6 +80,41 @@ test("unrecorded principles are counted even when no skill claims them", () => {
   assert.ok(unknowns.some((u) => /P3: text not recorded/.test(u)));
 });
 
+/* ── third-party skills (supply chain) ────────────────────────────────────────── */
+
+const SHA = "11d5960a326750d5838078e36cf38b85af677262";
+
+test("a first-party skill needs no pin", () => {
+  assert.deepEqual(check([skill("a")], PRINCIPLES(), RISK).problems, []);
+});
+
+test("a skill with source: must name the commit reviewed, and when", () => {
+  const out = joined([skill("a", { source: "https://github.com/someone/skills" })]);
+  assert.match(out, /no "pinned:"/);
+  assert.match(out, /no "reviewed:"/);
+});
+
+test("a mutable pin is rejected — that is the whole point of pinning", () => {
+  assert.match(joined([skill("a", { source: "https://x/y", pinned: "main", reviewed: "2026-08-22" })]),
+    /is not a 40-character commit SHA/);
+  assert.match(joined([skill("a", { source: "https://x/y", pinned: "11d5960", reviewed: "2026-08-22" })]),
+    /is not a 40-character commit SHA/);
+});
+
+test("a review date has to be a date", () => {
+  assert.match(joined([skill("a", { source: "https://x/y", pinned: SHA, reviewed: "recently" })]),
+    /is not a YYYY-MM-DD date/);
+});
+
+test("a properly pinned and reviewed third-party skill passes", () => {
+  assert.deepEqual(check([skill("a", { source: "https://x/y", pinned: SHA, reviewed: "2026-08-22" })],
+    PRINCIPLES(), RISK).problems, []);
+});
+
+test("no third-party skill is installed today — the rule is written before it is needed", () => {
+  assert.deepEqual(loadSkills().filter((s) => s.fm.source).map((s) => s.id), []);
+});
+
 /* ── the committed skills, against the committed policies ─────────────────────── */
 
 test("every committed skill passes against the real principles and risk classes", () => {

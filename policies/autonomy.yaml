@@ -260,6 +260,22 @@ workflows:
     permissions:
       contents: read
 
+# ── Supply chain — what automation may pull in ────────────────────────────────────
+# A third-party action pinned to a MUTABLE TAG is a standing invitation: whoever controls that
+# repository can re-point the tag at any commit, and it runs here with whatever the job's token
+# can reach. The 2026-07-19 estate review found exactly this on the 1Password action, with the
+# vault service-account token in scope. That one was SHA-pinned; ten more were still on tags
+# (actions/checkout@v4, github-script@v7, setup-node@v4, upload-artifact@v4) until 2026-08-22.
+#
+# First-party is exempt: `./` is this repo's own tree, and the reusable workflows are ours, so
+# `@main` there is a same-repo reference, not a supply-chain edge.
+supply_chain:
+  require_sha_pins: true
+  first_party_prefixes:
+    - "./"
+    - "aigovops-foundation/aigovops-library-june-ken-bob/"
+  note: "Every other `uses:` must name a 40-character commit SHA, with the human-readable tag in a trailing comment so the version stays legible."
+
 # ── Prohibitions — patterns that must never appear in a workflow ──────────────────
 # Grep-enforced. Each names the red action it would perform.
 prohibitions:
