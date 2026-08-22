@@ -23,7 +23,7 @@ jobs:
   crawl:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       # What we last MAILED about, so an unchanged red does not re-notify. Committed
       # alongside the board so the state survives between runs; absent on first run, which
@@ -39,7 +39,7 @@ jobs:
         id: sent
         run: echo "window=$(cat docs/.estate-last-window 2>/dev/null || echo none)" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: "20"
       - name: Install Playwright + Chromium
@@ -65,7 +65,7 @@ jobs:
           echo "score=$(node -e "console.log(JSON.parse(require('fs').readFileSync('docs/estate-health.json')).estate.score ?? '')")" >> "$GITHUB_OUTPUT"
 
       - name: Attach the readable report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: estate-health-report
           path: |
@@ -108,7 +108,7 @@ jobs:
         # Same reasoning as the mail below: the pinned issue is how anyone who looks between
         # sends finds out what is red, and a failed board push is no reason to stop updating it.
         if: ${{ !cancelled() && steps.digest.outcome == 'success' }}
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         with:
           script: |
             const fs = require('fs');

@@ -7,7 +7,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readPermissions, readWrittenPaths, check, loadPolicy, loadWorkflows } from "../scripts/autonomy-check.mjs";
+import { readPermissions, readWrittenPaths, readUses, check, loadPolicy, loadWorkflows } from "../scripts/autonomy-check.mjs";
 
 /* ── reading a workflow's permissions ─────────────────────────────────────────── */
 
@@ -155,6 +155,51 @@ test("catches a prohibited action, and does not fire on a comment describing one
   assert.match(joined(POLICY(), FILES({ "a.yml": "permissions: { contents: read }\nrun: git push --force\n" })),
     /prohibited "force-push" \(force-push-or-rewrite-history\)/);
   assert.deepEqual(check(POLICY(), FILES({ "a.yml": "permissions: { contents: read }\n# never run git push --force here\n" })), []);
+});
+
+/* ── supply chain ─────────────────────────────────────────────────────────────── */
+
+const SC = () => {
+  const p = POLICY();
+  p.supply_chain = { require_sha_pins: true, first_party_prefixes: ["./", "aigovops-foundation/aigovops-library-june-ken-bob/"] };
+  return p;
+};
+
+test("catches a third-party action pinned to a mutable tag", () => {
+  assert.match(joined(SC(), FILES({ "a.yml": "permissions: { contents: read }\n  - uses: actions/checkout@v4\n" })),
+    /"actions\/checkout@v4" is pinned to a mutable ref/);
+});
+
+test("catches a short SHA, which is not immutable enough", () => {
+  assert.match(joined(SC(), FILES({ "a.yml": "permissions: { contents: read }\n  - uses: actions/checkout@11d5960\n" })),
+    /pinned to a mutable ref/);
+});
+
+test("a full 40-character SHA passes, and the trailing version comment does not confuse it", () => {
+  const src = "permissions: { contents: read }\n  - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4\n";
+  assert.deepEqual(check(SC(), FILES({ "a.yml": src })), []);
+});
+
+test("first-party refs are exempt — a local path and our own reusable workflow at @main", () => {
+  const src = "permissions: { contents: read }\n    uses: ./.github/workflows/reusable-link-check.yml\n" +
+              "    uses: aigovops-foundation/aigovops-library-june-ken-bob/.github/workflows/reusable-link-check.yml@main\n";
+  assert.deepEqual(check(SC(), FILES({ "a.yml": src })), []);
+});
+
+test("the rule is off unless the policy asks for it", () => {
+  assert.deepEqual(check(POLICY(), FILES({ "a.yml": "permissions: { contents: read }\n  - uses: actions/checkout@v4\n" })), []);
+});
+
+test("every third-party action in this repo is SHA-pinned — the regression guard", () => {
+  const policy = loadPolicy();
+  assert.equal(policy.supply_chain?.require_sha_pins, true, "the policy must keep asking for pins");
+  const firstParty = policy.supply_chain.first_party_prefixes;
+  for (const [file, src] of loadWorkflows()) {
+    for (const { ref, line } of readUses(src)) {
+      if (firstParty.some((p) => ref.startsWith(p))) continue;
+      assert.match(ref, /@[0-9a-f]{40}$/, `${file}:${line} ${ref}`);
+    }
+  }
 });
 
 /* ── the committed policy, against the real workflows ─────────────────────────── */

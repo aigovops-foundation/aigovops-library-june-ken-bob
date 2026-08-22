@@ -99,6 +99,17 @@ export function readWrittenPaths(src) {
   return { paths: [...new Set(paths)], wild: [...new Set(wild)] };
 }
 
+// Every `uses:` in a workflow, with its line number. Reads the value only — not the whole step.
+export function readUses(src) {
+  const out = [];
+  src.split("\n").forEach((line, i) => {
+    if (/^\s*#/.test(line)) return;
+    const m = /^\s*(?:-\s*)?uses:\s*([^\s#]+)/.exec(line);
+    if (m) out.push({ ref: m[1], line: i + 1 });
+  });
+  return out;
+}
+
 /* ── the check ───────────────────────────────────────────────────────────────── */
 
 export function check(policy, files) {
@@ -176,6 +187,20 @@ export function check(policy, files) {
       }
     } else if (paths.length) {
       P(`${file}: stages ${paths.map((p) => `"${p}"`).join(", ")} with no declared writes: allowlist`);
+    }
+  }
+
+  // Supply chain: every third-party `uses:` must name an immutable commit.
+  const sc = policy.supply_chain ?? {};
+  if (sc.require_sha_pins) {
+    const firstParty = sc.first_party_prefixes ?? [];
+    for (const [file, src] of files) {
+      for (const { ref, line } of readUses(src)) {
+        if (firstParty.some((p) => ref.startsWith(p))) continue;
+        if (!/@[0-9a-f]{40}$/.test(ref)) {
+          P(`${file}:${line}: "${ref}" is pinned to a mutable ref — a third-party action must name a 40-character commit SHA`);
+        }
+      }
     }
   }
 
