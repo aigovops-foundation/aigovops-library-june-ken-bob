@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-08-22T10:13:27.906Z",
+  "generatedAt": "2026-08-22T11:12:57.314Z",
   "estate": {
     "properties": 7,
     "reporting": 6,
-    "healthy": 5,
-    "red": 1,
-    "greenPages": 330,
-    "redPages": 1,
+    "healthy": 6,
+    "red": 0,
+    "greenPages": 331,
+    "redPages": 0,
     "dead": 0,
     "broken": 0,
-    "consoleErrorPages": 1,
+    "consoleErrorPages": 0,
     "score": 100
   },
   "sites": [
@@ -18,7 +18,7 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-22T10:05:42.856Z",
+      "ranAt": "2026-08-22T11:05:35.557Z",
       "summary": {
         "pages": 26,
         "greenPages": 26,
@@ -258,7 +258,7 @@
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-22T10:07:17.703Z",
+      "ranAt": "2026-08-22T11:07:01.178Z",
       "summary": {
         "pages": 60,
         "greenPages": 60,
@@ -762,7 +762,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-22T10:09:23.133Z",
+      "ranAt": "2026-08-22T11:08:55.551Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -1410,7 +1410,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-22T10:11:18.554Z",
+      "ranAt": "2026-08-22T11:10:50.028Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2057,29 +2057,21 @@
       "name": "Lantern",
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
-      "status": "red",
-      "ranAt": "2026-08-22T10:11:37.247Z",
+      "status": "green",
+      "ranAt": "2026-08-22T11:11:05.723Z",
       "summary": {
         "pages": 11,
-        "greenPages": 10,
-        "redPages": 1,
+        "greenPages": 11,
+        "redPages": 0,
         "ok": 582,
         "dead": 0,
         "broken": 0,
         "external": 52,
         "delegated": 0,
-        "consoleErrorPages": 1,
-        "healthy": false
+        "consoleErrorPages": 0,
+        "healthy": true
       },
       "pageHealth": [
-        {
-          "path": "/aigovops-lantern/api/openapi/",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 1,
-          "status": "red",
-          "loadError": null
-        },
         {
           "path": "/aigovops-lantern/",
           "dead": 0,
@@ -2106,6 +2098,14 @@
         },
         {
           "path": "/aigovops-lantern/api/flows/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-lantern/api/openapi/",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -2163,21 +2163,14 @@
       ],
       "dead": [],
       "broken": [],
-      "consoleErrors": [
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/api/openapi/",
-          "errors": [
-            "Access to XMLHttpRequest at 'https://api.github.com/repos/aigovops-foundation/aigovops-lantern' from origin 'https://aigovops-foundation.github.io' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource."
-          ]
-        }
-      ]
+      "consoleErrors": []
     },
     {
       "name": "NCW AI Camp",
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-22T10:13:27.839Z",
+      "ranAt": "2026-08-22T11:12:57.217Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
