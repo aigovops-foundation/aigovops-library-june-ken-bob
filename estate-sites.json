@@ -44,6 +44,13 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "failOnDead": true,
       "gated": false
+    },
+    {
+      "name": "Open Source v4",
+      "base": "https://aigovops-foundation.github.io/aigovops/",
+      "failOnDead": true,
+      "gated": false,
+      "note": "Crawl switched on at the move. Nothing had ever watched this property, so nobody could say whether it served; the hourly crawl is now the thing that answers that, and if the Pages site is not actually live the board goes red within the hour. That is the intended outcome — an unwatched property is the worse state."
     }
   ]
 }
