@@ -105,9 +105,9 @@ repos:
     disposition: trunk
     pages_url: "https://bobrapp.github.io/Aigovops-Foundation-Open-Source-V4-10k/"
     verified: false
-    source: "council review 2026-08; linked from docs/index.html"
+    source: "council review 2026-08"
     risk: "Foundation production IP in a personal account — the highest-severity item both council models agreed on."
-    note: "D3 — transfer to the org, then rename to `aigovops`. The rename WILL break the Pages URL above, which the Library hub links today. Repoint the card first."
+    note: "D3 — transfer to the org, THEN rename to `aigovops`. The hub card is repointed (2026-08-23); the remaining blocker is the onboarding iframe, which cannot use a github.com URL. Order matters: transfer, rename, re-enable Pages under the org, then repoint the iframe and re-run the crawl."
 
   - id: aigovops-library-june-ken-bob
     account: aigovops-foundation
@@ -335,7 +335,7 @@ sites:
     source: "docs/index.html card"
     crawl:
       enabled: false
-      note: "Linked from the Library hub, never crawled, and it dies the moment D3's rename happens — GitHub Pages does not follow repo-rename redirects."
+      note: "Never crawled, so nobody knows whether it serves today. The Library hub card no longer points here (it points at the github.com repo URL, which survives both the transfer and the rename). ONE reference remains and it is a RENAME BLOCKER: docs/onboarding.html scene 'The v4 platform — run it yourself' loads this URL into an IFRAME, so it cannot be repointed at github.com — GitHub sends X-Frame-Options: deny and the panel would silently render blank. It can only be repointed once D3 decides where v4's Pages lands after the move."
 
 # ── Running services ──────────────────────────────────────────────────────────────
 services:
