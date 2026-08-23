@@ -14,6 +14,7 @@ on:
 permissions:
   contents: write   # commit the refreshed board
   issues: write     # upsert the founders' digest issue
+  actions: read     # read completed scheduled runs, to record a receipt for each
 
 concurrency:
   group: estate-interaction-crawl
@@ -101,6 +102,42 @@ jobs:
             docs/estate-exec.html
             docs/estate-exec.pdf
           if-no-files-found: warn
+
+      # ONE RECEIPT PER SCHEDULED RUN — ladder row 12. This is the only workflow that writes to
+      # main, so it is the one that records for all seven. It reads what the Actions API says
+      # about completed runs rather than having each job report on itself: a job that dies
+      # cannot suppress its own receipt, and that is the run most worth having.
+      #
+      # `continue-on-error` is deliberate and is the lesson this file already learned twice —
+      # housekeeping must never cancel the founders' digest. A missed receipt is visible in the
+      # ledger as a gap; a missed digest is invisible.
+      - name: Record a receipt for every scheduled run
+        id: receipts
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/receipts-collect.mjs
+
+      - name: Commit the run receipts
+        if: ${{ !cancelled() && steps.receipts.outcome == 'success' }}
+        continue-on-error: true
+        run: |
+          git config user.name "aigovops-estate-bot"
+          git config user.email "noreply@aigovops-foundation.com"
+          git add ops/receipts/runs.ndjson
+          if ! git diff --cached --quiet -- ops/receipts/runs.ndjson; then
+            # Verify BEFORE committing. An append that breaks the chain is worse than no
+            # append, because the file's whole value is that it cannot be quietly rewritten.
+            node scripts/run-receipt.mjs || { echo "::error::receipt chain did not verify — not committing"; exit 1; }
+            git commit -m "chore(receipts): scheduled-run receipts [automated]"
+            for attempt in 1 2 3; do
+              git push && exit 0
+              echo "push rejected (attempt $attempt) — rebasing onto origin/main and retrying"
+              git pull --rebase --autostash origin main || exit 1
+              sleep $((attempt * 5))
+            done
+            echo "::warning::could not push run receipts — the next run re-records the same runs"
+          fi
 
       - name: Commit the refreshed board (data only)
         run: |

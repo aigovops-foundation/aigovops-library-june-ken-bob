@@ -15,6 +15,8 @@
     "plan:check": "node scripts/plan-register-check.mjs",
     "repo:move": "node scripts/repo-move.mjs",
     "skills:check": "node scripts/skills-check.mjs",
+    "receipts:verify": "node scripts/run-receipt.mjs",
+    "receipts:collect": "node scripts/receipts-collect.mjs",
     "digest": "node scripts/founders-digest.mjs",
     "digest:waiting": "node scripts/founders-digest.mjs --waiting",
     "audit:repos:offline": "node scripts/repo-audit.mjs --repos-file audit/repos.inventory.json --open",
