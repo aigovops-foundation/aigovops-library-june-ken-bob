@@ -106,12 +106,12 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visibl
 
 <h2>2 · Where we actually are</h2>
 <p><strong>Live and holding.</strong> The governed core with the Yes-Gate and <code>SecretsProvider</code> (Ticket 0, implemented). Beacon signing with Ed25519 + JCS. Thirteen written skills, twelve processes with rules of record. The estate clock: hourly interaction crawl, daily tests and red-main watchdog, weekly link and repo-sync checks, monthly stale sweep, continuous secret scan. Twenty-one Library pages with SEO and a11y invariants gated in CI. The garden-warm design family across the estate. A live giving rail.</p>
-<p><strong>Drafted this morning, in review</strong> (PR #61, all checks green): the consolidation plan; <code>estate.yaml</code> — one manifest with <code>estate-sites.json</code>, <code>founders.json</code> and <code>repo-audit.config.json</code> as derived views; <code>policies/autonomy.yaml</code> — Green/Yellow/Red as data, enforced in CI, which on its first run found four workflows running on an unstated permission default.</p>
+<p><strong>Drafted 2026-08-22 and merged the same day</strong> (PR #61): the consolidation plan; <code>estate.yaml</code> — one manifest with <code>estate-sites.json</code>, <code>founders.json</code> and <code>repo-audit.config.json</code> as derived views; <code>policies/autonomy.yaml</code> — Green/Yellow/Red as data, enforced in CI, which on its first run found four workflows running on an unstated permission default.</p>
 <p><strong>Waiting on a founder.</strong> The seven decisions. The 1Password cleanup left from M3. The M2 sandbox-privilege call. <code>help@aigovops.org</code>, which still cannot receive mail.</p>
 
 <h3>The finding worth reading twice</h3>
 <p>We do not have a production problem. <strong>We have a merge-queue problem.</strong></p>
-<p><em>Measured 2026-08-22. A dated measurement does not rot; the live version of this table is kept current in PR #61's description.</em></p>
+<p><em>Measured 2026-08-22. A dated measurement does not rot — so this table stays as it was, and what happened next is recorded below it rather than written over it.</em></p>
 <div class="tablewrap"><table>
 <thead><tr><th>PR</th><th>Opened</th><th>Still open after</th></tr></thead>
 <tbody>
@@ -121,6 +121,8 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visibl
 </tbody></table></div>
 <p>All green, all Yellow-class: an agent did the work, a human decides. That is the design working exactly as intended — and #46 fixes a hang <strong>in the heartbeat that watches the whole estate</strong>, which had been sitting eight days when this was written.</p>
 <p>No amount of further automation touches this number. The Yellow queue moves at the speed of a founder's attention, and that is the honest constraint on everything in section 5. Worth deciding, in this same sitting, what the review cadence is — a standing thirty minutes twice a week would clear it.</p>
+<p><strong>What happened next — 2026-08-23.</strong> All three cleared: #40 merged after 8 days, #46 after 5. Counted from the git history rather than from memory, <strong>twenty pull requests across the two repositories merged inside a single day</strong> — fifteen here, five in the trunk — and <strong>the queue is now empty: zero open pull requests, checked 2026-08-23.</strong></p>
+<p>That is one good day, not a solved problem. The measurement above was taken when nobody was sitting with the queue; this one was taken while someone was. The cadence question is still the question — the number moves when attention does, which is exactly what the original finding said.</p>
 
 <h2>3 · The standing rules, in one place</h2>
 <p><strong>The boundary.</strong> Prepare and propose; the human makes the irreversible move. Now data, in <code>policies/autonomy.yaml</code>, and enforced in CI.</p>
@@ -164,23 +166,23 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visibl
 <div class="tablewrap"><table>
 <thead><tr><th>#</th><th>What</th><th>Class</th><th>Status</th></tr></thead>
 <tbody>
-<tr><td>0</td><td>The consolidation plan</td><td>Yellow</td><td><strong>in review</strong> — PR #61</td></tr>
-<tr><td>4</td><td><code>estate.yaml</code> + validator + CI drift gate</td><td>Yellow</td><td><strong>in review</strong> — PR #61</td></tr>
-<tr><td>6</td><td><code>policies/autonomy.yaml</code> + enforcer</td><td>Yellow</td><td><strong>in review</strong> — PR #61</td></tr>
+<tr><td>0</td><td>The consolidation plan</td><td>Yellow</td><td><strong>done</strong> — PR #61, merged 2026-08-22</td></tr>
+<tr><td>4</td><td><code>estate.yaml</code> + validator + CI drift gate</td><td>Yellow</td><td><strong>done</strong> — PR #61, merged 2026-08-22</td></tr>
+<tr><td>6</td><td><code>policies/autonomy.yaml</code> + enforcer</td><td>Yellow</td><td><strong>done</strong> — PR #61, merged 2026-08-22</td></tr>
 <tr><td>1a</td><td>Repoint <code>bobrapp.github.io/…V4-10k/</code> before any rename</td><td>Yellow</td><td><strong>done</strong> — 138 references repointed; the onboarding iframe last, by hand (it cannot use a github.com URL)</td></tr>
 <tr><td>1b</td><td>Transfer V4-10k to the org; rename <code>aigovops</code></td><td class="red">Red</td><td><strong>done</strong> — Bob, via the GitHub assistant, 2026-08-23. Pages green under the org</td></tr>
 <tr><td>2</td><td>Apply for GitHub for Nonprofits</td><td class="red">Red</td><td><strong>Bob</strong></td></tr>
-<tr><td>3</td><td>CODEOWNERS: both founders on <code>policies/</code>, <code>skills/</code>, <code>.github/</code></td><td>Yellow</td><td><strong>blocked on D7</strong></td></tr>
+<tr><td>3</td><td>CODEOWNERS: both founders on <code>policies/</code>, <code>skills/</code>, <code>.github/</code></td><td class="red">Red</td><td><strong>file merged (#65), still INERT.</strong> Only <code>@bobrapp</code> has access — checked 2026-08-23. Needs two settings moves: give <code>@kenjohnston-ai</code> write, then require Code Owner review on <code>main</code></td></tr>
 <tr><td>5</td><td>301 <code>a-i-gov-ops.com</code>; publish the <code>.org</code> redirect map</td><td class="red">Red</td><td><strong>Bob</strong> — needs D2</td></tr>
-<tr><td>7</td><td>Migrate 13 skills; add <code>principle:</code>/<code>owner:</code>/<code>risk:</code> + CI check</td><td>Yellow</td><td>ready</td></tr>
-<tr><td>8</td><td>Three fat skills (AI House, sponsorship, editorial voice)</td><td>Yellow</td><td>ready</td></tr>
-<tr><td>9</td><td><code>marketplace.json</code> + plugin manifest</td><td>Yellow</td><td>after 7–8</td></tr>
-<tr><td>10</td><td>Third-party skill pin policy</td><td>Yellow</td><td>ready</td></tr>
-<tr><td>11</td><td>One CI matrix over <code>estate.yaml</code> for the six unadopted reusables</td><td>Yellow</td><td>after M1</td></tr>
-<tr><td>12</td><td>Beacon receipt on every scheduled and skill run</td><td>Yellow</td><td>ready</td></tr>
-<tr><td>13</td><td>Weekly founders' digest + <code>estate.yaml</code> drift check</td><td>Yellow</td><td>ready</td></tr>
-<tr><td>14</td><td>Subtree each product into the trunk</td><td>Yellow</td><td>after 1b</td></tr>
-<tr><td>15</td><td><code>redirect-stub/</code> into each merged repo's Pages, then archive</td><td class="red">Red</td><td>steward-shipped, after 14</td></tr>
+<tr><td>7</td><td>Migrate the skills; add <code>principle:</code>/<code>owner:</code>/<code>risk:</code> + CI check</td><td>Yellow</td><td><strong>done</strong> — PR #62. 14 skills now, all four fields checked in CI</td></tr>
+<tr><td>8</td><td>Three fat skills (AI House, sponsorship, editorial voice)</td><td>Yellow</td><td>ready — none of the three exists yet</td></tr>
+<tr><td>9</td><td><code>marketplace.json</code> + plugin manifest</td><td>Yellow</td><td>after 8 — 7 is done; neither file exists yet</td></tr>
+<tr><td>10</td><td>Third-party skill pin policy</td><td>Yellow</td><td><strong>done</strong> — PR #63. Ten action refs SHA-pinned; <code>source:</code> skills need <code>pinned:</code> + <code>reviewed:</code></td></tr>
+<tr><td>11</td><td>One CI matrix over <code>estate.yaml</code> for the unadopted reusables</td><td>Yellow</td><td>ready — M1 is done. No workflow uses a matrix yet; locally 2 of 7 reusables have no caller, and adoption across the other repos is unmeasured from here</td></tr>
+<tr><td>12</td><td>Beacon receipt on every scheduled and skill run</td><td>Yellow</td><td>ready — no workflow emits one yet</td></tr>
+<tr><td>13</td><td>Weekly founders' digest + <code>estate.yaml</code> drift check</td><td>Yellow</td><td><strong>done</strong> — PR #64</td></tr>
+<tr><td>14</td><td>Subtree each product into the trunk</td><td>Yellow</td><td><strong>done</strong> — aigovops#2, #4, #5, #6. All four products in; 122 commits traverse</td></tr>
+<tr><td>15</td><td><code>redirect-stub/</code> into each merged repo's Pages, then archive</td><td class="red">Red</td><td><strong>unblocked</strong> — 14 is done. Steward-shipped; nothing is archived autonomously</td></tr>
 <tr><td>16</td><td>Redirects live; canonical domain serves everything</td><td class="red">Red</td><td>needs D1</td></tr>
 <tr><td>17</td><td>Library on the canonical domain with an ungated preview</td><td>Yellow</td><td>after 16</td></tr>
 <tr><td>18</td><td>GA4 + HTTPS verified; Ad Grants submitted</td><td class="red">Red</td><td><strong>Bob</strong> — after 16</td></tr>
@@ -188,7 +190,8 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visibl
 <tr><td>20</td><td>Skill Provenance in Beacon/Lantern</td><td>Yellow</td><td>M6</td></tr>
 <tr><td>21</td><td>Circle instrumentation: keep gated, or go public</td><td class="red">Red</td><td><strong>Bob + Ken</strong> — after M4</td></tr>
 </tbody></table></div>
-<p>Nine rows are ready to start and need nothing from you. Six are Red and need one of you personally. Three sit in review. One is blocked on a single line of JSON.</p>
+<p><strong>Swept 2026-08-23, against the repository rather than from memory.</strong> Nine rows are done. Three (8, 11, 12) are ready and need nothing from either of you. Four are queued behind another row. Seven are Red and need a founder personally.</p>
+<p>Row 3 is the one to move first. The file is written, reviewed and merged — and it does nothing. A CODEOWNERS entry naming someone without write access is ignored by GitHub silently: no warning, no error, the review requirement simply never applies. <code>@bobrapp</code> is still the only collaborator. The most important control in this plan is currently decorative, and two settings clicks fix it.</p>
 
 <h2>7 · What could go wrong</h2>
 <p><strong>The Yellow queue stays at a week.</strong> The single biggest risk, and the only one already measurable. Everything else assumes review happens.</p>
