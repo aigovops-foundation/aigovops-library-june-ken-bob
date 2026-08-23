@@ -62,7 +62,24 @@ const CORE_MODULES = {
 
 // Skills that are irreversible/credential-touching even if their SKILL.md uses a
 // different heading than "## Human gate" — always treated as human-gated.
+//
+// This is now a FALLBACK, not the rule. Enforcement keys off the declared `risk:` class
+// (ladder row 12c); this set still catches a skill whose frontmatter omits `risk:` entirely,
+// which CI forbids but a SKILLS_DIR override could still produce.
 const IRREVERSIBLE = new Set(['op-github-deploy']);
+
+// THE BOUNDARY, KEYED ON WHAT THE SKILL DECLARES — ladder row 12c.
+//
+// It used to read `handlerKey === 'op-github-deploy'`: one skill, by name. A SECOND red skill
+// given a handler would have walked straight past it. estate-mailer is already classed red and
+// had no handler, which was the only reason that gap was theoretical rather than live — a
+// control that happens to be correct because nobody has added the file that breaks it.
+//
+// `risk: red` means "must never run unattended", so the runner never runs it. Not with
+// --approve either: red is not a permission an agent can be granted at the command line, it is
+// work a human does themselves. --approve changes only what the refusal says.
+const isRed = (skill, name) =>
+  skill?.risk === 'red' || (!skill?.risk && IRREVERSIBLE.has(name));
 
 // ── SKILL.md parsing ──────────────────────────────────────────────────────────
 // The contract is uniform: YAML frontmatter (name, description) + fixed H2
@@ -91,12 +108,10 @@ function parseSkill(md) {
   // scripts/skills-check.mjs. The runner records it on every receipt so the ledger says what
   // class of thing was attempted, not just which name.
   //
-  // It does NOT drive the gate. Enforcement below still keys off IRREVERSIBLE / the prose
-  // "## Human gate" section, and changing that is a governance decision for a founder rather
-  // than a side effect of adding receipts. Worth raising: the blocking check is written
-  // `handlerKey === 'op-github-deploy'`, so a SECOND red skill given a handler would not be
-  // stopped by it. estate-mailer is already classed red and has no handler today, which is the
-  // only reason that gap is theoretical.
+  // Since row 12c it also DRIVES the gate: dispatchSkill refuses any skill declaring
+  // `risk: red` before either dispatch path is reached. Until then enforcement was keyed on one
+  // skill's name, so a second red skill given a backend would have run — this field is what
+  // replaced that.
   const risk = (front.match(/^risk:\s*(.+)$/m) || [])[1]?.trim() || null;
   const department = (front.match(/^department:\s*(.+)$/m) || [])[1]?.trim() || null;
   return { name, owner, humanGate, sectionGated, run, inputs, outputs, risk, department };
@@ -247,10 +262,11 @@ const HANDLERS = {
     return { receipt: receiptView(beacon.emit(meta)) };
   },
 
-  // Operator · human-gated + irreversible (1Password/GitHub). The runner NEVER
-  // executes this — it surfaces the procedure and stops at the boundary, per
-  // CLAUDE.md. It emits no side effect. It DOES leave a receipt: the attempt is
-  // the thing worth recording, and runSkill below emits it.
+  // Operator · human-gated + irreversible (1Password/GitHub). UNREACHABLE since row 12c: the
+  // red gate in dispatchSkill refuses this skill before the handler map is consulted. Kept
+  // deliberately — if the class check is ever loosened, this is the second thing that has to
+  // fail before anything executes, and a handler that refuses is a safer thing to find than a
+  // missing key. It emits no side effect; the attempt is recorded by runSkill.
   'op-github-deploy'({ approve }) {
     return {
       ran: false,
@@ -270,6 +286,24 @@ function receiptView(signed) {
 function dispatchSkill(name, args = {}) {
   const skill = getSkill(name);
   if (!skill) throw new Error(`unknown skill: ${name}`);
+
+  // Refused BEFORE any dispatch — ahead of the core: invoker and ahead of the handler map, so
+  // a red skill's backend is never reached whether it has one today or gains one tomorrow.
+  if (isRed(skill, name)) {
+    return {
+      ran: false,
+      gated: true,
+      risk: 'red',
+      // Carried through so the receipt states whether a backend even exists. Without it the
+      // wrapper's default reads `runnable: true` for a red skill that has none — a small
+      // untruth, in a ledger, about the one class of skill most worth being exact about.
+      runnable: skill.runnable !== false,
+      reason: args.approve
+        ? `${name} is classed risk: red — the runner never executes it, approved or not. Perform the documented human steps in plan/skills/${name}/SKILL.md.`
+        : `${name} is classed risk: red — must never run unattended. Refused. Read plan/skills/${name}/SKILL.md and have a founder perform the human steps.`,
+    };
+  }
+
   const run = skill.run;
 
   // Generic core dispatch (A1): a `run: core:<module>#<fn>` skill runs through the
@@ -284,11 +318,8 @@ function dispatchSkill(name, args = {}) {
   if (!(handlerKey in HANDLERS)) {
     return { name, runnable: false, note: 'prose skill — performed through the loop; no tool backend (see its SKILL.md). Add a `run:` line to make it runnable (Ticket A1).' };
   }
-  // Gate enforcement: a blocking human gate (op-github-deploy in particular)
-  // cannot side-effect without explicit approval.
-  if (skill.gated && !args.approve && handlerKey === 'op-github-deploy') {
-    return { name, ...HANDLERS[handlerKey]({ ...args, approve: false }) };
-  }
+  // No second gate here. Enforcement happens once, above, on the declared class — two gates
+  // that can disagree is how one of them quietly stops mattering.
   return { name, ...HANDLERS[handlerKey](args) };
 }
 
