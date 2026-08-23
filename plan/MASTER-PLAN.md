@@ -44,7 +44,7 @@ months. Full reasoning: [`auto-running-foundation.md`](./auto-running-foundation
 | **D3** | Mono-repo trunk | V4-10k → transfer to the org → rename `aigovops`. **Repoint its Pages links first** (§6 risk) | every subtree merge | ______ |
 | **D4** | What stays out | Circle owns membership, Stripe owns money, the CRM owns constituents. Git owns procedure | the ledger's PII line | ______ |
 | **D5** | Wordmark | `AiGovOps`, one spelling, CI-enforced. We currently ship four | due diligence | ______ |
-| **D6** | Read-only GitHub connection | A fine-grained credential scoped to metadata, contents, issues, pull requests and Actions — read only, nothing else | **42 unknowns in `estate.yaml`** | ______ |
+| **D6** | Read-only GitHub connection | A fine-grained credential scoped to metadata, contents, issues, pull requests and Actions — read only, nothing else | **40 unknowns in `estate.yaml`** | ______ |
 | **D7** | Ken's GitHub handle | One line in `founders.json` | **CODEOWNERS — the most important control in the plan** | ______ |
 
 **If you only answer two: D7 and D6.** D7 is one line and unblocks the two-founder gate on
@@ -196,8 +196,8 @@ milestone slides by roughly that much — the work is not the constraint.
 | 0 | The consolidation plan | Yellow | **in review** — PR #61 |
 | 4 | `estate.yaml` + validator + CI drift gate | Yellow | **in review** — PR #61 |
 | 6 | `policies/autonomy.yaml` + enforcer | Yellow | **in review** — PR #61 |
-| 1a | Repoint `bobrapp.github.io/…V4-10k/` before any rename | Yellow | ready — needs D3 |
-| 1b | Transfer V4-10k to the org; rename `aigovops` | **Red** | **Bob** — needs D3 |
+| 1a | Repoint `bobrapp.github.io/…V4-10k/` before any rename | Yellow | **done** — 138 references repointed; the onboarding iframe last, by hand (it cannot use a github.com URL) |
+| 1b | Transfer V4-10k to the org; rename `aigovops` | **Red** | **done** — Bob, via the GitHub assistant, 2026-08-23. Pages green under the org |
 | 2 | Apply for GitHub for Nonprofits | **Red** | **Bob** |
 | 3 | CODEOWNERS: both founders on `policies/`, `skills/`, `.github/` | Yellow | **blocked on D7** |
 | 5 | 301 `a-i-gov-ops.com`; publish the `.org` redirect map | **Red** | **Bob** — needs D2 |

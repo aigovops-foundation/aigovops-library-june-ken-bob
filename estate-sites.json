@@ -50,7 +50,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops/",
       "failOnDead": true,
       "gated": false,
-      "note": "Crawl switched on at the move. Nothing had ever watched this property, so nobody could say whether it served; the hourly crawl is now the thing that answers that, and if the Pages site is not actually live the board goes red within the hour. That is the intended outcome — an unwatched property is the worse state."
+      "note": "Crawl switched on at the move, because nothing had ever watched this property and so nobody could say whether it served. It has now answered: green at 2026-08-23T01:38:39Z, 0 dead links across 2 pages. This row is verified by that crawl rather than by a report, which is the point of switching it on — and it stays on, so the board goes red within the hour if that ever stops being true."
     }
   ]
 }

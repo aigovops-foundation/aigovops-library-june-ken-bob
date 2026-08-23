@@ -230,6 +230,16 @@ export function deriveSites(m) {
 }
 
 const setOf = (a) => new Set(a ?? []);
+// Stable, order-independent rendering, so a key-order difference is not read as
+// drift and an undefined field compares equal to an absent one.
+const stable = (v) =>
+  v === undefined
+    ? "(absent)"
+    : JSON.stringify(v, (_k, x) =>
+        x && typeof x === "object" && !Array.isArray(x)
+          ? Object.fromEntries(Object.keys(x).sort().map((k) => [k, x[k]]))
+          : x,
+      );
 const sameSet = (a, b) => a.size === b.size && [...a].every((x) => b.has(x));
 const diff = (a, b) => [...a].filter((x) => !b.has(x));
 
@@ -246,11 +256,19 @@ export function checkDrift(m) {
     for (const b of diff(wb, lb)) out.push(`estate-sites.json: manifest has a crawled site the crawler does not: ${b}`);
     for (const b of diff(lb, wb)) out.push(`estate-sites.json: the crawler crawls a site the manifest does not list: ${b}`);
   }
+  // Compare the WHOLE derived row, not a chosen few fields. This used to check
+  // failOnDead and cookie only, which meant `--check` could print "consistent
+  // with the derived files" while name, gated or note had silently drifted —
+  // a gate claiming more than it verified. Every field deriveSites() writes is
+  // a field the crawler reads, so every field is checked.
   for (const s of want) {
     const cur = live.find((x) => x.base === s.base);
     if (!cur) continue;
-    if (!!cur.failOnDead !== !!s.failOnDead) out.push(`estate-sites.json: ${s.base} failOnDead ${cur.failOnDead} != manifest ${s.failOnDead}`);
-    if ((cur.cookie ?? null) !== (s.cookie ?? null)) out.push(`estate-sites.json: ${s.base} cookie differs from the manifest`);
+    for (const k of setOf([...Object.keys(s), ...Object.keys(cur)])) {
+      const a = stable(cur[k]);
+      const b = stable(s[k]);
+      if (a !== b) out.push(`estate-sites.json: ${s.base} ${k} is ${a} but the manifest says ${b}`);
+    }
   }
 
   // founders.json — who holds the keys
