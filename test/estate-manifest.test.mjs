@@ -184,8 +184,14 @@ test("drift is detected when a founder's handle or email changes", () => {
   assert.match(checkDrift(renamed).join("\n"), /founders\.json: handles/);
 });
 
-test("the manifest still records Ken with no GitHub handle — D7 is open, and the file says so", () => {
-  const ken = load().people.find((p) => p.id === "ken");
-  assert.ok(ken, "Ken must be in the manifest");
-  assert.equal(ken.github, undefined, "if this fails, D7 was answered — add the handle to founders.json too");
+test("D7 is answered: both co-founders carry a GitHub handle, and founders.json agrees", () => {
+  // This assertion used to run the other way — it asserted Ken had NO handle and told whoever
+  // broke it to add one to founders.json as well. It fired on 2026-08-23 when he got one, which
+  // is what an inverted guard is for: it fails exactly once, at the moment the fact changes.
+  const cofounders = load().people.filter((p) => (p.roles ?? []).includes("co-founder"));
+  assert.ok(cofounders.length >= 2, "both founders must be in the manifest");
+  for (const p of cofounders) assert.ok(p.github, `${p.id} has no GitHub handle`);
+  // checkDrift already asserts the manifest and founders.json name the same set; this is the
+  // reminder of WHY they must, since CODEOWNERS silently ignores a handle it does not know.
+  assert.deepEqual(checkDrift(load()), []);
 });
