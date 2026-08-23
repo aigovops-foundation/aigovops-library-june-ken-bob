@@ -1,0 +1,33 @@
+# CODEOWNERS — the two-founder gate on the files that decide how the estate behaves.
+#
+# PR 3 of plan/MASTER-PLAN.md. Rule of record: plan/processes/codeowners.md
+#
+# READ THIS BEFORE TRUSTING IT. A CODEOWNERS entry naming a user WITHOUT write access to the
+# repository is silently ignored by GitHub — no warning, no error, the review requirement simply
+# never applies. As of 2026-08-23 the only collaborator here is @bobrapp, so every line below is
+# INERT for @kenjohnston-ai until a founder grants him access. Two moves make this real, and both
+# are irreversible-boundary calls that belong to a human, not an agent:
+#
+#   1. Give @kenjohnston-ai write access (org membership or repo collaborator).
+#   2. Turn on branch protection for `main` with "Require review from Code Owners".
+#      CODEOWNERS on its own asks for ONE listed owner to approve. If "both founders" is meant
+#      literally, that also needs "Require approvals: 2" — otherwise either founder alone
+#      satisfies it.
+#
+# Until both are done this file documents an intent rather than enforcing one, and it says so
+# rather than letting anyone believe the gate is up.
+
+# The policies that define what may happen without a human.
+/policies/                  @bobrapp @kenjohnston-ai
+
+# Procedure. A production skill never edits itself; changes arrive here.
+/plan/skills/               @bobrapp @kenjohnston-ai
+
+# The clock, and everything that runs unattended.
+/.github/                   @bobrapp @kenjohnston-ai
+
+# The manifest of what the Foundation owns.
+/estate.yaml                @bobrapp @kenjohnston-ai
+
+# The front door for the programme.
+/plan/MASTER-PLAN.md        @bobrapp @kenjohnston-ai

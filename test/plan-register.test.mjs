@@ -6,6 +6,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { parseRegister, check, planFiles, masterPlan, STATUSES } from "../scripts/plan-register-check.mjs";
 
 const TABLE = (rows) =>
@@ -44,6 +45,26 @@ test("catches a duplicate row, an unknown status, and an empty job", () => {
 
 test("status matching is case-insensitive, so a capitalised cell still passes", () => {
   assert.deepEqual(check(TABLE([ROW("a.md", "job", "In Force")]), ["a.md"]).problems, []);
+});
+
+/* ── CODEOWNERS ───────────────────────────────────────────────────────────────── */
+
+test("CODEOWNERS names only founders on record — a typo'd handle is a silently disabled gate", () => {
+  const src = readFileSync(new URL("../CODEOWNERS", import.meta.url), "utf8");
+  const named = new Set(
+    src.split("\n").filter((l) => l.trim() && !l.trimStart().startsWith("#"))
+       .flatMap((l) => l.match(/@[A-Za-z0-9-]+/g) ?? []).map((h) => h.slice(1)));
+  const founders = new Set(JSON.parse(readFileSync(new URL("../founders.json", import.meta.url), "utf8")).handles);
+  assert.ok(named.size > 0, "CODEOWNERS should name someone");
+  for (const h of named) {
+    assert.ok(founders.has(h), `CODEOWNERS names @${h}, who is not in founders.json — GitHub ignores unknown owners silently`);
+  }
+});
+
+test("both founders are on record, so CODEOWNERS can name them", () => {
+  const f = JSON.parse(readFileSync(new URL("../founders.json", import.meta.url), "utf8"));
+  assert.deepEqual([...f.handles].sort(), ["bobrapp", "kenjohnston-ai"]);
+  assert.equal(f.todo, undefined, "the D7 TODO was answered on 2026-08-23");
 });
 
 /* ── the committed register, against the real plan tree ───────────────────────── */
