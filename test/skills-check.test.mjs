@@ -143,6 +143,21 @@ test("op-github-deploy stays red — it is the one skill that reaches a release 
   assert.equal(s.fm.risk, "red");
 });
 
+test("a DRAFT does not make a principle claimable — the whole point of keeping them separate", () => {
+  const drafted = { principles: [{ id: "P3", text: "unknown", verified: false, draft: "Some proposed wording." }] };
+  const out = check([skill("a", { principle: "P3" })], drafted, RISK).problems.join("\n");
+  assert.match(out, /whose text has not been recorded yet/,
+    "draft wording must not satisfy a claim; only a founder-confirmed text may");
+});
+
+test("every drafted principle carries the basis it was reconstructed from", () => {
+  for (const p of loadPrinciples().principles.filter((p) => p.draft)) {
+    assert.ok(p.draft_basis, `${p.id} has draft wording with no stated basis`);
+    assert.equal(p.verified, false, `${p.id} is a draft and must not be marked verified`);
+    assert.equal(p.text, "unknown", `${p.id} is a draft; text must stay unknown until confirmed`);
+  }
+});
+
 test("six principles are still unrecorded, and the file says so rather than inventing them", () => {
   const ps = loadPrinciples().principles;
   assert.equal(ps.length, 11);
