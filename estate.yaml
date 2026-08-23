@@ -96,11 +96,11 @@ domains:
     note: "GitHub Pages does NOT follow repo-rename redirects — see repos/ below. Any rename here breaks a live link."
 
 # ── Repositories ──────────────────────────────────────────────────────────────────
-# disposition: trunk | subtree-into-trunk | keep-separate | pending-disposition
+# disposition: trunk | subtree-into-trunk | consolidated | keep-separate | pending-disposition
 repos:
   - id: aigovops
     account: aigovops-foundation
-    role: "The mono-repo trunk. Holds packages/ (npm libraries) and, from 2026-08-23, products/ (served products). Was the platform — Jeeves, Beacon, Umbrella, Lantern together (28 workspaces, 188 tests)"
+    role: "The mono-repo trunk. Holds packages/ (npm libraries) and, from 2026-08-23, products/ — vendor-rfi, lantern, umbrella, beacon. Was the platform — Jeeves, Beacon, Umbrella, Lantern together (28 workspaces, 193 tests)"
     visibility: public
     disposition: trunk
     pages_url: "https://aigovops-foundation.github.io/aigovops/"
@@ -124,35 +124,38 @@ repos:
     account: aigovops-foundation
     role: "Signed evidence receipts — Ed25519 + JCS canonical form"
     visibility: public
-    disposition: subtree-into-trunk
+    disposition: consolidated
     pages_url: "https://aigovops-foundation.github.io/aigovops-beacon/"
     verified: true
     source: "estate-sites.json"
     note: "Carries the signing primitives the Skill Provenance work (M6) builds on."
     canonical: "The STANDALONE REPO is canonical for the product — Bob, 2026-08-23."
     not_a_duplicate: "It shares only a NAME with packages/beacon, which is 7 JS modules (attestation, fluentd, keys, ledger, mlflow, sign) and 5 test files. This repo is seven services (server, agent, mcp, mcp-public, lab-service, studio) plus scoring — 39 Python files and 49 JS. Two of the three standalone products contain little or no JavaScript at all, so the trunk package is not a competing implementation — it is a different layer in a different language. Nothing is duplicated and nothing is retired; the trunk package stays, and what remains open is the shared NAME, not which code wins."
+    consolidated: "products/beacon in aigovops-foundation/aigovops — PR aigovops#6, 2026-08-23. filter-repo under the prefix then merge, so log and blame traverse; 75 commits and both authors intact. The ONLY product copy that is not byte-identical to its source: every blob over 1 MiB was stripped (191.56 MiB -> 5.82 MiB), because merging beacon whole would have made the trunk 192 MiB permanently and undoing that is a Red history rewrite. Five media files are absent and about twenty references to them are dead in the trunk copy — recorded in products/beacon/docs/ASSETS-NOT-IN-TRUNK.md, still live on this repo's Pages."
 
   - id: umbrella-govops
     account: aigovops-foundation
     role: "Conformance gates"
     visibility: public
-    disposition: subtree-into-trunk
+    disposition: consolidated
     pages_url: "https://aigovops-foundation.github.io/umbrella-govops/"
     verified: true
     source: "estate-sites.json"
     canonical: "The STANDALONE REPO is canonical for the product — Bob, 2026-08-23."
     not_a_duplicate: "It shares only a NAME with packages/umbrella, which is 7 JS modules (authz, compile, kyverno, lifecycle, profiles, rego) and 3 test files. This repo is a PYTHON project — pyproject.toml and a Makefile, 33 .py files against 1 .js. Two of the three standalone products contain little or no JavaScript at all, so the trunk package is not a competing implementation — it is a different layer in a different language. Nothing is duplicated and nothing is retired; the trunk package stays, and what remains open is the shared NAME, not which code wins."
+    consolidated: "products/umbrella in aigovops-foundation/aigovops — PR aigovops#5, 2026-08-23. filter-repo under the prefix then merge, so log and blame traverse; 24 commits and both authors intact. This is the product that forced PR aigovops#3: its sdk/typescript test imports a tsup build output it does not commit, so the trunk's old bare `node --test` discovered it and went red."
 
   - id: aigovops-lantern
     account: aigovops-foundation
     role: "Framework mapping and the reading surface"
     visibility: public
-    disposition: subtree-into-trunk
+    disposition: consolidated
     pages_url: "https://aigovops-foundation.github.io/aigovops-lantern/"
     verified: true
     source: "estate-sites.json"
     canonical: "The STANDALONE REPO is canonical for the product — Bob, 2026-08-23."
     not_a_duplicate: "It shares only a NAME with packages/lantern, which is 6 JS modules (diff, expectations, history, monitor, stats) and 3 test files. This repo is a PYTHON project — pyproject.toml and mkdocs, 14 .py files and ZERO JavaScript. Two of the three standalone products contain little or no JavaScript at all, so the trunk package is not a competing implementation — it is a different layer in a different language. Nothing is duplicated and nothing is retired; the trunk package stays, and what remains open is the shared NAME, not which code wins."
+    consolidated: "products/lantern in aigovops-foundation/aigovops — PR aigovops#4, 2026-08-23. filter-repo under the prefix then merge, so log and blame traverse; 10 commits, 1 author, all intact."
 
   - id: aigovops-ncw-ai-camp
     account: aigovops-foundation
