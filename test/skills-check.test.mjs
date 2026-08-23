@@ -6,7 +6,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFrontmatter, check, checkIndex, loadSkills, loadPrinciples, loadRiskClasses, loadIndex } from "../scripts/skills-check.mjs";
+import { readFrontmatter, check, checkIndex, loadSkills, loadPrinciples, loadRiskClasses, loadIndex, loadDepartments } from "../scripts/skills-check.mjs";
 import { ManifestError } from "../scripts/estate-manifest.mjs";
 
 const PRINCIPLES = () => ({
@@ -16,7 +16,11 @@ const PRINCIPLES = () => ({
   ],
 });
 const RISK = ["green", "yellow", "red"];
-const skill = (id, fm = {}) => ({ id, fm: { name: id, principle: "P1", owner: "bobrapp", agent: "Guardian", risk: "green", ...fm } });
+const skill = (id, fm = {}) => ({ id, fm: { name: id, principle: "P1", owner: "bobrapp", agent: "Guardian", risk: "green", department: "governance", ...fm } });
+const DEPTS = [
+  { id: "governance", plugin: "p-gov", volunteer_facing: true },
+  { id: "operator", plugin: "p-op", volunteer_facing: false, default_enabled: false },
+];
 const joined = (skills, principles = PRINCIPLES()) => check(skills, principles, RISK).problems.join("\n");
 
 /* ── frontmatter reading ──────────────────────────────────────────────────────── */
@@ -46,7 +50,7 @@ test("a fully declared skill passes", () => {
 });
 
 test("every required field is required", () => {
-  for (const f of ["principle", "owner", "agent", "risk"]) {
+  for (const f of ["principle", "owner", "agent", "risk", "department"]) {
     const s = skill("a"); delete s.fm[f];
     assert.match(joined([s]), new RegExp(`missing "${f}:"`), `${f} should be required`);
   }
@@ -208,4 +212,43 @@ test("a README with no table at all is a failure, not an empty pass", () => {
 
 test("the committed README matches the committed skill tree", () => {
   assert.deepEqual(checkIndex(loadIndex(), loadSkills()), []);
+});
+
+/* ── departments: where a one-command install puts a skill ────────────────────── */
+
+const withDepts = (skills) => check(skills, PRINCIPLES(), RISK, DEPTS).problems.join("\n");
+
+test("a department that is not in the policy is caught", () => {
+  assert.match(withDepts([skill("a", { department: "finance" })]),
+    /department "finance" is not in policies\/departments\.yaml/);
+});
+
+test("a RED skill in a volunteer-facing department is refused — the control, not the plumbing", () => {
+  // Red means "must never run unattended". A one-command install that hands a volunteer one of
+  // these has moved the irreversibility boundary by omission rather than by decision.
+  assert.match(withDepts([skill("danger", { risk: "red", department: "governance" })]),
+    /is risk "red" but sits in department "governance", which is volunteer-facing/);
+});
+
+test("a red skill in a non-volunteer-facing department passes", () => {
+  assert.deepEqual(check([skill("danger", { risk: "red", department: "operator" })],
+    PRINCIPLES(), RISK, DEPTS).problems, []);
+});
+
+test("with no departments supplied the check is skipped, not silently passed as valid", () => {
+  // check() is called without departments in several unit tests; that must not become a way to
+  // launder an unknown department into a pass at the call site that matters.
+  assert.deepEqual(check([skill("a", { department: "nonsense" })], PRINCIPLES(), RISK).problems, []);
+  assert.match(withDepts([skill("a", { department: "nonsense" })]), /is not in policies/);
+});
+
+test("every committed skill's department exists, and no red one is volunteer-facing", () => {
+  assert.deepEqual(check(loadSkills(), loadPrinciples(), loadRiskClasses(), loadDepartments()).problems, []);
+});
+
+test("the two red skills really are the operator department, on disk", () => {
+  const red = loadSkills().filter((s) => s.fm.risk === "red");
+  assert.equal(red.length, 2);
+  const locked = new Set(loadDepartments().filter((d) => d.volunteer_facing === false).map((d) => d.id));
+  for (const s of red) assert.ok(locked.has(s.fm.department), `${s.id} is red but in ${s.fm.department}`);
 });

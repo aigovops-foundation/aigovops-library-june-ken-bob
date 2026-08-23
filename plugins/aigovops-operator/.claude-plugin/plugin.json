@@ -1,0 +1,17 @@
+{
+  "name": "aigovops-operator",
+  "description": "Skills that reach a release path or send mail as the Foundation. Red-classed: never run unattended. Installs DISABLED — a founder or steward turns it on deliberately, per install.",
+  "version": "0.1.0",
+  "author": {
+    "name": "AiGovOps Foundation",
+    "url": "https://github.com/aigovops-foundation"
+  },
+  "homepage": "https://github.com/aigovops-foundation/aigovops-library-june-ken-bob",
+  "license": "Apache-2.0",
+  "keywords": [
+    "ai-governance",
+    "aigovops",
+    "operator"
+  ],
+  "defaultEnabled": false
+}

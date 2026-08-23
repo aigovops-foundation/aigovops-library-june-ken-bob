@@ -1,0 +1,16 @@
+{
+  "name": "aigovops-estate",
+  "description": "Watch the estate: the hourly interaction board, and alerting that pauses rather than guesses.",
+  "version": "0.1.0",
+  "author": {
+    "name": "AiGovOps Foundation",
+    "url": "https://github.com/aigovops-foundation"
+  },
+  "homepage": "https://github.com/aigovops-foundation/aigovops-library-june-ken-bob",
+  "license": "Apache-2.0",
+  "keywords": [
+    "ai-governance",
+    "aigovops",
+    "estate"
+  ]
+}
