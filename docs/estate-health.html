@@ -22,6 +22,8 @@
   *{box-sizing:border-box}
   body{margin:0;background:var(--cream);color:var(--ink);font-family:'Source Serif 4',Georgia,serif;line-height:1.5}
   .wrap{max-width:1080px;margin:0 auto;padding:28px 20px 60px}
+  .back{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:.82rem;color:var(--ink-soft);text-decoration:none;margin:0 0 14px;border-bottom:1px solid transparent}
+  .back:hover,.back:focus{color:var(--ink);border-bottom-color:currentColor}
   h1{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(1.5rem,3vw,2.1rem);margin:0 0 4px}
   .sub{color:var(--ink-soft);font-size:.95rem;margin:0 0 20px}
   .mono{font-family:'IBM Plex Mono',monospace}
@@ -63,6 +65,7 @@
 </head>
 <body>
 <div class="wrap">
+  <a class="back" href="./index.html" data-home>&larr; the Library</a>
   <h1>Estate Interaction Health</h1>
   <p class="sub">Every page of the estate, every button and link — crawled in a real browser, clicked or verified, dead ones flagged. Not just "does the URL 200?" — "does the button actually <em>do</em> something?"</p>
 

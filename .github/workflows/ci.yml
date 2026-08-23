@@ -29,6 +29,20 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with: { node-version: 20 }
       - run: node scripts/runbooks/seo-drift-check.mjs
+      # THE DEPLOY GATE, RUN ON PULL REQUESTS — the check that was missing.
+      #
+      # pages.yml gates every deploy on `test-library.mjs --dir docs`, and ci.yml never ran it.
+      # So a PR could be green while the deploy that followed it failed, and that is exactly what
+      # happened: docs/estate-health.html shipped in #35 without the back-link to the index that
+      # every other deep doc carries, and EVERY Pages deploy failed from 2026-08-14 to
+      # 2026-08-23 — nine days, ~30 runs, four of them merges made the night this was found.
+      # Nothing said so. The published site simply stopped changing while main kept moving.
+      #
+      # seo-drift-check above is a different, narrower check and passed throughout, which is
+      # what made the gap so easy to miss: there WAS a discoverability lane in CI, it just was
+      # not the one the deploy runs. Mirror pages.yml exactly — build first, then gate.
+      - run: node scripts/build-docs.mjs
+      - run: node scripts/test-library.mjs --dir docs
       # Estate manifest gate — estate.yaml is the one input; estate-sites.json, founders.json
       # and repo-audit.config.json are views of it. --check fails the build when they disagree.
       - run: node scripts/estate-manifest.mjs --check
