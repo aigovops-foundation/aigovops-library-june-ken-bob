@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-08-23T00:17:45.472Z",
+  "generatedAt": "2026-08-23T01:38:39.320Z",
   "estate": {
-    "properties": 7,
-    "reporting": 6,
-    "healthy": 6,
+    "properties": 8,
+    "reporting": 7,
+    "healthy": 7,
     "red": 0,
-    "greenPages": 333,
+    "greenPages": 335,
     "redPages": 0,
     "dead": 0,
     "broken": 0,
@@ -18,7 +18,7 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-23T00:10:46.334Z",
+      "ranAt": "2026-08-23T01:31:16.366Z",
       "summary": {
         "pages": 26,
         "greenPages": 26,
@@ -258,7 +258,7 @@
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-23T00:12:10.470Z",
+      "ranAt": "2026-08-23T01:32:52.603Z",
       "summary": {
         "pages": 62,
         "greenPages": 62,
@@ -778,7 +778,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-23T00:14:00.109Z",
+      "ranAt": "2026-08-23T01:34:52.519Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -1426,7 +1426,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-23T00:15:45.578Z",
+      "ranAt": "2026-08-23T01:36:38.351Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2074,7 +2074,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-23T00:16:00.655Z",
+      "ranAt": "2026-08-23T01:36:53.974Z",
       "summary": {
         "pages": 11,
         "greenPages": 11,
@@ -2186,7 +2186,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-23T00:17:45.389Z",
+      "ranAt": "2026-08-23T01:38:36.148Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2828,12 +2828,52 @@
       "dead": [],
       "broken": [],
       "consoleErrors": []
+    },
+    {
+      "name": "Open Source v4",
+      "base": "https://aigovops-foundation.github.io/aigovops/",
+      "gated": false,
+      "status": "green",
+      "ranAt": "2026-08-23T01:38:39.314Z",
+      "summary": {
+        "pages": 2,
+        "greenPages": 2,
+        "redPages": 0,
+        "ok": 6,
+        "dead": 0,
+        "broken": 0,
+        "external": 10,
+        "delegated": 0,
+        "consoleErrorPages": 0,
+        "healthy": true
+      },
+      "pageHealth": [
+        {
+          "path": "/aigovops-library-june-ken-bob/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        }
+      ],
+      "dead": [],
+      "broken": [],
+      "consoleErrors": []
     }
   ],
   "mail": {
-    "provider": "none",
-    "status": "unconfigured",
-    "detail": "no mailer configured — armed, not live (set GRAPH_* or ESTATE_SMTP_URL)",
-    "checkedAt": "2026-08-14T18:06:45.782Z"
+    "provider": "graph",
+    "status": "ok",
+    "detail": "app authenticates; sends as bob.rapp@aigovops.community",
+    "checkedAt": "2026-08-23T01:38:39.678Z"
   }
 }
