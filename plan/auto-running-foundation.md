@@ -177,8 +177,24 @@ aigovops-foundation/aigovops          ← the trunk (was V4-10k)
 
 ### How things move — history preserved, nothing deleted
 
-Each product arrives by `git subtree add --prefix=products/<name>`, which keeps its full
-commit history inside the trunk. The source repository is then **archived, not deleted** —
+**Corrected 2026-08-23 by the vendor-rfi proof (aigovops#2).** This said each product
+arrives by `git subtree add --prefix=products/<name>`, "which keeps its full commit history
+inside the trunk". Measured, that is half true, and the false half is the half people use:
+
+| | `git subtree add` | `filter-repo` then merge |
+|---|---|---|
+| commits under the prefix | **1** | **13** |
+| `git log <prefix>/README.md` | **1** (the merge) | **2** real commits |
+| `git blame` reaches | **0** authors | **2** authors |
+
+The commits land in the DAG either way, but after `subtree add` their paths are still at the
+old repo root, so `git log <path>`, `git blame` and `--follow` cannot traverse into them.
+Anyone asking *why is this line here* gets the merge commit and nothing else.
+
+So a product arrives by `git filter-repo --to-subdirectory-filter products/<name>` on a fresh
+clone, then a normal `git merge --allow-unrelated-histories`. `git-filter-repo` is a
+prerequisite (`pip install git-filter-repo`), not a nicety. The source repository is then
+**archived, not deleted** —
 archiving keeps its URL, its stars, its issues and its redirects alive and read-only, and it
 is reversible. Deletion is never on the table; it is Red and it is also just wrong here.
 
@@ -403,7 +419,8 @@ named as they will be *after* M1.
 | 11 | M3 | `aigovops/.github/workflows/` | One matrix over `estate.yaml` calling the six unadopted reusable workflows locally | Yellow |
 | 12 | M3 | `aigovops/ops/receipts/` | Beacon receipt hook on every scheduled and skill run (metadata only) | Yellow |
 | 13 | M3 | `aigovops/ops/digests/` | Weekly founders' digest + `estate.yaml` drift check | Yellow |
-| 14 | M3 | products (subtree) | `git subtree add` each product, one PR per product, history preserved | Yellow |
+| 14 | M3 | products | **Proof shipped** (aigovops#2, vendor-rfi). `git filter-repo --to-subdirectory-filter` then merge — NOT `git subtree add`, which breaks path history. One PR per product | Yellow |
+| 14a | M3 | — | **Decide beacon / umbrella / lantern.** The trunk already holds `packages/{beacon,umbrella,lantern}` — npm libraries sharing a name with the served products. Which is canonical? | **Red** |
 | 15 | M3 | old product repos | `redirect-stub/` into each merged repo's Pages, then archive | **Red** (steward-shipped) |
 | 16 | M4 | `sites/foundation/` | Redirect map live; canonical domain serves everything | **Red** for DNS, Yellow for content |
 | 17 | M4 | `sites/foundation/library/` | Library on the canonical domain with an ungated preview | Yellow |

@@ -100,7 +100,7 @@ domains:
 repos:
   - id: aigovops
     account: aigovops-foundation
-    role: "The platform — Jeeves, Beacon, Umbrella, Lantern together (28 workspaces, 188 tests)"
+    role: "The mono-repo trunk. Holds packages/ (npm libraries) and, from 2026-08-23, products/ (served products). Was the platform — Jeeves, Beacon, Umbrella, Lantern together (28 workspaces, 188 tests)"
     visibility: public
     disposition: trunk
     pages_url: "https://aigovops-foundation.github.io/aigovops/"
@@ -123,29 +123,32 @@ repos:
     account: aigovops-foundation
     role: "Signed evidence receipts — Ed25519 + JCS canonical form"
     visibility: public
-    disposition: subtree-into-trunk
+    disposition: pending-disposition
     pages_url: "https://aigovops-foundation.github.io/aigovops-beacon/"
     verified: true
     source: "estate-sites.json"
     note: "Carries the signing primitives the Skill Provenance work (M6) builds on."
+    conflict: "The trunk ALREADY contains packages/beacon — the npm library `@aigovops/beacon` v0.1.0, ~12 files. This repo is a different artifact under the same name: a served product with its own Pages site. Subtreeing it beside the package would put two things called the same name inside the trunk, which is the canonicity problem consolidation exists to remove. Which is canonical, and what the other becomes, is a founder decision — found by the vendor-rfi proof (aigovops#2), 2026-08-23."
 
   - id: umbrella-govops
     account: aigovops-foundation
     role: "Conformance gates"
     visibility: public
-    disposition: subtree-into-trunk
+    disposition: pending-disposition
     pages_url: "https://aigovops-foundation.github.io/umbrella-govops/"
     verified: true
     source: "estate-sites.json"
+    conflict: "The trunk ALREADY contains packages/umbrella — the npm library `@aigovops/umbrella` v0.1.0, ~12 files. This repo is a different artifact under the same name: a served product with its own Pages site. Subtreeing it beside the package would put two things called the same name inside the trunk, which is the canonicity problem consolidation exists to remove. Which is canonical, and what the other becomes, is a founder decision — found by the vendor-rfi proof (aigovops#2), 2026-08-23."
 
   - id: aigovops-lantern
     account: aigovops-foundation
     role: "Framework mapping and the reading surface"
     visibility: public
-    disposition: subtree-into-trunk
+    disposition: pending-disposition
     pages_url: "https://aigovops-foundation.github.io/aigovops-lantern/"
     verified: true
     source: "estate-sites.json"
+    conflict: "The trunk ALREADY contains packages/lantern — the npm library `@aigovops/lantern` v0.1.0, ~12 files. This repo is a different artifact under the same name: a served product with its own Pages site. Subtreeing it beside the package would put two things called the same name inside the trunk, which is the canonicity problem consolidation exists to remove. Which is canonical, and what the other becomes, is a founder decision — found by the vendor-rfi proof (aigovops#2), 2026-08-23."
 
   - id: aigovops-ncw-ai-camp
     account: aigovops-foundation
@@ -160,10 +163,11 @@ repos:
     account: aigovops-foundation
     role: "Open-source vendor RFI + audit questionnaire"
     visibility: public
-    disposition: subtree-into-trunk
+    disposition: consolidated
     pages_url: unknown
     verified: false
     source: "plan/estate-simplification.md (footer rollout list)"
+    consolidated: "products/vendor-rfi in aigovops-foundation/aigovops — PR aigovops#2, 2026-08-23. History rewritten under the prefix with git filter-repo before merging, so `git log` and `git blame` traverse into it; 13 commits, 193 trunk tests green."
 
   - id: aigovops-foundation-site-redesign-June2026-ken-and-bob
     account: aigovops-foundation

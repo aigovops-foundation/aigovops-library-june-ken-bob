@@ -74,6 +74,57 @@ Turn `crawl.enabled` on once the new Pages URL actually serves, then `npm run es
 
 ---
 
+## Bringing a product into the trunk
+
+**Not `git subtree add`.** It looks like the right tool and it is not. Measured on the
+vendor-rfi proof (aigovops#2, 2026-08-23):
+
+| | `git subtree add` | `filter-repo` then merge |
+|---|---|---|
+| commits under the prefix | **1** | **13** |
+| `git log <prefix>/README.md` | **1** (the merge) | **2** real commits |
+| `git blame` reaches | **0** authors | **2** authors |
+
+Both put the product's commits in the DAG — the trunk went 46 → 60 either way. The
+difference is that `subtree add` leaves those commits' paths at the *old repo root*, so
+`git log <path>`, `git blame` and `--follow` cannot connect the files to them. The history is
+present and unreachable, which is the worst of both: it looks preserved and answers nothing.
+
+The method that works:
+
+```
+pip install git-filter-repo                     # prerequisite, not a nicety
+git clone https://github.com/<org>/<product> /tmp/<product>
+cd /tmp/<product> && git filter-repo --to-subdirectory-filter products/<name>
+cd <trunk>
+git remote add <name> /tmp/<product> && git fetch <name>
+git merge --allow-unrelated-histories --no-edit <name>/main
+git remote remove <name>
+```
+
+Then prove it, every time — the check that failed for `subtree add` is the check that matters:
+
+```
+git log --oneline -- products/<name>/README.md     # must show the product's OWN commits
+git blame products/<name>/README.md                # must reach its real authors
+```
+
+## Before you move a product, check the trunk does not already have one
+
+The vendor-rfi proof found `packages/beacon`, `packages/umbrella` and `packages/lantern`
+already in the trunk. They are **not** copies of the standalone repos — they are npm libraries
+(`@aigovops/beacon` v0.1.0, ~14 files) while the repos carry servers, scoring and live Pages
+sites. Same name, different artifact.
+
+Moving those repos in beside the packages would put two things called Beacon inside one
+trunk, which is the canonicity problem consolidation exists to remove. Those three need a
+**decision** about which is canonical before any of them moves — recorded in `estate.yaml` as
+`disposition: pending-disposition` with the conflict spelled out.
+
+`vendor-rfi` was chosen for the proof precisely because it had no counterpart.
+
+---
+
 ## A note on the order
 
 `--apply` was dry-run against the real tree before it shipped, and the dry run caught a bug:
