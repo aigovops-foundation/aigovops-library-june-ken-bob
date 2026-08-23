@@ -420,7 +420,8 @@ named as they will be *after* M1.
 | 12 | M3 | `aigovops/ops/receipts/` | Beacon receipt hook on every scheduled and skill run (metadata only) | Yellow |
 | 13 | M3 | `aigovops/ops/digests/` | Weekly founders' digest + `estate.yaml` drift check | Yellow |
 | 14 | M3 | products | **Proof shipped** (aigovops#2, vendor-rfi). `git filter-repo --to-subdirectory-filter` then merge — NOT `git subtree add`, which breaks path history. One PR per product | Yellow |
-| 14a | M3 | — | **Decide beacon / umbrella / lantern.** The trunk already holds `packages/{beacon,umbrella,lantern}` — npm libraries sharing a name with the served products. Which is canonical? | **Red** |
+| 14a | M3 | — | **Answered 2026-08-23: the standalone repos are canonical for the products.** They are not duplicates of `packages/*` — they share only a name. Two of the three are Python; `aigovops-lantern` has zero JavaScript. The trunk packages are a separate JS library layer and stay | done |
+| 14b | M3 | `aigovops` | **The name, not the code.** `products/beacon` will sit beside `packages/beacon` — different layer, different language, same word. Decide how they are named and labelled before both exist | Yellow |
 | 15 | M3 | old product repos | `redirect-stub/` into each merged repo's Pages, then archive | **Red** (steward-shipped) |
 | 16 | M4 | `sites/foundation/` | Redirect map live; canonical domain serves everything | **Red** for DNS, Yellow for content |
 | 17 | M4 | `sites/foundation/library/` | Library on the canonical domain with an ungated preview | Yellow |

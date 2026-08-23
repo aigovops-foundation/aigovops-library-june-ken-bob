@@ -108,6 +108,7 @@ repos:
     source: "council review 2026-08"
     risk: "Foundation production IP in a personal account — the highest-severity item both council models agreed on."
     note: "D3 — transfer to the org, THEN rename to `aigovops`. The hub card is repointed (2026-08-23); the remaining blocker is the onboarding iframe, which cannot use a github.com URL. Order matters: transfer, rename, re-enable Pages under the org, then repoint the iframe and re-run the crawl."
+    library_layer: "packages/{beacon,umbrella,lantern} are a publishable JavaScript library layer (private: false, ~20 modules, 11 test files inside the trunk's 193). Nothing in the trunk imports them — checked 2026-08-23, zero dependencies and zero source imports — but they are tested and they have no counterpart in the standalone products, two of which are Python. They stay."
 
   - id: aigovops-library-june-ken-bob
     account: aigovops-foundation
@@ -123,32 +124,35 @@ repos:
     account: aigovops-foundation
     role: "Signed evidence receipts — Ed25519 + JCS canonical form"
     visibility: public
-    disposition: pending-disposition
+    disposition: subtree-into-trunk
     pages_url: "https://aigovops-foundation.github.io/aigovops-beacon/"
     verified: true
     source: "estate-sites.json"
     note: "Carries the signing primitives the Skill Provenance work (M6) builds on."
-    conflict: "The trunk ALREADY contains packages/beacon — the npm library `@aigovops/beacon` v0.1.0, ~12 files. This repo is a different artifact under the same name: a served product with its own Pages site. Subtreeing it beside the package would put two things called the same name inside the trunk, which is the canonicity problem consolidation exists to remove. Which is canonical, and what the other becomes, is a founder decision — found by the vendor-rfi proof (aigovops#2), 2026-08-23."
+    canonical: "The STANDALONE REPO is canonical for the product — Bob, 2026-08-23."
+    not_a_duplicate: "It shares only a NAME with packages/beacon, which is 7 JS modules (attestation, fluentd, keys, ledger, mlflow, sign) and 5 test files. This repo is seven services (server, agent, mcp, mcp-public, lab-service, studio) plus scoring — 39 Python files and 49 JS. Two of the three standalone products contain little or no JavaScript at all, so the trunk package is not a competing implementation — it is a different layer in a different language. Nothing is duplicated and nothing is retired; the trunk package stays, and what remains open is the shared NAME, not which code wins."
 
   - id: umbrella-govops
     account: aigovops-foundation
     role: "Conformance gates"
     visibility: public
-    disposition: pending-disposition
+    disposition: subtree-into-trunk
     pages_url: "https://aigovops-foundation.github.io/umbrella-govops/"
     verified: true
     source: "estate-sites.json"
-    conflict: "The trunk ALREADY contains packages/umbrella — the npm library `@aigovops/umbrella` v0.1.0, ~12 files. This repo is a different artifact under the same name: a served product with its own Pages site. Subtreeing it beside the package would put two things called the same name inside the trunk, which is the canonicity problem consolidation exists to remove. Which is canonical, and what the other becomes, is a founder decision — found by the vendor-rfi proof (aigovops#2), 2026-08-23."
+    canonical: "The STANDALONE REPO is canonical for the product — Bob, 2026-08-23."
+    not_a_duplicate: "It shares only a NAME with packages/umbrella, which is 7 JS modules (authz, compile, kyverno, lifecycle, profiles, rego) and 3 test files. This repo is a PYTHON project — pyproject.toml and a Makefile, 33 .py files against 1 .js. Two of the three standalone products contain little or no JavaScript at all, so the trunk package is not a competing implementation — it is a different layer in a different language. Nothing is duplicated and nothing is retired; the trunk package stays, and what remains open is the shared NAME, not which code wins."
 
   - id: aigovops-lantern
     account: aigovops-foundation
     role: "Framework mapping and the reading surface"
     visibility: public
-    disposition: pending-disposition
+    disposition: subtree-into-trunk
     pages_url: "https://aigovops-foundation.github.io/aigovops-lantern/"
     verified: true
     source: "estate-sites.json"
-    conflict: "The trunk ALREADY contains packages/lantern — the npm library `@aigovops/lantern` v0.1.0, ~12 files. This repo is a different artifact under the same name: a served product with its own Pages site. Subtreeing it beside the package would put two things called the same name inside the trunk, which is the canonicity problem consolidation exists to remove. Which is canonical, and what the other becomes, is a founder decision — found by the vendor-rfi proof (aigovops#2), 2026-08-23."
+    canonical: "The STANDALONE REPO is canonical for the product — Bob, 2026-08-23."
+    not_a_duplicate: "It shares only a NAME with packages/lantern, which is 6 JS modules (diff, expectations, history, monitor, stats) and 3 test files. This repo is a PYTHON project — pyproject.toml and mkdocs, 14 .py files and ZERO JavaScript. Two of the three standalone products contain little or no JavaScript at all, so the trunk package is not a competing implementation — it is a different layer in a different language. Nothing is duplicated and nothing is retired; the trunk package stays, and what remains open is the shared NAME, not which code wins."
 
   - id: aigovops-ncw-ai-camp
     account: aigovops-foundation
