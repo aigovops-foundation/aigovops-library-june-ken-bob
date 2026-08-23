@@ -35,17 +35,22 @@ test("the iframe reference is reported as a blocker, the link is not", () => {
   assert.equal(found.find((r) => r.file === "docs/onboarding.html").blocker, true);
 });
 
-test("only the iframe remains outstanding in the real repo — the link was repointed in #67", () => {
-  const found = scanReferences();
-  assert.deepEqual(found.map((r) => r.file), ["docs/onboarding.html"]);
-  assert.equal(found[0].blocker, true, "and it is still classed a blocker");
+// These two ran the other way until 2026-08-23: they asserted the iframe blocker was still
+// outstanding. The move happened, --apply cleared it, and they failed — which is what a guard
+// tied to a fact is supposed to do at the moment the fact changes. They now hold the post-move
+// state, so a regression that reintroduces the dead URL fails just as loudly.
+test("no reference to the old Pages URL survives — the move is complete", () => {
+  assert.deepEqual(scanReferences(), [],
+    "if this fails, something reintroduced a URL that GitHub no longer serves");
 });
 
-test("the blocker really is an iframe src, not a link — the classification is not just a label", () => {
+test("the onboarding scene points at the new Pages site, and still loads it in an iframe", () => {
   const html = readFileSync(new URL("../docs/onboarding.html", import.meta.url), "utf8");
-  assert.match(html, new RegExp(`src:\\s*"${OLD.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}"`),
-    "onboarding must reference the old URL as a scene src");
-  assert.match(html, /<iframe id="frame"/, "and those scene srcs must be loaded into an iframe");
+  assert.ok(!html.includes(OLD), "the retired Pages URL must be gone");
+  assert.match(html, /src:"https:\/\/aigovops-foundation\.github\.io\/aigovops\/"/,
+    "the v4 scene should load the repository's new Pages site");
+  assert.match(html, /<iframe id="frame"/,
+    "and it is still an iframe — which is why it could never have taken a github.com URL");
 });
 
 test("remoteHead returns null for a slug that does not exist, rather than throwing", () => {

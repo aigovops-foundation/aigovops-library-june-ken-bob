@@ -98,12 +98,12 @@ domains:
 # ── Repositories ──────────────────────────────────────────────────────────────────
 # disposition: trunk | subtree-into-trunk | keep-separate | pending-disposition
 repos:
-  - id: Aigovops-Foundation-Open-Source-V4-10k
-    account: bobrapp
+  - id: aigovops
+    account: aigovops-foundation
     role: "The platform — Jeeves, Beacon, Umbrella, Lantern together (28 workspaces, 188 tests)"
     visibility: public
     disposition: trunk
-    pages_url: "https://bobrapp.github.io/Aigovops-Foundation-Open-Source-V4-10k/"
+    pages_url: "https://aigovops-foundation.github.io/aigovops/"
     verified: false
     source: "council review 2026-08"
     risk: "Foundation production IP in a personal account — the highest-severity item both council models agreed on."
@@ -184,6 +184,16 @@ repos:
     verified: false
     source: "plan/estate-simplification.md; plan/processes/understanding-the-estate.md"
     risk: "Holds member records and session state, so it is the one repo where consolidation is NOT obviously right — see D4."
+
+  - id: aigovops-old
+    account: aigovops-foundation
+    role: "Empty. Held the name `AiGovOps`, which blocked the rename (GitHub repo names are case-insensitive), so it was moved aside on 2026-08-23."
+    visibility: unknown
+    disposition: pending-disposition
+    pages_url: none
+    verified: false
+    source: "reported by Bob, 2026-08-23"
+    note: "An empty repo is estate sprawl with a redirect attached. Archiving or deleting it is Red, and worth a decision rather than a shrug — but note that `AiGovOps` now resolves to the real `aigovops` repo, so nothing depends on this one."
 
   - id: aiupdates
     account: bobrapp
@@ -326,16 +336,18 @@ sites:
       note: "Linked from the Library hub but never crawled — a live link nothing watches. Candidate for the M3 matrix."
 
   - id: v4-platform-page
-    name: "Open Source v4 platform page"
-    base: "https://bobrapp.github.io/Aigovops-Foundation-Open-Source-V4-10k/"
-    repo: Aigovops-Foundation-Open-Source-V4-10k
+    name: "Open Source v4"
+    base: "https://aigovops-foundation.github.io/aigovops/"
+    repo: aigovops
     classification: public
-    status: unknown
+    status: live
     verified: false
-    source: "docs/index.html card"
+    source: "moved 2026-08-23; Pages URL reported live by Bob — this environment cannot reach the host to check"
     crawl:
-      enabled: false
-      note: "Never crawled, so nobody knows whether it serves today. The Library hub card no longer points here (it points at the github.com repo URL, which survives both the transfer and the rename). ONE reference remains and it is a RENAME BLOCKER: docs/onboarding.html scene 'The v4 platform — run it yourself' loads this URL into an IFRAME, so it cannot be repointed at github.com — GitHub sends X-Frame-Options: deny and the panel would silently render blank. It can only be repointed once D3 decides where v4's Pages lands after the move."
+      enabled: true
+      failOnDead: true
+      gated: false
+      note: "Crawl switched on at the move. Nothing had ever watched this property, so nobody could say whether it served; the hourly crawl is now the thing that answers that, and if the Pages site is not actually live the board goes red within the hour. That is the intended outcome — an unwatched property is the worse state."
 
 # ── Running services ──────────────────────────────────────────────────────────────
 services:
