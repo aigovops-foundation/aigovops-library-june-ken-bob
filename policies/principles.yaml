@@ -15,6 +15,15 @@
 # What CI does NOT tolerate is a skill claiming a principle id that does not exist, or no
 # `principle:` field at all.
 #
+# DRAFTS ARE NOT RECORDINGS. Six principles carry a `draft:` line proposed by an agent on
+# 2026-08-23 at Bob's request, each with the `draft_basis:` it was reconstructed from — the
+# estate's own doctrine, not the manifesto, which this environment cannot reach. `text:` stays
+# `unknown` and `verified:` stays false for every one of them, which means the gate is UNCHANGED:
+# a skill still cannot claim P3, P6, P7, P8, P9 or P11, and the digest still counts them as
+# unrecorded. A draft is something to correct, not something to rely on. When a founder confirms
+# the real wording, it moves into `text:` and `verified: true` — and only then does it become
+# claimable.
+#
 # Rule of record: plan/processes/skills-as-code.md · Checker: scripts/skills-check.mjs
 
 version: 1
@@ -35,6 +44,8 @@ principles:
   - id: P3
     text: unknown
     verified: false
+    draft: "Every effect passes a gate. Agents propose; humans decide."
+    draft_basis: "The Yes-Gate is the product, and CLAUDE.md states it as the rule that overrides everything: prepare and propose, the human makes the irreversible move."
 
   - id: P4
     text: "Policies must translate to executable code. YAML over yet another slide deck."
@@ -47,18 +58,26 @@ principles:
   - id: P6
     text: unknown
     verified: false
+    draft: "Evidence must verify offline, by someone who does not trust us."
+    draft_basis: "plan/enclave-runbook.md: the enclave profile exists so a regulated org can prove offline that what it runs is what we shipped. Beacon signs with Ed25519 + JCS so a third party can check without asking us."
 
   - id: P7
     text: unknown
     verified: false
+    draft: "Records are metadata, never payloads. Prove what happened without exposing whom it happened to."
+    draft_basis: "The ledger rule in CLAUDE.md, and the 2026-07-19 decision to document the 31-record PII exception rather than rewrite an append-only chain."
 
   - id: P8
     text: unknown
     verified: false
+    draft: "A check that cannot fail is not a check. Unknown is not green."
+    draft_basis: "The estate map's rule of record, learned the hard way: a backup job green for weeks while copying nothing, and a CI lint that proved no ungated effects existed and had never run."
 
   - id: P9
     text: unknown
     verified: false
+    draft: "Recovery is part of the design: get to yes, stay at yes, recover to yes."
+    draft_basis: "The estate's three movements, used as the information architecture on every property (plan/estate-simplification.md)."
 
   - id: P10
     text: "Community is the compliance layer."
@@ -67,3 +86,5 @@ principles:
   - id: P11
     text: unknown
     verified: false
+    draft: "The method is public even where the experience is gated."
+    draft_basis: "plan/processes/membership-wall.md: library repos stay public on GitHub while the rendered Library is member-gated — registration, never money or secrecy."
