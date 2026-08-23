@@ -165,6 +165,28 @@ test("deriveSites reproduces estate-sites.json exactly — the manifest really i
   assert.deepEqual(deriveSites(load()), live.sites);
 });
 
+test("drift in ANY derived field is caught, not just the two the check used to compare", () => {
+  // The check once compared failOnDead and cookie only, so a changed note or
+  // name left `--check` reporting "consistent with the derived files" while
+  // estate-sites.json was stale. Each of these fails if that regresses.
+  const m = load();
+  const target = m.sites.find((s) => s.id === "v4-platform-page");
+  assert.ok(target, "expected the v4-platform-page row to exist");
+
+  const bend = (mutate) => {
+    const copy = structuredClone(m);
+    mutate(copy.sites.find((s) => s.id === "v4-platform-page"));
+    return checkDrift(copy).join("\n");
+  };
+
+  assert.match(bend((s) => { s.crawl.note = "something else entirely"; }), /note is .* but the manifest says/);
+  assert.match(bend((s) => { s.name = "Renamed"; }), /name is .* but the manifest says/);
+  assert.match(bend((s) => { s.crawl.gated = !s.crawl.gated; }), /gated is .* but the manifest says/);
+
+  // and an unchanged manifest still reports no drift
+  assert.deepEqual(checkDrift(m), []);
+});
+
 test("drift is detected in both directions", () => {
   const m = load();
   const dropped = { ...m, sites: m.sites.filter((s) => s.id !== "beacon-pages") };

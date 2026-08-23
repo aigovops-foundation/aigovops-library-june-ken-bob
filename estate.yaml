@@ -104,10 +104,10 @@ repos:
     visibility: public
     disposition: trunk
     pages_url: "https://aigovops-foundation.github.io/aigovops/"
-    verified: false
-    source: "council review 2026-08"
-    risk: "Foundation production IP in a personal account — the highest-severity item both council models agreed on."
-    note: "D3 — transfer to the org, THEN rename to `aigovops`. The hub card is repointed (2026-08-23); the remaining blocker is the onboarding iframe, which cannot use a github.com URL. Order matters: transfer, rename, re-enable Pages under the org, then repoint the iframe and re-run the crawl."
+    verified: true
+    source: "first-hand — five PRs pushed and merged into aigovops-foundation/aigovops on 2026-08-23 (#2, #3, #4, #5, #6)"
+    risk: "CLOSED 2026-08-23 — the repo is in the org. Was: Foundation production IP in a personal account, the highest-severity item both council models agreed on. No Foundation production IP remains under a personal account."
+    note: "D3 is DONE. Transferred to the org and renamed `aigovops` (Bob, via the GitHub assistant, 2026-08-23), Pages re-enabled under the org, and the last blocker cleared: the onboarding iframe could not use a github.com URL and Pages does not follow rename redirects, so it had to be repointed by hand — docs/onboarding.html now loads https://aigovops-foundation.github.io/aigovops/. Verified green by the hourly crawl at 2026-08-23T01:38:39Z: 2 pages, 0 dead, 0 broken."
     library_layer: "packages/{beacon,umbrella,lantern} are a publishable JavaScript library layer (private: false, ~20 modules, 11 test files inside the trunk's 193). Nothing in the trunk imports them — checked 2026-08-23, zero dependencies and zero source imports — but they are tested and they have no counterpart in the standalone products, two of which are Python. They stay."
 
   - id: aigovops-library-june-ken-bob
@@ -352,13 +352,13 @@ sites:
     repo: aigovops
     classification: public
     status: live
-    verified: false
-    source: "moved 2026-08-23; Pages URL reported live by Bob — this environment cannot reach the host to check"
+    verified: true
+    source: "hourly interaction crawl, 2026-08-23T01:38:39Z — green: 2 pages, 0 dead, 0 broken"
     crawl:
       enabled: true
       failOnDead: true
       gated: false
-      note: "Crawl switched on at the move. Nothing had ever watched this property, so nobody could say whether it served; the hourly crawl is now the thing that answers that, and if the Pages site is not actually live the board goes red within the hour. That is the intended outcome — an unwatched property is the worse state."
+      note: "Crawl switched on at the move, because nothing had ever watched this property and so nobody could say whether it served. It has now answered: green at 2026-08-23T01:38:39Z, 0 dead links across 2 pages. This row is verified by that crawl rather than by a report, which is the point of switching it on — and it stays on, so the board goes red within the hour if that ever stops being true."
 
 # ── Running services ──────────────────────────────────────────────────────────────
 services:
