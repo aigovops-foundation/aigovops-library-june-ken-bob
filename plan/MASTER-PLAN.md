@@ -216,7 +216,9 @@ milestone slides by roughly that much — the work is not the constraint.
 | 9 | `marketplace.json` + plugin manifest | Yellow | ready — 7 and 8 are both done; neither file exists yet |
 | 10 | Third-party skill pin policy | Yellow | **done** — PR #63. Ten action refs SHA-pinned; `source:` skills need `pinned:` + `reviewed:` |
 | 11 | One CI matrix over `estate.yaml` for the unadopted reusables | Yellow | ready — M1 is done. No workflow uses a matrix yet; locally 2 of 7 reusables have no caller, and adoption across the other repos is unmeasured from here |
-| 12 | Beacon receipt on every scheduled and skill run | Yellow | ready — no workflow emits one yet |
+| 12 | Beacon receipt on every scheduled run | Yellow | **done** — `ops/receipts/runs.ndjson`, one collector, all 7 scheduled workflows. Receipts are **unsigned** until a founder mints a key: signing needs one, and minting is Red. Skill runs are not covered — see below |
+| 12a | Sign the run receipts | **Red** | **Bob or Ken** — mint an Ed25519 keypair, set `BEACON_PRIVATE_KEY_PEM` / `BEACON_PUBLIC_KEY_PEM` as repo secrets. Until then the ledger proves integrity, not authorship, and says so |
+| 12b | Receipts for skill runs, not just scheduled runs | Yellow | ready. A skill run happens outside CI, so the collector cannot observe it; it needs the skill runner to emit |
 | 13 | Weekly founders' digest + `estate.yaml` drift check | Yellow | **done** — PR #64 |
 | 14 | Subtree each product into the trunk | Yellow | **done** — aigovops#2, #4, #5, #6. All four products in; 122 commits traverse |
 | 15 | `redirect-stub/` into each merged repo's Pages, then archive | **Red** | **unblocked** — 14 is done. Steward-shipped; nothing is archived autonomously |

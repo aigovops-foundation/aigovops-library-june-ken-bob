@@ -46,5 +46,9 @@ jobs:
       # `principle: unknown` passes and is printed.
       - run: node scripts/skills-check.mjs
       - run: node --test test/skills-check.test.mjs
+      # Run-receipt gate (ladder row 12) — the scheduled-run ledger. Verifies the committed
+      # chain and that the hook is actually wired into a workflow rather than sitting on a shelf.
+      - run: node scripts/run-receipt.mjs
+      - run: node --test test/run-receipt.test.mjs
       - run: node --test test/founders-digest.test.mjs
       - run: node --test test/repo-move.test.mjs
