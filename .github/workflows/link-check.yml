@@ -1,12 +1,32 @@
 name: link-check
 
-# This repo adopting the estate's shared link checker.
+# THE WEEKLY LINK CHECK, OVER THE WHOLE ESTATE — ladder row 11.
 #
-# What it guards here is small but load-bearing: this repo's Pages site is no longer the Library
-# itself — it is the "the Library has moved" stub that sends readers to the member-gated
-# community. That stub IS the estate's public front door to the Library, so its links must keep
-# resolving. If the community URL ever moves again, this lane says so instead of leaving a
-# public page pointing nowhere.
+# What this used to be: this repo adopting the shared link checker for ONE site, its own Pages
+# stub. What it is now: one matrix over estate.yaml, so every ungated property the Foundation
+# publishes is checked by the same lane.
+#
+# The gap that motivated it is worth recording. The estate publishes eight properties. This lane
+# checked one of them, for as long as it existed — not because anyone decided the other seven
+# did not matter, but because adopting a shared workflow meant opening another repository, and
+# that is a decision nobody makes on a Tuesday. Seven reusable workflows here carry adoption
+# instructions in their headers; exactly one had been adopted cross-repo in two years.
+#
+# The matrix is DERIVED from the manifest by scripts/estate-matrix.mjs. Add a property to
+# estate.yaml and it is checked from the next run; there is no second list to remember. Gated
+# properties are excluded and NAMED in the log, because a lane covering six of eight while
+# reading as complete is the hollow green this estate keeps finding.
+#
+# WHAT IS STILL NOT MATRIXED, AND WHY — the honest half of row 11.
+#
+# Two of the seven reusables take a URL and so work against any property: link-check (this lane)
+# and interaction-crawl (already run hourly over the same manifest by estate-crawl.mjs). The
+# other five — secret-scan, repo-sync-check, stale-sweep, red-main-watchdog, dependency-triage —
+# operate on the CALLING repository's checkout or its Actions API. Pointing them at another repo
+# needs a `repository:` input added to each, and for the API-driven ones a token with access to
+# that repo: GITHUB_TOKEN is scoped to this repository only, so it is either anonymous API reads
+# at anonymous rate limits or a PAT — and minting a credential is Red. That is ladder row 11a,
+# and it is a founder's call, not something to slip in here.
 
 on:
   schedule:
@@ -17,8 +37,38 @@ on:
 # can only be a SUBSET of its caller's. reusable-link-check.yml asks for `contents: read`.
 permissions: { contents: read }
 
+concurrency: { group: link-check, cancel-in-progress: true }
+
 jobs:
+  # One job whose only output is the list. Kept separate so the matrix is visible in the log as
+  # a decision — including what was left out — before any checking starts.
+  properties:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.build.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: { node-version: "20" }
+      # The readable version first, so the log says what is checked and what is excluded and why,
+      # every week, whether or not anyone is reading. It exits non-zero on an EMPTY matrix: a
+      # lane that checks nothing must not report success.
+      - name: What this run will check, and what it will not
+        run: node scripts/estate-matrix.mjs
+      - name: Build the matrix
+        id: build
+        run: echo "matrix=$(node scripts/estate-matrix.mjs --json)" >> "$GITHUB_OUTPUT"
+
   link-check:
+    needs: properties
+    strategy:
+      # One property with rotted links must not cancel the check on the other five. The whole
+      # point of the matrix is that every property gets looked at on every run.
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.properties.outputs.matrix) }}
+    name: link-check (${{ matrix.name }})
     uses: ./.github/workflows/reusable-link-check.yml
     with:
-      site_url: "https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/"
+      site_url: ${{ matrix.site_url }}
+      max_pages: ${{ matrix.max_pages }}
+      fail_on_external: ${{ matrix.fail_on_external }}

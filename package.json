@@ -15,6 +15,7 @@
     "plan:check": "node scripts/plan-register-check.mjs",
     "repo:move": "node scripts/repo-move.mjs",
     "skills:check": "node scripts/skills-check.mjs",
+    "estate:matrix": "node scripts/estate-matrix.mjs",
     "receipts:verify": "node scripts/run-receipt.mjs",
     "receipts:collect": "node scripts/receipts-collect.mjs",
     "digest": "node scripts/founders-digest.mjs",
