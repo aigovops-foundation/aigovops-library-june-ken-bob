@@ -6,7 +6,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFrontmatter, check, loadSkills, loadPrinciples, loadRiskClasses } from "../scripts/skills-check.mjs";
+import { readFrontmatter, check, checkIndex, loadSkills, loadPrinciples, loadRiskClasses, loadIndex } from "../scripts/skills-check.mjs";
 import { ManifestError } from "../scripts/estate-manifest.mjs";
 
 const PRINCIPLES = () => ({
@@ -121,12 +121,13 @@ test("every committed skill passes against the real principles and risk classes"
   assert.deepEqual(check(loadSkills(), loadPrinciples(), loadRiskClasses()).problems, []);
 });
 
-test("all 14 skills are annotated — this is the guard when someone adds a skill", () => {
+test("all 17 skills are annotated — this is the guard when someone adds a skill", () => {
   // It fired on 2026-08-22 when #40 brought in estate-mailer without the governance fields,
-  // which is exactly what it is for. Raise the number when a skill is added ON PURPOSE; never
-  // relax the per-field assertion below, which is the part that has teeth.
+  // and again on 2026-08-23 at 14 -> 17 when ladder row 8 added ai-house-announce,
+  // sponsorship-proposal and editorial-voice. Both times it did its job. Raise the number when
+  // a skill is added ON PURPOSE; never relax the per-field assertion below, which has the teeth.
   const skills = loadSkills();
-  assert.equal(skills.length, 14);
+  assert.equal(skills.length, 17);
   for (const s of skills) {
     for (const f of ["principle", "owner", "agent", "risk"]) assert.ok(s.fm[f], `${s.id} is missing ${f}`);
   }
@@ -164,4 +165,47 @@ test("six principles are still unrecorded, and the file says so rather than inve
   const unrecorded = ps.filter((p) => p.verified !== true);
   assert.equal(unrecorded.length, 6, "if this fails, a founder filled them in — update this test");
   for (const p of unrecorded) assert.equal(p.text, "unknown");
+});
+
+// ── the README roster ───────────────────────────────────────────────────────
+// The index was stale by three skills before this check existed, which is how a reader ends up
+// believing a capability is not there. Each of these is that failure, one way at a time.
+
+const INDEX_SKILLS = [
+  { id: "alpha", fm: { agent: "Scribe", risk: "green" } },
+  { id: "beta",  fm: { agent: "Herald", risk: "yellow" } },
+];
+const INDEX_MD = [
+  "| Skill | Owning agent | Risk |",
+  "|---|---|---|",
+  "| [`alpha`](./alpha/SKILL.md) | Scribe | green |",
+  "| [`beta`](./beta/SKILL.md) | Herald | yellow |",
+].join("\n");
+
+test("a README listing exactly what is on disk passes", () => {
+  assert.deepEqual(checkIndex(INDEX_MD, INDEX_SKILLS), []);
+});
+
+test("a skill on disk but missing from the README fails", () => {
+  const md = INDEX_MD.split("\n").filter((l) => !l.includes("beta")).join("\n");
+  assert.match(checkIndex(md, INDEX_SKILLS).join("\n"), /beta exists but is not listed/);
+});
+
+test("a README row naming a skill that does not exist fails", () => {
+  assert.match(checkIndex(INDEX_MD, [INDEX_SKILLS[0]]).join("\n"), /lists beta, which has no directory/);
+});
+
+test("a row that disagrees with the skill's own agent or risk fails", () => {
+  const wrongRisk = INDEX_MD.replace("| Scribe | green |", "| Scribe | red |");
+  assert.match(checkIndex(wrongRisk, INDEX_SKILLS).join("\n"), /listed as risk "red" but declares "green"/);
+  const wrongAgent = INDEX_MD.replace("| Scribe | green |", "| Maker | green |");
+  assert.match(checkIndex(wrongAgent, INDEX_SKILLS).join("\n"), /listed under agent "Maker" but declares "Scribe"/);
+});
+
+test("a README with no table at all is a failure, not an empty pass", () => {
+  assert.match(checkIndex("# Skills\n\nnothing here.", INDEX_SKILLS).join("\n"), /no skill table found/);
+});
+
+test("the committed README matches the committed skill tree", () => {
+  assert.deepEqual(checkIndex(loadIndex(), loadSkills()), []);
 });

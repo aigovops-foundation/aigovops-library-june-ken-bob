@@ -212,8 +212,8 @@ milestone slides by roughly that much — the work is not the constraint.
 | 3 | CODEOWNERS: both founders on `policies/`, `skills/`, `.github/` | **Red** | **file merged (#65), still INERT.** Only `@bobrapp` has access — checked 2026-08-23. Needs two settings moves: give `@kenjohnston-ai` write, then require Code Owner review on `main` |
 | 5 | 301 `a-i-gov-ops.com`; publish the `.org` redirect map | **Red** | **Bob** — needs D2 |
 | 7 | Migrate the skills; add `principle:`/`owner:`/`risk:` + CI check | Yellow | **done** — PR #62. 14 skills now, all four fields checked in CI |
-| 8 | Three fat skills (AI House, sponsorship, editorial voice) | Yellow | ready — none of the three exists yet |
-| 9 | `marketplace.json` + plugin manifest | Yellow | after 8 — 7 is done; neither file exists yet |
+| 8 | Three fat skills (AI House, sponsorship, editorial voice) | Yellow | **done**. Each carries acceptance criteria and an output schema. 17 skills now. The falsification test — hand them to a volunteer for a weekend — has not been run |
+| 9 | `marketplace.json` + plugin manifest | Yellow | ready — 7 and 8 are both done; neither file exists yet |
 | 10 | Third-party skill pin policy | Yellow | **done** — PR #63. Ten action refs SHA-pinned; `source:` skills need `pinned:` + `reviewed:` |
 | 11 | One CI matrix over `estate.yaml` for the unadopted reusables | Yellow | ready — M1 is done. No workflow uses a matrix yet; locally 2 of 7 reusables have no caller, and adoption across the other repos is unmeasured from here |
 | 12 | Beacon receipt on every scheduled and skill run | Yellow | ready — no workflow emits one yet |

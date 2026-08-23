@@ -10,14 +10,14 @@ human it answers to. Agents propose; humans approve anything irreversible
 | **Lantern** | Reading Room | Maps a problem → frameworks → gates | framework-map | architecture review |
 | **Beacon** | Archives | Signs receipts, keeps the ledger | beacon-sign-evidence | Guardian |
 | **Maker** | Makerspace | Designs & builds workflows/agents | design-system-apply, ux-flow-spec | human design approval |
-| **Scribe** | Reading Room / Front Desk | Docs + user assistance | doc-generate, ua-help-authoring | maintainer / editor |
+| **Scribe** | Reading Room / Front Desk | Docs + user assistance; checks prose against the house voice | doc-generate, ua-help-authoring, editorial-voice | maintainer / editor |
 | **Cloud-Mary** | Makerspace | Runs unit/e2e/scale/chaos tests | cloud-mary-testing | CI gate |
 | **Polyglot** | all rooms | Translation & i18n | translate-and-sign | per-locale reviewer |
 | **Aperture** | all rooms | Accessibility audits (WCAG 2.2 AA) | accessibility-audit | a11y sign-off |
 | **Sentinel** | Status | Monitoring, alerts, cap-and-pause | monitor-and-alert | on-call human |
-| **Herald** | Status | Status / leadership / community reports | status-report | leadership (Bob/Ken) |
+| **Herald** | Status | Status / leadership / community reports; sponsor-facing drafts | status-report, sponsorship-proposal | leadership (Bob/Ken) |
 | **Guardian** | the gateway | Secret/PII scan, threat model | security-privacy-review | human exposure approval |
-| **Host** | Coffee Shop | Member introductions over global tables | links-for-events | the members |
+| **Host** | Coffee Shop | Member introductions over global tables; the monthly AI House announcement | links-for-events, ai-house-announce | the members; a founder for anything sent |
 | **Deploy** | CI/CD | Branch → test → PR → merge → publish | aigovops-deploy-workflow, github-pages-publish | **Bob/Ken (irreversible click)** |
 
 > This is the canonical **cast** (the human-facing vocabulary). The deployed membership
