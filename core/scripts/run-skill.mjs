@@ -6,6 +6,15 @@
 // today, ENFORCES the declared human gate, and emits the metadata-only Beacon
 // receipt the skill specifies — so a skill run leaves verifiable evidence.
 //
+// EVERY run leaves exactly one receipt, whatever the outcome (ladder row 12b).
+// It did not always. Measured on 2026-08-23, five invocations produced ONE
+// receipt: a success. A gate refusal, a prose skill with no backend, a
+// validation error and an unknown skill each recorded nothing — so the single
+// most governance-relevant event in the system, an agent attempting a red
+// irreversible skill and being refused, left no trace at all. The refusal
+// handler even said so in a comment: "It emits no side effect and no receipt."
+// A ledger that records only what succeeded is a ledger of good news.
+//
 // Dependency-free (node: built-ins + the core's own modules). Usage:
 //   node core/scripts/run-skill.mjs list
 //   node core/scripts/run-skill.mjs run framework-map --input "AI tool that screens job candidates"
@@ -78,7 +87,19 @@ function parseSkill(md) {
   const run = (front.match(/^run:\s*(.+)$/m) || [])[1]?.trim() || null;
   const inputs = parseJsonLine(front, 'inputs');
   const outputs = parseJsonLine(front, 'outputs');
-  return { name, owner, humanGate, sectionGated, run, inputs, outputs };
+  // The DECLARED governance class, read straight from frontmatter and checked in CI by
+  // scripts/skills-check.mjs. The runner records it on every receipt so the ledger says what
+  // class of thing was attempted, not just which name.
+  //
+  // It does NOT drive the gate. Enforcement below still keys off IRREVERSIBLE / the prose
+  // "## Human gate" section, and changing that is a governance decision for a founder rather
+  // than a side effect of adding receipts. Worth raising: the blocking check is written
+  // `handlerKey === 'op-github-deploy'`, so a SECOND red skill given a handler would not be
+  // stopped by it. estate-mailer is already classed red and has no handler today, which is the
+  // only reason that gap is theoretical.
+  const risk = (front.match(/^risk:\s*(.+)$/m) || [])[1]?.trim() || null;
+  const department = (front.match(/^department:\s*(.+)$/m) || [])[1]?.trim() || null;
+  return { name, owner, humanGate, sectionGated, run, inputs, outputs, risk, department };
 }
 
 function parseJsonLine(front, key) {
@@ -228,7 +249,8 @@ const HANDLERS = {
 
   // Operator · human-gated + irreversible (1Password/GitHub). The runner NEVER
   // executes this — it surfaces the procedure and stops at the boundary, per
-  // CLAUDE.md. It emits no side effect and no receipt.
+  // CLAUDE.md. It emits no side effect. It DOES leave a receipt: the attempt is
+  // the thing worth recording, and runSkill below emits it.
   'op-github-deploy'({ approve }) {
     return {
       ran: false,
@@ -245,7 +267,7 @@ function receiptView(signed) {
 }
 
 // ── Run one skill, enforcing the declared human gate ──────────────────────────
-export function runSkill(name, args = {}) {
+function dispatchSkill(name, args = {}) {
   const skill = getSkill(name);
   if (!skill) throw new Error(`unknown skill: ${name}`);
   const run = skill.run;
@@ -268,6 +290,61 @@ export function runSkill(name, args = {}) {
     return { name, ...HANDLERS[handlerKey]({ ...args, approve: false }) };
   }
   return { name, ...HANDLERS[handlerKey](args) };
+}
+
+// EVERY RUN LEAVES EXACTLY ONE RECEIPT — ladder row 12b.
+//
+// The handlers already emit a domain receipt when they do real work, so this
+// wrapper emits only for the paths that recorded nothing before: a gate refusal,
+// a prose skill with no backend, and a thrown error. One receipt per run either
+// way — never two, so the ledger stays a run log rather than a mixture.
+//
+// WHAT THE RECEIPT MAY CARRY. Metadata only, and no free text at all. The
+// outcome, whether the skill is gated, whether it is runnable, and for a failure
+// a COARSE errorKind — never the error message. Error strings are the obvious
+// place for caller input to leak into a ledger that gets published, and
+// "the messages happen to be field-level today" is an assumption, not a control.
+// The full message still reaches the caller and the CLI; it just never reaches
+// the receipt. The input itself appears only as a sha256, as everywhere else.
+const errorKindOf = (err) => {
+  const m = String(err?.message || '');
+  if (/^unknown skill:/.test(m)) return 'unknown-skill';
+  if (/input validation failed/.test(m)) return 'validation';
+  if (/^run: core:/.test(m)) return 'dispatch';
+  return 'handler';
+};
+
+function emitRunReceipt(name, args, detail) {
+  const skill = getSkill(name);
+  return receiptView(beacon.emit({
+    kind: 'artifact',
+    actor: skill?.owner ? `agent:${skill.owner}` : 'agent:skill',
+    action: name,
+    contentHash: beacon.sha256(JSON.stringify(args || {})),
+    detail: { via: 'runner', ...(skill?.risk ? { risk: skill.risk } : {}), ...detail },
+  }));
+}
+
+export function runSkill(name, args = {}) {
+  let out;
+  try {
+    out = dispatchSkill(name, args);
+  } catch (err) {
+    // The run happened and failed. That is evidence, so record it and rethrow
+    // unchanged — callers and tests see exactly the error they saw before.
+    try {
+      emitRunReceipt(name, args, { outcome: 'failed', errorKind: errorKindOf(err) });
+    } catch { /* a ledger that cannot be written must not swallow the real error */ }
+    throw err;
+  }
+
+  // A handler that already signed its own evidence needs nothing further.
+  if (out.receipt) return out;
+
+  const outcome = out.gated ? 'refused' : out.runnable === false ? 'not-runnable' : 'ok';
+  return { ...out, receipt: emitRunReceipt(name, args, {
+    outcome, gated: !!out.gated, runnable: out.runnable !== false,
+  }) };
 }
 
 // ── CLI ───────────────────────────────────────────────────────────────────────

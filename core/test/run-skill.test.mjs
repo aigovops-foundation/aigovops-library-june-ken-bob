@@ -56,11 +56,18 @@ test('beacon-sign-evidence appends a receipt and refuses payloads', () => {
 });
 
 test('op-github-deploy is refused at the human gate and causes no side effect', () => {
+  // CHANGED 2026-08-23 (ladder row 12b), deliberately. This used to assert "no receipt, no
+  // side effect" — one clause true and load-bearing, the other a bug wearing its clothes.
+  //
+  // No side effect is the invariant and is asserted harder than before. But "no receipt" meant
+  // an agent attempting a red, irreversible skill and being refused left NO trace anywhere,
+  // which is the single event in this system most worth having a record of. The refusal is now
+  // recorded. Recording it is not permitting it: `ran` is still false.
   const before = beacon.ledgerCount();
   const res = runSkill('op-github-deploy', {});
   assert.equal(res.ran, false, 'must not execute');
   assert.equal(res.gated, true, 'must report the gate');
-  assert.equal(beacon.ledgerCount(), before, 'no receipt, no side effect');
+  assert.equal(beacon.ledgerCount(), before + 1, 'the attempt is recorded — exactly once');
 });
 
 test('unknown skill throws', () => {
