@@ -62,7 +62,7 @@ weekly link and repo-sync checks, monthly stale sweep, continuous secret scan. T
 Library pages with SEO and a11y invariants gated in CI. The garden-warm design family across
 the estate. A live giving rail.
 
-**Drafted this morning, in review** (PR #61, all checks green): the consolidation plan;
+**Drafted 2026-08-22 and merged the same day** (PR #61): the consolidation plan;
 `estate.yaml` — one manifest with `estate-sites.json`, `founders.json` and
 `repo-audit.config.json` as derived views; `policies/autonomy.yaml` — Green/Yellow/Red as data,
 enforced in CI, which on its first run found four workflows running on an unstated permission
@@ -75,8 +75,8 @@ sandbox-privilege call. `help@aigovops.org`, which still cannot receive mail.
 
 We do not have a production problem. **We have a merge-queue problem.**
 
-*Measured 2026-08-22. A dated measurement does not rot; the live version of this table is
-kept current in PR #61's description.*
+*Measured 2026-08-22. A dated measurement does not rot — so this table stays as it was, and
+what happened next is recorded below it rather than written over it.*
 
 | PR | Opened | Still open after |
 |---|---|---|
@@ -92,6 +92,16 @@ No amount of further automation touches this number. The Yellow queue moves at t
 founder's attention, and that is the honest constraint on everything in section 5. Worth
 deciding, in this same sitting, what the review cadence is: a standing thirty minutes twice a
 week would clear it.
+
+**What happened next — 2026-08-23.** All three cleared: #40 merged after 8 days, #46 after 5.
+Counted from the git history rather than from memory, **twenty pull requests across the two
+repositories merged inside a single day** — fifteen here, five in the trunk — and **the queue is
+now empty: zero open pull requests, checked 2026-08-23.**
+
+That is one good day, not a solved problem. The measurement above was taken when nobody was
+sitting with the queue; this one was taken while someone was. The cadence question is still the
+question — the number moves when attention does, which is exactly what the original finding
+said.
 
 ---
 
@@ -193,23 +203,23 @@ milestone slides by roughly that much — the work is not the constraint.
 
 | # | What | Class | Status |
 |---|---|---|---|
-| 0 | The consolidation plan | Yellow | **in review** — PR #61 |
-| 4 | `estate.yaml` + validator + CI drift gate | Yellow | **in review** — PR #61 |
-| 6 | `policies/autonomy.yaml` + enforcer | Yellow | **in review** — PR #61 |
+| 0 | The consolidation plan | Yellow | **done** — PR #61, merged 2026-08-22 |
+| 4 | `estate.yaml` + validator + CI drift gate | Yellow | **done** — PR #61, merged 2026-08-22 |
+| 6 | `policies/autonomy.yaml` + enforcer | Yellow | **done** — PR #61, merged 2026-08-22 |
 | 1a | Repoint `bobrapp.github.io/…V4-10k/` before any rename | Yellow | **done** — 138 references repointed; the onboarding iframe last, by hand (it cannot use a github.com URL) |
 | 1b | Transfer V4-10k to the org; rename `aigovops` | **Red** | **done** — Bob, via the GitHub assistant, 2026-08-23. Pages green under the org |
 | 2 | Apply for GitHub for Nonprofits | **Red** | **Bob** |
-| 3 | CODEOWNERS: both founders on `policies/`, `skills/`, `.github/` | Yellow | **blocked on D7** |
+| 3 | CODEOWNERS: both founders on `policies/`, `skills/`, `.github/` | **Red** | **file merged (#65), still INERT.** Only `@bobrapp` has access — checked 2026-08-23. Needs two settings moves: give `@kenjohnston-ai` write, then require Code Owner review on `main` |
 | 5 | 301 `a-i-gov-ops.com`; publish the `.org` redirect map | **Red** | **Bob** — needs D2 |
-| 7 | Migrate 13 skills; add `principle:`/`owner:`/`risk:` + CI check | Yellow | ready |
-| 8 | Three fat skills (AI House, sponsorship, editorial voice) | Yellow | ready |
-| 9 | `marketplace.json` + plugin manifest | Yellow | after 7–8 |
-| 10 | Third-party skill pin policy | Yellow | ready |
-| 11 | One CI matrix over `estate.yaml` for the six unadopted reusables | Yellow | after M1 |
-| 12 | Beacon receipt on every scheduled and skill run | Yellow | ready |
-| 13 | Weekly founders' digest + `estate.yaml` drift check | Yellow | ready |
-| 14 | Subtree each product into the trunk | Yellow | after 1b |
-| 15 | `redirect-stub/` into each merged repo's Pages, then archive | **Red** | steward-shipped, after 14 |
+| 7 | Migrate the skills; add `principle:`/`owner:`/`risk:` + CI check | Yellow | **done** — PR #62. 14 skills now, all four fields checked in CI |
+| 8 | Three fat skills (AI House, sponsorship, editorial voice) | Yellow | ready — none of the three exists yet |
+| 9 | `marketplace.json` + plugin manifest | Yellow | after 8 — 7 is done; neither file exists yet |
+| 10 | Third-party skill pin policy | Yellow | **done** — PR #63. Ten action refs SHA-pinned; `source:` skills need `pinned:` + `reviewed:` |
+| 11 | One CI matrix over `estate.yaml` for the unadopted reusables | Yellow | ready — M1 is done. No workflow uses a matrix yet; locally 2 of 7 reusables have no caller, and adoption across the other repos is unmeasured from here |
+| 12 | Beacon receipt on every scheduled and skill run | Yellow | ready — no workflow emits one yet |
+| 13 | Weekly founders' digest + `estate.yaml` drift check | Yellow | **done** — PR #64 |
+| 14 | Subtree each product into the trunk | Yellow | **done** — aigovops#2, #4, #5, #6. All four products in; 122 commits traverse |
+| 15 | `redirect-stub/` into each merged repo's Pages, then archive | **Red** | **unblocked** — 14 is done. Steward-shipped; nothing is archived autonomously |
 | 16 | Redirects live; canonical domain serves everything | **Red** + Yellow | needs D1 |
 | 17 | Library on the canonical domain with an ungated preview | Yellow | after 16 |
 | 18 | GA4 + HTTPS verified; Ad Grants submitted | **Red** | **Bob** — after 16 |
@@ -217,8 +227,15 @@ milestone slides by roughly that much — the work is not the constraint.
 | 20 | Skill Provenance in Beacon/Lantern | Yellow | M6 |
 | 21 | Circle instrumentation: keep gated, or go public | **Red** | **Bob + Ken** — after M4 |
 
-Nine rows are ready to start and need nothing from you. Six are Red and need one of you
-personally. Three sit in review. One is blocked on a single line of JSON.
+**Swept 2026-08-23, against the repository rather than from memory.** Nine rows are done. Three
+(8, 11, 12) are ready and need nothing from either of you. Four are queued behind another row.
+Seven are Red and need a founder personally.
+
+Row 3 is the one to move first. The file is written, reviewed and merged — and it does nothing.
+A CODEOWNERS entry naming someone without write access is ignored by GitHub silently: no
+warning, no error, the review requirement simply never applies. `@bobrapp` is still the only
+collaborator. The most important control in this plan is currently decorative, and two settings
+clicks fix it.
 
 ---
 
