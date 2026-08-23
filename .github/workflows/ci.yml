@@ -50,5 +50,10 @@ jobs:
       # chain and that the hook is actually wired into a workflow rather than sitting on a shelf.
       - run: node scripts/run-receipt.mjs
       - run: node --test test/run-receipt.test.mjs
+      # Estate matrix gate (ladder row 11) — the weekly link check runs over every ungated
+      # property in estate.yaml. Exits non-zero on an empty matrix: a lane that checks nothing
+      # must not report success.
+      - run: node scripts/estate-matrix.mjs
+      - run: node --test test/estate-matrix.test.mjs
       - run: node --test test/founders-digest.test.mjs
       - run: node --test test/repo-move.test.mjs
