@@ -1,5 +1,9 @@
 ---
 name: ua-help-authoring
+principle: unknown
+owner: bobrapp
+agent: Scribe
+risk: yellow
 description: Author in-context user assistance: tooltips, gate summaries, and the agent’s gentle "shall I?". Use when a feature users will touch is shipping. Trigger on "write the help", "add tooltips", "explain this gate to users", "user assistance".
 run: prose
 ---

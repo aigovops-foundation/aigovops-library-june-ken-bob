@@ -11,11 +11,40 @@
   <a href="good.html"><span style="cursor:pointer">span inside a link</span></a>
   <form action="good.html"><button type="submit">Submit</button></form>
 
+  <!-- GOOD: the four false-positive classes that faked 95% of the 2026-08-19 report. Each one
+       was reported DEAD by a crawler that was looking the wrong way; none is a defect. -->
+  <a href="#pkg.mod.Class.method">Dotted anchor</a>          <!-- querySelector reads .mod as a class -->
+  <h3 id="pkg.mod.Class.method">Dotted target</h3>
+  <a href="#render_bundle(path)">Parenthesised anchor</a>    <!-- '(' makes the SELECTOR invalid: querySelector THROWS,
+                                                                  which killed the whole page.evaluate and left the page
+                                                                  red with zero elements collected — dead=0 because
+                                                                  nothing was ever measured. getElementById cannot throw. -->
+  <h3 id="render_bundle(path)">Parenthesised target</h3>
+  <a href="#top">Scroll to top</a>                           <!-- a browser built-in: no element to find, and it works -->
+  <a href="#caf%C3%A9">Percent-encoded anchor</a>            <!-- href="#caf%C3%A9" targets id="café" -->
+  <h3 id="caf&eacute;">Percent-encoded target</h3>
+  <button id="prop-wired">Wired via onclick property</button> <!-- el.onclick = fn: no attribute, no listener -->
+  <label>Wrapping label<input type="checkbox"><span style="cursor:pointer">child of a wrapping label</span></label>
+  <button disabled>Disabled on purpose</button>               <!-- nobody can press it: not a defect -->
+  <div id="prop-chip" style="cursor:pointer"><span class="n">1</span><span>child of a property-wired chip</span></div>
+  <div data-simulated="true">
+    <button>Depicted button</button>                          <!-- a drawing of software -->
+    <a>Unfilled placeholder link</a>
+  </div>
+
   <!-- BAD: planted defects the crawler must catch -->
   <a href="does-not-exist.html">Broken internal link</a>   <!-- BROKEN: 404 -->
   <a href="#nope">Anchor to missing target</a>              <!-- DEAD: no #nope -->
   <button>Dead button (no handler)</button>                 <!-- DEAD -->
   <div class="btn" style="cursor:pointer">Dead card (no handler) &rarr;</div> <!-- DEAD -->
 
-  <script>document.getElementById('js-wired').addEventListener('click', () => {});</script>
+  <script>
+    document.getElementById('js-wired').addEventListener('click', () => {});
+    document.getElementById('prop-wired').onclick = () => {};   // property, not attribute or listener
+    // A CONTAINER wired the same way. Its children inherit cursor:pointer but have no handler of
+    // their own — they must read as covered, not dead. NCW's jeeves-demo.html has six such chips;
+    // every chip verified WIRED while its own spans were reported DEAD, 14 findings from six
+    // working controls, because a CSS selector cannot test a JS property.
+    document.getElementById('prop-chip').onclick = () => {};
+  </script>
 </body></html>

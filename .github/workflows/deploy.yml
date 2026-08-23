@@ -8,6 +8,10 @@ on:
   pull_request: { paths: [ "deploy/**", "Dockerfile" ] }
   workflow_dispatch: {}
 
+# Least privilege, declared (policies/autonomy.yaml). Validation only — nothing is deployed
+# from CI, so nothing here needs write.
+permissions: { contents: read }
+
 jobs:
   validate:
     runs-on: ubuntu-latest

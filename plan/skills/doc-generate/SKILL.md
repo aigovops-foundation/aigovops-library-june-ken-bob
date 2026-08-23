@@ -1,5 +1,9 @@
 ---
 name: doc-generate
+principle: unknown
+owner: bobrapp
+agent: Scribe
+risk: yellow
 description: Generate documentation for a capability, API, or process, grounded in source and the receipts it emits. Use when something ships or changes. Trigger on "document this", "write the docs", "update the README", "API docs".
 run: prose
 ---

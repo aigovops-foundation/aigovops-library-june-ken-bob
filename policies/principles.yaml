@@ -1,0 +1,69 @@
+# principles.yaml — the AiGovOps manifesto, as data
+#
+# The manifesto is not a mission statement; it reads as a specification. This file makes that
+# literal: every skill declares which principle it implements, and CI checks the claim. That
+# turns the manifesto from a page people read into a spec the build tests against.
+#
+# STATUS: INCOMPLETE, ON PURPOSE. Five principles are recorded here verbatim. The other six are
+# marked `unknown` because the manifesto lives on the Foundation site and is NOT in this repo —
+# which is its own canonicity finding: the document the plan treats as the policy spec has no
+# copy in the source of record, and this environment cannot reach the site to fetch it.
+#
+# Filling the six is a two-minute paste by a founder. Until then a skill may declare
+# `principle: unknown`, and every one of those is counted and printed on each run — the same
+# rule estate.yaml runs under: a thing we could not verify reads as unknown, never as green.
+# What CI does NOT tolerate is a skill claiming a principle id that does not exist, or no
+# `principle:` field at all.
+#
+# Rule of record: plan/processes/skills-as-code.md · Checker: scripts/skills-check.mjs
+
+version: 1
+status: incomplete
+source: "The AiGovOps manifesto (published on the Foundation site; no copy in this repo yet)"
+recorded: "2026-08-22"
+recorded_by: "verbatim quotations carried in the 2026-08 council review; the rest not yet retrieved"
+
+principles:
+  - id: P1
+    text: "Governance belongs in the pipeline, not in a PDF."
+    verified: true
+
+  - id: P2
+    text: "Every system creates governance debt. We measure it. We track it."
+    verified: true
+
+  - id: P3
+    text: unknown
+    verified: false
+
+  - id: P4
+    text: "Policies must translate to executable code. YAML over yet another slide deck."
+    verified: true
+
+  - id: P5
+    text: "Observability is non-negotiable. What we can't trace, we can't trust."
+    verified: true
+
+  - id: P6
+    text: unknown
+    verified: false
+
+  - id: P7
+    text: unknown
+    verified: false
+
+  - id: P8
+    text: unknown
+    verified: false
+
+  - id: P9
+    text: unknown
+    verified: false
+
+  - id: P10
+    text: "Community is the compliance layer."
+    verified: true
+
+  - id: P11
+    text: unknown
+    verified: false

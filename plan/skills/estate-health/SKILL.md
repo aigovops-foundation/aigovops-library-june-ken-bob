@@ -1,5 +1,9 @@
 ---
 name: estate-health
+principle: P5
+owner: bobrapp
+agent: Sentinel
+risk: green
 description: Open every page of the estate in a real browser, click/verify every button and link, and drive each page to GREEN. Use hourly and before any launch. Trigger on "estate health", "are the buttons working", "check every page", "red or green", "interaction test", "dead button", "estate-health board".
 run: prose
 inputs: {"type":"object","properties":{"site":{"type":"string"}}}

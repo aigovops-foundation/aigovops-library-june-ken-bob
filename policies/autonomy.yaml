@@ -1,0 +1,315 @@
+# autonomy.yaml — what an agent may do alone, what it may only propose, and what it may never do
+#
+# This file writes down the house rule that already governs this repo (CLAUDE.md's
+# irreversibility boundary) as DATA, so CI can check it instead of everyone remembering it.
+#
+# The one rule it encodes: prepare and propose; the human makes the irreversible move.
+#
+# It is enforceable, not decorative. `node scripts/autonomy-check.mjs` asserts that every
+# workflow in .github/workflows/ is declared here, that each declares its permissions
+# explicitly, that none asks for more than its class allows, that anything writing to the
+# repository declares exactly which paths it may write, and that no workflow contains a
+# prohibited action. Undeclared automation fails the build.
+#
+# WHY EXPLICIT PERMISSIONS ARE THE FIRST CHECK. A workflow with no `permissions:` block runs on
+# the repository default, which nobody in this repo has stated. An inherited default is an
+# UNKNOWN permission set, and unknown is not green — the same rule the estate map and
+# estate.yaml run under. Four workflows were inheriting silently when this file was written
+# (ci, deploy-validate, link-check, secret-scan); all four now declare `contents: read`.
+#
+# STATUS: DRAFT. Not ratified. Nothing here grants an agent anything it did not already have;
+# it describes and constrains what is already running.
+# Plan of record: plan/auto-running-foundation.md · Rule of record: plan/processes/autonomy.md
+
+version: 1
+status: draft
+drafted: "2026-08-22"
+ratified_by: null
+
+# ── The three classes ─────────────────────────────────────────────────────────────
+classes:
+  - id: green
+    means: "An agent acts unattended."
+    test: "Reversible, observable, and it emits a receipt. Undoing it costs nothing."
+    human: none
+    milestone_marker: "[auto]"
+    unattended: true
+    allowed_permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      actions: read
+      pages: write
+      id-token: write
+    requires_write_paths: true
+    note: "`contents: write` is allowed ONLY with a declared `writes:` path allowlist, and only for machine-written artifacts. An agent writing prose or code to main is not green — it is yellow, and it arrives as a PR."
+
+  - id: yellow
+    means: "An agent prepares; a human merges."
+    test: "The agent does all of the work and none of the deciding. The output is a pull request."
+    human: "a founder or steward merges"
+    milestone_marker: "[auto] ending in a PR"
+    unattended: false
+    allowed_permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+    requires_write_paths: false
+    note: "Where most of the value lives — every content change, skill change, policy edit and site copy change. This is the Yes-Gate applied to the Foundation's own bureaucracy."
+
+  - id: red
+    means: "Never autonomous. Ever."
+    test: "Irreversible, outward-facing, or it moves a key. A human does it, with their own hands and their own credentials."
+    human: "Bob or Ken, personally"
+    milestone_marker: "[gate]"
+    unattended: false
+    allowed_permissions: null
+    requires_write_paths: false
+    no_workflow: true
+    note: "No workflow may be classified red. If a job would need to do one of these, the job is wrong — it should stop and ask."
+
+# ── The action taxonomy — what falls where, and why ───────────────────────────────
+actions:
+  # Green
+  - id: crawl-the-estate
+    class: green
+    why: "Reading published pages changes nothing."
+  - id: run-tests
+    class: green
+    why: "Reversible, and the result is the point."
+  - id: check-links
+    class: green
+  - id: audit-repos
+    class: green
+    why: "Read-only inventory. Every fix line in the report is a proposal, not an action."
+  - id: scan-for-secrets
+    class: green
+  - id: write-a-machine-artifact
+    class: green
+    why: "A generated board or a state marker on a declared path. Regenerable from scratch, so losing or reverting it costs nothing."
+    bounded_by: "the workflow's declared `writes:` allowlist"
+  - id: open-or-update-an-issue
+    class: green
+    why: "An issue is a message, not an effect. The founders' digest lives here."
+  - id: draft-a-pull-request
+    class: green
+    why: "A PR is the proposal itself — the safest possible output."
+  - id: report-drift
+    class: green
+
+  # Yellow
+  - id: edit-content-or-code
+    class: yellow
+    why: "Reversible in git, but it is a judgement about what we say and how we work."
+  - id: edit-a-skill
+    class: yellow
+    why: "Skills are procedure. A production skill never edits itself — improvement arrives as a PR under CODEOWNERS."
+  - id: edit-a-policy
+    class: yellow
+    why: "Including this file. A policy that can rewrite itself unattended is not a policy."
+  - id: change-site-copy
+    class: yellow
+  - id: pin-or-bump-a-dependency
+    class: yellow
+    why: "Third-party skills and actions are dependencies. Pin to reviewed commits; read the prose as adversarial input."
+  - id: merge-a-pull-request
+    class: yellow
+    human: "a founder or steward"
+    why: "The merge IS the human decision. An agent that merges its own PR has removed the gate it was built to serve."
+
+  # Red
+  - id: push-to-main
+    class: red
+    why: "The one exception is a machine artifact on a declared allowlist — see write-a-machine-artifact."
+  - id: change-dns-or-registrar
+    class: red
+  - id: create-an-account
+    class: red
+  - id: enrol-a-key-or-enter-a-credential
+    class: red
+  - id: delete-data
+    class: red
+  - id: force-push-or-rewrite-history
+    class: red
+  - id: change-access-control-or-repo-settings
+    class: red
+  - id: transfer-rename-or-archive-a-repository
+    class: red
+    why: "D3 and PR 15. Archiving is reversible; the Pages breakage it causes is not cheap to undo."
+  - id: retire-a-github-io-mirror
+    class: red
+    why: "Steward-shipped, never autonomous — the estate rule of record."
+  - id: accept-a-member-or-grant-access
+    class: red
+  - id: send-mail-as-a-founder
+    class: red
+  - id: move-money
+    class: red
+  - id: disable-a-gate
+    class: red
+    why: "Never turn a failOnDead gate off to fake green. A red page is an action: fix the button."
+
+# ── Every workflow in .github/workflows/, declared ────────────────────────────────
+# `permissions` here is the expectation; the checker compares it against the file.
+workflows:
+  - file: ci.yml
+    class: green
+    permissions:
+      contents: read
+    note: "Core tests, the governance gate, the security scan, the SEO gate, and the estate-manifest gate."
+
+  - file: deploy.yml
+    class: green
+    permissions:
+      contents: read
+    note: "Validates the deploy stack. The actual deploy needs operator-provided host access and is red."
+
+  - file: pages.yml
+    class: green
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    note: "Publishes docs/ to Pages on a push to main. The push that triggers it is the human's decision, not the workflow's."
+
+  - file: secret-scan.yml
+    class: green
+    permissions:
+      contents: read
+
+  - file: link-check.yml
+    class: green
+    permissions:
+      contents: read
+
+  - file: library-tests.yml
+    class: green
+    permissions:
+      contents: read
+
+  - file: repo-sync-check.yml
+    class: green
+    permissions:
+      contents: read
+
+  - file: stale-sweep.yml
+    class: green
+    permissions:
+      contents: read
+      pull-requests: read
+
+  - file: red-main-watchdog.yml
+    class: green
+    permissions:
+      contents: read
+      actions: read
+
+  - file: op-secrets-check.yml
+    class: green
+    permissions:
+      contents: read
+    note: "Manual dispatch only — nothing here runs on push. It proves the broker answers; it never prints a secret."
+
+  - file: estate-fix-request.yml
+    class: green
+    permissions:
+      issues: write
+    note: "Turns a red page into an issue. A message, not an effect."
+
+  - file: founders-digest.yml
+    class: green
+    permissions:
+      contents: read
+      issues: write
+    note: "Weekly, Mondays. Renders one page — drift, what waits on a human, and the state of the gates — and edits ONE issue in place rather than opening a new one each week. Mail only if a founder has armed ESTATE_SMTP_URL."
+
+  - file: estate-interaction-crawl.yml
+    class: green
+    permissions:
+      contents: write
+      issues: write
+    writes:
+      - docs/estate-health.json
+      - docs/.estate-notified
+      - docs/.estate-last-window
+    note: "The hourly heartbeat, and the only workflow that writes to main. All three paths are machine-written artifacts regenerated by the next run — which is exactly what keeps this green rather than red."
+
+  # The reusable half of the clock. These run only when called, inherit a subset of the
+  # caller's permissions, and are what the mono-repo turns into one local matrix (M3).
+  - file: reusable-link-check.yml
+    class: green
+    permissions:
+      contents: read
+  - file: reusable-interaction-crawl.yml
+    class: green
+    permissions:
+      contents: read
+  - file: reusable-secret-scan.yml
+    class: green
+    permissions:
+      contents: read
+  - file: reusable-repo-sync-check.yml
+    class: green
+    permissions:
+      contents: read
+  - file: reusable-red-main-watchdog.yml
+    class: green
+    permissions:
+      contents: read
+      actions: read
+  - file: reusable-stale-sweep.yml
+    class: green
+    permissions:
+      contents: read
+      pull-requests: read
+  - file: reusable-dependency-triage.yml
+    class: green
+    permissions:
+      contents: read
+
+# ── Supply chain — what automation may pull in ────────────────────────────────────
+# A third-party action pinned to a MUTABLE TAG is a standing invitation: whoever controls that
+# repository can re-point the tag at any commit, and it runs here with whatever the job's token
+# can reach. The 2026-07-19 estate review found exactly this on the 1Password action, with the
+# vault service-account token in scope. That one was SHA-pinned; ten more were still on tags
+# (actions/checkout@v4, github-script@v7, setup-node@v4, upload-artifact@v4) until 2026-08-22.
+#
+# First-party is exempt: `./` is this repo's own tree, and the reusable workflows are ours, so
+# `@main` there is a same-repo reference, not a supply-chain edge.
+supply_chain:
+  require_sha_pins: true
+  first_party_prefixes:
+    - "./"
+    - "aigovops-foundation/aigovops-library-june-ken-bob/"
+  note: "Every other `uses:` must name a 40-character commit SHA, with the human-readable tag in a trailing comment so the version stays legible."
+
+# ── Prohibitions — patterns that must never appear in a workflow ──────────────────
+# Grep-enforced. Each names the red action it would perform.
+prohibitions:
+  - id: force-push
+    pattern: "git push (--force|-f)\\b"
+    action: force-push-or-rewrite-history
+  - id: force-with-lease
+    pattern: "--force-with-lease"
+    action: force-push-or-rewrite-history
+  - id: hard-reset-push
+    pattern: "git push .*\\+refs"
+    action: force-push-or-rewrite-history
+  - id: delete-repo
+    pattern: "gh repo delete"
+    action: delete-data
+  - id: delete-branch-remote
+    pattern: "git push .*--delete"
+    action: delete-data
+  - id: change-repo-settings
+    pattern: "gh (repo edit|api .*-X (PATCH|PUT) .*repos/[^ ]*/(settings|pages))"
+    action: change-access-control-or-repo-settings
+  - id: merge-a-pr
+    pattern: "gh pr merge"
+    action: merge-a-pull-request
+  - id: skip-hooks
+    pattern: "--no-verify"
+    action: disable-a-gate
+  - id: print-a-secret
+    pattern: "op read .*\\| *(cat|echo|tee)"
+    action: enrol-a-key-or-enter-a-credential

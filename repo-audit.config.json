@@ -1,0 +1,6 @@
+{
+  "$comment": "Who scripts/repo-audit.mjs audits and where the line sits between 'idle' and 'archive it'. Add an owner by adding a row. Outputs land in audit/ (gitignored — the report names private repos, and this repo is public).",
+  "owners": ["bobrapp", "aigovops-foundation"],
+  "staleDays": 90,
+  "dormantDays": 365
+}

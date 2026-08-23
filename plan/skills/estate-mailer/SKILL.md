@@ -1,5 +1,9 @@
 ---
 name: estate-mailer
+principle: unknown
+owner: bobrapp
+agent: Deploy
+risk: red
 description: Stand up and verify the estate's email sender the right way — a Microsoft Graph app-only mailer (Foundation address, unattended in CI), or SMTP. Use to turn on the hourly digest + member drip, or to check why email isn't sending. Trigger on "set up email", "estate mailer", "turn on the digest email", "email isn't sending", "mail health", "Graph app-only", "go live email".
 run: prose
 inputs: {"type":"object","properties":{"sender":{"type":"string"}}}
