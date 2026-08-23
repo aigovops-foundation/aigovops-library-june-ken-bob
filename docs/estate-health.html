@@ -142,7 +142,12 @@ function render(data){
 
   const gen = data.generatedAt;
   const stale = gen ? (Date.now()-new Date(gen).getTime()) > 26*3600*1000 : true;
-  $('freshness').innerHTML = `<span class="dot ${stale?'stale':'live'}"></span>estate crawled ${ago(gen)}${stale?' — stale, waiting on next scheduled run':''}`;
+  var mailBit = '';
+  if (data.mail) {
+    var mc = data.mail.status === 'ok' ? 'live' : data.mail.status === 'error' ? 'stale' : 'stale';
+    mailBit = ` &nbsp;·&nbsp; <span class="dot ${mc}"></span>mail: ${esc(data.mail.status)} (${esc(data.mail.provider)})`;
+  }
+  $('freshness').innerHTML = `<span class="dot ${stale?'stale':'live'}"></span>estate crawled ${ago(gen)}${stale?' — stale, waiting on next scheduled run':''}${mailBit}`;
   $('foot').innerHTML = `Source of truth: <span class="mono">estate-health.json</span>, written by <span class="mono">estate-interaction-crawl.yml</span> (scheduled + on demand). Engine: <span class="mono">scripts/interaction-crawl.mjs</span>. Runbook: <span class="mono">plan/processes/estate-interaction-audit.md</span>. This board polls the JSON every 30s; the crawl itself runs in CI where the live domains are reachable.`;
 }
 

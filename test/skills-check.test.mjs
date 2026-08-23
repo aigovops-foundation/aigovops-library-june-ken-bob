@@ -121,9 +121,12 @@ test("every committed skill passes against the real principles and risk classes"
   assert.deepEqual(check(loadSkills(), loadPrinciples(), loadRiskClasses()).problems, []);
 });
 
-test("all 13 skills are annotated — this is the guard when someone adds a skill", () => {
+test("all 14 skills are annotated — this is the guard when someone adds a skill", () => {
+  // It fired on 2026-08-22 when #40 brought in estate-mailer without the governance fields,
+  // which is exactly what it is for. Raise the number when a skill is added ON PURPOSE; never
+  // relax the per-field assertion below, which is the part that has teeth.
   const skills = loadSkills();
-  assert.equal(skills.length, 13);
+  assert.equal(skills.length, 14);
   for (const s of skills) {
     for (const f of ["principle", "owner", "agent", "risk"]) assert.ok(s.fm[f], `${s.id} is missing ${f}`);
   }
