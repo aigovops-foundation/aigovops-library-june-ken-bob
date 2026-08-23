@@ -99,6 +99,35 @@ export function check(skills, principles, riskClasses) {
   return { problems, unknowns };
 }
 
+// The roster in plan/skills/README.md is an index, and an index nobody maintains is worse than
+// no index because people trust it. It was stale by three skills — estate-health, estate-mailer
+// and op-github-deploy had been added and never listed — which is exactly how a reader ends up
+// believing a capability does not exist. So the table is checked against the directory, and
+// against each skill's own declared agent and risk, rather than being kept in step by hand.
+export function checkIndex(md, skills) {
+  const problems = [];
+  const rows = new Map();
+  for (const line of md.split("\n")) {
+    const m = /^\|\s*\[`([^`]+)`\]\([^)]*\)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*$/.exec(line);
+    if (m) rows.set(m[1], { agent: m[2], risk: m[3] });
+  }
+  if (!rows.size) return ["plan/skills/README.md: no skill table found — expected rows of | [`name`](./name/SKILL.md) | agent | risk |"];
+
+  for (const { id, fm } of skills) {
+    const row = rows.get(id);
+    if (!row) { problems.push(`plan/skills/README.md: ${id} exists but is not listed`); continue; }
+    if (fm.agent && row.agent !== fm.agent) problems.push(`plan/skills/README.md: ${id} is listed under agent "${row.agent}" but declares "${fm.agent}"`);
+    if (fm.risk && row.risk !== fm.risk) problems.push(`plan/skills/README.md: ${id} is listed as risk "${row.risk}" but declares "${fm.risk}"`);
+  }
+  const have = new Set(skills.map((s) => s.id));
+  for (const id of rows.keys()) {
+    if (!have.has(id)) problems.push(`plan/skills/README.md: lists ${id}, which has no directory`);
+  }
+  return problems;
+}
+
+export const loadIndex = () => readFileSync(join(SKILLS, "README.md"), "utf8");
+
 export function loadSkills(dir = SKILLS) {
   return readdirSync(dir, { withFileTypes: true })
     .filter((e) => e.isDirectory())
@@ -115,6 +144,7 @@ function main(argv) {
   const skills = loadSkills();
   const principles = loadPrinciples();
   const riskClasses = loadRiskClasses();
+  const indexProblems = checkIndex(loadIndex(), skills);
 
   const byPrinciple = {};
   for (const s of skills) (byPrinciple[s.fm.principle] ??= []).push(s.id);
@@ -139,7 +169,8 @@ function main(argv) {
     console.log(`\n! ${s.id} is classed red — it must never run unattended.`);
   }
 
-  const { problems, unknowns } = check(skills, principles, riskClasses);
+  const { problems: skillProblems, unknowns } = check(skills, principles, riskClasses);
+  const problems = [...skillProblems, ...indexProblems];
 
   if (unknowns.length) {
     console.log(`\n? ${unknowns.length} unknown(s) — honest gaps, not failures:`);
@@ -151,7 +182,7 @@ function main(argv) {
     for (const p of problems) console.error(`  - ${p}`);
     return 1;
   }
-  console.log(`\n✓ every skill declares a principle, an owner, an agent and a risk class.`);
+  console.log(`\n✓ every skill declares a principle, an owner, an agent and a risk class, and the README lists exactly what is on disk.`);
   return 0;
 }
 
