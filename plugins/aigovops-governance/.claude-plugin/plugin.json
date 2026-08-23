@@ -1,0 +1,16 @@
+{
+  "name": "aigovops-governance",
+  "description": "Map a problem to the frameworks that govern it, sign the evidence, and check what ships. Everyone loads this one.",
+  "version": "0.1.0",
+  "author": {
+    "name": "AiGovOps Foundation",
+    "url": "https://github.com/aigovops-foundation"
+  },
+  "homepage": "https://github.com/aigovops-foundation/aigovops-library-june-ken-bob",
+  "license": "Apache-2.0",
+  "keywords": [
+    "ai-governance",
+    "aigovops",
+    "governance"
+  ]
+}

@@ -16,6 +16,8 @@
     "repo:move": "node scripts/repo-move.mjs",
     "skills:check": "node scripts/skills-check.mjs",
     "estate:matrix": "node scripts/estate-matrix.mjs",
+    "plugins:build": "node scripts/build-plugins.mjs",
+    "plugins:check": "node scripts/build-plugins.mjs --check",
     "receipts:verify": "node scripts/run-receipt.mjs",
     "receipts:collect": "node scripts/receipts-collect.mjs",
     "digest": "node scripts/founders-digest.mjs",

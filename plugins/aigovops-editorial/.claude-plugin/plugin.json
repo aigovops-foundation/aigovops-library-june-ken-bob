@@ -1,0 +1,16 @@
+{
+  "name": "aigovops-editorial",
+  "description": "Write, document and translate in the Foundation's voice — and check prose against it before it carries the Foundation's name.",
+  "version": "0.1.0",
+  "author": {
+    "name": "AiGovOps Foundation",
+    "url": "https://github.com/aigovops-foundation"
+  },
+  "homepage": "https://github.com/aigovops-foundation/aigovops-library-june-ken-bob",
+  "license": "Apache-2.0",
+  "keywords": [
+    "ai-governance",
+    "aigovops",
+    "editorial"
+  ]
+}

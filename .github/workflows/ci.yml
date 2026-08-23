@@ -69,5 +69,10 @@ jobs:
       # must not report success.
       - run: node scripts/estate-matrix.mjs
       - run: node --test test/estate-matrix.test.mjs
+      # Marketplace gate (ladder row 9) — plugins/ and .claude-plugin/ are GENERATED from
+      # plan/skills/ and policies/departments.yaml. --check fails on drift, and the build
+      # itself refuses to place a `risk: red` skill in a volunteer-facing plugin.
+      - run: node scripts/build-plugins.mjs --check
+      - run: node --test test/build-plugins.test.mjs
       - run: node --test test/founders-digest.test.mjs
       - run: node --test test/repo-move.test.mjs

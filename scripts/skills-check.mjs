@@ -31,7 +31,7 @@ import { parseYaml, ManifestError } from "./estate-manifest.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SKILLS = join(ROOT, "plan", "skills");
-const REQUIRED = ["name", "principle", "owner", "agent", "risk"];
+const REQUIRED = ["name", "principle", "owner", "agent", "risk", "department"];
 // A skill carrying `source:` came from outside this repo. It is a dependency, and its prose is
 // read as adversarial input: 84.2% of the vulnerabilities found across the 98,380-skill study
 // lived in documentation, not code. So it names the exact commit reviewed, and when.
@@ -54,7 +54,7 @@ export function readFrontmatter(src, label = "SKILL.md") {
   return out;
 }
 
-export function check(skills, principles, riskClasses) {
+export function check(skills, principles, riskClasses, departments = []) {
   const problems = [];
   const unknowns = [];
   const known = new Map((principles.principles ?? []).map((p) => [p.id, p]));
@@ -69,6 +69,18 @@ export function check(skills, principles, riskClasses) {
 
     if (fm.risk && !riskClasses.includes(fm.risk)) {
       problems.push(`${id}: risk "${fm.risk}" is not one of ${riskClasses.join(", ")}`);
+    }
+
+    // `department:` decides which plugin a volunteer's one-command install puts this skill in,
+    // so it is checked here rather than only at build time — and a RED skill in a
+    // volunteer-facing department is the irreversibility boundary sitting behind a default.
+    if (fm.department && departments.length) {
+      const d = departments.find((x) => x.id === fm.department);
+      if (!d) {
+        problems.push(`${id}: department "${fm.department}" is not in policies/departments.yaml`);
+      } else if (fm.risk === "red" && d.volunteer_facing !== false) {
+        problems.push(`${id}: is risk "red" but sits in department "${d.id}", which is volunteer-facing — one install command would hand an irreversible action to a volunteer`);
+      }
     }
 
     if (fm.source) {
@@ -139,11 +151,14 @@ export function loadSkills(dir = SKILLS) {
 export const loadPrinciples = () => parseYaml(readFileSync(join(ROOT, "policies", "principles.yaml"), "utf8"));
 export const loadRiskClasses = () =>
   (parseYaml(readFileSync(join(ROOT, "policies", "autonomy.yaml"), "utf8")).classes ?? []).map((c) => c.id);
+export const loadDepartments = () =>
+  parseYaml(readFileSync(join(ROOT, "policies", "departments.yaml"), "utf8")).departments ?? [];
 
 function main(argv) {
   const skills = loadSkills();
   const principles = loadPrinciples();
   const riskClasses = loadRiskClasses();
+  const departments = loadDepartments();
   const indexProblems = checkIndex(loadIndex(), skills);
 
   const byPrinciple = {};
@@ -153,7 +168,8 @@ function main(argv) {
 
   console.log(`skills-check: ${skills.length} skill(s) · ` +
     Object.entries(byRisk).map(([r, xs]) => `${xs.length} ${r}`).join(" · ") +
-    ` · ${(principles.principles ?? []).filter((p) => p.verified).length}/${(principles.principles ?? []).length} principles recorded`);
+    ` · ${(principles.principles ?? []).filter((p) => p.verified).length}/${(principles.principles ?? []).length} principles recorded` +
+    ` · ${new Set(skills.map((s) => s.fm.department)).size} department(s)`);
 
   if (argv.includes("--list")) {
     for (const [p, xs] of Object.entries(byPrinciple).sort()) {
@@ -169,7 +185,7 @@ function main(argv) {
     console.log(`\n! ${s.id} is classed red — it must never run unattended.`);
   }
 
-  const { problems: skillProblems, unknowns } = check(skills, principles, riskClasses);
+  const { problems: skillProblems, unknowns } = check(skills, principles, riskClasses, departments);
   const problems = [...skillProblems, ...indexProblems];
 
   if (unknowns.length) {
@@ -182,7 +198,7 @@ function main(argv) {
     for (const p of problems) console.error(`  - ${p}`);
     return 1;
   }
-  console.log(`\n✓ every skill declares a principle, an owner, an agent and a risk class, and the README lists exactly what is on disk.`);
+  console.log(`\n✓ every skill declares a principle, an owner, an agent, a risk class and a department; the README lists exactly what is on disk; and no red skill sits in a volunteer-facing plugin.`);
   return 0;
 }
 

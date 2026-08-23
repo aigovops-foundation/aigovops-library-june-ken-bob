@@ -213,7 +213,7 @@ milestone slides by roughly that much — the work is not the constraint.
 | 5 | 301 `a-i-gov-ops.com`; publish the `.org` redirect map | **Red** | **Bob** — needs D2 |
 | 7 | Migrate the skills; add `principle:`/`owner:`/`risk:` + CI check | Yellow | **done** — PR #62. 14 skills now, all four fields checked in CI |
 | 8 | Three fat skills (AI House, sponsorship, editorial voice) | Yellow | **done**. Each carries acceptance criteria and an output schema. 17 skills now. The falsification test — hand them to a volunteer for a weekend — has not been run |
-| 9 | `marketplace.json` + plugin manifest | Yellow | ready — 7 and 8 are both done; neither file exists yet |
+| 9 | `marketplace.json` + plugin manifest | Yellow | **done** — 6 department-scoped plugins over 17 skills, one install command. The 2 **red** skills are quarantined in `aigovops-operator`, which installs DISABLED, and CI refuses any tree where that stops being true |
 | 10 | Third-party skill pin policy | Yellow | **done** — PR #63. Ten action refs SHA-pinned; `source:` skills need `pinned:` + `reviewed:` |
 | 11 | One CI matrix over `estate.yaml` for the URL-driven reusables | Yellow | **done** — the weekly link check went from **1 property to 6**, derived from the manifest. The 2 gated ones are excluded and named in the log |
 | 11a | Matrix the five repo-scoped reusables | **Red** | **Bob or Ken** — secret-scan, repo-sync-check, stale-sweep, red-main-watchdog and dependency-triage read the *calling* repo. Cross-repo needs a `repository:` input on each and, for the API-driven ones, a token `GITHUB_TOKEN` cannot provide. Minting a PAT is Red |

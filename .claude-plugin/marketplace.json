@@ -1,0 +1,78 @@
+{
+  "name": "aigovops",
+  "owner": {
+    "name": "AiGovOps Foundation",
+    "url": "https://github.com/aigovops-foundation"
+  },
+  "description": "The AiGovOps Foundation's skills, scoped by department — governed procedure a volunteer can install in one command.",
+  "plugins": [
+    {
+      "name": "aigovops-governance",
+      "source": "./plugins/aigovops-governance",
+      "description": "Map a problem to the frameworks that govern it, sign the evidence, and check what ships. Everyone loads this one.",
+      "version": "0.1.0",
+      "category": "governance",
+      "tags": [
+        "ai-governance",
+        "governance"
+      ]
+    },
+    {
+      "name": "aigovops-editorial",
+      "source": "./plugins/aigovops-editorial",
+      "description": "Write, document and translate in the Foundation's voice — and check prose against it before it carries the Foundation's name.",
+      "version": "0.1.0",
+      "category": "editorial",
+      "tags": [
+        "ai-governance",
+        "editorial"
+      ]
+    },
+    {
+      "name": "aigovops-community",
+      "source": "./plugins/aigovops-community",
+      "description": "Announce the monthly session, report what shipped, and draft for sponsors — each from facts that already exist.",
+      "version": "0.1.0",
+      "category": "community",
+      "tags": [
+        "ai-governance",
+        "community"
+      ]
+    },
+    {
+      "name": "aigovops-design",
+      "source": "./plugins/aigovops-design",
+      "description": "Apply the estate's design system and specify a flow before anyone builds it.",
+      "version": "0.1.0",
+      "category": "design",
+      "tags": [
+        "ai-governance",
+        "design"
+      ]
+    },
+    {
+      "name": "aigovops-estate",
+      "source": "./plugins/aigovops-estate",
+      "description": "Watch the estate: the hourly interaction board, and alerting that pauses rather than guesses.",
+      "version": "0.1.0",
+      "category": "estate",
+      "tags": [
+        "ai-governance",
+        "estate"
+      ]
+    },
+    {
+      "name": "aigovops-operator",
+      "source": "./plugins/aigovops-operator",
+      "description": "Skills that reach a release path or send mail as the Foundation. Red-classed: never run unattended. Installs DISABLED — a founder or steward turns it on deliberately, per install.",
+      "version": "0.1.0",
+      "category": "operator",
+      "tags": [
+        "ai-governance",
+        "operator",
+        "operator-only"
+      ],
+      "defaultEnabled": false
+    }
+  ]
+}

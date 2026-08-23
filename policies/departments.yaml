@@ -1,0 +1,51 @@
+# DEPARTMENTS — who loads which skills, as data.
+#
+# Ladder row 9. A volunteer's first day should be one install command and a skill set scoped to
+# the work they came to do: the content volunteer never loads finance skills, and nobody loads
+# the operator skills by accident.
+#
+# Every skill declares its `department:` in its own frontmatter, so this file lists the
+# departments and nothing else — there is no second roster to keep in step, and a skill can only
+# be in one place. `scripts/build-plugins.mjs` turns the two into a marketplace.
+#
+# THE FIELD THAT MATTERS IS `volunteer_facing`.
+#
+# Two skills are classed `risk: red` — they must never run unattended. A marketplace that ships
+# those to anyone who runs one install command has quietly moved the irreversibility boundary,
+# and moved it by omission rather than by decision. So red-classed skills may live ONLY in a
+# department marked `volunteer_facing: false`, that department's plugin installs disabled, and
+# CI fails if either stops being true. The boundary is enforced where the install happens, not
+# only where the skill runs.
+
+departments:
+  - id: governance
+    plugin: aigovops-governance
+    volunteer_facing: true
+    description: "Map a problem to the frameworks that govern it, sign the evidence, and check what ships. Everyone loads this one."
+
+  - id: editorial
+    plugin: aigovops-editorial
+    volunteer_facing: true
+    description: "Write, document and translate in the Foundation's voice — and check prose against it before it carries the Foundation's name."
+
+  - id: community
+    plugin: aigovops-community
+    volunteer_facing: true
+    description: "Announce the monthly session, report what shipped, and draft for sponsors — each from facts that already exist."
+
+  - id: design
+    plugin: aigovops-design
+    volunteer_facing: true
+    description: "Apply the estate's design system and specify a flow before anyone builds it."
+
+  - id: estate
+    plugin: aigovops-estate
+    volunteer_facing: true
+    description: "Watch the estate: the hourly interaction board, and alerting that pauses rather than guesses."
+
+  - id: operator
+    plugin: aigovops-operator
+    volunteer_facing: false
+    default_enabled: false
+    description: "Skills that reach a release path or send mail as the Foundation. Red-classed: never run unattended. Installs DISABLED — a founder or steward turns it on deliberately, per install."
+    why_not_volunteer_facing: "These are the two skills whose effects a volunteer cannot undo. Shipping them in a one-command install would put the irreversibility boundary behind a default, which is the one place it must never be."

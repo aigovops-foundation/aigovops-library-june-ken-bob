@@ -1,0 +1,16 @@
+{
+  "name": "aigovops-design",
+  "description": "Apply the estate's design system and specify a flow before anyone builds it.",
+  "version": "0.1.0",
+  "author": {
+    "name": "AiGovOps Foundation",
+    "url": "https://github.com/aigovops-foundation"
+  },
+  "homepage": "https://github.com/aigovops-foundation/aigovops-library-june-ken-bob",
+  "license": "Apache-2.0",
+  "keywords": [
+    "ai-governance",
+    "aigovops",
+    "design"
+  ]
+}
