@@ -13,6 +13,7 @@
     "estate:regen": "node scripts/estate-manifest.mjs --regen",
     "autonomy:check": "node scripts/autonomy-check.mjs",
     "plan:check": "node scripts/plan-register-check.mjs",
+    "repo:move": "node scripts/repo-move.mjs",
     "skills:check": "node scripts/skills-check.mjs",
     "digest": "node scripts/founders-digest.mjs",
     "digest:waiting": "node scripts/founders-digest.mjs --waiting",

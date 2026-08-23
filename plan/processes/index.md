@@ -23,5 +23,6 @@ Every discipline follows one shape: **trigger → agent does the work → human 
 - [`codeowners`](./codeowners.md) — **The two-founder gate**: what needs both founders, and why it is inert until Ken has write access · steward · `CODEOWNERS`
 - [`skills-as-code`](./skills-as-code.md) — **Skills as code** (`principle:` frontmatter): the manifesto as a spec CI checks · steward · `skills:check`
 - [`supply-chain`](./supply-chain.md) — **The supply chain**: every third-party action and skill pinned to a reviewed commit · steward · `autonomy:check`
+- [`repo-move`](./repo-move.md) — **Moving a repository**: what a machine may do either side of a transfer, and why Pages is the whole problem · Deploy · `repo:move`
 - [`founders-digest`](./founders-digest.md) — **The founders' digest**: one weekly page — drift, what waits on a human, and the state of the gates · Herald · `digest`
 - [`disaster-recovery`](./disaster-recovery.md) — **Disaster recovery** (the DR agent) · dr-agent · `jeeves dr` + monthly `dr-rehearse`
