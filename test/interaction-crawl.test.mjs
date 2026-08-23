@@ -56,6 +56,17 @@ test('interaction crawler catches planted dead + broken, passes the good ones', 
 
   // no false positives on the good ones (real link, onclick, addEventListener, submit,
   // covered child, span-in-link, anchor-to-existing, external).
+  // Anchor resolution: the fragment is looked up by ID, never parsed as a CSS selector. Each of
+  // these was a real false positive, and the parenthesised one was worse than a miscount — it made
+  // querySelector THROW, which blanked the whole page and reported dead=0 for a page nobody measured.
+  const anchorDead = rep.dead
+    .map((d) => /^anchor "([^"]+)"/.exec(d.reason || ''))
+    .filter(Boolean).map((m) => m[1]);
+  assert.deepStrictEqual(anchorDead, ['#nope'],
+    `only the planted missing anchor may be dead; got ${JSON.stringify(anchorDead)}`);
+  assert.ok(rep.pageHealth.every((p) => !p.loadError),
+    'a parenthesised fragment must not throw out of page.evaluate and blank the page');
+
   const badTexts = [...rep.dead, ...rep.broken].map((x) => x.text).join(' | ');
   // The four classes that faked 95% of the 2026-08-19 estate report. Each was reported DEAD by a
   // crawler looking the wrong way; each is pinned here so the fix cannot silently regress.

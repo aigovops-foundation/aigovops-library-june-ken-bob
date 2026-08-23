@@ -22,6 +22,7 @@ const argv = process.argv.slice(2);
 const opt = (n, d) => { const i = argv.indexOf(`--${n}`); return i >= 0 ? argv[i + 1] : d; };
 const OUT = opt('out', join(ROOT, 'docs', 'estate-health.json'));
 const MAX = opt('max-pages', '80');
+const SITE_TIMEOUT_MS = parseInt(opt('site-timeout-ms', String(10 * 60 * 1000)), 10);
 
 const registry = JSON.parse(readFileSync(join(ROOT, 'estate-sites.json'), 'utf8'));
 const CRAWLER = join(HERE, 'interaction-crawl.mjs');
@@ -42,7 +43,20 @@ for (const s of registry.sites) {
   // for anyone who clicks.
   if (s.cookie) args.push('--cookie', s.cookie);
   if (s.failOnDead) args.push('--fail-on-dead');
-  const res = spawnSync('node', args, { stdio: 'inherit', env: process.env });
+  // Bound each property. Without a timeout one wedged site hangs the WHOLE estate crawl,
+  // and because the workflow holds a concurrency lock that stalls every following hourly
+  // run too — the board stops refreshing while every lane still reads green. A property
+  // that cannot be crawled must degrade to one red property, never to a dead heartbeat.
+  // 10 minutes is far above any real per-site cost (the largest property takes ~3 min at
+  // --max-pages 80) and well inside the job's own 25-minute ceiling.
+  const res = spawnSync('node', args, { stdio: 'inherit', env: process.env, timeout: SITE_TIMEOUT_MS });
+  if (res.error && res.error.code === 'ETIMEDOUT') {
+    sites.push({ name: s.name, base: s.base, gated: false, status: 'error',
+                 note: `crawler exceeded ${SITE_TIMEOUT_MS >= 60000 ? `${+(SITE_TIMEOUT_MS / 60000).toFixed(1)}m` : `${Math.round(SITE_TIMEOUT_MS / 1000)}s`} and was killed — property not measured this run`,
+                 summary: null });
+    anyFail = true;
+    continue;
+  }
   if (!existsSync(tmp)) {
     sites.push({ name: s.name, base: s.base, gated: false, status: 'error', note: 'crawler produced no report (unreachable?)', summary: null });
     anyFail = true;

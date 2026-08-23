@@ -15,6 +15,14 @@
        was reported DEAD by a crawler that was looking the wrong way; none is a defect. -->
   <a href="#pkg.mod.Class.method">Dotted anchor</a>          <!-- querySelector reads .mod as a class -->
   <h3 id="pkg.mod.Class.method">Dotted target</h3>
+  <a href="#render_bundle(path)">Parenthesised anchor</a>    <!-- '(' makes the SELECTOR invalid: querySelector THROWS,
+                                                                  which killed the whole page.evaluate and left the page
+                                                                  red with zero elements collected — dead=0 because
+                                                                  nothing was ever measured. getElementById cannot throw. -->
+  <h3 id="render_bundle(path)">Parenthesised target</h3>
+  <a href="#top">Scroll to top</a>                           <!-- a browser built-in: no element to find, and it works -->
+  <a href="#caf%C3%A9">Percent-encoded anchor</a>            <!-- href="#caf%C3%A9" targets id="café" -->
+  <h3 id="caf&eacute;">Percent-encoded target</h3>
   <button id="prop-wired">Wired via onclick property</button> <!-- el.onclick = fn: no attribute, no listener -->
   <label>Wrapping label<input type="checkbox"><span style="cursor:pointer">child of a wrapping label</span></label>
   <button disabled>Disabled on purpose</button>               <!-- nobody can press it: not a defect -->

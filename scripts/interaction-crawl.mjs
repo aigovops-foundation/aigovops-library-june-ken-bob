@@ -143,19 +143,35 @@ const COLLECT = `(() => {
     const labelTargetOk = forId ? !!document.getElementById(forId) : null;
     const labelWraps = tag === 'label' && !!el.querySelector('input, select, textarea');
     let anchorTargetOk = null;
-    // ANCHOR TARGETS ARE LOOKED UP BY ID, NOT BY SELECTOR. querySelector('#' + frag) parses the
-    // fragment as CSS, where '.' starts a class and ':' a pseudo-class — so every dotted id
-    // (mkdocstrings names every Python symbol that way: #aigovops_lantern.bundle.Receipt) asked
-    // for "id=aigovops_lantern AND class=bundle AND class=Receipt" and never matched. That single
-    // line reported 18 live anchors on Lantern's API pages as dead on 2026-08-18. getElementById
-    // does an exact string match and cannot be confused by punctuation. The fragment is also
-    // percent-decoded, because href="#caf%C3%A9" targets id="café".
+    // ANCHOR TARGETS ARE LOOKED UP BY ID, NEVER AS A CSS SELECTOR. querySelector('#' + frag)
+    // parses the fragment as CSS, where '.' starts a class, ':' a pseudo-class, and '(' is
+    // outright invalid. mkdocstrings names every Python symbol that way, so Lantern's API docs
+    // broke it two different ways at once on 2026-08-18:
+    //   - a dotted id (#aigovops_lantern.bundle.Receipt) read as "id=aigovops_lantern AND
+    //     class=bundle AND class=Receipt" and never matched — live permalinks reported DEAD;
+    //   - a parenthesised id (#render_bundle(path)) made the selector INVALID, so querySelector
+    //     THREW, which killed the whole page.evaluate and left the page red with zero elements
+    //     collected. That reads as dead=0 because nothing was ever measured.
+    //
+    // getElementById does an exact string match and cannot throw. Both the decoded and the raw
+    // fragment are tried: href="#caf%C3%A9" targets id="café", while an id may itself contain a
+    // literal percent sequence. getElementsByName covers old-style <a name>.
     if (rawHref && rawHref.startsWith('#')) {
       const frag = rawHref.slice(1);
       let id = frag; try { id = decodeURIComponent(frag); } catch (err) { id = frag; }
       anchorTargetOk = frag === '' ? false
         : !!(document.getElementById(id) || document.getElementById(frag)
-             || document.getElementsByName(id).length);
+             || document.getElementsByName(id).length
+             // '#top' is a browser built-in meaning "scroll to the document top": there is no
+             // element to find and the control genuinely works, so calling it dead is a false
+             // positive of exactly the kind this block exists to remove.
+             || id.toLowerCase() === 'top');
+      if (!anchorTargetOk && frag !== '') {
+        // Last resort for an id findable as an escaped selector but not by the lookups above.
+        // CSS.escape makes the fragment literal, and the try/catch means even a pathological
+        // fragment cannot throw out of page.evaluate — the failure that blanked whole pages.
+        try { anchorTargetOk = !!document.querySelector('#' + CSS.escape(id)); } catch (err) { /* not resolvable */ }
+      }
     }
     out.push({
       tag,

@@ -22,6 +22,16 @@ concurrency:
 jobs:
   crawl:
     runs-on: ubuntu-latest
+    # A HANG MUST NOT STOP THE HEARTBEAT. With no job timeout, GitHub's default is six
+    # hours; combined with `cancel-in-progress: false` above, one wedged run holds the
+    # concurrency lock and every hourly run behind it sits pending. That is not
+    # hypothetical: on 2026-08-18 the install step below hung for 67 minutes (its normal
+    # cost is ~30 seconds) and the 04:12 scheduled crawl was still pending an hour later.
+    # The board silently stopped refreshing while every lane still read green — the
+    # hollow-green failure this estate keeps finding, this time in the watcher itself.
+    # 25 minutes is ~3x the observed end-to-end run (~8 min), so a real crawl never trips
+    # it and a hang self-clears before the next hour's run is due.
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
@@ -43,6 +53,11 @@ jobs:
         with:
           node-version: "20"
       - name: Install Playwright + Chromium
+        # Bounded separately from the job: this step is the one that hung, and it is a
+        # pure download/apt step whose honest cost is well under a minute. Failing it at
+        # 8 minutes surfaces the hang as a red run with an obvious cause, rather than
+        # burning the whole job budget on a step that was never going to finish.
+        timeout-minutes: 8
         run: |
           npm init -y >/dev/null 2>&1
           npm i -D playwright@1.55.0 >/dev/null 2>&1
