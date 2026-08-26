@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-08-26T15:55:49.640Z",
+  "generatedAt": "2026-08-26T16:36:05.484Z",
   "estate": {
     "properties": 8,
     "reporting": 7,
-    "healthy": 6,
-    "red": 1,
-    "greenPages": 332,
-    "redPages": 3,
+    "healthy": 7,
+    "red": 0,
+    "greenPages": 335,
+    "redPages": 0,
     "dead": 0,
-    "broken": 9,
+    "broken": 0,
     "consoleErrorPages": 0,
-    "score": 99
+    "score": 100
   },
   "sites": [
     {
@@ -18,7 +18,7 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-26T15:48:12.042Z",
+      "ranAt": "2026-08-26T16:28:58.985Z",
       "summary": {
         "pages": 26,
         "greenPages": 26,
@@ -258,7 +258,7 @@
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-26T15:49:49.495Z",
+      "ranAt": "2026-08-26T16:30:25.951Z",
       "summary": {
         "pages": 62,
         "greenPages": 62,
@@ -778,7 +778,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-26T15:51:52.477Z",
+      "ranAt": "2026-08-26T16:32:17.048Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -1426,7 +1426,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-26T15:53:41.713Z",
+      "ranAt": "2026-08-26T16:34:02.541Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2074,7 +2074,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-26T15:53:57.527Z",
+      "ranAt": "2026-08-26T16:34:17.668Z",
       "summary": {
         "pages": 11,
         "greenPages": 11,
@@ -2185,43 +2185,27 @@
       "name": "NCW AI Camp",
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
-      "status": "red",
-      "ranAt": "2026-08-26T15:55:46.204Z",
+      "status": "green",
+      "ranAt": "2026-08-26T16:36:02.304Z",
       "summary": {
         "pages": 78,
-        "greenPages": 75,
-        "redPages": 3,
-        "ok": 3913,
+        "greenPages": 78,
+        "redPages": 0,
+        "ok": 3922,
         "dead": 0,
-        "broken": 9,
+        "broken": 0,
         "external": 1622,
         "delegated": 0,
         "consoleErrorPages": 0,
-        "healthy": false
+        "healthy": true
       },
       "pageHealth": [
         {
           "path": "/aigovops-beacon/",
           "dead": 0,
-          "broken": 4,
+          "broken": 0,
           "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-beacon/index.html",
-          "dead": 0,
-          "broken": 4,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-beacon/video/",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
+          "status": "green",
           "loadError": null
         },
         {
@@ -2250,6 +2234,14 @@
         },
         {
           "path": "/aigovops-beacon/howibuilt.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-beacon/index.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -2298,6 +2290,14 @@
         },
         {
           "path": "/aigovops-beacon/quiz.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-beacon/video/",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -2826,62 +2826,7 @@
         }
       ],
       "dead": [],
-      "broken": [
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "text": "Get the zip",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/downloads/aigovops-beacon-starter.zip",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "text": "Download starter (.zip)",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/downloads/aigovops-beacon-starter.zip",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "text": "Or grab the starter .zip",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/downloads/aigovops-beacon-starter.zip",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "text": "Starter .zip",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/downloads/aigovops-beacon-starter.zip",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/video/",
-          "text": "Get the zip",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/downloads/aigovops-beacon-starter.zip",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/index.html",
-          "text": "Get the zip",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/downloads/aigovops-beacon-starter.zip",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/index.html",
-          "text": "Download starter (.zip)",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/downloads/aigovops-beacon-starter.zip",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/index.html",
-          "text": "Or grab the starter .zip",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/downloads/aigovops-beacon-starter.zip",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/index.html",
-          "text": "Starter .zip",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/downloads/aigovops-beacon-starter.zip",
-          "reason": "internal link → HTTP 503"
-        }
-      ],
+      "broken": [],
       "consoleErrors": []
     },
     {
@@ -2889,7 +2834,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-26T15:55:49.633Z",
+      "ranAt": "2026-08-26T16:36:05.477Z",
       "summary": {
         "pages": 2,
         "greenPages": 2,
@@ -2929,6 +2874,6 @@
     "provider": "graph",
     "status": "ok",
     "detail": "app authenticates; sends as bob.rapp@aigovops.community",
-    "checkedAt": "2026-08-26T15:55:50.112Z"
+    "checkedAt": "2026-08-26T16:36:05.887Z"
   }
 }
