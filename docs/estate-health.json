@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-08-27T06:11:26.543Z",
+  "generatedAt": "2026-08-27T10:24:36.479Z",
   "estate": {
     "properties": 8,
     "reporting": 7,
-    "healthy": 7,
-    "red": 0,
-    "greenPages": 335,
-    "redPages": 0,
+    "healthy": 6,
+    "red": 1,
+    "greenPages": 330,
+    "redPages": 5,
     "dead": 0,
-    "broken": 0,
+    "broken": 6,
     "consoleErrorPages": 0,
-    "score": 100
+    "score": 99
   },
   "sites": [
     {
@@ -18,7 +18,7 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-27T06:04:27.207Z",
+      "ranAt": "2026-08-27T10:16:55.346Z",
       "summary": {
         "pages": 26,
         "greenPages": 26,
@@ -258,7 +258,7 @@
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-27T06:05:51.380Z",
+      "ranAt": "2026-08-27T10:18:31.840Z",
       "summary": {
         "pages": 62,
         "greenPages": 62,
@@ -777,21 +777,61 @@
       "name": "Beacon",
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
-      "status": "green",
-      "ranAt": "2026-08-27T06:07:39.633Z",
+      "status": "red",
+      "ranAt": "2026-08-27T10:20:33.611Z",
       "summary": {
         "pages": 78,
-        "greenPages": 78,
-        "redPages": 0,
-        "ok": 3922,
+        "greenPages": 73,
+        "redPages": 5,
+        "ok": 3916,
         "dead": 0,
-        "broken": 0,
+        "broken": 6,
         "external": 1622,
         "delegated": 0,
         "consoleErrorPages": 0,
-        "healthy": true
+        "healthy": false
       },
       "pageHealth": [
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/attendee-guide.html",
+          "dead": 0,
+          "broken": 1,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
+          "dead": 0,
+          "broken": 1,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/index.html",
+          "dead": 0,
+          "broken": 1,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/row-edition.html",
+          "dead": 0,
+          "broken": 2,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/whats-new.html",
+          "dead": 0,
+          "broken": 1,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": null
+        },
         {
           "path": "/aigovops-beacon/",
           "dead": 0,
@@ -1009,14 +1049,6 @@
           "loadError": null
         },
         {
-          "path": "/aigovops-ncw-ai-camp/kit/attendee-guide.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
           "path": "/aigovops-ncw-ai-camp/kit/checklist-card.html",
           "dead": 0,
           "broken": 0,
@@ -1026,14 +1058,6 @@
         },
         {
           "path": "/aigovops-ncw-ai-camp/kit/claim-letter.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1058,14 +1082,6 @@
         },
         {
           "path": "/aigovops-ncw-ai-camp/kit/helpers.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/index.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1154,14 +1170,6 @@
         },
         {
           "path": "/aigovops-ncw-ai-camp/resources.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/row-edition.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1385,14 +1393,6 @@
           "loadError": null
         },
         {
-          "path": "/aigovops-ncw-ai-camp/whats-new.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
           "path": "/aigovops-ncw-ai-camp/workshop.html",
           "dead": 0,
           "broken": 0,
@@ -1418,7 +1418,44 @@
         }
       ],
       "dead": [],
-      "broken": [],
+      "broken": [
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/attendee-guide.html",
+          "text": "Lab 1: break-it",
+          "href": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/claim-letter.html",
+          "reason": "internal link → HTTP 503"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/row-edition.html",
+          "text": "Open the fictional training letter.",
+          "href": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/claim-letter.html",
+          "reason": "internal link → HTTP 503"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/row-edition.html",
+          "text": "KIT PAGE Claim-letter prompt-injection lab QR-ready, mobile-first, and print-fri",
+          "href": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/claim-letter.html",
+          "reason": "internal link → HTTP 503"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/index.html",
+          "text": "OPEN ON PHONE Claim-letter prompt-injection lab Project it, scan it, or print it",
+          "href": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/claim-letter.html",
+          "reason": "internal link → HTTP 503"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/whats-new.html",
+          "text": "Open the claim letter →",
+          "href": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/claim-letter.html",
+          "reason": "internal link → HTTP 503"
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
+          "text": "Open the interactive claim letter",
+          "href": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/claim-letter.html",
+          "reason": "internal link → HTTP 503"
+        }
+      ],
       "consoleErrors": []
     },
     {
@@ -1426,7 +1463,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-27T06:09:24.285Z",
+      "ranAt": "2026-08-27T10:22:32.147Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2074,7 +2111,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-27T06:09:39.310Z",
+      "ranAt": "2026-08-27T10:22:48.774Z",
       "summary": {
         "pages": 11,
         "greenPages": 11,
@@ -2186,7 +2223,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-27T06:11:23.406Z",
+      "ranAt": "2026-08-27T10:24:32.801Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2834,7 +2871,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-08-27T06:11:26.537Z",
+      "ranAt": "2026-08-27T10:24:36.473Z",
       "summary": {
         "pages": 2,
         "greenPages": 2,
@@ -2874,6 +2911,6 @@
     "provider": "graph",
     "status": "ok",
     "detail": "app authenticates; sends as bob.rapp@aigovops.community",
-    "checkedAt": "2026-08-27T06:11:26.988Z"
+    "checkedAt": "2026-08-27T10:24:36.955Z"
   }
 }
