@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-09-01T21:15:00.196Z",
+  "generatedAt": "2026-09-01T22:14:42.593Z",
   "estate": {
     "properties": 8,
     "reporting": 7,
-    "healthy": 7,
-    "red": 0,
-    "greenPages": 335,
-    "redPages": 0,
+    "healthy": 6,
+    "red": 1,
+    "greenPages": 334,
+    "redPages": 1,
     "dead": 0,
     "broken": 0,
-    "consoleErrorPages": 0,
+    "consoleErrorPages": 1,
     "score": 100
   },
   "sites": [
@@ -18,7 +18,7 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-01T21:07:29.119Z",
+      "ranAt": "2026-09-01T22:06:48.591Z",
       "summary": {
         "pages": 26,
         "greenPages": 26,
@@ -258,7 +258,7 @@
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-01T21:08:59.569Z",
+      "ranAt": "2026-09-01T22:08:25.815Z",
       "summary": {
         "pages": 62,
         "greenPages": 62,
@@ -778,7 +778,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-01T21:10:54.381Z",
+      "ranAt": "2026-09-01T22:10:28.690Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -1426,7 +1426,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-01T21:12:56.021Z",
+      "ranAt": "2026-09-01T22:12:26.013Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2073,21 +2073,29 @@
       "name": "Lantern",
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
-      "status": "green",
-      "ranAt": "2026-09-01T21:13:11.563Z",
+      "status": "red",
+      "ranAt": "2026-09-01T22:12:42.953Z",
       "summary": {
         "pages": 11,
-        "greenPages": 11,
-        "redPages": 0,
+        "greenPages": 10,
+        "redPages": 1,
         "ok": 582,
         "dead": 0,
         "broken": 0,
         "external": 52,
         "delegated": 0,
-        "consoleErrorPages": 0,
-        "healthy": true
+        "consoleErrorPages": 1,
+        "healthy": false
       },
       "pageHealth": [
+        {
+          "path": "/aigovops-lantern/python/render/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
         {
           "path": "/aigovops-lantern/",
           "dead": 0,
@@ -2153,14 +2161,6 @@
           "loadError": null
         },
         {
-          "path": "/aigovops-lantern/python/render/",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
           "path": "/aigovops-lantern/python/ucid/",
           "dead": 0,
           "broken": 0,
@@ -2179,14 +2179,21 @@
       ],
       "dead": [],
       "broken": [],
-      "consoleErrors": []
+      "consoleErrors": [
+        {
+          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/render/",
+          "errors": [
+            "Access to XMLHttpRequest at 'https://api.github.com/repos/aigovops-foundation/aigovops-lantern' from origin 'https://aigovops-foundation.github.io' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource."
+          ]
+        }
+      ]
     },
     {
       "name": "NCW AI Camp",
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-01T21:14:56.974Z",
+      "ranAt": "2026-09-01T22:14:39.211Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2834,7 +2841,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-01T21:15:00.191Z",
+      "ranAt": "2026-09-01T22:14:42.587Z",
       "summary": {
         "pages": 2,
         "greenPages": 2,
@@ -2874,6 +2881,6 @@
     "provider": "graph",
     "status": "ok",
     "detail": "app authenticates; sends as bob.rapp@aigovops.community",
-    "checkedAt": "2026-09-01T21:15:00.389Z"
+    "checkedAt": "2026-09-01T22:14:43.067Z"
   }
 }
