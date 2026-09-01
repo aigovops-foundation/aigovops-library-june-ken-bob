@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-09-01T18:17:47.350Z",
+  "generatedAt": "2026-09-01T19:15:20.633Z",
   "estate": {
     "properties": 8,
     "reporting": 7,
     "healthy": 6,
-    "red": 1,
-    "greenPages": 327,
-    "redPages": 9,
-    "dead": 0,
-    "broken": 12,
+    "red": 0,
+    "greenPages": 335,
+    "redPages": 0,
+    "dead": 1,
+    "broken": 0,
     "consoleErrorPages": 0,
-    "score": 97
+    "score": 100
   },
   "sites": [
     {
@@ -18,7 +18,7 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-01T18:09:35.544Z",
+      "ranAt": "2026-09-01T19:07:18.033Z",
       "summary": {
         "pages": 26,
         "greenPages": 26,
@@ -257,19 +257,19 @@
       "name": "Library (rendered)",
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
-      "status": "green",
-      "ranAt": "2026-09-01T18:11:16.646Z",
+      "status": "warn",
+      "ranAt": "2026-09-01T19:09:19.540Z",
       "summary": {
         "pages": 62,
         "greenPages": 62,
         "redPages": 0,
-        "ok": 1569,
-        "dead": 0,
+        "ok": 1567,
+        "dead": 1,
         "broken": 0,
-        "external": 812,
+        "external": 809,
         "delegated": 10,
         "consoleErrorPages": 0,
-        "healthy": true
+        "healthy": false
       },
       "pageHealth": [
         {
@@ -777,93 +777,21 @@
       "name": "Beacon",
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
-      "status": "red",
-      "ranAt": "2026-09-01T18:13:38.906Z",
+      "status": "green",
+      "ranAt": "2026-09-01T19:11:26.923Z",
       "summary": {
-        "pages": 79,
-        "greenPages": 70,
-        "redPages": 9,
-        "ok": 3866,
+        "pages": 78,
+        "greenPages": 78,
+        "redPages": 0,
+        "ok": 3922,
         "dead": 0,
-        "broken": 12,
-        "external": 1614,
+        "broken": 0,
+        "external": 1622,
         "delegated": 0,
         "consoleErrorPages": 0,
-        "healthy": false
+        "healthy": true
       },
       "pageHealth": [
-        {
-          "path": "/",
-          "dead": 0,
-          "broken": 2,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/checklist.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/es/checklist.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/es/workshop.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/attendee-guide.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/index.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/row-edition.html",
-          "dead": 0,
-          "broken": 2,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/wispr-flow.html",
-          "dead": 0,
-          "broken": 2,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/workshop.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
         {
           "path": "/aigovops-beacon/",
           "dead": 0,
@@ -1001,6 +929,14 @@
           "loadError": null
         },
         {
+          "path": "/aigovops-ncw-ai-camp/checklist.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/aigovops-ncw-ai-camp/community-resources.html",
           "dead": 0,
           "broken": 0,
@@ -1025,7 +961,23 @@
           "loadError": null
         },
         {
+          "path": "/aigovops-ncw-ai-camp/es/checklist.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/aigovops-ncw-ai-camp/es/community-resources.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/es/workshop.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1050,6 +1002,14 @@
         },
         {
           "path": "/aigovops-ncw-ai-camp/jeeves-demo.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/attendee-guide.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1098,6 +1058,14 @@
         },
         {
           "path": "/aigovops-ncw-ai-camp/kit/helpers.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/index.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1186,6 +1154,14 @@
         },
         {
           "path": "/aigovops-ncw-ai-camp/resources.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/row-edition.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1401,7 +1377,23 @@
           "loadError": null
         },
         {
+          "path": "/aigovops-ncw-ai-camp/tools/wispr-flow.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/aigovops-ncw-ai-camp/whats-new.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/workshop.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1426,80 +1418,7 @@
         }
       ],
       "dead": [],
-      "broken": [
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/workshop.html",
-          "text": "🛡️ The HARMS worksheet Blank and reusable — score the next AI use the same way.",
-          "href": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/downloads/harms-worksheet.pdf",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/attendee-guide.html",
-          "text": "Sort the failures",
-          "href": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/failure-cards.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/row-edition.html",
-          "text": "Open all 13 cards with sources.",
-          "href": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/failure-cards.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/row-edition.html",
-          "text": "KIT PAGE Failure cards QR-ready, mobile-first, and print-friendly.",
-          "href": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/failure-cards.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/index.html",
-          "text": "OPEN ON PHONE Failure cards Project it, scan it, or print it.",
-          "href": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/failure-cards.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/checklist.html",
-          "text": "🛡️ The HARMS worksheet Blank and reusable: who's affected, worst case, defense,",
-          "href": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/downloads/harms-worksheet.pdf",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/es/workshop.html",
-          "text": "🛡️ La hoja de trabajo HARMS En blanco y reutilizable: evalúe el próximo uso de ",
-          "href": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/downloads/harms-worksheet.pdf",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools/wispr-flow.html",
-          "text": "",
-          "href": "https://aigovops-foundation.github.io/",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools/wispr-flow.html",
-          "text": "",
-          "href": "https://aigovops-foundation.github.io/",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/es/checklist.html",
-          "text": "🛡️ La hoja de trabajo HARMS En blanco y reutilizable: a quién afecta, el peor c",
-          "href": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/downloads/harms-worksheet.pdf",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/",
-          "text": "",
-          "href": "https://aigovops-foundation.github.io/",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/",
-          "text": "",
-          "href": "https://aigovops-foundation.github.io/",
-          "reason": "internal link → HTTP 404"
-        }
-      ],
+      "broken": [],
       "consoleErrors": []
     },
     {
@@ -1507,7 +1426,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-01T18:15:38.334Z",
+      "ranAt": "2026-09-01T19:13:16.214Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2155,7 +2074,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-01T18:15:57.541Z",
+      "ranAt": "2026-09-01T19:13:32.589Z",
       "summary": {
         "pages": 11,
         "greenPages": 11,
@@ -2267,7 +2186,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-01T18:17:43.711Z",
+      "ranAt": "2026-09-01T19:15:17.292Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2915,7 +2834,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-01T18:17:47.344Z",
+      "ranAt": "2026-09-01T19:15:20.627Z",
       "summary": {
         "pages": 2,
         "greenPages": 2,
@@ -2955,6 +2874,6 @@
     "provider": "graph",
     "status": "ok",
     "detail": "app authenticates; sends as bob.rapp@aigovops.community",
-    "checkedAt": "2026-09-01T18:17:47.663Z"
+    "checkedAt": "2026-09-01T19:15:21.030Z"
   }
 }
