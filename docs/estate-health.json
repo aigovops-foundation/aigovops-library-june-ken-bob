@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-01T10:15:52.497Z",
+  "generatedAt": "2026-09-01T11:15:06.394Z",
   "estate": {
     "properties": 8,
     "reporting": 7,
@@ -18,7 +18,7 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-01T10:08:29.017Z",
+      "ranAt": "2026-09-01T11:07:20.495Z",
       "summary": {
         "pages": 26,
         "greenPages": 26,
@@ -258,7 +258,7 @@
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-01T10:09:57.213Z",
+      "ranAt": "2026-09-01T11:08:56.485Z",
       "summary": {
         "pages": 62,
         "greenPages": 62,
@@ -778,7 +778,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-01T10:11:54.227Z",
+      "ranAt": "2026-09-01T11:11:00.363Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -1426,7 +1426,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-01T10:13:43.339Z",
+      "ranAt": "2026-09-01T11:13:01.622Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2074,7 +2074,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-01T10:13:59.398Z",
+      "ranAt": "2026-09-01T11:13:19.117Z",
       "summary": {
         "pages": 11,
         "greenPages": 11,
@@ -2186,7 +2186,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-01T10:15:49.093Z",
+      "ranAt": "2026-09-01T11:15:03.133Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2834,7 +2834,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-01T10:15:52.490Z",
+      "ranAt": "2026-09-01T11:15:06.388Z",
       "summary": {
         "pages": 2,
         "greenPages": 2,
@@ -2874,6 +2874,6 @@
     "provider": "graph",
     "status": "ok",
     "detail": "app authenticates; sends as bob.rapp@aigovops.community",
-    "checkedAt": "2026-09-01T10:15:52.687Z"
+    "checkedAt": "2026-09-01T11:15:06.689Z"
   }
 }
