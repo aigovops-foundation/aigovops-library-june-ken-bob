@@ -333,9 +333,18 @@ async function main() {
   }
 
   // verify internal link targets (dedup) with real requests
+  // A download (the Beacon starter .zip is 48 MB) cannot be judged by a 15 s GET — it times out,
+  // reads as HTTP 0, and the whole property goes red while the file serves fine. HEAD first for
+  // anything that is not a page; a host that refuses HEAD (405/501) gets the GET as before.
   const targetStatus = new Map();
   for (const t of internalTargets) {
-    try { const r = await context.request.get(t, { timeout: 15000, maxRedirects: 5 }); targetStatus.set(t, r.status()); }
+    try {
+      if (!isHtmlPath(t)) {
+        const h = await context.request.head(t, { timeout: 15000, maxRedirects: 5 });
+        if (h.status() !== 405 && h.status() !== 501) { targetStatus.set(t, h.status()); continue; }
+      }
+      const r = await context.request.get(t, { timeout: 15000, maxRedirects: 5 }); targetStatus.set(t, r.status());
+    }
     catch { targetStatus.set(t, 0); }
   }
 
