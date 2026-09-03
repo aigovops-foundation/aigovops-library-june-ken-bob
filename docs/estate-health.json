@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-09-03T17:14:47.276Z",
+  "generatedAt": "2026-09-03T18:17:40.323Z",
   "estate": {
     "properties": 8,
     "reporting": 7,
     "healthy": 6,
-    "red": 1,
-    "greenPages": 339,
-    "redPages": 3,
-    "dead": 0,
-    "broken": 9,
+    "red": 0,
+    "greenPages": 342,
+    "redPages": 0,
+    "dead": 6,
+    "broken": 0,
     "consoleErrorPages": 0,
-    "score": 99
+    "score": 100
   },
   "sites": [
     {
@@ -18,7 +18,7 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-03T17:07:02.898Z",
+      "ranAt": "2026-09-03T18:09:27.094Z",
       "summary": {
         "pages": 27,
         "greenPages": 27,
@@ -265,19 +265,19 @@
       "name": "Library (rendered)",
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
-      "status": "green",
-      "ranAt": "2026-09-03T17:08:43.180Z",
+      "status": "warn",
+      "ranAt": "2026-09-03T18:11:47.241Z",
       "summary": {
         "pages": 68,
         "greenPages": 68,
         "redPages": 0,
-        "ok": 1660,
-        "dead": 0,
+        "ok": 1599,
+        "dead": 6,
         "broken": 0,
-        "external": 852,
+        "external": 834,
         "delegated": 10,
         "consoleErrorPages": 0,
-        "healthy": true
+        "healthy": false
       },
       "pageHealth": [
         {
@@ -834,7 +834,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-03T17:10:38.690Z",
+      "ranAt": "2026-09-03T18:13:50.779Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -1481,43 +1481,27 @@
       "name": "Umbrella",
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
-      "status": "red",
-      "ranAt": "2026-09-03T17:12:41.951Z",
+      "status": "green",
+      "ranAt": "2026-09-03T18:15:37.453Z",
       "summary": {
         "pages": 78,
-        "greenPages": 75,
-        "redPages": 3,
-        "ok": 3913,
+        "greenPages": 78,
+        "redPages": 0,
+        "ok": 3922,
         "dead": 0,
-        "broken": 9,
+        "broken": 0,
         "external": 1622,
         "delegated": 0,
         "consoleErrorPages": 0,
-        "healthy": false
+        "healthy": true
       },
       "pageHealth": [
         {
           "path": "/aigovops-beacon/",
           "dead": 0,
-          "broken": 4,
+          "broken": 0,
           "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-beacon/index.html",
-          "dead": 0,
-          "broken": 4,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-beacon/video/",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
+          "status": "green",
           "loadError": null
         },
         {
@@ -1546,6 +1530,14 @@
         },
         {
           "path": "/aigovops-beacon/howibuilt.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-beacon/index.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1594,6 +1586,14 @@
         },
         {
           "path": "/aigovops-beacon/quiz.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-beacon/video/",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -2122,62 +2122,7 @@
         }
       ],
       "dead": [],
-      "broken": [
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "text": "Get the zip",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/downloads/aigovops-beacon-starter.zip",
-          "reason": "internal link → HTTP 0"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "text": "Download starter (.zip)",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/downloads/aigovops-beacon-starter.zip",
-          "reason": "internal link → HTTP 0"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "text": "Or grab the starter .zip",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/downloads/aigovops-beacon-starter.zip",
-          "reason": "internal link → HTTP 0"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "text": "Starter .zip",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/downloads/aigovops-beacon-starter.zip",
-          "reason": "internal link → HTTP 0"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/video/",
-          "text": "Get the zip",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/downloads/aigovops-beacon-starter.zip",
-          "reason": "internal link → HTTP 0"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/index.html",
-          "text": "Get the zip",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/downloads/aigovops-beacon-starter.zip",
-          "reason": "internal link → HTTP 0"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/index.html",
-          "text": "Download starter (.zip)",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/downloads/aigovops-beacon-starter.zip",
-          "reason": "internal link → HTTP 0"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/index.html",
-          "text": "Or grab the starter .zip",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/downloads/aigovops-beacon-starter.zip",
-          "reason": "internal link → HTTP 0"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/index.html",
-          "text": "Starter .zip",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/downloads/aigovops-beacon-starter.zip",
-          "reason": "internal link → HTTP 0"
-        }
-      ],
+      "broken": [],
       "consoleErrors": []
     },
     {
@@ -2185,7 +2130,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-03T17:12:58.332Z",
+      "ranAt": "2026-09-03T18:15:52.821Z",
       "summary": {
         "pages": 11,
         "greenPages": 11,
@@ -2297,7 +2242,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-03T17:14:43.940Z",
+      "ranAt": "2026-09-03T18:17:37.111Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2945,7 +2890,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-03T17:14:47.269Z",
+      "ranAt": "2026-09-03T18:17:40.318Z",
       "summary": {
         "pages": 2,
         "greenPages": 2,
@@ -2985,6 +2930,6 @@
     "provider": "graph",
     "status": "ok",
     "detail": "app authenticates; sends as bob.rapp@aigovops.community",
-    "checkedAt": "2026-09-03T17:14:47.485Z"
+    "checkedAt": "2026-09-03T18:17:40.509Z"
   }
 }
