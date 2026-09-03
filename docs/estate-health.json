@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-09-03T14:15:35.590Z",
+  "generatedAt": "2026-09-03T15:18:03.313Z",
   "estate": {
     "properties": 8,
     "reporting": 7,
     "healthy": 6,
     "red": 1,
-    "greenPages": 341,
-    "redPages": 2,
-    "dead": 0,
-    "broken": 4,
+    "greenPages": 339,
+    "redPages": 3,
+    "dead": 1,
+    "broken": 5,
     "consoleErrorPages": 0,
     "score": 99
   },
@@ -18,7 +18,7 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-03T14:08:06.812Z",
+      "ranAt": "2026-09-03T15:08:07.878Z",
       "summary": {
         "pages": 27,
         "greenPages": 27,
@@ -265,21 +265,45 @@
       "name": "Library (rendered)",
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
-      "status": "green",
-      "ranAt": "2026-09-03T14:09:42.202Z",
+      "status": "red",
+      "ranAt": "2026-09-03T15:11:43.270Z",
       "summary": {
         "pages": 68,
-        "greenPages": 68,
-        "redPages": 0,
-        "ok": 1660,
-        "dead": 0,
-        "broken": 0,
-        "external": 852,
+        "greenPages": 65,
+        "redPages": 3,
+        "ok": 1636,
+        "dead": 1,
+        "broken": 5,
+        "external": 839,
         "delegated": 10,
         "consoleErrorPages": 0,
-        "healthy": true
+        "healthy": false
       },
       "pageHealth": [
+        {
+          "path": "/library/DataCenter-Ai-And-Social-Tradeoffs/",
+          "dead": 0,
+          "broken": 2,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/library/DataCenter-Ai-And-Social-Tradeoffs/index.html",
+          "dead": 0,
+          "broken": 2,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/library/failfest.html",
+          "dead": 0,
+          "broken": 1,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": null
+        },
         {
           "path": "/",
           "dead": 0,
@@ -513,23 +537,7 @@
           "loadError": null
         },
         {
-          "path": "/library/DataCenter-Ai-And-Social-Tradeoffs/",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
           "path": "/library/DataCenter-Ai-And-Social-Tradeoffs/for-more-reading.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/library/DataCenter-Ai-And-Social-Tradeoffs/index.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -586,14 +594,6 @@
         },
         {
           "path": "/library/f-ai-friday.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/library/failfest.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -826,44 +826,59 @@
         }
       ],
       "dead": [],
-      "broken": [],
+      "broken": [
+        {
+          "page": "https://community.aigovops-foundation.com/library/failfest.html",
+          "text": "JSON",
+          "href": "https://community.aigovops-foundation.com/library/data/verified-harms-2026-W24.json",
+          "reason": "internal link → HTTP 520"
+        },
+        {
+          "page": "https://community.aigovops-foundation.com/library/DataCenter-Ai-And-Social-Tradeoffs/",
+          "text": "More reading →",
+          "href": "https://community.aigovops-foundation.com/library/DataCenter-Ai-And-Social-Tradeoffs/for-more-reading.html",
+          "reason": "internal link → HTTP 520"
+        },
+        {
+          "page": "https://community.aigovops-foundation.com/library/DataCenter-Ai-And-Social-Tradeoffs/",
+          "text": "For more reading — every source, every caveat, and the most common misquotes",
+          "href": "https://community.aigovops-foundation.com/library/DataCenter-Ai-And-Social-Tradeoffs/for-more-reading.html",
+          "reason": "internal link → HTTP 520"
+        },
+        {
+          "page": "https://community.aigovops-foundation.com/library/DataCenter-Ai-And-Social-Tradeoffs/index.html",
+          "text": "More reading →",
+          "href": "https://community.aigovops-foundation.com/library/DataCenter-Ai-And-Social-Tradeoffs/for-more-reading.html",
+          "reason": "internal link → HTTP 520"
+        },
+        {
+          "page": "https://community.aigovops-foundation.com/library/DataCenter-Ai-And-Social-Tradeoffs/index.html",
+          "text": "For more reading — every source, every caveat, and the most common misquotes",
+          "href": "https://community.aigovops-foundation.com/library/DataCenter-Ai-And-Social-Tradeoffs/for-more-reading.html",
+          "reason": "internal link → HTTP 520"
+        }
+      ],
       "consoleErrors": []
     },
     {
       "name": "Beacon",
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
-      "status": "red",
-      "ranAt": "2026-09-03T14:11:41.681Z",
+      "status": "green",
+      "ranAt": "2026-09-03T15:13:48.038Z",
       "summary": {
-        "pages": 79,
-        "greenPages": 77,
-        "redPages": 2,
-        "ok": 3873,
+        "pages": 78,
+        "greenPages": 78,
+        "redPages": 0,
+        "ok": 3922,
         "dead": 0,
-        "broken": 4,
-        "external": 1618,
+        "broken": 0,
+        "external": 1622,
         "delegated": 0,
         "consoleErrorPages": 0,
-        "healthy": false
+        "healthy": true
       },
       "pageHealth": [
-        {
-          "path": "/",
-          "dead": 0,
-          "broken": 2,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/microsoft-scout.html",
-          "dead": 0,
-          "broken": 2,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
         {
           "path": "/aigovops-beacon/",
           "dead": 0,
@@ -1409,6 +1424,14 @@
           "loadError": null
         },
         {
+          "path": "/aigovops-ncw-ai-camp/tools/microsoft-scout.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/aigovops-ncw-ai-camp/tools/n8n.html",
           "dead": 0,
           "broken": 0,
@@ -1482,32 +1505,7 @@
         }
       ],
       "dead": [],
-      "broken": [
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools/microsoft-scout.html",
-          "text": "",
-          "href": "https://aigovops-foundation.github.io/",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools/microsoft-scout.html",
-          "text": "",
-          "href": "https://aigovops-foundation.github.io/",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/",
-          "text": "",
-          "href": "https://aigovops-foundation.github.io/",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/",
-          "text": "",
-          "href": "https://aigovops-foundation.github.io/",
-          "reason": "internal link → HTTP 404"
-        }
-      ],
+      "broken": [],
       "consoleErrors": []
     },
     {
@@ -1515,7 +1513,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-03T14:13:31.685Z",
+      "ranAt": "2026-09-03T15:15:45.745Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2163,7 +2161,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-03T14:13:47.692Z",
+      "ranAt": "2026-09-03T15:16:02.300Z",
       "summary": {
         "pages": 11,
         "greenPages": 11,
@@ -2275,7 +2273,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-03T14:15:32.233Z",
+      "ranAt": "2026-09-03T15:17:59.717Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2923,7 +2921,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-03T14:15:35.583Z",
+      "ranAt": "2026-09-03T15:18:03.307Z",
       "summary": {
         "pages": 2,
         "greenPages": 2,
@@ -2963,6 +2961,6 @@
     "provider": "graph",
     "status": "ok",
     "detail": "app authenticates; sends as bob.rapp@aigovops.community",
-    "checkedAt": "2026-09-03T14:15:35.814Z"
+    "checkedAt": "2026-09-03T15:18:03.730Z"
   }
 }
