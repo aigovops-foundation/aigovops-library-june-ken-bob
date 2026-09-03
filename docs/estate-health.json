@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-09-03T15:18:03.313Z",
+  "generatedAt": "2026-09-03T16:17:36.735Z",
   "estate": {
     "properties": 8,
     "reporting": 7,
     "healthy": 6,
-    "red": 1,
-    "greenPages": 339,
-    "redPages": 3,
-    "dead": 1,
-    "broken": 5,
+    "red": 0,
+    "greenPages": 342,
+    "redPages": 0,
+    "dead": 2,
+    "broken": 0,
     "consoleErrorPages": 0,
-    "score": 99
+    "score": 100
   },
   "sites": [
     {
@@ -18,7 +18,7 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-03T15:08:07.878Z",
+      "ranAt": "2026-09-03T16:09:01.832Z",
       "summary": {
         "pages": 27,
         "greenPages": 27,
@@ -265,45 +265,21 @@
       "name": "Library (rendered)",
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
-      "status": "red",
-      "ranAt": "2026-09-03T15:11:43.270Z",
+      "status": "warn",
+      "ranAt": "2026-09-03T16:11:33.507Z",
       "summary": {
         "pages": 68,
-        "greenPages": 65,
-        "redPages": 3,
-        "ok": 1636,
-        "dead": 1,
-        "broken": 5,
-        "external": 839,
+        "greenPages": 68,
+        "redPages": 0,
+        "ok": 1627,
+        "dead": 2,
+        "broken": 0,
+        "external": 838,
         "delegated": 10,
         "consoleErrorPages": 0,
         "healthy": false
       },
       "pageHealth": [
-        {
-          "path": "/library/DataCenter-Ai-And-Social-Tradeoffs/",
-          "dead": 0,
-          "broken": 2,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/library/DataCenter-Ai-And-Social-Tradeoffs/index.html",
-          "dead": 0,
-          "broken": 2,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/library/failfest.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
         {
           "path": "/",
           "dead": 0,
@@ -537,7 +513,23 @@
           "loadError": null
         },
         {
+          "path": "/library/DataCenter-Ai-And-Social-Tradeoffs/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/library/DataCenter-Ai-And-Social-Tradeoffs/for-more-reading.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/DataCenter-Ai-And-Social-Tradeoffs/index.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -594,6 +586,14 @@
         },
         {
           "path": "/library/f-ai-friday.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library/failfest.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -826,38 +826,7 @@
         }
       ],
       "dead": [],
-      "broken": [
-        {
-          "page": "https://community.aigovops-foundation.com/library/failfest.html",
-          "text": "JSON",
-          "href": "https://community.aigovops-foundation.com/library/data/verified-harms-2026-W24.json",
-          "reason": "internal link → HTTP 520"
-        },
-        {
-          "page": "https://community.aigovops-foundation.com/library/DataCenter-Ai-And-Social-Tradeoffs/",
-          "text": "More reading →",
-          "href": "https://community.aigovops-foundation.com/library/DataCenter-Ai-And-Social-Tradeoffs/for-more-reading.html",
-          "reason": "internal link → HTTP 520"
-        },
-        {
-          "page": "https://community.aigovops-foundation.com/library/DataCenter-Ai-And-Social-Tradeoffs/",
-          "text": "For more reading — every source, every caveat, and the most common misquotes",
-          "href": "https://community.aigovops-foundation.com/library/DataCenter-Ai-And-Social-Tradeoffs/for-more-reading.html",
-          "reason": "internal link → HTTP 520"
-        },
-        {
-          "page": "https://community.aigovops-foundation.com/library/DataCenter-Ai-And-Social-Tradeoffs/index.html",
-          "text": "More reading →",
-          "href": "https://community.aigovops-foundation.com/library/DataCenter-Ai-And-Social-Tradeoffs/for-more-reading.html",
-          "reason": "internal link → HTTP 520"
-        },
-        {
-          "page": "https://community.aigovops-foundation.com/library/DataCenter-Ai-And-Social-Tradeoffs/index.html",
-          "text": "For more reading — every source, every caveat, and the most common misquotes",
-          "href": "https://community.aigovops-foundation.com/library/DataCenter-Ai-And-Social-Tradeoffs/for-more-reading.html",
-          "reason": "internal link → HTTP 520"
-        }
-      ],
+      "broken": [],
       "consoleErrors": []
     },
     {
@@ -865,7 +834,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-03T15:13:48.038Z",
+      "ranAt": "2026-09-03T16:13:32.907Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -1513,7 +1482,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-03T15:15:45.745Z",
+      "ranAt": "2026-09-03T16:15:30.885Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2161,7 +2130,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-03T15:16:02.300Z",
+      "ranAt": "2026-09-03T16:15:49.106Z",
       "summary": {
         "pages": 11,
         "greenPages": 11,
@@ -2273,7 +2242,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-03T15:17:59.717Z",
+      "ranAt": "2026-09-03T16:17:33.479Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2921,7 +2890,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-03T15:18:03.307Z",
+      "ranAt": "2026-09-03T16:17:36.729Z",
       "summary": {
         "pages": 2,
         "greenPages": 2,
@@ -2961,6 +2930,6 @@
     "provider": "graph",
     "status": "ok",
     "detail": "app authenticates; sends as bob.rapp@aigovops.community",
-    "checkedAt": "2026-09-03T15:18:03.730Z"
+    "checkedAt": "2026-09-03T16:17:36.959Z"
   }
 }
