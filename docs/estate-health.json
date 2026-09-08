@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-09-08T22:14:39.966Z",
+  "generatedAt": "2026-09-08T23:14:58.717Z",
   "estate": {
     "properties": 8,
     "reporting": 7,
-    "healthy": 6,
+    "healthy": 7,
     "red": 0,
-    "greenPages": 341,
+    "greenPages": 344,
     "redPages": 0,
-    "dead": 1,
+    "dead": 0,
     "broken": 0,
     "consoleErrorPages": 0,
     "score": 100
@@ -18,7 +18,7 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-08T22:06:57.561Z",
+      "ranAt": "2026-09-08T23:07:04.252Z",
       "summary": {
         "pages": 29,
         "greenPages": 29,
@@ -281,19 +281,19 @@
       "name": "Library (rendered)",
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
-      "status": "warn",
-      "ranAt": "2026-09-08T22:08:44.160Z",
+      "status": "green",
+      "ranAt": "2026-09-08T23:08:49.656Z",
       "summary": {
-        "pages": 65,
-        "greenPages": 65,
+        "pages": 68,
+        "greenPages": 68,
         "redPages": 0,
-        "ok": 1600,
-        "dead": 1,
+        "ok": 1666,
+        "dead": 0,
         "broken": 0,
-        "external": 825,
+        "external": 854,
         "delegated": 10,
         "consoleErrorPages": 0,
-        "healthy": false
+        "healthy": true
       },
       "pageHealth": [
         {
@@ -370,6 +370,30 @@
         },
         {
           "path": "/experience.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/gate-check.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/gate-check.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/gate-check.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -826,7 +850,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-08T22:10:43.361Z",
+      "ranAt": "2026-09-08T23:10:51.026Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -1474,7 +1498,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-08T22:12:33.090Z",
+      "ranAt": "2026-09-08T23:12:46.216Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2122,7 +2146,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-08T22:12:49.066Z",
+      "ranAt": "2026-09-08T23:13:03.078Z",
       "summary": {
         "pages": 11,
         "greenPages": 11,
@@ -2234,7 +2258,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-08T22:14:36.627Z",
+      "ranAt": "2026-09-08T23:14:55.315Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2882,7 +2906,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-08T22:14:39.960Z",
+      "ranAt": "2026-09-08T23:14:58.710Z",
       "summary": {
         "pages": 2,
         "greenPages": 2,
@@ -2922,6 +2946,6 @@
     "provider": "graph",
     "status": "ok",
     "detail": "app authenticates; sends as bob.rapp@aigovops.community",
-    "checkedAt": "2026-09-08T22:14:40.344Z"
+    "checkedAt": "2026-09-08T23:14:58.985Z"
   }
 }
