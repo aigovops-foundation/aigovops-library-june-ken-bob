@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-09-11T16:17:08.174Z",
+  "generatedAt": "2026-09-11T17:15:19.349Z",
   "estate": {
     "properties": 8,
     "reporting": 7,
-    "healthy": 7,
-    "red": 0,
-    "greenPages": 344,
-    "redPages": 0,
+    "healthy": 4,
+    "red": 3,
+    "greenPages": 317,
+    "redPages": 33,
     "dead": 0,
     "broken": 0,
-    "consoleErrorPages": 0,
-    "score": 100
+    "consoleErrorPages": 33,
+    "score": 91
   },
   "sites": [
     {
@@ -18,15 +18,15 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-11T16:08:25.041Z",
+      "ranAt": "2026-09-11T17:06:21.990Z",
       "summary": {
         "pages": 29,
         "greenPages": 29,
         "redPages": 0,
-        "ok": 713,
+        "ok": 680,
         "dead": 0,
         "broken": 0,
-        "external": 184,
+        "external": 201,
         "delegated": 0,
         "consoleErrorPages": 0,
         "healthy": true
@@ -282,7 +282,7 @@
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-11T16:10:44.466Z",
+      "ranAt": "2026-09-11T17:08:14.109Z",
       "summary": {
         "pages": 68,
         "greenPages": 68,
@@ -290,7 +290,7 @@
         "ok": 1666,
         "dead": 0,
         "broken": 0,
-        "external": 852,
+        "external": 856,
         "delegated": 10,
         "consoleErrorPages": 0,
         "healthy": true
@@ -849,21 +849,157 @@
       "name": "Beacon",
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
-      "status": "green",
-      "ranAt": "2026-09-11T16:12:49.389Z",
+      "status": "red",
+      "ranAt": "2026-09-11T17:10:38.945Z",
       "summary": {
-        "pages": 78,
-        "greenPages": 78,
-        "redPages": 0,
-        "ok": 3922,
+        "pages": 80,
+        "greenPages": 64,
+        "redPages": 16,
+        "ok": 3395,
         "dead": 0,
         "broken": 0,
-        "external": 1622,
+        "external": 1703,
         "delegated": 0,
-        "consoleErrorPages": 0,
-        "healthy": true
+        "consoleErrorPages": 16,
+        "healthy": false
       },
       "pageHealth": [
+        {
+          "path": "/practice/catalog/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/CHANGELOG.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/docs/es/levels/100-begin/WORKSHEET.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/docs/es/MANIFESTO.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/docs/FLOW.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/docs/practitioners/bob-100.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/docs/practitioners/STRANGER-INVITE.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/docs/reference/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/docs/THURSDAY.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/docs/WREN.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/levels/100-begin/WORKSHEET.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/levels/200-retrofit/WORKSHEET.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/levels/300-hold/WORKSHEET.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/levels/400-prove/WORKSHEET.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/MANIFESTO.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/RELEASE.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-beacon/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
         {
           "path": "/aigovops-beacon/",
           "dead": 0,
@@ -1033,22 +1169,6 @@
           "loadError": null
         },
         {
-          "path": "/aigovops-ncw-ai-camp/es/checklist.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/es/community-resources.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
           "path": "/aigovops-ncw-ai-camp/es/workshop.html",
           "dead": 0,
           "broken": 0,
@@ -1073,14 +1193,6 @@
           "loadError": null
         },
         {
-          "path": "/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
           "path": "/aigovops-ncw-ai-camp/kit/attendee-guide.html",
           "dead": 0,
           "broken": 0,
@@ -1097,39 +1209,7 @@
           "loadError": null
         },
         {
-          "path": "/aigovops-ncw-ai-camp/kit/claim-letter.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
           "path": "/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/failure-cards.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/harms-worksheet.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/helpers.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1145,47 +1225,7 @@
           "loadError": null
         },
         {
-          "path": "/aigovops-ncw-ai-camp/kit/ksr-cards.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/land-acknowledgment.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/layers-placemat.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
           "path": "/aigovops-ncw-ai-camp/kit/prompts.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/scout-deep-dive.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/video-script.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1305,14 +1345,6 @@
           "loadError": null
         },
         {
-          "path": "/aigovops-ncw-ai-camp/tools/chatprd.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
           "path": "/aigovops-ncw-ai-camp/tools/claude.html",
           "dead": 0,
           "broken": 0,
@@ -1345,14 +1377,6 @@
           "loadError": null
         },
         {
-          "path": "/aigovops-ncw-ai-camp/tools/glean.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
           "path": "/aigovops-ncw-ai-camp/tools/granola.html",
           "dead": 0,
           "broken": 0,
@@ -1370,14 +1394,6 @@
         },
         {
           "path": "/aigovops-ncw-ai-camp/tools/khanmigo.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/lab-tools.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1410,14 +1426,6 @@
         },
         {
           "path": "/aigovops-ncw-ai-camp/tools/microsoft-scout.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/n8n.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1473,6 +1481,14 @@
           "loadError": null
         },
         {
+          "path": "/practice/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/umbrella-govops/",
           "dead": 0,
           "broken": 0,
@@ -1491,27 +1507,260 @@
       ],
       "dead": [],
       "broken": [],
-      "consoleErrors": []
+      "consoleErrors": [
+        {
+          "page": "https://aigovops-foundation.github.io/practice/levels/100-begin/WORKSHEET.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/MANIFESTO.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/levels/200-retrofit/WORKSHEET.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/levels/300-hold/WORKSHEET.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/levels/400-prove/WORKSHEET.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/docs/THURSDAY.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/docs/FLOW.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/docs/es/levels/100-begin/WORKSHEET.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/docs/es/MANIFESTO.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/docs/WREN.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/RELEASE.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/CHANGELOG.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/catalog/",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/docs/practitioners/bob-100.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/docs/practitioners/STRANGER-INVITE.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/docs/reference/",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        }
+      ]
     },
     {
       "name": "Umbrella",
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
-      "status": "green",
-      "ranAt": "2026-09-11T16:14:59.240Z",
+      "status": "red",
+      "ranAt": "2026-09-11T17:12:44.587Z",
       "summary": {
-        "pages": 78,
-        "greenPages": 78,
-        "redPages": 0,
-        "ok": 3922,
+        "pages": 80,
+        "greenPages": 64,
+        "redPages": 16,
+        "ok": 3395,
         "dead": 0,
         "broken": 0,
-        "external": 1622,
+        "external": 1703,
         "delegated": 0,
-        "consoleErrorPages": 0,
-        "healthy": true
+        "consoleErrorPages": 16,
+        "healthy": false
       },
       "pageHealth": [
+        {
+          "path": "/practice/catalog/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/CHANGELOG.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/docs/es/levels/100-begin/WORKSHEET.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/docs/es/MANIFESTO.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/docs/FLOW.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/docs/practitioners/bob-100.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/docs/practitioners/STRANGER-INVITE.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/docs/reference/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/docs/THURSDAY.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/docs/WREN.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/levels/100-begin/WORKSHEET.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/levels/200-retrofit/WORKSHEET.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/levels/300-hold/WORKSHEET.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/levels/400-prove/WORKSHEET.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/MANIFESTO.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/RELEASE.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-beacon/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
         {
           "path": "/aigovops-beacon/",
           "dead": 0,
@@ -1681,22 +1930,6 @@
           "loadError": null
         },
         {
-          "path": "/aigovops-ncw-ai-camp/es/checklist.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/es/community-resources.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
           "path": "/aigovops-ncw-ai-camp/es/workshop.html",
           "dead": 0,
           "broken": 0,
@@ -1721,14 +1954,6 @@
           "loadError": null
         },
         {
-          "path": "/aigovops-ncw-ai-camp/jeeves-demo.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
           "path": "/aigovops-ncw-ai-camp/kit/attendee-guide.html",
           "dead": 0,
           "broken": 0,
@@ -1745,39 +1970,7 @@
           "loadError": null
         },
         {
-          "path": "/aigovops-ncw-ai-camp/kit/claim-letter.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
           "path": "/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/failure-cards.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/harms-worksheet.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/helpers.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1793,47 +1986,7 @@
           "loadError": null
         },
         {
-          "path": "/aigovops-ncw-ai-camp/kit/ksr-cards.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/land-acknowledgment.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/layers-placemat.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
           "path": "/aigovops-ncw-ai-camp/kit/prompts.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/scout-deep-dive.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/video-script.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1953,14 +2106,6 @@
           "loadError": null
         },
         {
-          "path": "/aigovops-ncw-ai-camp/tools/chatprd.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
           "path": "/aigovops-ncw-ai-camp/tools/claude.html",
           "dead": 0,
           "broken": 0,
@@ -1993,14 +2138,6 @@
           "loadError": null
         },
         {
-          "path": "/aigovops-ncw-ai-camp/tools/glean.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
           "path": "/aigovops-ncw-ai-camp/tools/granola.html",
           "dead": 0,
           "broken": 0,
@@ -2018,14 +2155,6 @@
         },
         {
           "path": "/aigovops-ncw-ai-camp/tools/khanmigo.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/lab-tools.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -2058,14 +2187,6 @@
         },
         {
           "path": "/aigovops-ncw-ai-camp/tools/microsoft-scout.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/n8n.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -2121,6 +2242,14 @@
           "loadError": null
         },
         {
+          "path": "/practice/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/umbrella-govops/",
           "dead": 0,
           "broken": 0,
@@ -2139,14 +2268,111 @@
       ],
       "dead": [],
       "broken": [],
-      "consoleErrors": []
+      "consoleErrors": [
+        {
+          "page": "https://aigovops-foundation.github.io/practice/levels/100-begin/WORKSHEET.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/MANIFESTO.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/levels/200-retrofit/WORKSHEET.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/levels/300-hold/WORKSHEET.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/levels/400-prove/WORKSHEET.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/docs/THURSDAY.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/docs/FLOW.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/docs/es/levels/100-begin/WORKSHEET.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/docs/es/MANIFESTO.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/docs/WREN.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/RELEASE.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/CHANGELOG.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/catalog/",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/docs/practitioners/bob-100.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/docs/practitioners/STRANGER-INVITE.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/docs/reference/",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        }
+      ]
     },
     {
       "name": "Lantern",
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-11T16:15:16.261Z",
+      "ranAt": "2026-09-11T17:13:00.267Z",
       "summary": {
         "pages": 11,
         "greenPages": 11,
@@ -2257,21 +2483,29 @@
       "name": "NCW AI Camp",
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
-      "status": "green",
-      "ranAt": "2026-09-11T16:17:04.737Z",
+      "status": "red",
+      "ranAt": "2026-09-11T17:15:16.011Z",
       "summary": {
-        "pages": 78,
-        "greenPages": 78,
-        "redPages": 0,
-        "ok": 3922,
+        "pages": 80,
+        "greenPages": 79,
+        "redPages": 1,
+        "ok": 3958,
         "dead": 0,
         "broken": 0,
-        "external": 1622,
+        "external": 1637,
         "delegated": 0,
-        "consoleErrorPages": 0,
-        "healthy": true
+        "consoleErrorPages": 1,
+        "healthy": false
       },
       "pageHealth": [
+        {
+          "path": "/practice/levels/100-begin/WORKSHEET.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
         {
           "path": "/aigovops-beacon/",
           "dead": 0,
@@ -2881,6 +3115,14 @@
           "loadError": null
         },
         {
+          "path": "/practice/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/umbrella-govops/",
           "dead": 0,
           "broken": 0,
@@ -2899,14 +3141,21 @@
       ],
       "dead": [],
       "broken": [],
-      "consoleErrors": []
+      "consoleErrors": [
+        {
+          "page": "https://aigovops-foundation.github.io/practice/levels/100-begin/WORKSHEET.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        }
+      ]
     },
     {
       "name": "Open Source v4",
       "base": "https://aigovops-foundation.github.io/aigovops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-11T16:17:08.166Z",
+      "ranAt": "2026-09-11T17:15:19.345Z",
       "summary": {
         "pages": 2,
         "greenPages": 2,
@@ -2946,6 +3195,6 @@
     "provider": "graph",
     "status": "ok",
     "detail": "app authenticates; sends as bob.rapp@aigovops.community",
-    "checkedAt": "2026-09-11T16:17:08.386Z"
+    "checkedAt": "2026-09-11T17:15:19.579Z"
   }
 }
