@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-09-12T14:13:56.822Z",
+  "generatedAt": "2026-09-12T15:13:28.045Z",
   "estate": {
     "properties": 8,
     "reporting": 7,
     "healthy": 4,
     "red": 3,
-    "greenPages": 317,
+    "greenPages": 313,
     "redPages": 33,
     "dead": 0,
     "broken": 0,
     "consoleErrorPages": 33,
-    "score": 91
+    "score": 90
   },
   "sites": [
     {
@@ -18,15 +18,15 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-12T14:06:40.981Z",
+      "ranAt": "2026-09-12T15:06:23.537Z",
       "summary": {
-        "pages": 29,
-        "greenPages": 29,
+        "pages": 26,
+        "greenPages": 26,
         "redPages": 0,
-        "ok": 680,
+        "ok": 657,
         "dead": 0,
         "broken": 0,
-        "external": 202,
+        "external": 181,
         "delegated": 0,
         "consoleErrorPages": 0,
         "healthy": true
@@ -185,14 +185,6 @@
           "loadError": null
         },
         {
-          "path": "/get-to-yes.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
           "path": "/index.html",
           "dead": 0,
           "broken": 0,
@@ -225,23 +217,7 @@
           "loadError": null
         },
         {
-          "path": "/recover-to-yes.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
           "path": "/resources.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/stay-at-yes.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -282,16 +258,16 @@
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-12T14:08:13.912Z",
+      "ranAt": "2026-09-12T15:07:53.138Z",
       "summary": {
-        "pages": 68,
-        "greenPages": 68,
+        "pages": 67,
+        "greenPages": 67,
         "redPages": 0,
-        "ok": 1666,
+        "ok": 1559,
         "dead": 0,
         "broken": 0,
-        "external": 858,
-        "delegated": 10,
+        "external": 854,
+        "delegated": 9,
         "consoleErrorPages": 0,
         "healthy": true
       },
@@ -705,14 +681,6 @@
           "loadError": null
         },
         {
-          "path": "/playbooks.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
           "path": "/portal.html",
           "dead": 0,
           "broken": 0,
@@ -850,15 +818,15 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-09-12T14:10:05.346Z",
+      "ranAt": "2026-09-12T15:09:41.490Z",
       "summary": {
         "pages": 80,
         "greenPages": 64,
         "redPages": 16,
-        "ok": 3395,
+        "ok": 3347,
         "dead": 0,
         "broken": 0,
-        "external": 1703,
+        "external": 1695,
         "delegated": 0,
         "consoleErrorPages": 16,
         "healthy": false
@@ -1515,12 +1483,6 @@
           ]
         },
         {
-          "page": "https://aigovops-foundation.github.io/practice/MANIFESTO.html",
-          "errors": [
-            "pageerror: ReferenceError: anchors is not defined"
-          ]
-        },
-        {
           "page": "https://aigovops-foundation.github.io/practice/levels/200-retrofit/WORKSHEET.html",
           "errors": [
             "pageerror: ReferenceError: anchors is not defined"
@@ -1545,12 +1507,6 @@
           ]
         },
         {
-          "page": "https://aigovops-foundation.github.io/practice/docs/FLOW.html",
-          "errors": [
-            "pageerror: ReferenceError: anchors is not defined"
-          ]
-        },
-        {
           "page": "https://aigovops-foundation.github.io/practice/docs/es/levels/100-begin/WORKSHEET.html",
           "errors": [
             "pageerror: ReferenceError: anchors is not defined"
@@ -1563,7 +1519,19 @@
           ]
         },
         {
+          "page": "https://aigovops-foundation.github.io/practice/MANIFESTO.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
           "page": "https://aigovops-foundation.github.io/practice/docs/WREN.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/docs/FLOW.html",
           "errors": [
             "pageerror: ReferenceError: anchors is not defined"
           ]
@@ -1611,15 +1579,15 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-09-12T14:11:51.976Z",
+      "ranAt": "2026-09-12T15:11:25.816Z",
       "summary": {
         "pages": 80,
         "greenPages": 64,
         "redPages": 16,
-        "ok": 3395,
+        "ok": 3347,
         "dead": 0,
         "broken": 0,
-        "external": 1703,
+        "external": 1695,
         "delegated": 0,
         "consoleErrorPages": 16,
         "healthy": false
@@ -2276,12 +2244,6 @@
           ]
         },
         {
-          "page": "https://aigovops-foundation.github.io/practice/MANIFESTO.html",
-          "errors": [
-            "pageerror: ReferenceError: anchors is not defined"
-          ]
-        },
-        {
           "page": "https://aigovops-foundation.github.io/practice/levels/200-retrofit/WORKSHEET.html",
           "errors": [
             "pageerror: ReferenceError: anchors is not defined"
@@ -2306,12 +2268,6 @@
           ]
         },
         {
-          "page": "https://aigovops-foundation.github.io/practice/docs/FLOW.html",
-          "errors": [
-            "pageerror: ReferenceError: anchors is not defined"
-          ]
-        },
-        {
           "page": "https://aigovops-foundation.github.io/practice/docs/es/levels/100-begin/WORKSHEET.html",
           "errors": [
             "pageerror: ReferenceError: anchors is not defined"
@@ -2324,7 +2280,19 @@
           ]
         },
         {
+          "page": "https://aigovops-foundation.github.io/practice/MANIFESTO.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
           "page": "https://aigovops-foundation.github.io/practice/docs/WREN.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/docs/FLOW.html",
           "errors": [
             "pageerror: ReferenceError: anchors is not defined"
           ]
@@ -2372,7 +2340,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-12T14:12:07.099Z",
+      "ranAt": "2026-09-12T15:11:40.495Z",
       "summary": {
         "pages": 11,
         "greenPages": 11,
@@ -2484,15 +2452,15 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-09-12T14:13:53.674Z",
+      "ranAt": "2026-09-12T15:13:24.997Z",
       "summary": {
         "pages": 80,
         "greenPages": 79,
         "redPages": 1,
-        "ok": 3958,
+        "ok": 3955,
         "dead": 0,
         "broken": 0,
-        "external": 1637,
+        "external": 1640,
         "delegated": 0,
         "consoleErrorPages": 1,
         "healthy": false
@@ -3155,7 +3123,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-12T14:13:56.816Z",
+      "ranAt": "2026-09-12T15:13:28.039Z",
       "summary": {
         "pages": 2,
         "greenPages": 2,
@@ -3195,6 +3163,6 @@
     "provider": "graph",
     "status": "ok",
     "detail": "app authenticates; sends as bob.rapp@aigovops.community",
-    "checkedAt": "2026-09-12T14:13:57.055Z"
+    "checkedAt": "2026-09-12T15:13:28.461Z"
   }
 }
