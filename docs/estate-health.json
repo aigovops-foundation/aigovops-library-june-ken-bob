@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-09-13T00:28:15.166Z",
+  "generatedAt": "2026-09-13T01:30:39.064Z",
   "estate": {
     "properties": 8,
     "reporting": 7,
     "healthy": 4,
     "red": 3,
-    "greenPages": 313,
-    "redPages": 33,
+    "greenPages": 312,
+    "redPages": 35,
     "dead": 0,
     "broken": 0,
-    "consoleErrorPages": 33,
+    "consoleErrorPages": 35,
     "score": 90
   },
   "sites": [
@@ -18,7 +18,7 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-13T00:20:16.202Z",
+      "ranAt": "2026-09-13T01:22:28.901Z",
       "summary": {
         "pages": 26,
         "greenPages": 26,
@@ -258,15 +258,15 @@
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-13T00:21:58.420Z",
+      "ranAt": "2026-09-13T01:24:13.580Z",
       "summary": {
-        "pages": 67,
-        "greenPages": 67,
+        "pages": 68,
+        "greenPages": 68,
         "redPages": 0,
-        "ok": 1554,
+        "ok": 1563,
         "dead": 0,
         "broken": 0,
-        "external": 859,
+        "external": 863,
         "delegated": 9,
         "consoleErrorPages": 0,
         "healthy": true
@@ -338,6 +338,14 @@
         },
         {
           "path": "/console.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/decide.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -818,17 +826,17 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-09-13T00:24:01.889Z",
+      "ranAt": "2026-09-13T01:26:22.367Z",
       "summary": {
         "pages": 80,
-        "greenPages": 64,
-        "redPages": 16,
-        "ok": 3347,
+        "greenPages": 63,
+        "redPages": 17,
+        "ok": 3308,
         "dead": 0,
         "broken": 0,
-        "external": 1695,
+        "external": 1691,
         "delegated": 0,
-        "consoleErrorPages": 16,
+        "consoleErrorPages": 17,
         "healthy": false
       },
       "pageHealth": [
@@ -850,6 +858,14 @@
         },
         {
           "path": "/practice/docs/es/levels/100-begin/WORKSHEET.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/docs/es/levels/200-retrofit/WORKSHEET.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 1,
@@ -1377,14 +1393,6 @@
           "loadError": null
         },
         {
-          "path": "/aigovops-ncw-ai-camp/tools/magic-patterns.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
           "path": "/aigovops-ncw-ai-camp/tools/microsoft-copilot.html",
           "dead": 0,
           "broken": 0,
@@ -1568,6 +1576,12 @@
         },
         {
           "page": "https://aigovops-foundation.github.io/practice/docs/reference/",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/docs/es/levels/200-retrofit/WORKSHEET.html",
           "errors": [
             "pageerror: ReferenceError: anchors is not defined"
           ]
@@ -1579,17 +1593,17 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-09-13T00:25:55.923Z",
+      "ranAt": "2026-09-13T01:28:22.183Z",
       "summary": {
         "pages": 80,
-        "greenPages": 64,
-        "redPages": 16,
-        "ok": 3347,
+        "greenPages": 63,
+        "redPages": 17,
+        "ok": 3308,
         "dead": 0,
         "broken": 0,
-        "external": 1695,
+        "external": 1691,
         "delegated": 0,
-        "consoleErrorPages": 16,
+        "consoleErrorPages": 17,
         "healthy": false
       },
       "pageHealth": [
@@ -1611,6 +1625,14 @@
         },
         {
           "path": "/practice/docs/es/levels/100-begin/WORKSHEET.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 1,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/practice/docs/es/levels/200-retrofit/WORKSHEET.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 1,
@@ -2138,14 +2160,6 @@
           "loadError": null
         },
         {
-          "path": "/aigovops-ncw-ai-camp/tools/magic-patterns.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
           "path": "/aigovops-ncw-ai-camp/tools/microsoft-copilot.html",
           "dead": 0,
           "broken": 0,
@@ -2332,6 +2346,12 @@
           "errors": [
             "pageerror: ReferenceError: anchors is not defined"
           ]
+        },
+        {
+          "page": "https://aigovops-foundation.github.io/practice/docs/es/levels/200-retrofit/WORKSHEET.html",
+          "errors": [
+            "pageerror: ReferenceError: anchors is not defined"
+          ]
         }
       ]
     },
@@ -2340,7 +2360,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-13T00:26:12.333Z",
+      "ranAt": "2026-09-13T01:28:37.881Z",
       "summary": {
         "pages": 11,
         "greenPages": 11,
@@ -2452,7 +2472,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-09-13T00:28:11.713Z",
+      "ranAt": "2026-09-13T01:30:35.684Z",
       "summary": {
         "pages": 80,
         "greenPages": 79,
@@ -2460,7 +2480,7 @@
         "ok": 3955,
         "dead": 0,
         "broken": 0,
-        "external": 1640,
+        "external": 1641,
         "delegated": 0,
         "consoleErrorPages": 1,
         "healthy": false
@@ -3123,7 +3143,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-13T00:28:15.159Z",
+      "ranAt": "2026-09-13T01:30:39.058Z",
       "summary": {
         "pages": 2,
         "greenPages": 2,
@@ -3163,6 +3183,6 @@
     "provider": "graph",
     "status": "ok",
     "detail": "app authenticates; sends as bob.rapp@aigovops.community",
-    "checkedAt": "2026-09-13T00:28:15.485Z"
+    "checkedAt": "2026-09-13T01:30:39.320Z"
   }
 }
