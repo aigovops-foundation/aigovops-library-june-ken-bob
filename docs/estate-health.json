@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-09-22T15:15:33.053Z",
+  "generatedAt": "2026-09-22T16:15:51.580Z",
   "estate": {
     "properties": 8,
     "reporting": 7,
     "healthy": 7,
     "red": 0,
-    "greenPages": 341,
+    "greenPages": 345,
     "redPages": 0,
     "dead": 0,
     "broken": 0,
@@ -18,20 +18,28 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-22T15:07:42.841Z",
+      "ranAt": "2026-09-22T16:08:05.616Z",
       "summary": {
-        "pages": 26,
-        "greenPages": 26,
+        "pages": 30,
+        "greenPages": 30,
         "redPages": 0,
-        "ok": 655,
+        "ok": 750,
         "dead": 0,
         "broken": 0,
-        "external": 179,
+        "external": 203,
         "delegated": 0,
         "consoleErrorPages": 0,
         "healthy": true
       },
       "pageHealth": [
+        {
+          "path": "/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
         {
           "path": "/",
           "dead": 0,
@@ -129,7 +137,23 @@
           "loadError": null
         },
         {
+          "path": "/blog/the-cafe-is-open.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/blog/the-fall-2026-release.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/the-one-dollar-tahoe.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -154,6 +178,14 @@
         },
         {
           "path": "/community.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/f-ai-friday.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -258,7 +290,7 @@
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-22T15:09:28.606Z",
+      "ranAt": "2026-09-22T16:10:12.467Z",
       "summary": {
         "pages": 68,
         "greenPages": 68,
@@ -826,7 +858,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-22T15:11:32.670Z",
+      "ranAt": "2026-09-22T16:12:03.234Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -1474,7 +1506,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-22T15:13:26.645Z",
+      "ranAt": "2026-09-22T16:13:48.697Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2122,7 +2154,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-22T15:13:43.952Z",
+      "ranAt": "2026-09-22T16:14:03.791Z",
       "summary": {
         "pages": 11,
         "greenPages": 11,
@@ -2234,7 +2266,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-22T15:15:29.625Z",
+      "ranAt": "2026-09-22T16:15:48.369Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2882,7 +2914,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-22T15:15:33.045Z",
+      "ranAt": "2026-09-22T16:15:51.573Z",
       "summary": {
         "pages": 2,
         "greenPages": 2,
@@ -2922,6 +2954,6 @@
     "provider": "graph",
     "status": "ok",
     "detail": "app authenticates; sends as bob.rapp@aigovops.community",
-    "checkedAt": "2026-09-22T15:15:33.533Z"
+    "checkedAt": "2026-09-22T16:15:52.002Z"
   }
 }
