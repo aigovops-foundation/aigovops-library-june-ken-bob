@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-09-29T09:17:09.683Z",
+  "generatedAt": "2026-09-29T10:15:32.385Z",
   "estate": {
     "properties": 8,
     "reporting": 7,
-    "healthy": 6,
-    "red": 1,
-    "greenPages": 276,
-    "redPages": 71,
+    "healthy": 7,
+    "red": 0,
+    "greenPages": 347,
+    "redPages": 0,
     "dead": 0,
-    "broken": 86,
+    "broken": 0,
     "consoleErrorPages": 0,
-    "score": 80
+    "score": 100
   },
   "sites": [
     {
@@ -18,7 +18,7 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-29T09:09:32.526Z",
+      "ranAt": "2026-09-29T10:08:18.629Z",
       "summary": {
         "pages": 32,
         "greenPages": 32,
@@ -306,7 +306,7 @@
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-29T09:11:09.910Z",
+      "ranAt": "2026-09-29T10:09:50.278Z",
       "summary": {
         "pages": 68,
         "greenPages": 68,
@@ -873,591 +873,31 @@
       "name": "Beacon",
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
-      "status": "red",
-      "ranAt": "2026-09-29T09:13:07.817Z",
+      "status": "green",
+      "ranAt": "2026-09-29T10:11:41.021Z",
       "summary": {
         "pages": 78,
-        "greenPages": 7,
-        "redPages": 71,
-        "ok": 3838,
+        "greenPages": 78,
+        "redPages": 0,
+        "ok": 3924,
         "dead": 0,
-        "broken": 86,
+        "broken": 0,
         "external": 1624,
         "delegated": 0,
         "consoleErrorPages": 0,
-        "healthy": false
+        "healthy": true
       },
       "pageHealth": [
         {
-          "path": "/aigovops-beacon/blueprint/",
-          "dead": 0,
-          "broken": 2,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-beacon/howibuilt.html",
-          "dead": 0,
-          "broken": 2,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-beacon/lab-100.html",
-          "dead": 0,
-          "broken": 2,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-beacon/lab-200.html",
-          "dead": 0,
-          "broken": 2,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-beacon/lab.html",
-          "dead": 0,
-          "broken": 2,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-beacon/lab/worksheet-100.html",
-          "dead": 0,
-          "broken": 2,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-beacon/lab/worksheet-200.html",
-          "dead": 0,
-          "broken": 2,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-beacon/quiz.html",
-          "dead": 0,
-          "broken": 3,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-beacon/video/",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/about.html",
-          "dead": 0,
-          "broken": 2,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/centerpiece.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/checklist.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/community-resources.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/courses.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/demos.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/es/checklist.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/es/community-resources.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/es/workshop.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/hint-logs.html",
-          "dead": 0,
-          "broken": 2,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/index.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/attendee-guide.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/checklist-card.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/claim-letter.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/failure-cards.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/harms-worksheet.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/helpers.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/index.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/ksr-cards.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/land-acknowledgment.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/layers-placemat.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/prompts.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/scout-deep-dive.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/kit/video-script.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/mini-camps.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/plan.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/pledge.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/privacy.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/resources.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/row-edition.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/support.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/supporters.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/survey-after.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/survey.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/terms.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/bolt.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/chatgpt.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/chatprd.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/claude.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/elevenlabs.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/gamma.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/gemini.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/glean.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/granola.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/invideo.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/khanmigo.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/lab-tools.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/lovable.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/magic-patterns.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/microsoft-copilot.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/microsoft-scout.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/n8n.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/notebooklm.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/perplexity.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/replit.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/tools/wispr-flow.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/whats-new.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/workshop.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/umbrella-govops/",
-          "dead": 0,
-          "broken": 5,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
           "path": "/aigovops-beacon/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-beacon/blueprint/",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1481,7 +921,71 @@
           "loadError": null
         },
         {
+          "path": "/aigovops-beacon/howibuilt.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/aigovops-beacon/index.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-beacon/lab-100.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-beacon/lab-200.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-beacon/lab.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-beacon/lab/worksheet-100.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-beacon/lab/worksheet-200.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-beacon/quiz.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-beacon/video/",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1497,7 +1001,503 @@
           "loadError": null
         },
         {
+          "path": "/aigovops-ncw-ai-camp/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/about.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/centerpiece.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/checklist.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/community-resources.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/courses.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/demos.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/es/checklist.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/es/community-resources.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/es/workshop.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/hint-logs.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/index.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/aigovops-ncw-ai-camp/jeeves-demo.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/attendee-guide.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/checklist-card.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/claim-letter.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/failure-cards.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/harms-worksheet.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/helpers.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/index.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/ksr-cards.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/land-acknowledgment.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/layers-placemat.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/prompts.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/scout-deep-dive.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/kit/video-script.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/mini-camps.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/plan.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/pledge.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/privacy.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/resources.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/row-edition.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/support.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/supporters.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/survey-after.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/survey.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/terms.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/tools.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/tools/bolt.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/tools/chatgpt.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/tools/chatprd.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/tools/claude.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/tools/elevenlabs.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/tools/gamma.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/tools/gemini.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/tools/glean.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/tools/granola.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/tools/invideo.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/tools/khanmigo.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/tools/lab-tools.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/tools/lovable.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/tools/magic-patterns.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/tools/microsoft-copilot.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/tools/microsoft-scout.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/tools/n8n.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/tools/notebooklm.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/tools/perplexity.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/tools/replit.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/tools/wispr-flow.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/whats-new.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/workshop.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/umbrella-govops/",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1514,524 +1514,7 @@
         }
       ],
       "dead": [],
-      "broken": [
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/video/",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/quiz.html",
-          "text": "Open Beacon App",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/quiz.html",
-          "text": "Open Beacon App",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/quiz.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/blueprint/",
-          "text": "Y AiGovOps Beacon Reference Architecture Blueprint",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/blueprint/",
-          "text": "← Back to Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab.html",
-          "text": "Y AiGovOps Beacon AIGOVOPS FOUNDATION",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab.html",
-          "text": "Home",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "text": "Y AiGovOps Beacon LEVEL 100 · FRAMEWORK LAB",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-100.html",
-          "text": "Home",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "text": "Y AiGovOps Beacon LEVEL 200 · FRAMEWORK LAB",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab-200.html",
-          "text": "Home",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/howibuilt.html",
-          "text": "Y AiGovOps Beacon AIGOVOPS FOUNDATION",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/howibuilt.html",
-          "text": "Home",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/umbrella-govops/",
-          "text": "AiGovOps Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/umbrella-govops/",
-          "text": "OVERT 1.0",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/umbrella-govops/",
-          "text": "🔦 AiGovOps Beacon™ The spotlight. Machine-facing. Signs, attests, and emits mac",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/umbrella-govops/",
-          "text": "100-incident failure database",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/umbrella-govops/",
-          "text": "AiGovOps Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab/worksheet-100.html",
-          "text": "AiGovOps Beacon WORKSHEET 100",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab/worksheet-100.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab/worksheet-200.html",
-          "text": "AiGovOps Beacon WORKSHEET 200",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-beacon/lab/worksheet-200.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/index.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/plan.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/centerpiece.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/mini-camps.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/workshop.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/demos.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/courses.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/pledge.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/hint-logs.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/hint-logs.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/resources.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/support.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/about.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/about.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/attendee-guide.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/row-edition.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/index.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/checklist.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/community-resources.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/supporters.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/whats-new.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/privacy.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/terms.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/prompts.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/checklist-card.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/es/workshop.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/survey.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/survey-after.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/demo-walkthroughs.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools/microsoft-copilot.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools/microsoft-scout.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools/elevenlabs.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools/invideo.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools/gemini.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools/notebooklm.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools/perplexity.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools/chatgpt.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools/claude.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools/khanmigo.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools/gamma.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools/granola.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools/wispr-flow.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools/lovable.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools/bolt.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools/replit.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools/magic-patterns.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools/chatprd.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools/n8n.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools/glean.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/tools/lab-tools.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/land-acknowledgment.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/video-script.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/ksr-cards.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/claim-letter.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/helpers.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/layers-placemat.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/failure-cards.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/scout-deep-dive.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/kit/harms-worksheet.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/es/checklist.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/es/community-resources.html",
-          "text": "Beacon",
-          "href": "https://aigovops-foundation.github.io/aigovops-beacon/",
-          "reason": "internal link → HTTP 503"
-        }
-      ],
+      "broken": [],
       "consoleErrors": []
     },
     {
@@ -2039,7 +1522,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-29T09:15:01.183Z",
+      "ranAt": "2026-09-29T10:13:26.414Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2687,7 +2170,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-29T09:15:17.608Z",
+      "ranAt": "2026-09-29T10:13:41.484Z",
       "summary": {
         "pages": 11,
         "greenPages": 11,
@@ -2799,7 +2282,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-29T09:17:06.311Z",
+      "ranAt": "2026-09-29T10:15:27.249Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -3447,7 +2930,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-09-29T09:17:09.676Z",
+      "ranAt": "2026-09-29T10:15:32.379Z",
       "summary": {
         "pages": 2,
         "greenPages": 2,
@@ -3487,6 +2970,6 @@
     "provider": "graph",
     "status": "ok",
     "detail": "app authenticates; sends as bob.rapp@aigovops.community",
-    "checkedAt": "2026-09-29T09:17:09.919Z"
+    "checkedAt": "2026-09-29T10:15:32.792Z"
   }
 }
