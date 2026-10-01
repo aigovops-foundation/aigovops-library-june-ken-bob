@@ -23,4 +23,10 @@ permissions:
 
 jobs:
   repo-sync:
-    uses: aigovops-foundation/aigovops-library-june-ken-bob/.github/workflows/reusable-repo-sync-check.yml@main
+    # SAME REPO, so a LOCAL path rather than owner/repo@ref. Found by
+    # reusable-estate-audit.yml on its first run (2026-09-30): this was
+    # `aigovops-foundation/aigovops-library-june-ken-bob/...@main`, i.e. the Library
+    # reaching across the network for its own file at a moving ref. A local `./` path
+    # always resolves to the callee AT THIS COMMIT, so caller and callee can never
+    # drift apart and there is nothing to pin or bump.
+    uses: ./.github/workflows/reusable-repo-sync-check.yml

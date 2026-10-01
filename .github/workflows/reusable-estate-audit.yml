@@ -1,0 +1,326 @@
+name: reusable-estate-audit
+
+# A reusable, dependency-free audit of the things that are true of a healthy estate repo
+# and silently stop being true. Adopt it in one line; no PAT, no external action, no
+# network beyond the checkout.
+#
+#   jobs:
+#     estate-audit:
+#       uses: aigovops-foundation/aigovops-library-june-ken-bob/.github/workflows/reusable-estate-audit.yml@<sha>
+#       with:
+#         sitemap_pages_dir: "blog"     # optional; omit unless the repo publishes a sitemap
+#
+# WHY THIS EXISTS. On 2026-09-30 a six-specialist review council swept five repos in this
+# estate. The most transferable thing it found was not a bug in any one of them — it was
+# that three separate findings had the same shape: **a check that existed in one repo and
+# not in its neighbour.**
+#
+#   · Omni-v4's red-main watchdog called a Library workflow at `@main`, unpinned, while
+#     every other `uses:` in that repo was SHA-pinned. Omni-Rapp then turned out to have
+#     the same thing TWICE plus four floating action tags — in the repo that ships direct
+#     to prod.
+#   · Omni-v4's watchdog had never once run, because the caller did not grant `actions: read`
+#     and a reusable workflow that cannot get its scopes dies as a `startup_failure`: no
+#     job, no log, no notification. It read as configured and active for its whole life.
+#   · Neither Omni-v4 nor the site repo had a `CLAUDE.md`, so a multi-repo agent session
+#     filled that slot from a NEIGHBOURING repository and handed twelve reviewers another
+#     project's house rules as binding policy.
+#   · The site repo had a tracked `.pyc` that `.gitignore` could not cover (gitignore does
+#     not apply to tracked files), which CI re-committed to the Pages-served branch every run.
+#   · Five of fourteen blog posts were absent from `sitemap.xml`, because nothing wrote it.
+#
+# Eighteen specialist reviews found those. A scheduled lane finds the next one for free.
+# That is the whole argument: every assertion below is a thing that was ALREADY WRONG in
+# this estate, not a best practice someone liked the sound of.
+#
+# WHY IT IS ADVISORY BY DEFAULT ON SOME CHECKS. A lane that reds a repo for something its
+# owner has not agreed to is a lane that gets switched off, and then the real findings go
+# with it. `require_*` inputs default to the strictest setting that every estate repo can
+# actually satisfy today; anything repo-shaped (a sitemap, a published site) is opt-in.
+
+on:
+  workflow_call:
+    inputs:
+      require_pinned_uses:
+        description: "Fail if any external `uses:` is not a full 40-char commit SHA."
+        required: false
+        type: boolean
+        default: true
+      require_version_comments:
+        description: "Fail if a pinned `uses:` has no trailing `# version` comment."
+        required: false
+        type: boolean
+        default: true
+      require_watchdog:
+        description: "Fail if there is no red-main watchdog lane, or its caller cannot grant the scopes it needs."
+        required: false
+        type: boolean
+        default: true
+      require_agent_instructions:
+        description: "Fail if the repo root has no CLAUDE.md / AGENTS.md — in a multi-repo agent session that slot gets filled by a neighbour."
+        required: false
+        type: boolean
+        default: true
+      sitemap_pages_dir:
+        description: "Directory of published pages to check against sitemap.xml (e.g. 'blog'). Omit to skip the sitemap check."
+        required: false
+        type: string
+        default: ""
+      site_url:
+        description: "Site root used to build expected sitemap <loc> values. Defaults to whatever the existing sitemap already uses."
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  estate-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Audit
+        env:
+          REQUIRE_PINNED: ${{ inputs.require_pinned_uses }}
+          REQUIRE_COMMENTS: ${{ inputs.require_version_comments }}
+          REQUIRE_WATCHDOG: ${{ inputs.require_watchdog }}
+          REQUIRE_AGENT_MD: ${{ inputs.require_agent_instructions }}
+          SITEMAP_PAGES_DIR: ${{ inputs.sitemap_pages_dir }}
+          SITE_URL: ${{ inputs.site_url }}
+        run: |
+          set -uo pipefail
+          python3 - <<'PY'
+          import os, re, subprocess, sys
+          from pathlib import Path
+
+          def flag(name):
+              return os.environ.get(name, "false").strip().lower() == "true"
+
+          REQUIRE_PINNED   = flag("REQUIRE_PINNED")
+          REQUIRE_COMMENTS = flag("REQUIRE_COMMENTS")
+          REQUIRE_WATCHDOG = flag("REQUIRE_WATCHDOG")
+          REQUIRE_AGENT_MD = flag("REQUIRE_AGENT_MD")
+          PAGES_DIR = os.environ.get("SITEMAP_PAGES_DIR", "").strip().strip("/")
+          SITE_URL  = os.environ.get("SITE_URL", "").strip().rstrip("/")
+
+          ROOT = Path(".").resolve()
+          WF = ROOT / ".github" / "workflows"
+          SHA = re.compile(r"^[0-9a-f]{40}$")
+
+          findings = []   # (severity, check, message)  severity: "fail" | "warn" | "note"
+          def fail(check, msg): findings.append(("fail", check, msg))
+          def warn(check, msg): findings.append(("warn", check, msg))
+          def note(check, msg): findings.append(("note", check, msg))
+
+          workflows = sorted(WF.glob("*.yml")) + sorted(WF.glob("*.yaml")) if WF.is_dir() else []
+
+          # ── 1. Pinning ────────────────────────────────────────────────────────────
+          # A tag is not a pin: tags move, and `@v4` is a branch-shaped promise from
+          # someone else. A reusable workflow is the sharp case, because its permission
+          # REQUIREMENTS can change under the caller and the resulting failure is silent.
+          uses_lines = []
+          for path in workflows:
+              for i, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+                  m = re.match(r"^\s*-?\s*uses:\s*(\S+)", line)
+                  if not m:
+                      continue
+                  raw = m.group(1)
+                  if raw.startswith("./") or raw.startswith("docker://"):
+                      continue      # local to this repo, at this commit — nothing to pin
+                  uses_lines.append((path.name, i, raw, line))
+
+          if not workflows:
+              note("pinning", "no .github/workflows/ directory — nothing to check")
+          elif not uses_lines:
+              note("pinning", "no external `uses:` references found")
+          else:
+              unpinned = [(f, i, r) for (f, i, r, _) in uses_lines
+                          if not SHA.match(r.rpartition("@")[2])]
+              reusable_unpinned = [x for x in unpinned if "/.github/workflows/" in x[2]]
+              # A repo calling its OWN reusable workflow over the network is a case with a
+              # better answer than pinning: `./.github/workflows/x.yml` always resolves to
+              # the callee at this commit, so caller and callee cannot drift and there is
+              # nothing to bump. The Library was doing exactly this when this lane first
+              # ran against it.
+              this_repo = os.environ.get("GITHUB_REPOSITORY", "")
+              for f, i, r in unpinned:
+                  if this_repo and r.startswith(this_repo + "/"):
+                      advice = (f" — and since this is THIS repository, prefer a local path "
+                                f"(`./.github/workflows/...`) over a pinned ref: it always "
+                                f"matches the current commit and needs no bump")
+                  elif "/.github/workflows/" in r:
+                      advice = (" (REUSABLE WORKFLOW — an upstream permission change kills "
+                                "this lane silently: no job, no log, no notification)")
+                  else:
+                      advice = ""
+                  (fail if REQUIRE_PINNED else warn)(
+                      "pinning", f"{f}:{i} is not pinned to a commit SHA: {r}{advice}")
+              if not unpinned:
+                  note("pinning", f"all {len(uses_lines)} external `uses:` pinned to a full SHA")
+              if reusable_unpinned:
+                  note("pinning",
+                       f"{len(reusable_unpinned)} of those is a cross-repo reusable workflow, "
+                       f"which is the case that fails without a job, a log or a notification")
+
+              missing_comment = [(f, i, r) for (f, i, r, line) in uses_lines
+                                 if SHA.match(r.rpartition("@")[2]) and "#" not in line]
+              for f, i, r in missing_comment:
+                  (fail if REQUIRE_COMMENTS else warn)(
+                      "pin-comments",
+                      f"{f}:{i} is pinned but says no version — a bare SHA is safe and "
+                      f"unreadable, and the comment is what makes a bump reviewable")
+
+          # ── 2. The watchdog can actually start ────────────────────────────────────
+          # Parsed out of the real `permissions:` block, NOT grepped. A grep for
+          # "actions: read" passes on a repo whose watchdog file merely EXPLAINS the
+          # startup_failure in a comment — which is a mistake that was actually made
+          # while writing the local version of this check, and it reported healthy on a
+          # file whose grant had been deleted.
+          def declared_permissions(path):
+              granted, inside = set(), False
+              for line in path.read_text(encoding="utf-8").splitlines():
+                  if re.match(r"^[a-z]", line) and not line.startswith("permissions:"):
+                      inside = False
+                  if line.startswith("permissions:"):
+                      inside = True
+                      continue
+                  if inside:
+                      m = re.match(r"^\s+([a-z-]+):\s*([a-z]+)\s*$", line)
+                      if m:
+                          granted.add((m.group(1), m.group(2)))
+                      elif line.strip() and not line.lstrip().startswith("#"):
+                          inside = False
+              return granted
+
+          watchdogs = [p for p in workflows if "red-main" in p.name or "watchdog" in p.name]
+          if not watchdogs:
+              (fail if REQUIRE_WATCHDOG else warn)(
+                  "watchdog",
+                  "no red-main watchdog lane. A red default branch is only a control if "
+                  "somebody hears it; adopt reusable-red-main-watchdog.yml")
+          for p in watchdogs:
+              granted = declared_permissions(p)
+              names = {k: v for k, v in granted}
+              if names.get("actions") != "read":
+                  (fail if REQUIRE_WATCHDOG else warn)(
+                      "watchdog",
+                      f"{p.name} does not grant `actions: read` at the caller. The reusable "
+                      f"watchdog reads Actions history and cannot hold a scope its caller "
+                      f"lacks, so every run dies at startup with no job, no log and no "
+                      f"notification — the lane looks active and is dead. "
+                      f"(declared: {sorted(granted) or 'nothing'})")
+              elif names.get("contents") != "read":
+                  warn("watchdog", f"{p.name} grants actions: read but not contents: read")
+              else:
+                  note("watchdog", f"{p.name} grants the scopes the reusable lane needs")
+
+          # ── 3. An agent-instruction file, so the slot is not filled by a neighbour ──
+          agent_files = [n for n in ("CLAUDE.md", "AGENTS.md") if (ROOT / n).is_file()]
+          if agent_files:
+              note("agent-instructions", f"root has {', '.join(agent_files)}")
+          else:
+              (fail if REQUIRE_AGENT_MD else warn)(
+                  "agent-instructions",
+                  "no CLAUDE.md or AGENTS.md at the repo root. An agent session with several "
+                  "repos checked out injects SOME repo's file as binding project policy — if "
+                  "not this one's, then a neighbour's. On 2026-09-30 that handed twelve "
+                  "reviewers of this estate another project's house rules, including one that "
+                  "normalises pushing straight to main. The slot gets filled either way; fill "
+                  "it deliberately")
+
+          # ── 4. Tracked build artifacts that .gitignore cannot save you from ────────
+          # gitignore does not apply to an already-tracked file. The site repo carried a
+          # tracked scripts/__pycache__/*.pyc that CI re-committed to the Pages-served
+          # branch on every run, which made its "no changes" path dead code.
+          try:
+              tracked = subprocess.run(["git", "ls-files"], capture_output=True, text=True,
+                                       timeout=60).stdout.splitlines()
+          except Exception as e:
+              tracked = []
+              note("tracked-artifacts", f"could not list tracked files ({type(e).__name__})")
+          ARTIFACT = re.compile(r"(^|/)(__pycache__/|\.pytest_cache/|node_modules/)|"
+                                r"\.(pyc|pyo|class|o|so|dylib)$")
+          bad = [f for f in tracked if ARTIFACT.search(f)]
+          if bad:
+              fail("tracked-artifacts",
+                   f"{len(bad)} build artifact(s) are TRACKED in git, so .gitignore has no "
+                   f"effect on them and any `git add -A` re-commits them: "
+                   f"{', '.join(bad[:6])}{' …' if len(bad) > 6 else ''}. "
+                   f"Fix with `git rm -r --cached <path>`")
+          elif tracked:
+              note("tracked-artifacts", "no compiled or cached build output is tracked")
+
+          # ── 5. Script injection into a shell ──────────────────────────────────────
+          for path in workflows:
+              text = path.read_text(encoding="utf-8")
+              for m in re.finditer(r"\$\{\{\s*(github\.event\.[\w.]*|github\.head_ref)\s*\}\}", text):
+                  before = text[:m.start()]
+                  if before.rfind("run:") > max(before.rfind("with:"), before.rfind("env:"),
+                                                before.rfind("uses:")):
+                      fail("script-injection",
+                           f"{path.name}: {m.group(0)} is interpolated into a `run:` block. "
+                           f"Anything an outsider can title reaches the shell; pass it via "
+                           f"`env:` and quote it")
+
+          # ── 6. Sitemap coverage (opt-in: only repos that publish one) ──────────────
+          if PAGES_DIR:
+              sm = ROOT / "sitemap.xml"
+              pages_dir = ROOT / PAGES_DIR
+              if not sm.is_file():
+                  warn("sitemap", f"sitemap_pages_dir={PAGES_DIR!r} was given but sitemap.xml does not exist")
+              elif not pages_dir.is_dir():
+                  warn("sitemap", f"sitemap_pages_dir={PAGES_DIR!r} is not a directory")
+              else:
+                  text = sm.read_text(encoding="utf-8")
+                  pages = sorted(p.name for p in pages_dir.glob("*.html"))
+                  absent = [p for p in pages if f"/{PAGES_DIR}/{p}" not in text]
+                  if absent:
+                      fail("sitemap",
+                           f"{len(absent)} of {len(pages)} page(s) under {PAGES_DIR}/ are "
+                           f"absent from sitemap.xml: {', '.join(absent[:8])}"
+                           f"{' …' if len(absent) > 8 else ''}. A sitemap maintained by hand "
+                           f"falls behind by one every time a page is generated")
+                  else:
+                      note("sitemap", f"all {len(pages)} page(s) under {PAGES_DIR}/ are listed")
+                  # Malformed is worse than stale: a crawler rejects the whole file.
+                  try:
+                      import xml.dom.minidom
+                      xml.dom.minidom.parseString(text)
+                      note("sitemap", "sitemap.xml is well-formed XML")
+                  except Exception as e:
+                      fail("sitemap", f"sitemap.xml is not well-formed XML: {e}")
+
+          # ── Report ────────────────────────────────────────────────────────────────
+          order = {"fail": 0, "warn": 1, "note": 2}
+          icon = {"fail": "::error::", "warn": "::warning::", "note": "  ·"}
+          findings.sort(key=lambda f: (order[f[0]], f[1]))
+
+          fails = [f for f in findings if f[0] == "fail"]
+          warns = [f for f in findings if f[0] == "warn"]
+
+          print("")
+          print("ESTATE AUDIT")
+          print("=" * 60)
+          for sev, check, msg in findings:
+              print(f"{icon[sev]} [{check}] {msg}")
+          print("=" * 60)
+          print(f"{len(fails)} failing, {len(warns)} warning, "
+                f"{len(findings) - len(fails) - len(warns)} ok")
+
+          # A summary a person reads on their phone, not a log they have to open.
+          summary = os.environ.get("GITHUB_STEP_SUMMARY")
+          if summary:
+              with open(summary, "a", encoding="utf-8") as fh:
+                  fh.write("## Estate audit\n\n")
+                  if not fails and not warns:
+                      fh.write("Everything checked is in order.\n\n")
+                  for sev, check, msg in findings:
+                      if sev == "note":
+                          continue
+                      fh.write(f"- **{sev.upper()}** · `{check}` — {msg}\n")
+                  fh.write(f"\n{len(fails)} failing, {len(warns)} warning.\n")
+
+          sys.exit(1 if fails else 0)
+          PY
