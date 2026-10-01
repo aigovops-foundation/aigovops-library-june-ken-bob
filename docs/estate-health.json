@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-10-01T18:23:05.603Z",
+  "generatedAt": "2026-10-01T19:21:18.522Z",
   "estate": {
     "properties": 8,
     "reporting": 7,
-    "healthy": 6,
-    "red": 1,
-    "greenPages": 344,
-    "redPages": 3,
+    "healthy": 7,
+    "red": 0,
+    "greenPages": 347,
+    "redPages": 0,
     "dead": 0,
-    "broken": 3,
+    "broken": 0,
     "consoleErrorPages": 0,
-    "score": 99
+    "score": 100
   },
   "sites": [
     {
@@ -18,7 +18,7 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-10-01T18:15:45.850Z",
+      "ranAt": "2026-10-01T19:13:58.072Z",
       "summary": {
         "pages": 32,
         "greenPages": 32,
@@ -306,7 +306,7 @@
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-10-01T18:17:20.651Z",
+      "ranAt": "2026-10-01T19:15:35.330Z",
       "summary": {
         "pages": 68,
         "greenPages": 68,
@@ -873,45 +873,21 @@
       "name": "Beacon",
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
-      "status": "red",
-      "ranAt": "2026-10-01T18:19:15.499Z",
+      "status": "green",
+      "ranAt": "2026-10-01T19:17:25.858Z",
       "summary": {
         "pages": 78,
-        "greenPages": 75,
-        "redPages": 3,
-        "ok": 3921,
+        "greenPages": 78,
+        "redPages": 0,
+        "ok": 3924,
         "dead": 0,
-        "broken": 3,
+        "broken": 0,
         "external": 1624,
         "delegated": 0,
         "consoleErrorPages": 0,
-        "healthy": false
+        "healthy": true
       },
       "pageHealth": [
-        {
-          "path": "/aigovops-ncw-ai-camp/community-resources.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/es/community-resources.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/aigovops-ncw-ai-camp/resources.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
         {
           "path": "/aigovops-beacon/",
           "dead": 0,
@@ -1057,6 +1033,14 @@
           "loadError": null
         },
         {
+          "path": "/aigovops-ncw-ai-camp/community-resources.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/aigovops-ncw-ai-camp/courses.html",
           "dead": 0,
           "broken": 0,
@@ -1074,6 +1058,14 @@
         },
         {
           "path": "/aigovops-ncw-ai-camp/es/checklist.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/es/community-resources.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1250,6 +1242,14 @@
         },
         {
           "path": "/aigovops-ncw-ai-camp/privacy.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/aigovops-ncw-ai-camp/resources.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -1514,26 +1514,7 @@
         }
       ],
       "dead": [],
-      "broken": [
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/resources.html",
-          "text": "🍎 Cool Schools AI in the classroom — the Sunday-night rescue kit and your 3-sen",
-          "href": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/downloads/cool-schools.pdf",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/community-resources.html",
-          "text": "the Cool Schools one-pager",
-          "href": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/downloads/cool-schools.pdf",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/es/community-resources.html",
-          "text": "el resumen de Cool Schools",
-          "href": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/downloads/cool-schools.pdf",
-          "reason": "internal link → HTTP 503"
-        }
-      ],
+      "broken": [],
       "consoleErrors": []
     },
     {
@@ -1541,7 +1522,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-10-01T18:21:01.356Z",
+      "ranAt": "2026-10-01T19:19:12.958Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2189,7 +2170,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-10-01T18:21:16.543Z",
+      "ranAt": "2026-10-01T19:19:28.443Z",
       "summary": {
         "pages": 11,
         "greenPages": 11,
@@ -2301,7 +2282,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-10-01T18:23:02.424Z",
+      "ranAt": "2026-10-01T19:21:15.317Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2949,7 +2930,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-10-01T18:23:05.595Z",
+      "ranAt": "2026-10-01T19:21:18.514Z",
       "summary": {
         "pages": 2,
         "greenPages": 2,
@@ -2989,6 +2970,6 @@
     "provider": "graph",
     "status": "ok",
     "detail": "app authenticates; sends as bob.rapp@aigovops.community",
-    "checkedAt": "2026-10-01T18:23:05.846Z"
+    "checkedAt": "2026-10-01T19:21:18.965Z"
   }
 }
