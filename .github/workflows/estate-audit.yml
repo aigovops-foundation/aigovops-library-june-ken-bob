@@ -1,0 +1,33 @@
+name: estate-audit
+
+# This repo adopting the estate's shared audit lane (one `uses:` line — the checks and the
+# reason each one exists live in the Library).
+#
+# Every assertion it runs is something that was ALREADY WRONG somewhere in this estate on
+# 2026-09-30, found by a six-specialist review council: a workflow ref floating on a branch,
+# a watchdog that could never start because its caller withheld `actions: read`, a missing
+# CLAUDE.md that let a NEIGHBOURING repo's house rules be injected as this one's policy, a
+# tracked .pyc that CI re-committed on every run, a sitemap nothing wrote. The council cost
+# eighteen reviews; this lane costs a cron line.
+#
+# Scheduled rather than on-push because these are all slow decays — nothing breaks the day it
+# goes wrong, which is exactly why a human never notices.
+
+on:
+  schedule:
+    - cron: "42 16 * * 1"
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/**"      # the one change that can introduce these faults
+
+# The audit only reads the checked-out tree, so this is the stock read set. Declared
+# explicitly anyway: a reusable workflow's permissions can only be a SUBSET of its
+# caller's, and leaving it implicit is how the red-main watchdog spent its whole life
+# dying at startup with no job, no log and no notification.
+permissions:
+  contents: read
+
+jobs:
+  estate-audit:
+    uses: aigovops-foundation/aigovops-library-june-ken-bob/.github/workflows/reusable-estate-audit.yml@3c6ec751e81a06ca7c8985916d6246b6fd435c28 # v1
