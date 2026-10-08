@@ -133,7 +133,7 @@ document rather than rewrite an append-only chain.
 
 ---
 
-## 4 · The plan register — all twenty-six documents
+## 4 · The plan register — all twenty-seven documents
 
 Status: **in force** (being executed) · **reference** (a rule of record) · **shipped** (done,
 kept for the record) · **proposal** (waits on a founder) · **historical** (a snapshot) ·
@@ -150,6 +150,7 @@ Checked by `npm run plan:check` — a new plan document without a row here fails
 | [`END-TO-END-BUILD-PLAN.md`](./END-TO-END-BUILD-PLAN.md) | The engineering map to the production backbone | in force |
 | [`estate-review-2026-07-19.md`](./estate-review-2026-07-19.md) | ~60 findings from six sweeps; Waves 2–4 still carry open items | in force |
 | [`growth-100k-recommendations.md`](./growth-100k-recommendations.md) | The reconciled growth plan from three senior reviews | in force |
+| [`simple-front-door.md`](./simple-front-door.md) | The approved six-action front door, one Library, and default-yes design | in force |
 | [`scale-architecture.md`](./scale-architecture.md) | Running AiGovOps as a workflow system at 100k | in force |
 | [`00-overview.md`](./00-overview.md) | How we operate — agents, skills, processes, receipts | reference |
 | [`agents.md`](./agents.md) | The cast: each agent's role, dial, and named human | reference |

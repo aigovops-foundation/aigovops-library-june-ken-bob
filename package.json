@@ -7,6 +7,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "build:docs": "node scripts/build-docs.mjs",
+    "library:index": "node scripts/build-library-index.mjs",
     "audit:repos": "node scripts/repo-audit.mjs --open",
     "estate:exec": "node scripts/estate-exec-digest.mjs",
     "estate:check": "node scripts/estate-manifest.mjs --check",
