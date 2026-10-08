@@ -92,6 +92,7 @@ function toolsFromEstate() {
   const estate = parseYaml(readFileSync(join(ROOT, "estate.yaml"), "utf8"));
   return (estate.repos ?? [])
     .filter((repo) => repo.account === "aigovops-foundation")
+    .filter((repo) => !/^Empty/iu.test(String(repo.role ?? "")))
     .filter((repo) => !repo.archived && !repo.retired &&
       !["archived", "retired", "keep-separate"].includes(String(repo.disposition ?? "").toLowerCase()) &&
       !["archived", "retired", "keep-separate"].includes(String(repo.status ?? "").toLowerCase()))

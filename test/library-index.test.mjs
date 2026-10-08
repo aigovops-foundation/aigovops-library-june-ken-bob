@@ -30,6 +30,21 @@ test("the 100 harm-case anchors are unique", () => {
   assert.equal(new Set(anchors).size, 100);
 });
 
+test("tools exclude empty repos and use an available Pages URL", () => {
+  const tools = records.filter((item) => item.ty === "Tool");
+  assert.ok(!tools.some((item) => item.t === "aigovops-old"));
+  assert.equal(
+    tools.find((item) => item.t === "aigovops-foundation-site-redesign-June2026-ken-and-bob")?.u,
+    "https://www.aigovops-foundation.com",
+  );
+});
+
+test("the front door and search pages are not Library content records", () => {
+  for (const page of ["front-door.html", "find.html"]) {
+    assert.ok(!records.some((item) => item.u.endsWith(`/library/${page}`)));
+  }
+});
+
 test("building the same inputs twice produces byte-identical JSON", () => {
   assert.equal(serializeLibraryIndex(buildLibraryIndex()), serializeLibraryIndex(buildLibraryIndex()));
 });

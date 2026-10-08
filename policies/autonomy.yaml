@@ -45,9 +45,9 @@ classes:
     note: "`contents: write` is allowed ONLY with a declared `writes:` path allowlist, and only for machine-written artifacts. An agent writing prose or code to main is not green — it is yellow, and it arrives as a PR."
 
   - id: yellow
-    means: "An agent proposes; a human may veto."
-    test: "The agent does all of the work and none of the deciding. Listed actions may ship after the veto window."
-    human: "a founder or steward may veto during the window"
+    means: "An agent prepares; a human merges."
+    test: "The agent does all of the work and none of the deciding. The output is a pull request."
+    human: "a founder or steward merges"
     milestone_marker: "[auto] ending in a PR"
     unattended: false
     allowed_permissions:
@@ -55,7 +55,7 @@ classes:
       issues: write
       pull-requests: write
     requires_write_paths: false
-    note: "Where most of the value lives — every content change, skill change, policy edit and site copy change. Listed actions default to yes after 24 hours when checks are green."
+    note: "Where most of the value lives — every content change, skill change, policy edit and site copy change. This is the Yes-Gate applied to the Foundation's own bureaucracy. Actions listed under default_yes ship after the veto window unless a founder says no."
 
   - id: red
     means: "Never autonomous. Ever."
