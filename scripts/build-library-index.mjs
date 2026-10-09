@@ -8,6 +8,7 @@ import { parseYaml } from "./estate-manifest.mjs";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUTPUT = join(ROOT, "docs", "data", "library.json");
 const LIBRARY_URL = "https://community.aigovops-foundation.com/library/";
+const LIVE_URL = { "aigovops-library-june-ken-bob": LIBRARY_URL };
 const GITHUB_URL = "https://github.com/aigovops-foundation/";
 const LEVELS = [
   ["100-begin", "Begin", "Pre-pend"],
@@ -99,9 +100,11 @@ function toolsFromEstate() {
     .map((repo) => {
       const purpose = repo.description ?? repo.purpose ?? repo.role ?? "";
       const page = repo.pages_url;
-      const url = typeof page === "string" && /^https?:\/\//iu.test(page)
-        ? page
-        : `https://github.com/${repo.account}/${repo.id}`;
+      const url = LIVE_URL[repo.id] ?? (
+        typeof page === "string" && /^https?:\/\//iu.test(page)
+          ? page
+          : `https://github.com/${repo.account}/${repo.id}`
+      );
       return record({
         t: repo.id,
         s: boundedDescription(purpose),
@@ -120,11 +123,11 @@ export function buildLibraryIndex() {
     t: `${item.org} (${item.year})`,
     s: caseSummary(item.incident),
     ty: "Case",
-    fw: (item.frameworks ?? []).slice(0, 3)
+    fw: (item.frameworks ?? [])
       .map((framework) => String(framework).split(/\s*\(/u)[0].trim().slice(0, 30)),
     c: item.country ?? "",
     k: item.gate ?? "",
-    u: `${LIBRARY_URL}f-ai-friday.html#${item.id}`,
+    u: `${LIBRARY_URL}f-ai-friday.html?id=${encodeURIComponent(item.id)}`,
   }));
 
   const pages = readdirSync(join(ROOT, "docs"))
@@ -134,7 +137,7 @@ export function buildLibraryIndex() {
       const page = pageMetadata(file);
       return record({
         t: page.title,
-        s: page.description,
+        s: "Members-only Library page — sign in to read.",
         ty: page.type,
         u: `${LIBRARY_URL}${file}`,
         m: true,
