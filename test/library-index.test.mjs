@@ -50,10 +50,13 @@ test("a case with more than three frameworks retains every normalized tag", () =
   assert.ok(item.fw.some((framework) => framework.startsWith("ISO/IEC 42001")));
 });
 
-test("members-only pages expose a generic sign-in summary", () => {
+test("members-only pages keep their public description so topic search finds them", () => {
   const membersOnly = records.filter((item) => item.m);
   assert.ok(membersOnly.length > 0);
-  assert.ok(membersOnly.every((item) => item.s === "Members-only Library page — sign in to read."));
+  assert.ok(!records.some((item) => item.s === "Members-only Library page — sign in to read."));
+  const controlPlane = membersOnly.find((item) => item.u.endsWith("control-plane.html"));
+  assert.ok(controlPlane);
+  assert.match(controlPlane.s, /sandbox/iu);
 });
 
 test("tools exclude empty repos and use an available Pages URL", () => {

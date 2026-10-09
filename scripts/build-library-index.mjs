@@ -137,7 +137,7 @@ export function buildLibraryIndex() {
       const page = pageMetadata(file);
       return record({
         t: page.title,
-        s: "Members-only Library page — sign in to read.",
+        s: page.description,
         ty: page.type,
         u: `${LIBRARY_URL}${file}`,
         m: true,
