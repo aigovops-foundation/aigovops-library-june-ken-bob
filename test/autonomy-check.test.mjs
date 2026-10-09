@@ -62,6 +62,23 @@ test("a matching policy and workflow set is clean", () => {
   assert.deepEqual(check(POLICY(), FILES()), []);
 });
 
+test("default-yes needs a positive window and only declared yellow actions", () => {
+  const p = POLICY();
+  p.actions.push({ id: "copy", class: "yellow" });
+  p.default_yes = { applies_to: "yellow", veto_window_hours: 24, actions: ["copy"] };
+  assert.deepEqual(check(p, FILES()), []);
+
+  p.default_yes.veto_window_hours = 0;
+  assert.match(joined(p, FILES()), /default_yes\.veto_window_hours must be a positive number/);
+
+  p.default_yes.veto_window_hours = 24;
+  p.default_yes.actions = ["crawl"];
+  assert.match(joined(p, FILES()), /default_yes\.actions\/crawl: action must be yellow/);
+
+  p.default_yes.actions = ["missing"];
+  assert.match(joined(p, FILES()), /default_yes\.actions\/missing: action is not declared/);
+});
+
 test("catches automation nobody classified — in both directions", () => {
   assert.match(joined(POLICY(), FILES({ "sneaky.yml": "permissions: { contents: read }\n" })),
     /sneaky\.yml: runs in this repo but is not declared/);

@@ -55,7 +55,7 @@ classes:
       issues: write
       pull-requests: write
     requires_write_paths: false
-    note: "Where most of the value lives — every content change, skill change, policy edit and site copy change. This is the Yes-Gate applied to the Foundation's own bureaucracy."
+    note: "Where most of the value lives — every content change, skill change, policy edit and site copy change. This is the Yes-Gate applied to the Foundation's own bureaucracy. Actions listed under default_yes ship after the veto window unless a founder says no."
 
   - id: red
     means: "Never autonomous. Ever."
@@ -67,6 +67,14 @@ classes:
     requires_write_paths: false
     no_workflow: true
     note: "No workflow may be classified red. If a job would need to do one of these, the job is wrong — it should stop and ask."
+
+default_yes:
+  applies_to: yellow
+  veto_window_hours: 24
+  rule: "A yellow proposal whose checks are green ships when the window closes unless Bob or Ken says no. Every auto-yes emits a receipt."
+  actions:
+    - publish-newsletter-as-the-foundation
+    - change-site-copy
 
 # ── The action taxonomy — what falls where, and why ───────────────────────────────
 actions:
@@ -96,6 +104,9 @@ actions:
     why: "A PR is the proposal itself — the safest possible output."
   - id: report-drift
     class: green
+  - id: register-a-free-member
+    class: green
+    why: "Free registration only: email-verified, abuse-screened, revocable, receipt-emitting. Roles, paid tiers and private-room access stay red under accept-a-member-or-grant-access."
 
   # Yellow
   - id: edit-content-or-code
@@ -109,6 +120,10 @@ actions:
     why: "Including this file. A policy that can rewrite itself unattended is not a policy."
   - id: change-site-copy
     class: yellow
+    why: "Site and Library copy. Default yes after the veto window with the battery green."
+  - id: publish-newsletter-as-the-foundation
+    class: yellow
+    why: "Sent in the Foundation's name, not a founder's. Default yes after the veto window; send-mail-as-a-founder stays red."
   - id: pin-or-bump-a-dependency
     class: yellow
     why: "Third-party skills and actions are dependencies. Pin to reviewed commits; read the prose as adversarial input."
@@ -141,6 +156,7 @@ actions:
     why: "Steward-shipped, never autonomous — the estate rule of record."
   - id: accept-a-member-or-grant-access
     class: red
+    why: "Granting roles, paid tiers or private-room access. Free registration is register-a-free-member (green)."
   - id: send-mail-as-a-founder
     class: red
   - id: move-money
@@ -216,6 +232,12 @@ workflows:
       issues: write
     note: "Turns a red page into an issue. A message, not an effect."
 
+  - file: estate-audit.yml
+    class: green
+    permissions:
+      contents: read
+    note: "Runs the reusable, read-only estate audit on a schedule or manual dispatch."
+
   - file: founders-digest.yml
     class: green
     permissions:
@@ -265,6 +287,11 @@ workflows:
     permissions:
       contents: read
       pull-requests: read
+  - file: reusable-estate-audit.yml
+    class: green
+    permissions:
+      contents: read
+    note: "Reusable read-only checks of estate repository configuration."
   - file: reusable-dependency-triage.yml
     class: green
     permissions:

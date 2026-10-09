@@ -42,6 +42,8 @@ jobs:
       # what made the gap so easy to miss: there WAS a discoverability lane in CI, it just was
       # not the one the deploy runs. Mirror pages.yml exactly — build first, then gate.
       - run: node scripts/build-docs.mjs
+      - run: node scripts/build-library-index.mjs --check
+      - run: node --test test/library-index.test.mjs
       - run: node scripts/test-library.mjs --dir docs
       # Estate manifest gate — estate.yaml is the one input; estate-sites.json, founders.json
       # and repo-audit.config.json are views of it. --check fails the build when they disagree.
