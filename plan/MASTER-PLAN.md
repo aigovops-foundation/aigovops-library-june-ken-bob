@@ -69,7 +69,7 @@ enforced in CI, which on its first run found four workflows running on an unstat
 default.
 
 **Waiting on a founder.** The seven decisions. The 1Password cleanup left from M3. The M2
-sandbox-privilege call. `help@aigovops.org`, which still cannot receive mail.
+sandbox-privilege call. `help@aigovops-foundation.com`, which still cannot receive mail.
 
 ### The finding worth reading twice
 
