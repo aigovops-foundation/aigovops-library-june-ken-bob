@@ -4,10 +4,10 @@ Where people learn the rule and earn marks: the café, the worksheets, the Libra
 
 | Repo | Owner | Updated | Licence |
 |---|---|---|---|
-| [Practice — Fall 2026 Release](#practice-—-fall-2026-release) | `aigovops-foundation` | 2026-09-25 | Apache-2.0 |
+| [Practice — Fall 2026 Release](#practice--fall-2026-release) | `aigovops-foundation` | 2026-09-25 | Apache-2.0 |
 | [The Library](#the-library) | `aigovops-foundation` | 2026-10-08 | see repo |
 | [NCW AI Camp](#ncw-ai-camp) | `aigovops-foundation` | 2026-09-11 | Apache-2.0 |
-| [Vendor RFI + audit training](#vendor-rfi-+-audit-training) | `aigovops-foundation` | 2026-09-02 | Apache-2.0 |
+| [Vendor RFI + audit training](#vendor-rfi--audit-training) | `aigovops-foundation` | 2026-09-02 | Apache-2.0 |
 | [Foundation OS](#foundation-os) | `aigovops-foundation` | 2026-02-28 | Apache-2.0 |
 | [Review Framework (AOS)](#review-framework-aos) | `aigovops-foundation` | 2026-04-19 | Apache-2.0 |
 

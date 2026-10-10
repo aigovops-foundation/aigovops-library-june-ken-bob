@@ -7,7 +7,7 @@ The engines that make, bind, read and carry signed receipts. All conform to (or 
 | [Beacon](#beacon) | `aigovops-foundation` | 2026-10-05 | Apache-2.0 |
 | [Umbrella-GovOps](#umbrella-govops) | `aigovops-foundation` | 2026-09-11 | Apache-2.0 |
 | [Lantern](#lantern) | `aigovops-foundation` | 2026-08-17 | Apache-2.0 |
-| [aigovops — Open Source v4 (trunk)](#aigovops-—-open-source-v4-trunk) | `aigovops-foundation` | 2026-08-23 | MIT (LICENSE file) |
+| [aigovops — Open Source v4 (trunk)](#aigovops--open-source-v4-trunk) | `aigovops-foundation` | 2026-08-23 | MIT (LICENSE file) |
 | [One Receipt](#one-receipt) | `aigovops-foundation` | 2026-09-29 | Apache-2.0 / CC BY 4.0 |
 | [REPLAY](#replay) | `aigovops-foundation` | 2026-08-17 | Apache-2.0 |
 | [Prompt Studio](#prompt-studio) | `aigovops-foundation` | 2026-08-17 | see repo |
