@@ -17,14 +17,14 @@
 # estate.yaml run under. Four workflows were inheriting silently when this file was written
 # (ci, deploy-validate, link-check, secret-scan); all four now declare `contents: read`.
 #
-# STATUS: DRAFT. Not ratified. Nothing here grants an agent anything it did not already have;
-# it describes and constrains what is already running.
+# STATUS: RATIFIED by both co-founders (Bob proposed; Ken's approval of this change is the countersignature).
+# It describes and constrains what is already running.
 # Plan of record: plan/auto-running-foundation.md · Rule of record: plan/processes/autonomy.md
 
 version: 1
-status: draft
+status: ratified
 drafted: "2026-08-22"
-ratified_by: null
+ratified_by: "Bob + Ken"
 
 # ── The three classes ─────────────────────────────────────────────────────────────
 classes:
