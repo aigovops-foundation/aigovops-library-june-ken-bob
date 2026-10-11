@@ -7,7 +7,7 @@
 
 ## Legacy and stubs
 
-- [`aigovops-foundation/aigovops-foundation`](https://github.com/aigovops-foundation/aigovops-foundation): Early (April 2026) rebuild of the old aigovopsfoundation.org site, made with Google AI tools (NotebookLM, Stitch, Veo). Four pillars. Superseded by the current site.
+- [`aigovops-foundation/aigovops-foundation`](https://github.com/aigovops-foundation/aigovops-foundation): Early (April 2026) rebuild of the old aigovopsfoundation.org site, made with Google AI tools (NotebookLM, Stitch, Veo). Four pillars. Superseded by the current site. **Archived 2026-10-10.** Its Pages site now sends visitors to [www.aigovops-foundation.com](https://www.aigovops-foundation.com) ([aigovops-foundation#1](https://github.com/aigovops-foundation/aigovops-foundation/pull/1)); with JavaScript off, deep links land on the homepage.
 - [`aigovops-foundation/aigovops-old`](https://github.com/aigovops-foundation/aigovops-old): Empty. Moved aside on 2026-08-23 to free the `aigovops` name; archived.
 - [`aigovops-foundation/AIGovernanceHub`](https://github.com/aigovops-foundation/AIGovernanceHub): Empty Replit export; archived.
 - [`aigovops-foundation/the-underserved-weather-the-ai-revolution-rural-indigenous-people-resource-app`](https://github.com/aigovops-foundation/the-underserved-weather-the-ai-revolution-rural-indigenous-people-resource-app): README-only stub for the Global Inclusion Matchmaker; archived.
@@ -22,4 +22,4 @@
 
 The remaining bobrapp repos (OpenConvention-rapp-v1, kettos-glean-webapp, linkedin-shield, nexus-of-everything, pioneer-bakeoff, vibe-rant-framework, brave-plum-healing, ai-job-finder, AI-Bob-* kits, examples-*, and about 29 empty Replit exports) contain no AiGovOps references.
 
-Generated from repo READMEs, estate.yaml and the GitHub API on 2026-10-10.
+Generated from repo READMEs, estate.yaml and the GitHub API on 2026-10-11.
