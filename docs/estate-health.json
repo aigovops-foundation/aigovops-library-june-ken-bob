@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-10-11T16:16:06.545Z",
+  "generatedAt": "2026-10-11T17:14:45.998Z",
   "estate": {
     "properties": 8,
     "reporting": 7,
     "healthy": 7,
     "red": 0,
-    "greenPages": 363,
+    "greenPages": 362,
     "redPages": 0,
     "dead": 0,
     "broken": 0,
@@ -18,15 +18,15 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-10-11T16:08:39.689Z",
+      "ranAt": "2026-10-11T17:07:00.855Z",
       "summary": {
-        "pages": 48,
-        "greenPages": 48,
+        "pages": 49,
+        "greenPages": 49,
         "redPages": 0,
-        "ok": 1419,
+        "ok": 1495,
         "dead": 0,
         "broken": 0,
-        "external": 328,
+        "external": 332,
         "delegated": 0,
         "consoleErrorPages": 0,
         "healthy": true
@@ -337,6 +337,14 @@
           "loadError": null
         },
         {
+          "path": "/glossary.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/index.html",
           "dead": 0,
           "broken": 0,
@@ -434,15 +442,15 @@
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-10-11T16:10:21.840Z",
+      "ranAt": "2026-10-11T17:08:39.055Z",
       "summary": {
-        "pages": 68,
-        "greenPages": 68,
+        "pages": 66,
+        "greenPages": 66,
         "redPages": 0,
-        "ok": 1587,
+        "ok": 1595,
         "dead": 0,
         "broken": 0,
-        "external": 863,
+        "external": 899,
         "delegated": 9,
         "consoleErrorPages": 0,
         "healthy": true
@@ -450,14 +458,6 @@
       "pageHealth": [
         {
           "path": "/",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
-          "path": "/api/auth/sso",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -913,14 +913,6 @@
           "loadError": null
         },
         {
-          "path": "/signin.html",
-          "dead": 0,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "green",
-          "loadError": null
-        },
-        {
           "path": "/standards.html",
           "dead": 0,
           "broken": 0,
@@ -1002,7 +994,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-10-11T16:12:17.296Z",
+      "ranAt": "2026-10-11T17:10:36.300Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -1650,7 +1642,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-10-11T16:14:03.492Z",
+      "ranAt": "2026-10-11T17:12:31.200Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2298,7 +2290,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-10-11T16:14:18.911Z",
+      "ranAt": "2026-10-11T17:12:47.645Z",
       "summary": {
         "pages": 11,
         "greenPages": 11,
@@ -2410,7 +2402,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-10-11T16:16:03.404Z",
+      "ranAt": "2026-10-11T17:14:42.527Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -3058,7 +3050,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-10-11T16:16:06.539Z",
+      "ranAt": "2026-10-11T17:14:45.991Z",
       "summary": {
         "pages": 2,
         "greenPages": 2,
@@ -3098,6 +3090,6 @@
     "provider": "graph",
     "status": "ok",
     "detail": "app authenticates; sends as bob.rapp@aigovops.community",
-    "checkedAt": "2026-10-11T16:16:06.750Z"
+    "checkedAt": "2026-10-11T17:14:46.242Z"
   }
 }
