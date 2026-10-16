@@ -1,179 +1,83 @@
 {
-  "generatedAt": "2026-10-16T21:14:11.431Z",
+  "generatedAt": "2026-10-16T22:15:50.945Z",
   "estate": {
     "properties": 8,
     "reporting": 7,
-    "healthy": 6,
-    "red": 1,
-    "greenPages": 346,
-    "redPages": 18,
+    "healthy": 7,
+    "red": 0,
+    "greenPages": 364,
+    "redPages": 0,
     "dead": 0,
-    "broken": 26,
+    "broken": 0,
     "consoleErrorPages": 0,
-    "score": 95
+    "score": 100
   },
   "sites": [
     {
       "name": "Foundation site",
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
-      "status": "red",
-      "ranAt": "2026-10-16T21:06:55.270Z",
+      "status": "green",
+      "ranAt": "2026-10-16T22:07:53.867Z",
       "summary": {
         "pages": 51,
-        "greenPages": 33,
-        "redPages": 18,
-        "ok": 1523,
+        "greenPages": 51,
+        "redPages": 0,
+        "ok": 1549,
         "dead": 0,
-        "broken": 26,
+        "broken": 0,
         "external": 337,
         "delegated": 0,
         "consoleErrorPages": 0,
-        "healthy": false
+        "healthy": true
       },
       "pageHealth": [
         {
           "path": "/",
           "dead": 0,
-          "broken": 1,
+          "broken": 0,
           "jsErrors": 0,
-          "status": "red",
+          "status": "green",
           "loadError": null
         },
         {
           "path": "/",
           "dead": 0,
-          "broken": 1,
+          "broken": 0,
           "jsErrors": 0,
-          "status": "red",
+          "status": "green",
           "loadError": null
         },
         {
           "path": "/ai-governance.html",
           "dead": 0,
-          "broken": 2,
+          "broken": 0,
           "jsErrors": 0,
-          "status": "red",
+          "status": "green",
           "loadError": null
         },
         {
           "path": "/aigovops.html",
           "dead": 0,
-          "broken": 1,
+          "broken": 0,
           "jsErrors": 0,
-          "status": "red",
+          "status": "green",
           "loadError": null
         },
         {
           "path": "/audit.html",
           "dead": 0,
-          "broken": 2,
+          "broken": 0,
           "jsErrors": 0,
-          "status": "red",
+          "status": "green",
           "loadError": null
         },
         {
           "path": "/beacon.html",
           "dead": 0,
-          "broken": 2,
+          "broken": 0,
           "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/for-contributors.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/for-enterprise.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/for-founders.html",
-          "dead": 0,
-          "broken": 3,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/for-regulators.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/for-researchers.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/for-students.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/index.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/library.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/nonprofit.html",
-          "dead": 0,
-          "broken": 2,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/open-source.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/overt.html",
-          "dead": 0,
-          "broken": 2,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/starter-kits.html",
-          "dead": 0,
-          "broken": 2,
-          "jsErrors": 0,
-          "status": "red",
+          "status": "green",
           "loadError": null
         },
         {
@@ -385,6 +289,54 @@
           "loadError": null
         },
         {
+          "path": "/for-contributors.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/for-enterprise.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/for-founders.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/for-regulators.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/for-researchers.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/for-students.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/founders.html",
           "dead": 0,
           "broken": 0,
@@ -409,6 +361,46 @@
           "loadError": null
         },
         {
+          "path": "/index.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/library.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/nonprofit.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/open-source.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/overt.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/privacy.html",
           "dead": 0,
           "broken": 0,
@@ -418,6 +410,14 @@
         },
         {
           "path": "/resources.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/starter-kits.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -442,164 +442,7 @@
         }
       ],
       "dead": [],
-      "broken": [
-        {
-          "page": "https://www.aigovops-foundation.com/",
-          "text": "AiGovOps",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/library.html",
-          "text": "AiGovOps",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/open-source.html",
-          "text": "AiGovOps",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/ai-governance.html",
-          "text": "What is AiGovOps?",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/ai-governance.html",
-          "text": "What is AiGovOps",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/aigovops.html",
-          "text": "What is AiGovOps",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/nonprofit.html",
-          "text": "What is AiGovOps?",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/nonprofit.html",
-          "text": "What is AiGovOps",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/overt.html",
-          "text": "What is AiGovOps?",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/overt.html",
-          "text": "What is AiGovOps",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/beacon.html",
-          "text": "What is AiGovOps?",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/beacon.html",
-          "text": "What is AiGovOps",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/audit.html",
-          "text": "What is AiGovOps?",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/audit.html",
-          "text": "What is AiGovOps",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/starter-kits.html",
-          "text": "What is AiGovOps?",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/starter-kits.html",
-          "text": "What is AiGovOps",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/for-founders.html",
-          "text": "New to this? What is AiGovOps →",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/for-founders.html",
-          "text": "What is AiGovOps?",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/for-founders.html",
-          "text": "AiGovOps",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/for-enterprise.html",
-          "text": "AiGovOps",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/for-students.html",
-          "text": "AiGovOps",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/for-researchers.html",
-          "text": "AiGovOps",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/for-regulators.html",
-          "text": "AiGovOps",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/for-contributors.html",
-          "text": "AiGovOps",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/index.html",
-          "text": "AiGovOps",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/?src=letter",
-          "text": "AiGovOps",
-          "href": "https://www.aigovops-foundation.com/aigovops.html",
-          "reason": "internal link → HTTP 503"
-        }
-      ],
+      "broken": [],
       "consoleErrors": []
     },
     {
@@ -615,7 +458,7 @@
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-10-16T21:08:29.556Z",
+      "ranAt": "2026-10-16T22:09:36.586Z",
       "summary": {
         "pages": 66,
         "greenPages": 66,
@@ -1167,7 +1010,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-10-16T21:10:22.575Z",
+      "ranAt": "2026-10-16T22:11:40.389Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -1815,7 +1658,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-10-16T21:12:08.718Z",
+      "ranAt": "2026-10-16T22:13:36.808Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2463,7 +2306,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-10-16T21:12:24.121Z",
+      "ranAt": "2026-10-16T22:13:53.592Z",
       "summary": {
         "pages": 11,
         "greenPages": 11,
@@ -2575,7 +2418,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-10-16T21:14:08.139Z",
+      "ranAt": "2026-10-16T22:15:47.149Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -3223,7 +3066,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-10-16T21:14:11.424Z",
+      "ranAt": "2026-10-16T22:15:50.938Z",
       "summary": {
         "pages": 2,
         "greenPages": 2,
@@ -3263,6 +3106,6 @@
     "provider": "graph",
     "status": "ok",
     "detail": "app authenticates; sends as bob.rapp@aigovops.community",
-    "checkedAt": "2026-10-16T21:14:11.785Z"
+    "checkedAt": "2026-10-16T22:15:51.456Z"
   }
 }
