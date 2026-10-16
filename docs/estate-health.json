@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-10-16T19:16:09.228Z",
+  "generatedAt": "2026-10-16T20:14:26.826Z",
   "estate": {
     "properties": 8,
     "reporting": 7,
-    "healthy": 6,
-    "red": 1,
-    "greenPages": 353,
-    "redPages": 11,
+    "healthy": 7,
+    "red": 0,
+    "greenPages": 364,
+    "redPages": 0,
     "dead": 0,
-    "broken": 13,
+    "broken": 0,
     "consoleErrorPages": 0,
-    "score": 97
+    "score": 100
   },
   "sites": [
     {
@@ -18,7 +18,7 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-10-16T19:07:28.055Z",
+      "ranAt": "2026-10-16T20:07:12.853Z",
       "summary": {
         "pages": 51,
         "greenPages": 51,
@@ -458,7 +458,7 @@
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-10-16T19:09:11.533Z",
+      "ranAt": "2026-10-16T20:08:50.285Z",
       "summary": {
         "pages": 66,
         "greenPages": 66,
@@ -1010,7 +1010,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-10-16T19:11:36.722Z",
+      "ranAt": "2026-10-16T20:10:42.054Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -1658,7 +1658,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-10-16T19:13:41.323Z",
+      "ranAt": "2026-10-16T20:12:25.557Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2305,191 +2305,112 @@
       "name": "Lantern",
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
-      "status": "red",
-      "ranAt": "2026-10-16T19:14:00.456Z",
+      "status": "green",
+      "ranAt": "2026-10-16T20:12:40.801Z",
       "summary": {
         "pages": 11,
-        "greenPages": 0,
-        "redPages": 11,
-        "ok": 569,
+        "greenPages": 11,
+        "redPages": 0,
+        "ok": 582,
         "dead": 0,
-        "broken": 13,
+        "broken": 0,
         "external": 52,
         "delegated": 0,
         "consoleErrorPages": 0,
-        "healthy": false
+        "healthy": true
       },
       "pageHealth": [
         {
           "path": "/aigovops-lantern/",
           "dead": 0,
-          "broken": 2,
+          "broken": 0,
           "jsErrors": 0,
-          "status": "red",
+          "status": "green",
           "loadError": null
         },
         {
           "path": "/aigovops-lantern/api/actions/",
           "dead": 0,
-          "broken": 1,
+          "broken": 0,
           "jsErrors": 0,
-          "status": "red",
+          "status": "green",
           "loadError": null
         },
         {
           "path": "/aigovops-lantern/api/data-model/",
           "dead": 0,
-          "broken": 1,
+          "broken": 0,
           "jsErrors": 0,
-          "status": "red",
+          "status": "green",
           "loadError": null
         },
         {
           "path": "/aigovops-lantern/api/flows/",
           "dead": 0,
-          "broken": 1,
+          "broken": 0,
           "jsErrors": 0,
-          "status": "red",
+          "status": "green",
           "loadError": null
         },
         {
           "path": "/aigovops-lantern/api/openapi/",
           "dead": 0,
-          "broken": 2,
+          "broken": 0,
           "jsErrors": 0,
-          "status": "red",
+          "status": "green",
           "loadError": null
         },
         {
           "path": "/aigovops-lantern/cli/",
           "dead": 0,
-          "broken": 1,
+          "broken": 0,
           "jsErrors": 0,
-          "status": "red",
+          "status": "green",
           "loadError": null
         },
         {
           "path": "/aigovops-lantern/python/bundle/",
           "dead": 0,
-          "broken": 1,
+          "broken": 0,
           "jsErrors": 0,
-          "status": "red",
+          "status": "green",
           "loadError": null
         },
         {
           "path": "/aigovops-lantern/python/cli/",
           "dead": 0,
-          "broken": 1,
+          "broken": 0,
           "jsErrors": 0,
-          "status": "red",
+          "status": "green",
           "loadError": null
         },
         {
           "path": "/aigovops-lantern/python/render/",
           "dead": 0,
-          "broken": 1,
+          "broken": 0,
           "jsErrors": 0,
-          "status": "red",
+          "status": "green",
           "loadError": null
         },
         {
           "path": "/aigovops-lantern/python/ucid/",
           "dead": 0,
-          "broken": 1,
+          "broken": 0,
           "jsErrors": 0,
-          "status": "red",
+          "status": "green",
           "loadError": null
         },
         {
           "path": "/aigovops-lantern/roadmap/",
           "dead": 0,
-          "broken": 1,
+          "broken": 0,
           "jsErrors": 0,
-          "status": "red",
+          "status": "green",
           "loadError": null
         }
       ],
       "dead": [],
-      "broken": [
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/",
-          "text": "Flows",
-          "href": "https://aigovops-foundation.github.io/aigovops-lantern/api/flows/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/",
-          "text": "API · Flows",
-          "href": "https://aigovops-foundation.github.io/aigovops-lantern/api/flows/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/cli/",
-          "text": "Flows",
-          "href": "https://aigovops-foundation.github.io/aigovops-lantern/api/flows/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/api/data-model/",
-          "text": "Flows",
-          "href": "https://aigovops-foundation.github.io/aigovops-lantern/api/flows/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/bundle/",
-          "text": "Flows",
-          "href": "https://aigovops-foundation.github.io/aigovops-lantern/api/flows/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/roadmap/",
-          "text": "Flows",
-          "href": "https://aigovops-foundation.github.io/aigovops-lantern/api/flows/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/api/actions/",
-          "text": "Flows",
-          "href": "https://aigovops-foundation.github.io/aigovops-lantern/api/flows/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/api/flows/",
-          "text": "Flows",
-          "href": "https://aigovops-foundation.github.io/aigovops-lantern/api/flows/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/api/openapi/",
-          "text": "Flows",
-          "href": "https://aigovops-foundation.github.io/aigovops-lantern/api/flows/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/api/openapi/",
-          "text": "Flows",
-          "href": "https://aigovops-foundation.github.io/aigovops-lantern/api/flows/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/render/",
-          "text": "Flows",
-          "href": "https://aigovops-foundation.github.io/aigovops-lantern/api/flows/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/ucid/",
-          "text": "Flows",
-          "href": "https://aigovops-foundation.github.io/aigovops-lantern/api/flows/",
-          "reason": "internal link → HTTP 503"
-        },
-        {
-          "page": "https://aigovops-foundation.github.io/aigovops-lantern/python/cli/",
-          "text": "Flows",
-          "href": "https://aigovops-foundation.github.io/aigovops-lantern/api/flows/",
-          "reason": "internal link → HTTP 503"
-        }
-      ],
+      "broken": [],
       "consoleErrors": []
     },
     {
@@ -2497,7 +2418,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-10-16T19:16:05.753Z",
+      "ranAt": "2026-10-16T20:14:23.664Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -3145,7 +3066,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-10-16T19:16:09.222Z",
+      "ranAt": "2026-10-16T20:14:26.820Z",
       "summary": {
         "pages": 2,
         "greenPages": 2,
@@ -3185,6 +3106,6 @@
     "provider": "graph",
     "status": "ok",
     "detail": "app authenticates; sends as bob.rapp@aigovops.community",
-    "checkedAt": "2026-10-16T19:16:09.663Z"
+    "checkedAt": "2026-10-16T20:14:27.003Z"
   }
 }
