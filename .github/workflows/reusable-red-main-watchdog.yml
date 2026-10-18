@@ -106,7 +106,7 @@ jobs:
               || { echo "could not read Actions history for workflow $id"; exit 1; }
           done < ids.txt
 
-          BRANCH="$branch" SELF_ID="$self_id" RUN_ID="$RUN_ID" python3 - <<'PY'
+          BRANCH="$branch" SELF_ID="$self_id" python3 - <<'PY'
           import glob, json, os, sys
           from datetime import datetime, timezone
 
@@ -196,22 +196,25 @@ jobs:
               summary = (f"{len(over)} workflow(s) red past {limit:.0f}h on {branch} — "
                          f"worst: '{worst_n}' for {'>=' if worst_floor else ''}{worst_h:.1f}h "
                          f"(since {worst_fb['created_at']}: {worst_fb.get('html_url')})")
-              # Alarm ONCE per incident. A watchdog that fails every day for the same red job
-              # sends one email per repo per day until someone fixes it — in 2026-10 that was
-              # 23 straight failures on Beacon for one stale-branch check, and the alarms were
-              # being deleted unread. If the previous completed watchdog run on this branch
-              # already failed, the alarm has been raised: report, annotate, exit green. The
-              # next NEW incident (previous run green) fails again.
-              prior = None
-              if self_id and os.path.exists(f"runs/{self_id}.json"):
-                  mine = [r for r in json.load(open(f"runs/{self_id}.json")).get("workflow_runs", [])
-                          if r.get("status") == "completed" and str(r.get("id")) != os.environ.get("RUN_ID", "")]
-                  mine.sort(key=lambda r: r["created_at"], reverse=True)
-                  prior = mine[0]["conclusion"] if mine else None
-              if prior == "failure":
-                  print(f"\n::warning::still red (already alarmed by the previous watchdog run): {summary}")
+              # Alarm ONCE per incident, judged from the incident itself, not from this
+              # watchdog's own history. A red that crossed the threshold within the last
+              # ALARM_WINDOW hours is new and fails the run; an older one has already been
+              # alarmed and is reported as a warning. The window equals the daily cadence so
+              # each crossing is seen by exactly one run (a 36h window had two runs inside it
+              # and sent duplicate alarms). Each workflow has its own first_bad age, so a second
+              # workflow going red later still gets its own alarm, and a workflow_file-filtered
+              # watchdog behaves the same way. A crossing older than the window when the
+              # watchdog first runs is reported as a warning, with the rows above — not silent.
+              ALARM_WINDOW = 24.0
+              fresh = [x for x in over if x[0] - limit <= ALARM_WINDOW]
+              if not fresh:
+                  print(f"\n::warning::still red (alarmed when it first crossed {limit:.0f}h): {summary}")
                   sys.exit(0)
-              print(f"\n::error::{summary}")
+              new_h, new_n, new_fb, new_floor = fresh[0]
+              print(f"\n::error::{len(over)} workflow(s) red past {limit:.0f}h on {branch} — "
+                    f"newly over the threshold: '{new_n}' for {'>=' if new_floor else ''}{new_h:.1f}h "
+                    f"(since {new_fb['created_at']}: {new_fb.get('html_url')})"
+                    + (f"; longest: '{worst_n}' for {'>=' if worst_floor else ''}{worst_h:.1f}h" if worst_n != new_n else ""))
               sys.exit(1)
 
           print(f"\nred-main-watchdog: {len(reds)} red but all under {limit:.0f}h — not escalating yet "
