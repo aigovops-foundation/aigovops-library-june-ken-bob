@@ -6,7 +6,7 @@ name: reusable-stale-sweep
 # Adopt it from another repo with:
 #   jobs:
 #     stale-sweep:
-#       uses: aigovops-foundation/aigovops-library-june-ken-bob/.github/workflows/reusable-stale-sweep.yml@main
+#       uses: aigovops-foundation/aigovops-library-june-ken-bob/.github/workflows/reusable-stale-sweep.yml@d402457658f626cbdb77ec6f7de08916e829e7d9 # main 2026-10-18
 #       with:
 #         branch_days: 30      # optional (default 30)
 #         pr_days: 21          # optional (default 21)

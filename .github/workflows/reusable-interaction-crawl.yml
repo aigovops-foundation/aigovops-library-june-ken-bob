@@ -8,7 +8,7 @@ name: reusable-interaction-crawl
 # Adopt it from any property in one block:
 #   jobs:
 #     interaction-crawl:
-#       uses: aigovops-foundation/aigovops-library-june-ken-bob/.github/workflows/reusable-interaction-crawl.yml@main
+#       uses: aigovops-foundation/aigovops-library-june-ken-bob/.github/workflows/reusable-interaction-crawl.yml@d402457658f626cbdb77ec6f7de08916e829e7d9 # main 2026-10-18
 #       with:
 #         site_url: "https://aigovops-foundation.github.io/umbrella-govops/"
 #         fail_on_dead: true          # optional (default true) — a dead button fails the build

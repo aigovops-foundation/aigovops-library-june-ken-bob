@@ -6,7 +6,7 @@ name: reusable-red-main-watchdog
 # Adopt it from another repo with:
 #   jobs:
 #     red-main:
-#       uses: aigovops-foundation/aigovops-library-june-ken-bob/.github/workflows/reusable-red-main-watchdog.yml@main
+#       uses: aigovops-foundation/aigovops-library-june-ken-bob/.github/workflows/reusable-red-main-watchdog.yml@d402457658f626cbdb77ec6f7de08916e829e7d9 # main 2026-10-18
 #       with:
 #         max_red_hours: 48          # optional (default 48)
 #         workflow_file: "ci.yml"    # optional; omit to watch every workflow on the branch
