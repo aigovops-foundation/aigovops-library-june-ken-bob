@@ -8,7 +8,7 @@ name: estate-interaction-crawl
 
 on:
   schedule:
-    - cron: "0 * * * *"   # hourly, on the hour
+    - cron: "0 */6 * * *"   # every six hours — hourly was 24 runs and 48 automated commits a day
   workflow_dispatch:
 
 permissions:
@@ -111,8 +111,13 @@ jobs:
       # `continue-on-error` is deliberate and is the lesson this file already learned twice —
       # housekeeping must never cancel the founders' digest. A missed receipt is visible in the
       # ledger as a gap; a missed digest is invisible.
+      - name: Is this the once-a-day receipts run? (12:00 UTC)
+        id: daily
+        if: ${{ !cancelled() }}
+        run: echo "yes=$([ "$(date -u +%H)" = "12" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
       - name: Record a receipt for every scheduled run
         id: receipts
+        if: ${{ !cancelled() && (steps.daily.outputs.yes == 'true' || github.event_name == 'workflow_dispatch') }}
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -310,8 +315,6 @@ jobs:
             echo "::warning::could not record window ${{ steps.window.outputs.window }} — the next run will send it again"
           fi
 
-      - name: Fail the run if any page is red
+      - name: Flag red pages (the pinned issue and the 05:00 digest carry the alarm; a failed run only adds an email)
         if: steps.crawl.outputs.estate_red == '1' || steps.digest.outputs.state == 'red'
-        run: |
-          echo "::error::Estate has red pages — see the pinned Estate Health issue and docs/estate-health.html"
-          exit 1
+        run: echo "::warning::Estate has red pages — see the pinned Estate Health issue and docs/estate-health.html"
