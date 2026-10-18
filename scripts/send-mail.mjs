@@ -59,7 +59,7 @@ async function sendGraph() {
       body: { contentType: 'HTML', content: body },
       toRecipients: recipients.map((address) => ({ emailAddress: { address } })),
     },
-    saveToSentItems: true,
+    saveToSentItems: false, // the sender is a founder's own mailbox; a Sent copy is a third copy of every digest
   };
   const sendRes = await fetch(`https://graph.microsoft.com/v1.0/users/${encodeURIComponent(G.sender)}/sendMail`, {
     method: 'POST', headers: { authorization: `Bearer ${access_token}`, 'content-type': 'application/json' },
