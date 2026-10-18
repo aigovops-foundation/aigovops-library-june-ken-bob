@@ -17,10 +17,13 @@ name: reusable-red-main-watchdog
 # were found by a human happening to look. A control that reports healthy while nobody is
 # watching is the most dangerous kind; this one turns "red for a while" into its own failure.
 #
-# WHY PER-REPO AND NOT ONE ESTATE-WIDE JOB. A central watchdog would have to read other repos'
-# Actions history, which GITHUB_TOKEN cannot do — it would need a long-lived cross-repo PAT, a
-# standing credential the estate would then have to hold and rotate. Each repo watching ITSELF
-# uses only its own scoped token. No new secret exists anywhere.
+# PER-REPO OR ESTATE-WIDE — BOTH, SINCE 2026-10-18. Called with no `repository`, a repo watches
+# itself with its own scoped GITHUB_TOKEN and no new secret exists anywhere. Called with
+# `repository:` plus the `token` secret, one Library lane (estate-watchdog.yml) watches every repo
+# in estate.yaml from a single daily run — Bob's cut-list decision 7, after a year in which ten
+# daily per-repo watchdogs produced one alarm email per repo per day for the same stale red. The
+# cross-repo token is a standing read-only credential a founder mints and the Library holds; a
+# repo the token cannot read is reported UNKNOWN by name, never green.
 #
 # WHY IT MEASURES DURATION, NOT JUST "IS IT RED". A single failed run is often a flake or a
 # transient upstream. What matters — and what nobody notices — is red that STAYS red. The job
@@ -61,6 +64,15 @@ on:
         required: false
         type: string
         default: ""
+      repository:
+        description: "owner/repo to watch. Omit to watch the calling repository. Another repo needs the `token` secret: GITHUB_TOKEN is scoped to the caller and reads nothing else."
+        required: false
+        type: string
+        default: ""
+    secrets:
+      token:
+        description: "Read-only token (Actions: read, Contents: read) for the watched repository. Falls back to GITHUB_TOKEN, which only sees the calling repository."
+        required: false
 
 permissions:
   contents: read
@@ -73,10 +85,11 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: Fail if the default branch has been red past the threshold
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.token || github.token }}
           MAX_RED_HOURS: ${{ inputs.max_red_hours }}
           WORKFLOW_FILE: ${{ inputs.workflow_file }}
-          REPO: ${{ github.repository }}
+          REPO: ${{ inputs.repository || github.repository }}
+          SELF_REPO: ${{ github.repository }}
           RUN_ID: ${{ github.run_id }}
         run: |
           set -uo pipefail
@@ -86,7 +99,19 @@ jobs:
           # The calling workflow's own id, so the verdict can exclude it (see WHY IT IGNORES ITSELF).
           # A reusable workflow shares the caller's run id, so this resolves to the ADOPTING
           # workflow — red-main-watchdog.yml in the repo being watched, not this file.
-          self_id=$(gh api "repos/$REPO/actions/runs/$RUN_ID" --jq .workflow_id) || self_id=""
+          if ! gh api "repos/$REPO/actions/workflows?per_page=1" --jq .total_count >/dev/null 2>&1; then
+            # The token cannot see this repo's Actions history. A check that could not run reads as
+            # UNKNOWN by name — never as green, and not as a daily alarm either: the fix is a
+            # credential (the `token` secret), not a code change.
+            echo "::warning::red-main-watchdog: UNKNOWN — cannot read Actions history for $REPO with the token provided (a cross-repo watch needs the 'token' secret with Actions: read)."
+            exit 0
+          fi
+
+          # The verdict excludes this workflow's own id — only meaningful when watching the repo it runs in.
+          self_id=""
+          if [ "$REPO" = "$SELF_REPO" ]; then
+            self_id=$(gh api "repos/$REPO/actions/runs/$RUN_ID" --jq .workflow_id) || self_id=""
+          fi
 
           if [ -n "$WORKFLOW_FILE" ]; then
             gh api "repos/$REPO/actions/workflows/$WORKFLOW_FILE" --jq .id > ids.txt \
@@ -180,7 +205,7 @@ jobs:
               print("")
 
           if not reds:
-              print(f"red-main-watchdog: green — every ACTIVE workflow's latest run is good "
+              print(f"red-main-watchdog: {os.environ.get('REPO', '')} green — every ACTIVE workflow's latest run is good "
                     f"({checked} workflow(s) on {branch}, {len(dormant)} dormant).")
               sys.exit(0)
 

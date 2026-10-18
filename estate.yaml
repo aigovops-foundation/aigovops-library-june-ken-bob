@@ -187,9 +187,9 @@ repos:
     note: "Different release discipline from this repo. If it joins the trunk, its PR + Cloud-Mary gate has to survive the move."
 
   - id: Omni-Rapp-June-2026
-    account: bobrapp
+    account: aigovops-foundation
     role: "Omni — the community platform and control room (51 pages + signin) on droplet A"
-    visibility: unknown
+    visibility: public
     disposition: pending-disposition
     pages_url: none
     verified: false
@@ -225,6 +225,31 @@ repos:
     verified: false
     source: "plan/MILESTONES.md M9; docs/index.html card"
     note: "Repo name and Pages path differ. Personal-account training material, not Foundation IP — keep-separate unless a founder says otherwise."
+
+  - id: practice
+    account: aigovops-foundation
+    role: "Practice — the levelled practitioner path (Level 100/200/300) at practice.aigovops-foundation.com"
+    visibility: public
+    disposition: keep-separate
+    pages_url: "https://practice.aigovops-foundation.com/"
+    verified: false
+    source: "estate-watchdog adoption, 2026-10-18 — read from the repo list, not confirmed via API"
+
+  - id: aigovops-policy-foundry
+    account: aigovops-foundation
+    role: "Policy Foundry — policy-as-code packs"
+    visibility: public
+    disposition: keep-separate
+    verified: false
+    source: "estate-watchdog adoption, 2026-10-18 — read from the repo list, not confirmed via API"
+
+  - id: openclaw-installer
+    account: aigovops-foundation
+    role: "OpenClaw installer — the governed-agent install path (default branch master)"
+    visibility: public
+    disposition: keep-separate
+    verified: false
+    source: "estate-watchdog adoption, 2026-10-18 — read from the repo list, not confirmed via API"
 
 # ── Served sites ──────────────────────────────────────────────────────────────────
 # `crawl:` is the hourly interaction audit's view. estate-sites.json is generated from it.
