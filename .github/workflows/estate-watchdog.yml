@@ -1,0 +1,56 @@
+name: estate-watchdog
+
+# ONE daily watchdog for the whole estate (Bob's cut-list decision 7, 2026-10-18). Until now each
+# repo ran reusable-red-main-watchdog.yml itself, so one stale red job became one alarm email
+# per repo per day. This lane watches every active Foundation repository named in estate.yaml
+# from a single run; the per-repo callers can retire once this has run green.
+#
+# The matrix is DERIVED from estate.yaml by scripts/estate-repos.mjs (see link-check.yml for the
+# same pattern over sites). Add a repo to the manifest and it is watched from the next run; what
+# is left out is NAMED in the log.
+#
+# THE CREDENTIAL. GITHUB_TOKEN is scoped to this repository and reads no other repo's Actions
+# history (unauthenticated reads are refused too). Cross-repo watching therefore needs
+# ESTATE_READ_TOKEN: a fine-grained PAT with Actions: read, Contents: read, Metadata: read on
+# every aigovops-foundation repository — minted by a founder, held as a repo secret here, never
+# in a workflow file. Until it exists, every repo except this one is reported UNKNOWN by name
+# (a warning, not a failure: the fix is the credential, not a code change).
+
+on:
+  schedule:
+    - cron: "0 15 * * *"   # 15:00 UTC daily (08:00 PT) — a working-hours alarm, not a 3am one
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency: { group: estate-watchdog, cancel-in-progress: true }
+
+jobs:
+  repos:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.build.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: { node-version: "20" }
+      - name: What this run will watch, and what it will not
+        run: node scripts/estate-repos.mjs
+      - name: Build the matrix
+        id: build
+        run: echo "matrix=$(node scripts/estate-repos.mjs --json)" >> "$GITHUB_OUTPUT"
+
+  watch:
+    needs: repos
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.repos.outputs.matrix) }}
+    name: watch (${{ matrix.name }})
+    uses: ./.github/workflows/reusable-red-main-watchdog.yml
+    with:
+      repository: ${{ matrix.repository }}
+      max_red_hours: 48
+    secrets:
+      token: ${{ secrets.ESTATE_READ_TOKEN }}

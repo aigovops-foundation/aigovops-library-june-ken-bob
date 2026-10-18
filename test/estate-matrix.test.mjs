@@ -114,17 +114,26 @@ test("it still calls the shared reusable rather than a private copy", () => {
   assert.match(LINK_CHECK(), /uses: \.\/\.github\/workflows\/reusable-link-check\.yml/);
 });
 
-test("the five repo-scoped reusables are still un-matrixed, and the workflow says why", () => {
-  // This is the half of row 11 that did NOT ship. If someone later adds a `repository:` input
-  // and matrixes them, this test failing is the prompt to update the note rather than leave a
-  // stale explanation of a limit that no longer exists.
+test("the four repo-scoped reusables are still un-matrixed, and the workflow says why", () => {
+  // The half of row 11 that did NOT ship. If someone later adds a `repository:` input and
+  // matrixes one of these, this test failing is the prompt to update the note rather than leave
+  // a stale explanation of a limit that no longer exists.
   const dir = join(ROOT, ".github", "workflows");
   const repoScoped = ["reusable-secret-scan.yml", "reusable-repo-sync-check.yml",
-                      "reusable-stale-sweep.yml", "reusable-red-main-watchdog.yml",
-                      "reusable-dependency-triage.yml"];
+                      "reusable-stale-sweep.yml", "reusable-dependency-triage.yml"];
   for (const f of repoScoped) {
     const src = readFileSync(join(dir, f), "utf8");
-    assert.doesNotMatch(src, /^\s+repository:/m, `${f} gained a repository: input — row 11a may be done; update the note in link-check.yml`);
+    assert.doesNotMatch(src, /^\s+repository:/m, `${f} gained a repository: input — update the note in link-check.yml`);
   }
   assert.match(LINK_CHECK(), /row 11a/, "the workflow must name what is still not covered");
+  assert.match(LINK_CHECK(), /estate-watchdog\.yml/, "the workflow must say where the watchdog went");
+});
+
+test("the red-main watchdog is matrixed over the manifest's repos (row 11a)", () => {
+  const dir = join(ROOT, ".github", "workflows");
+  assert.match(readFileSync(join(dir, "reusable-red-main-watchdog.yml"), "utf8"), /^\s+repository:/m);
+  const lane = readFileSync(join(dir, "estate-watchdog.yml"), "utf8");
+  assert.match(lane, /estate-repos\.mjs --json/);
+  assert.match(lane, /secrets\.ESTATE_READ_TOKEN/);
+  assert.match(lane, /actions: read/, "the caller must grant actions: read or the lane dies at startup");
 });

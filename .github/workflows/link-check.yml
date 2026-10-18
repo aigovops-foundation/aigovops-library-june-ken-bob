@@ -20,13 +20,13 @@ name: link-check
 # WHAT IS STILL NOT MATRIXED, AND WHY — the honest half of row 11.
 #
 # Two of the seven reusables take a URL and so work against any property: link-check (this lane)
-# and interaction-crawl (already run hourly over the same manifest by estate-crawl.mjs). The
-# other five — secret-scan, repo-sync-check, stale-sweep, red-main-watchdog, dependency-triage —
-# operate on the CALLING repository's checkout or its Actions API. Pointing them at another repo
-# needs a `repository:` input added to each, and for the API-driven ones a token with access to
-# that repo: GITHUB_TOKEN is scoped to this repository only, so it is either anonymous API reads
-# at anonymous rate limits or a PAT — and minting a credential is Red. That is ladder row 11a,
-# and it is a founder's call, not something to slip in here.
+# and interaction-crawl (run over the same manifest by estate-crawl.mjs). A third,
+# red-main-watchdog, gained a `repository:` input on 2026-10-18 and is matrixed over estate.yaml
+# by estate-watchdog.yml, reading other repos' Actions history with the ESTATE_READ_TOKEN secret
+# — row 11a, decided by Bob (cut-list decision 7) and minted by him, not slipped in here. The
+# other four — secret-scan, repo-sync-check, stale-sweep, dependency-triage — still operate on the
+# CALLING repository's checkout and stay per-repo; they run weekly or monthly, so the daily noise
+# the watchdog made is the part that was worth centralising.
 
 on:
   schedule:
