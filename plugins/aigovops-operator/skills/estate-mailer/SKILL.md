@@ -5,7 +5,7 @@ owner: bobrapp
 agent: Deploy
 risk: red
 department: operator
-description: Stand up and verify the estate's email sender the right way — a Microsoft Graph app-only mailer (Foundation address, unattended in CI), or SMTP. Use to turn on the hourly digest + member drip, or to check why email isn't sending. Trigger on "set up email", "estate mailer", "turn on the digest email", "email isn't sending", "mail health", "Graph app-only", "go live email".
+description: Stand up and verify the estate's email sender the right way — a Microsoft Graph app-only mailer (Foundation address, unattended in CI); the only mail path since 2026-10-18. Use to turn on the hourly digest + member drip, or to check why email isn't sending. Trigger on "set up email", "estate mailer", "turn on the digest email", "email isn't sending", "mail health", "Graph app-only", "go live email".
 run: prose
 inputs: {"type":"object","properties":{"sender":{"type":"string"}}}
 outputs: {"type":"object"}
@@ -58,5 +58,4 @@ a signed artifact, emit via `beacon-sign-evidence` an `artifact` receipt —
 
 ## Notes
 Harden by locking the app to one mailbox: `New-ApplicationAccessPolicy -AppId <id>
--PolicyScopeGroupId <sender> -AccessRight RestrictAccess`. SMTP (`ESTATE_SMTP_URL`) is the
-fallback provider if Graph isn't used.
+-PolicyScopeGroupId <sender> -AccessRight RestrictAccess`. The SMTP relay (`ESTATE_SMTP_URL`) was retired 2026-10-18; Graph is the only path.

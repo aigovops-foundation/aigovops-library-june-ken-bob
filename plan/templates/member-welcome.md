@@ -1,4 +1,4 @@
-<!-- member-welcome.md — sent on admission. cc: Bob + Ken (founders.json). Prepared, not auto-sent: needs ESTATE_SMTP_URL + auto_accept armed. -->
+<!-- member-welcome.md — sent on admission. cc: Bob + Ken (founders.json). Prepared, not auto-sent: needs the GRAPH_* secrets + auto_accept armed. -->
 Subject: 🌿 Welcome to the AiGovOps Library
 
 Hi {{name}},
