@@ -56,7 +56,8 @@ async function sendGraph() {
   const msg = {
     message: {
       subject,
-      body: { contentType: 'HTML', content: body },
+      // A .md body goes as plain text (what the retired SMTP relay did); only a .html body is sent as HTML.
+      body: { contentType: bodyFile.toLowerCase().endsWith('.html') ? 'HTML' : 'Text', content: body },
       toRecipients: recipients.map((address) => ({ emailAddress: { address } })),
     },
     saveToSentItems: false, // the sender is a founder's own mailbox; a Sent copy is a third copy of every digest
