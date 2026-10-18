@@ -214,11 +214,12 @@ workflows:
       contents: read
       pull-requests: read
 
-  - file: red-main-watchdog.yml
+  - file: estate-watchdog.yml
     class: green
     permissions:
       contents: read
       actions: read
+    note: "Replaced red-main-watchdog.yml on 2026-10-18 (cut-list 7): one daily run watches every repo in estate.yaml. Reads other repos' Actions history with ESTATE_READ_TOKEN, a read-only PAT a founder mints; a repo it cannot read is reported UNKNOWN by name. Still a reader — it alarms, it changes nothing."
 
   - file: op-secrets-check.yml
     class: green

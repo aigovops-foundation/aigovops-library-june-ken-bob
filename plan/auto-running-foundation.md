@@ -273,7 +273,7 @@ this repo*:
 | Cadence | What runs today | Where |
 |---|---|---|
 | Hourly | Estate interaction crawl — every button on every page, in a real browser | `estate-interaction-crawl.yml` |
-| Daily | Library test suite; red-main watchdog (15:00 UTC — a working-hours alarm, not a 3am one) | `library-tests.yml`, `red-main-watchdog.yml` |
+| Daily | Library test suite; the estate watchdog — every repo in estate.yaml from one run (15:00 UTC — a working-hours alarm, not a 3am one) | `library-tests.yml`, `estate-watchdog.yml` |
 | Weekly | Link check (Mon 16:00 UTC); repo-sync check (Mon 13:00 UTC) | `link-check.yml`, `repo-sync-check.yml` |
 | Monthly | Stale sweep (1st, 14:00 UTC) | `stale-sweep.yml` |
 | Continuous | Secret scan; dependency triage | `secret-scan.yml`, `reusable-dependency-triage.yml` |
