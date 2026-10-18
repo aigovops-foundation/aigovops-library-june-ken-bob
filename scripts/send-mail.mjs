@@ -4,8 +4,9 @@
 // Provider precedence, all credential-gated (nothing sends without a human's secret):
 //   1. Microsoft Graph app-only (RECOMMENDED) — sends as a real Foundation mailbox, works
 //      unattended in CI. Needs GRAPH_TENANT_ID, GRAPH_CLIENT_ID, GRAPH_CLIENT_SECRET, GRAPH_SENDER.
-//   2. SMTP (delegates to send-digest-email.mjs) — if ESTATE_SMTP_URL is set instead.
-//   3. Neither set → skip (prints why, exits 0). The paused, human-armed state.
+//   2. Not set → skip (prints why, exits 0). The paused, human-armed state.
+//   (The SMTP path and ESTATE_SMTP_URL were retired 2026-10-18: two senders meant two secrets
+//   sets to keep alive, and the relay had never sent a mail. One path, Graph.)
 //
 //   node scripts/send-mail.mjs --subject "..." --body digest.md [--to a@x,b@y]
 //
@@ -13,7 +14,6 @@
 // Keeps the traffic in the brain: a metadata-only line on send (never the body/PII).
 
 import { readFileSync } from 'node:fs';
-import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -71,21 +71,10 @@ async function sendGraph() {
   return 0;
 }
 
-// Provider precedence: MAIL_PROVIDER wins if set; otherwise an explicit SMTP relay
-// (ESTATE_SMTP_URL) takes priority over Graph — you configured a relay, you mean it —
-// then Graph app-only, then nothing.
 const graphReady = !!(G.tenant && G.client && G.secret && G.sender);
-const smtpReady = !!process.env.ESTATE_SMTP_URL;
-const forced = (process.env.MAIL_PROVIDER || '').toLowerCase();
-const provider = forced === 'smtp' ? 'smtp' : forced === 'graph' ? 'graph'
-  : smtpReady ? 'smtp' : graphReady ? 'graph' : 'none';
-
-if (provider === 'graph' && graphReady) {
+if (graphReady) {
   process.exit(await sendGraph());
-} else if (provider === 'smtp' && smtpReady) {
-  const r = spawnSync('node', [join(HERE, 'send-digest-email.mjs'), '--subject', subject, '--body', bodyFile, ...(toArg ? ['--to', toArg] : [])], { stdio: 'inherit', env: process.env });
-  process.exit(r.status || 0);
 } else {
-  console.log('send-mail: no mail provider configured (set ESTATE_SMTP_URL for SMTP/SendGrid, or GRAPH_* for Microsoft Graph app-only) — skipping. This is the paused, human-armed state.');
+  console.log('send-mail: Microsoft Graph not configured (set GRAPH_TENANT_ID, GRAPH_CLIENT_ID, GRAPH_CLIENT_SECRET, GRAPH_SENDER) — skipping. This is the paused, human-armed state.');
   process.exit(0);
 }

@@ -77,9 +77,6 @@ jobs:
           GRAPH_CLIENT_ID: ${{ secrets.GRAPH_CLIENT_ID }}
           GRAPH_CLIENT_SECRET: ${{ secrets.GRAPH_CLIENT_SECRET }}
           GRAPH_SENDER: ${{ secrets.GRAPH_SENDER }}
-          ESTATE_SMTP_URL: ${{ secrets.ESTATE_SMTP_URL }}
-          ESTATE_MAIL_FROM: ${{ secrets.ESTATE_MAIL_FROM }}
-          MAIL_PROVIDER: ${{ vars.MAIL_PROVIDER }}
         run: node scripts/mail-health.mjs --write docs/estate-health.json
 
       # The old digest pasted every occurrence: hundreds of near-identical lines that nobody
@@ -280,8 +277,6 @@ jobs:
           GRAPH_CLIENT_ID: ${{ secrets.GRAPH_CLIENT_ID }}
           GRAPH_CLIENT_SECRET: ${{ secrets.GRAPH_CLIENT_SECRET }}
           GRAPH_SENDER: ${{ secrets.GRAPH_SENDER }}
-          ESTATE_SMTP_URL: ${{ secrets.ESTATE_SMTP_URL }}
-          MAIL_PROVIDER: ${{ vars.MAIL_PROVIDER }}
         run: node scripts/send-mail.mjs --subject "🌿 Estate health — ${{ steps.digest.outputs.state == 'green' && 'all green' || format('{0} to fix', steps.digest.outputs.count) }}" --body digest.md
 
       # RECORD THE WINDOW ONLY AFTER IT ACTUALLY WENT OUT. Written here, not in the window step,

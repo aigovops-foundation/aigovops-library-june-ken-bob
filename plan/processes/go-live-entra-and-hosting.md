@@ -58,32 +58,13 @@ than build the app-only path, admin-consent `Mail.Send`/`Mail.ReadWrite` (delega
 connector app `07c030f6-5743-41b7-ba00-0a6e85f37c17` — but that only covers interactive sends,
 not the unattended hourly job. The Graph app-only path above is the one that does both.
 
-### Track A′ — SendGrid SMTP (use this if the tenant has no mailboxes)
+### Track A′ — SendGrid SMTP (retired 2026-10-18)
 
-Graph app-only can only send **as a licensed Exchange Online mailbox**. If
-`aigovops.community` is identity-only (no M365 email), Graph returns `ErrorInvalidUser` and
-can't send — use a transactional relay instead. `send-mail.mjs` prefers SMTP whenever
-`ESTATE_SMTP_URL` is set, so this just works alongside (or instead of) the Graph secrets.
-
-1. **SendGrid account** (free tier: 100 emails/day).
-2. **Verify a sender** — *Settings → Sender Authentication*: either **Single Sender
-   Verification** (verify one from-address you control) or **Domain Authentication** (verify
-   `aigovops.community` — lets you send as any `@aigovops.community`). The From address MUST be
-   verified or SendGrid rejects the send.
-3. **API key** — *Settings → API Keys → Create*, **Mail Send** permission. Copy it (starts `SG.`).
-4. **Two GitHub Actions secrets** (repo → Settings → Secrets and variables → Actions):
-   | Secret | Value |
-   |---|---|
-   | `ESTATE_SMTP_URL` | `smtps://apikey:SG.your-key@smtp.sendgrid.net:465` (username is the literal `apikey`) |
-   | `ESTATE_MAIL_FROM` | the **verified** sender address, e.g. `estate@aigovops.community` |
-
-   (Leave the `GRAPH_*` secrets or delete them — SMTP wins when `ESTATE_SMTP_URL` is set.
-   Force a provider with the `MAIL_PROVIDER` repo variable = `smtp` or `graph` if ever needed.)
-
-The mailer sends from `ESTATE_MAIL_FROM` (never the `apikey` username), over implicit TLS on
-port 465. `mail-health` reports `ok (smtp)`; trigger a run to confirm `send-mail(graph|smtp): sent`.
-
----
+Graph is the only mail path now. The SMTP relay (`ESTATE_SMTP_URL`, `ESTATE_MAIL_FROM`,
+`scripts/send-digest-email.mjs`, the `MAIL_PROVIDER` variable) was removed so that one set
+of secrets, one sender identity and one health check cover every estate mail. If the tenant
+ever loses its mailboxes, reinstate a relay deliberately rather than keeping a never-used
+fallback alive. Delete the two `ESTATE_SMTP_*` repo secrets if they still exist.
 
 ## Track B — Hosting (stand up the IdP so membership goes live)
 

@@ -76,7 +76,7 @@ property, say what, and the digest believes you.
 The issue upsert is **green**: an issue is a message, not an effect.
 
 Email is **credential-gated by design** — `send-digest-email.mjs` does nothing unless
-`ESTATE_SMTP_URL` is set, and no secret lives in the repo. CI wires the send; a founder's
+the `GRAPH_*` secrets (Microsoft Graph app-only; the SMTP relay was retired 2026-10-18) is set, and no secret lives in the repo. CI wires the send; a founder's
 credential arms it. That is the prepare-don't-send boundary expressed in code rather than in
 a comment.
 
