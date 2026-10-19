@@ -10,7 +10,7 @@ name: founders-digest
 #
 # It posts into ONE issue and edits it in place, so the founders have a single durable URL
 # rather than a new issue every Monday that nobody subscribes to. Email delivery is
-# credential-gated: send-digest-email.mjs does nothing unless ESTATE_SMTP_URL is set, which is
+# credential-gated: send-mail.mjs does nothing unless the GRAPH_* secrets are set, which is
 # the prepare-don't-send boundary in code — CI wires it, a human's credential arms it.
 #
 # Autonomy class: green (policies/autonomy.yaml). An issue is a message, not an effect.
@@ -73,8 +73,10 @@ jobs:
               core.notice(`Opened the founders' digest: #${made.data.number}`);
             }
 
-      - name: Mail it, if a founder has armed the sender
-        if: ${{ env.ESTATE_SMTP_URL != '' }}
+      - name: Mail it, if a founder has armed the sender (Microsoft Graph app-only)
         env:
-          ESTATE_SMTP_URL: ${{ secrets.ESTATE_SMTP_URL }}
-        run: node scripts/send-digest-email.mjs --subject "AiGovOps — the founders' digest" --body digest.md
+          GRAPH_TENANT_ID: ${{ secrets.GRAPH_TENANT_ID }}
+          GRAPH_CLIENT_ID: ${{ secrets.GRAPH_CLIENT_ID }}
+          GRAPH_CLIENT_SECRET: ${{ secrets.GRAPH_CLIENT_SECRET }}
+          GRAPH_SENDER: ${{ secrets.GRAPH_SENDER }}
+        run: node scripts/send-mail.mjs --subject "AiGovOps — the founders' digest" --body digest.md
