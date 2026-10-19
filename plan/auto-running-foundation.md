@@ -215,7 +215,7 @@ benefits:
   canonical-domain decision (D1) to be real, not aspirational — products get served at
   `aigovops-foundation.com/<product>/` or they are not served.
 - **CI blast radius.** One broken workflow can red every product at once. Mitigation: path
-  filters per product, and the `red-main-watchdog` we already run daily.
+  filters per product, and the `estate-watchdog` that watches every repo daily.
 - **CODEOWNERS granularity matters more.** In a mono-repo, `policies/` and `skills/` sit
   beside code a volunteer might touch. The two-founder requirement on those paths is the
   whole gate; get it in before the first outside contributor, not after.

@@ -93,17 +93,13 @@ jobs:
           RUN_ID: ${{ github.run_id }}
         run: |
           set -uo pipefail
-          branch=$(gh api "repos/$REPO" --jq .default_branch) \
-            || { echo "could not read repo metadata"; exit 1; }
-
-          # The calling workflow's own id, so the verdict can exclude it (see WHY IT IGNORES ITSELF).
-          # A reusable workflow shares the caller's run id, so this resolves to the ADOPTING
-          # workflow — red-main-watchdog.yml in the repo being watched, not this file.
-          if ! gh api "repos/$REPO/actions/workflows?per_page=1" --jq .total_count >/dev/null 2>&1; then
-            # The token cannot see this repo's Actions history. A check that could not run reads as
-            # UNKNOWN by name — never as green, and not as a daily alarm either: the fix is a
-            # credential (the `token` secret), not a code change.
-            echo "::warning::red-main-watchdog: UNKNOWN — cannot read Actions history for $REPO with the token provided (a cross-repo watch needs the 'token' secret with Actions: read)."
+          # Can the token see this repository at all? GITHUB_TOKEN reads only the calling repo;
+          # a private repo elsewhere 404s on metadata before any Actions call. Either way, a
+          # check that could not run reads as UNKNOWN by name — never as green, and not as a
+          # daily alarm either: the fix is a credential (the `token` secret), not a code change.
+          if ! branch=$(gh api "repos/$REPO" --jq .default_branch 2>/dev/null) \
+             || ! gh api "repos/$REPO/actions/workflows?per_page=1" --jq .total_count >/dev/null 2>&1; then
+            echo "::warning::red-main-watchdog: UNKNOWN — cannot read $REPO (metadata or Actions history) with the token provided; a cross-repo watch needs the 'token' secret with Actions: read, Contents: read."
             exit 0
           fi
 
