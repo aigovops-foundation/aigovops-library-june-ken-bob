@@ -1,0 +1,126 @@
+name: estate-uptime
+
+# THE CRITICAL TEST: is each live service UP? Every 30 minutes, one plain GET per service in
+# estate-uptime.json, three tries twenty seconds apart; DOWN only when all three fail. The
+# latest answer lives in ONE pinned issue ("Estate uptime"), edited in place. A founder is
+# told — issue comment, Graph mail, and this run going red — only when a service FLIPS, so a
+# steady outage is one message, not forty-eight, and a steady green is silence.
+#
+# Bob, 2026-10-20: "get rid of duplicates or mostly failed runs — and re-think critical test
+# for uptime of the service". This lane replaced nine per-repo red-main watchdogs and the
+# estate-watchdog that needed a cross-repo token. It needs no token beyond this repo's own,
+# commits nothing, signs into nothing, submits nothing.
+#
+# Autonomy class: green (policies/autonomy.yaml) — a reader that messages.
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency: { group: estate-uptime, cancel-in-progress: true }
+
+jobs:
+  uptime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: { node-version: "20" }
+
+      - name: Test the policy (no network)
+        run: node --test test/estate-uptime.test.mjs
+
+      # The previous answer comes out of the pinned issue, not a committed file: this lane must
+      # never write to main (48 runs a day of bot commits is the noise it exists to end).
+      - name: Read the last answer from the pinned issue
+        id: issue
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        with:
+          script: |
+            const fs = require('fs');
+            const { owner, repo } = context.repo;
+            const title = 'Estate uptime — is each service up?';
+            const found = await github.rest.issues.listForRepo({ owner, repo, state: 'open', labels: 'estate-uptime', per_page: 10 });
+            let issue = found.data.find(i => i.title === title);
+            if (!issue) {
+              issue = (await github.rest.issues.create({ owner, repo, title, labels: ['estate-uptime'],
+                body: 'First run — the table appears after the first probe.' })).data;
+              try { await github.graphql(`mutation($id:ID!){ pinIssue(input:{issueId:$id}){ issue { id } } }`, { id: issue.node_id }); } catch (e) { core.warning(`could not pin: ${e.message}`); }
+            }
+            const m = (issue.body || '').match(/<!-- uptime-state:(.*?)-->/s);
+            fs.writeFileSync('prev.json', m ? m[1].trim() : 'null');
+            core.setOutput('number', issue.number);
+
+      - name: Probe every service (three tries each)
+        id: probe
+        run: |
+          set +e
+          node scripts/estate-uptime.mjs --prev prev.json --json result.json | tee probe.log
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+          echo "down=$(node -e "console.log(JSON.parse(require('fs').readFileSync('result.json')).down)")" >> "$GITHUB_OUTPUT"
+          echo "flips=$(node -e "console.log(JSON.parse(require('fs').readFileSync('result.json')).flips.length)")" >> "$GITHUB_OUTPUT"
+          node -e "
+            const { renderTable, renderFlips } = await import('./scripts/estate-uptime.mjs');
+            const cur = JSON.parse(require('fs').readFileSync('result.json'));
+            const fs = require('fs');
+            fs.writeFileSync('table.md', renderTable(cur));
+            fs.writeFileSync('flips.md', cur.flips.length ? renderFlips(cur.flips) : '');
+          " --input-type=module || true
+          [ -s table.md ] || node --input-type=module -e "import('./scripts/estate-uptime.mjs').then(m => { const fs = require('fs'); const cur = JSON.parse(fs.readFileSync('result.json')); fs.writeFileSync('table.md', m.renderTable(cur)); fs.writeFileSync('flips.md', cur.flips.length ? m.renderFlips(cur.flips) : ''); })"
+
+      - name: Update the pinned issue (and comment only on a flip)
+        if: ${{ !cancelled() && steps.probe.outputs.down != '' }}
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        env:
+          ISSUE: ${{ steps.issue.outputs.number }}
+          FLIPS: ${{ steps.probe.outputs.flips }}
+          DOWN: ${{ steps.probe.outputs.down }}
+        with:
+          script: |
+            const fs = require('fs');
+            const { owner, repo } = context.repo;
+            const issue_number = Number(process.env.ISSUE);
+            const cur = JSON.parse(fs.readFileSync('result.json', 'utf8'));
+            const table = fs.readFileSync('table.md', 'utf8');
+            const flips = fs.readFileSync('flips.md', 'utf8').trim();
+            const state = JSON.stringify({ checked_at: cur.checked_at, results: cur.results.map(r => ({ name: r.name, status: r.status })) });
+            const headline = Number(process.env.DOWN) ? `🔴 ${process.env.DOWN} service(s) DOWN` : '🟢 every service UP';
+            const run = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
+            const body = [
+              `## ${headline}`, '',
+              `Checked ${cur.checked_at} · every 30 minutes · three tries per service · [this run](${run})`, '',
+              table, '',
+              '<sub>Edited in place by estate-uptime.yml. A comment appears below only when a service changes state; nothing else here will ping you. Rows live in estate-uptime.json.</sub>', '',
+              `<!-- uptime-state:${state}-->`,
+            ].join('\n');
+            await github.rest.issues.update({ owner, repo, issue_number, body });
+            if (Number(process.env.FLIPS) && flips) {
+              await github.rest.issues.createComment({ owner, repo, issue_number,
+                body: `### ${headline}\n\nChanged since the last check:\n\n${flips}\n\n${run}` });
+            }
+
+      # Graph mail on a flip only — credential-gated, like every other founder mail here:
+      # send-mail.mjs does nothing unless the GRAPH_* secrets exist.
+      - name: Mail the founders (only when a service flips)
+        if: ${{ !cancelled() && steps.probe.outputs.flips != '' && steps.probe.outputs.flips != '0' }}
+        env:
+          GRAPH_TENANT_ID: ${{ secrets.GRAPH_TENANT_ID }}
+          GRAPH_CLIENT_ID: ${{ secrets.GRAPH_CLIENT_ID }}
+          GRAPH_CLIENT_SECRET: ${{ secrets.GRAPH_CLIENT_SECRET }}
+          GRAPH_SENDER: ${{ secrets.GRAPH_SENDER }}
+        run: |
+          { echo "## Estate uptime — ${{ steps.probe.outputs.down == '0' && 'back to all green' || format('{0} service(s) down', steps.probe.outputs.down) }}"; echo; cat flips.md; echo; echo; cat table.md; } > mail.md
+          node scripts/send-mail.mjs --subject "${{ steps.probe.outputs.down == '0' && '🟢 Estate uptime — all services back up' || format('🔴 Estate uptime — {0} service(s) down', steps.probe.outputs.down) }}" --body mail.md
+
+      # Red only on a NEW outage (the script's exit code with --prev). GitHub's own "workflow
+      # failed" mail is then the third copy of the same one message — once per incident.
+      - name: Red only when a service has just gone down
+        run: |
+          cat probe.log
+          exit ${{ steps.probe.outputs.code }}

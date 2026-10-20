@@ -214,12 +214,12 @@ workflows:
       contents: read
       pull-requests: read
 
-  - file: estate-watchdog.yml
+  - file: estate-uptime.yml
     class: green
     permissions:
       contents: read
-      actions: read
-    note: "Replaced red-main-watchdog.yml on 2026-10-18 (cut-list 7): one daily run watches every repo in estate.yaml. Reads other repos' Actions history with ESTATE_READ_TOKEN, a read-only PAT a founder mints; a repo it cannot read is reported UNKNOWN by name. Still a reader — it alarms, it changes nothing."
+      issues: write
+    note: "Replaced estate-watchdog.yml and every per-repo red-main-watchdog on 2026-10-20 (Bob: fewer duplicate alarms, one critical uptime test). Every 30 minutes, fetches each live service in estate-uptime.json three times; a service is DOWN only when all three fail. State lives in one pinned issue; a comment and a Graph mail go out only when a service flips UP↔DOWN. No commits, no token beyond this repo's own. A reader that messages — it changes nothing."
 
   - file: op-secrets-check.yml
     class: green

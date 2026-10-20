@@ -1,14 +1,17 @@
 name: estate-interaction-crawl
 
-# HOURLY end-to-end interaction test across the whole estate. Crawls every page of every
+# DAILY end-to-end interaction test across the whole estate (hourly until 2026-10-18, six-hourly until 2026-10-20). Crawls every page of every
 # property (estate-sites.json) in a real browser, scores each PAGE red or green (green is
 # the goal), refreshes the live board (docs/estate-health.json → docs/estate-health.html),
-# and delivers the digest Ken and Bob GET: a pinned issue updated every hour, with a ping
-# when a page flips red. Runbook: plan/processes/estate-interaction-audit.md.
+# and delivers the digest Ken and Bob GET: a pinned issue refreshed each run, with a ping
+# when a page flips red. Whether a service is UP is a different question answered every
+# 30 minutes by estate-uptime.yml; this lane is about every button working, once a day. Runbook: plan/processes/estate-interaction-audit.md.
 
 on:
   schedule:
-    - cron: "0 */6 * * *"   # every six hours — hourly was 24 runs and 48 automated commits a day
+    - cron: "0 13 * * *"    # once a day, 13:00 UTC — after 05:00 Pacific in both DST and standard time, so the
+                            # founders' window below is always open when this run reaches the mail step.
+                            # (Hourly was 24 runs and 48 bot commits a day; six-hourly still 8 commits. Bob, 2026-10-20: daily.)
   workflow_dispatch:
 
 permissions:
@@ -108,10 +111,10 @@ jobs:
       # `continue-on-error` is deliberate and is the lesson this file already learned twice —
       # housekeeping must never cancel the founders' digest. A missed receipt is visible in the
       # ledger as a gap; a missed digest is invisible.
-      - name: Is this the once-a-day receipts run? (12:00 UTC)
+      - name: Is this the once-a-day receipts run? (every scheduled run, now that the lane is daily)
         id: daily
         if: ${{ !cancelled() }}
-        run: echo "yes=$([ "$(date -u +%H)" = "12" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+        run: echo "yes=$([ "${{ github.event_name }}" = "schedule" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
       - name: Record a receipt for every scheduled run
         id: receipts
         if: ${{ !cancelled() && (steps.daily.outputs.yes == 'true' || github.event_name == 'workflow_dispatch') }}
