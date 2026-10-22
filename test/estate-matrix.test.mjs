@@ -7,7 +7,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { partition, buildMatrix, sitesFromManifest } from "../scripts/estate-matrix.mjs";
 import { load, deriveSites } from "../scripts/estate-manifest.mjs";
@@ -126,14 +126,15 @@ test("the four repo-scoped reusables are still un-matrixed, and the workflow say
     assert.doesNotMatch(src, /^\s+repository:/m, `${f} gained a repository: input — update the note in link-check.yml`);
   }
   assert.match(LINK_CHECK(), /row 11a/, "the workflow must name what is still not covered");
-  assert.match(LINK_CHECK(), /estate-watchdog\.yml/, "the workflow must say where the watchdog went");
+  assert.match(LINK_CHECK(), /estate-uptime\.yml/, "the workflow must say where the watchdog went (retired 2026-10-20; uptime replaced it)");
 });
 
-test("the red-main watchdog is matrixed over the manifest's repos (row 11a)", () => {
+test("the estate alarm is the uptime lane, not a per-repo watchdog (2026-10-20)", () => {
   const dir = join(ROOT, ".github", "workflows");
-  assert.match(readFileSync(join(dir, "reusable-red-main-watchdog.yml"), "utf8"), /^\s+repository:/m);
-  const lane = readFileSync(join(dir, "estate-watchdog.yml"), "utf8");
-  assert.match(lane, /estate-repos\.mjs --json/);
-  assert.match(lane, /secrets\.ESTATE_READ_TOKEN/);
-  assert.match(lane, /actions: read/, "the caller must grant actions: read or the lane dies at startup");
+  assert.ok(!existsSync(join(dir, "estate-watchdog.yml")), "estate-watchdog.yml was retired with the per-repo callers");
+  assert.ok(!existsSync(join(dir, "red-main-watchdog.yml")), "no per-repo red-main watchdog here either");
+  const lane = readFileSync(join(dir, "estate-uptime.yml"), "utf8");
+  assert.match(lane, /estate-uptime\.mjs/);
+  assert.match(lane, /\*\/30 \* \* \* \*/, "every 30 minutes");
+  assert.doesNotMatch(lane, /contents: write/, "the uptime lane never commits — state lives in the pinned issue");
 });

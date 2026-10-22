@@ -31,3 +31,7 @@ permissions:
 jobs:
   estate-audit:
     uses: aigovops-foundation/aigovops-library-june-ken-bob/.github/workflows/reusable-estate-audit.yml@3c6ec751e81a06ca7c8985916d6246b6fd435c28 # v1
+    with:
+      # The red-main watchdogs were retired estate-wide on 2026-10-20 (Bob: duplicates of GitHub's own
+      # failure mail). The alarm for the thing that matters — is the service up — is estate-uptime.yml.
+      require_watchdog: false

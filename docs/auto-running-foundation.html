@@ -137,7 +137,7 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visibl
 <p>Worth saying out loud before we commit, because they are real and they arrive later than the benefits.</p>
 <ul>
 <li><strong>One Pages site.</strong> A repo publishes one Pages site. Consolidation therefore forces the canonical-domain decision to be real, not aspirational — products get served at <code>aigovops-foundation.com/&lt;product&gt;/</code> or they are not served.</li>
-<li><strong>CI blast radius.</strong> One broken workflow can red every product at once. Mitigation: path filters per product, plus the <code>estate-watchdog</code> that watches every repo daily.</li>
+<li><strong>CI blast radius.</strong> One broken workflow can red every product at once. Mitigation: path filters per product, plus <code>estate-uptime</code>, which asks every 30 minutes whether each live service is up.</li>
 <li><strong>CODEOWNERS granularity matters more.</strong> In a mono-repo, <code>policies/</code> and <code>skills/</code> sit beside code a volunteer might touch. The two-founder requirement on those paths is the whole gate — get it in before the first outside contributor, not after.</li>
 <li><strong>Clone size.</strong> 28 workspaces plus seven products plus an MP4 is a large first clone. Tolerable; worth an LFS look before it becomes a complaint.</li>
 <li><strong>Release cadence couples.</strong> If the skills library later outgrows this — past forty entries with its own rhythm — split it out then. Splitting later is cheap; merging later is not, which is the argument for merging now.</li>
@@ -162,7 +162,8 @@ description: ...
 <thead><tr><th>Cadence</th><th>What runs today</th><th>Where</th></tr></thead>
 <tbody>
 <tr><td>Hourly</td><td>Estate interaction crawl — every button on every page, in a real browser</td><td><code>estate-interaction-crawl.yml</code></td></tr>
-<tr><td>Daily</td><td>Library test suite; the estate watchdog — every repo in estate.yaml from one run (15:00 UTC — a working-hours alarm, not a 3am one)</td><td><code>library-tests.yml</code>, <code>estate-watchdog.yml</code></td></tr>
+<tr><td>Every 30 min</td><td>Estate uptime — is each live service up (three tries; a message only when the answer changes)</td><td><code>estate-uptime.yml</code></td></tr>
+<tr><td>Daily</td><td>Library test suite; the estate interaction crawl (13:00 UTC, with the founders' digest)</td><td><code>library-tests.yml</code>, <code>estate-interaction-crawl.yml</code></td></tr>
 <tr><td>Weekly</td><td>Link check (Mon 16:00 UTC); repo-sync check (Mon 13:00 UTC)</td><td><code>link-check.yml</code>, <code>repo-sync-check.yml</code></td></tr>
 <tr><td>Monthly</td><td>Stale sweep (1st, 14:00 UTC)</td><td><code>stale-sweep.yml</code></td></tr>
 <tr><td>Continuous</td><td>Secret scan; dependency triage</td><td><code>secret-scan.yml</code>, <code>reusable-dependency-triage.yml</code></td></tr>

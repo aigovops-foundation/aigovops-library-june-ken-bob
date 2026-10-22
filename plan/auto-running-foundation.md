@@ -215,7 +215,7 @@ benefits:
   canonical-domain decision (D1) to be real, not aspirational — products get served at
   `aigovops-foundation.com/<product>/` or they are not served.
 - **CI blast radius.** One broken workflow can red every product at once. Mitigation: path
-  filters per product, and the `estate-watchdog` that watches every repo daily.
+  filters per product, and `estate-uptime`, which asks every 30 minutes whether each live service is up.
 - **CODEOWNERS granularity matters more.** In a mono-repo, `policies/` and `skills/` sit
   beside code a volunteer might touch. The two-founder requirement on those paths is the
   whole gate; get it in before the first outside contributor, not after.
@@ -272,8 +272,8 @@ this repo*:
 
 | Cadence | What runs today | Where |
 |---|---|---|
-| Hourly | Estate interaction crawl — every button on every page, in a real browser | `estate-interaction-crawl.yml` |
-| Daily | Library test suite; the estate watchdog — every repo in estate.yaml from one run (15:00 UTC — a working-hours alarm, not a 3am one) | `library-tests.yml`, `estate-watchdog.yml` |
+| Every 30 min | Estate uptime — is each live service up (three tries; a message only when the answer changes) | `estate-uptime.yml` |
+| Daily | Estate interaction crawl — every button on every page, in a real browser (13:00 UTC, with the founders' digest); Library test suite | `estate-interaction-crawl.yml`, `library-tests.yml` |
 | Weekly | Link check (Mon 16:00 UTC); repo-sync check (Mon 13:00 UTC) | `link-check.yml`, `repo-sync-check.yml` |
 | Monthly | Stale sweep (1st, 14:00 UTC) | `stale-sweep.yml` |
 | Continuous | Secret scan; dependency triage | `secret-scan.yml`, `reusable-dependency-triage.yml` |

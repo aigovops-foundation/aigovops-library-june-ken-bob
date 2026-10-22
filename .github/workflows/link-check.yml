@@ -21,12 +21,13 @@ name: link-check
 #
 # Two of the seven reusables take a URL and so work against any property: link-check (this lane)
 # and interaction-crawl (run over the same manifest by estate-crawl.mjs). A third,
-# red-main-watchdog, gained a `repository:` input on 2026-10-18 and is matrixed over estate.yaml
-# by estate-watchdog.yml, reading other repos' Actions history with the ESTATE_READ_TOKEN secret
-# — row 11a, decided by Bob (cut-list decision 7) and minted by him, not slipped in here. The
-# other four — secret-scan, repo-sync-check, stale-sweep, dependency-triage — still operate on the
-# CALLING repository's checkout and stay per-repo; they run weekly or monthly, so the daily noise
-# the watchdog made is the part that was worth centralising.
+# red-main-watchdog, was matrixed over estate.yaml by estate-watchdog.yml for two days (row 11a,
+# 2026-10-18) and then retired with every per-repo caller on 2026-10-20: it needed a cross-repo
+# token Bob chose not to mint, and GitHub already mails a founder when a run fails, so it was a
+# second alarm for the same red. What replaced it is estate-uptime.yml — is each live service UP,
+# every 30 minutes, a message only when that answer changes. The other four — secret-scan,
+# repo-sync-check, stale-sweep, dependency-triage — still operate on the CALLING repository's
+# checkout and stay per-repo; they run weekly or monthly.
 
 on:
   schedule:
