@@ -46,8 +46,15 @@ jobs:
             const fs = require('fs');
             const { owner, repo } = context.repo;
             const title = 'Estate uptime — is each service up?';
-            const found = await github.rest.issues.listForRepo({ owner, repo, state: 'open', labels: 'estate-uptime', per_page: 10 });
-            let issue = found.data.find(i => i.title === title);
+            // Match by TITLE across all open issues (not only the label): a label-only lookup missed the
+            // issue once and the lane opened a second one. Oldest wins; any duplicate is closed here.
+            const open = await github.paginate(github.rest.issues.listForRepo, { owner, repo, state: 'open', per_page: 100 });
+            const matches = open.filter(i => !i.pull_request && i.title === title).sort((x, y) => x.number - y.number);
+            let issue = matches[0];
+            for (const dup of matches.slice(1)) {
+              await github.rest.issues.update({ owner, repo, issue_number: dup.number, state: 'closed',
+                body: `Duplicate of #${issue.number} — closed by estate-uptime.yml.` });
+            }
             if (!issue) {
               issue = (await github.rest.issues.create({ owner, repo, title, labels: ['estate-uptime'],
                 body: 'First run — the table appears after the first probe.' })).data;
@@ -61,21 +68,16 @@ jobs:
         id: probe
         run: |
           set +e
-          node scripts/estate-uptime.mjs --prev prev.json --json result.json | tee probe.log
-          echo "code=$?" >> "$GITHUB_OUTPUT"
-          echo "down=$(node -e "console.log(JSON.parse(require('fs').readFileSync('result.json')).down)")" >> "$GITHUB_OUTPUT"
-          echo "flips=$(node -e "console.log(JSON.parse(require('fs').readFileSync('result.json')).flips.length)")" >> "$GITHUB_OUTPUT"
-          node -e "
-            const { renderTable, renderFlips } = await import('./scripts/estate-uptime.mjs');
-            const cur = JSON.parse(require('fs').readFileSync('result.json'));
-            const fs = require('fs');
-            fs.writeFileSync('table.md', renderTable(cur));
-            fs.writeFileSync('flips.md', cur.flips.length ? renderFlips(cur.flips) : '');
-          " --input-type=module || true
-          [ -s table.md ] || node --input-type=module -e "import('./scripts/estate-uptime.mjs').then(m => { const fs = require('fs'); const cur = JSON.parse(fs.readFileSync('result.json')); fs.writeFileSync('table.md', m.renderTable(cur)); fs.writeFileSync('flips.md', cur.flips.length ? m.renderFlips(cur.flips) : ''); })"
+          node scripts/estate-uptime.mjs --prev prev.json --json result.json --table table.md --flips flips.md | tee probe.log
+          code=${PIPESTATUS[0]}
+          set -e
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          test -s result.json && test -s table.md
+          echo "down=$(node -p "JSON.parse(require('fs').readFileSync('result.json','utf8')).down")" >> "$GITHUB_OUTPUT"
+          echo "flips=$(node -p "JSON.parse(require('fs').readFileSync('result.json','utf8')).flips.length")" >> "$GITHUB_OUTPUT"
 
       - name: Update the pinned issue (and comment only on a flip)
-        if: ${{ !cancelled() && steps.probe.outputs.down != '' }}
+        if: ${{ !cancelled() && steps.probe.outcome == 'success' }}
         uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         env:
           ISSUE: ${{ steps.issue.outputs.number }}

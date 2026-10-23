@@ -4,6 +4,7 @@
 //   node scripts/estate-uptime.mjs                   # probe everything, print a table, exit 1 if anything is DOWN
 //   node scripts/estate-uptime.mjs --json out.json   # also write the machine-readable result
 //   node scripts/estate-uptime.mjs --prev prev.json  # read the last result; exit 1 only on a NEW outage
+//   node scripts/estate-uptime.mjs --table table.md --flips flips.md   # write the Markdown the pinned issue shows
 //
 // WHY THIS EXISTS (Bob, 2026-10-20). The estate had nine daily red-main watchdogs, nine weekly
 // link checks, a six-hourly browser crawl and GitHub's own mail on every passed run — a hundred
@@ -108,6 +109,12 @@ async function main(argv) {
   for (const r of cur.results) console.log(`  ${r.status === "UP" ? "✓" : "✗"} ${r.name} — ${r.status}${r.why ? ` (${r.why})` : ""}`);
   if (changed.length) { console.log("\nchanged:"); console.log(renderFlips(changed)); }
   if (opt("json")) writeFileSync(opt("json"), JSON.stringify(cur, null, 2) + "\n");
+  // The workflow reads these two files; rendering them HERE (not in an inline `node -e` in YAML)
+  // is what the first 48 scheduled runs taught: a one-line script that mixed ESM `import()` with
+  // CommonJS `require` never wrote table.md, the issue step then failed on the missing file, and
+  // the lane that exists to end failure mail produced one every half hour.
+  if (opt("table")) writeFileSync(opt("table"), renderTable(cur) + "\n");
+  if (opt("flips")) writeFileSync(opt("flips"), (changed.length ? renderFlips(changed) : "") + "\n");
 
   // With a previous result, red means NEW outage (one failure mail per incident, not 48 a day).
   // Without one (first run, or run by hand), red means anything is down right now.
