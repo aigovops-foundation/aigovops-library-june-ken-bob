@@ -2,7 +2,9 @@
 // told only about a flip; a 404 can be UP when the row says so (the Beacon lab's Express root).
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { createRequire } from "node:module";
 import { loadConfig, probeOnce, probeWithRetries, flips, renderTable } from "../scripts/estate-uptime.mjs";
+const require = createRequire(import.meta.url);
 
 const cfg = { attempts: 3, gap_seconds: 0, timeout_seconds: 1 };
 const ok = (status = 200, body = "AiGovOps Foundation") => async () => ({ status, text: async () => body });
@@ -58,4 +60,11 @@ test("only flips are reported: steady UP and steady DOWN are silent, a new DOWN 
 test("the table names every service with its status", () => {
   const t = renderTable({ results: [{ name: "a", status: "UP", attempts: [{ status: 200, ms: 120 }] }, { name: "b", status: "DOWN", why: "HTTP 503", attempts: [{ status: 503, ms: 90 }] }] });
   assert.match(t, /\| a \| 🟢 UP \| HTTP 200 in 120 ms/); assert.match(t, /\| b \| 🔴 DOWN \| HTTP 503 in 90 ms \| HTTP 503/);
+});
+
+test("the workflow lets the script render the issue Markdown (no inline node -e; the first 48 runs failed on one)", () => {
+  const { readFileSync: read } = require("node:fs");
+  const lane = read(new URL("../.github/workflows/estate-uptime.yml", import.meta.url), "utf8");
+  assert.match(lane, /estate-uptime\.mjs --prev prev\.json --json result\.json --table table\.md --flips flips\.md/);
+  assert.doesNotMatch(lane, /node -e\s+"[\s\S]*?import\(/, "no inline ESM import() in a node -e string");
 });
