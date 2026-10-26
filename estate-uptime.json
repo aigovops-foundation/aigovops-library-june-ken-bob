@@ -1,95 +1,19 @@
 {
-  "$comment": "The critical uptime test \u2014 is each live service UP? Read by scripts/estate-uptime.mjs every 30 minutes from estate-uptime.yml. A probe is a plain HTTPS GET, no browser, no sign-in, no form. A service is DOWN only when every attempt fails (status outside `expect`, or `must_contain` missing, or no answer inside the timeout). Add a service by adding a row; the pinned issue 'Estate uptime' shows the latest answer and a founder is messaged only when a row flips.",
+  "$comment": "The critical uptime test — is each live service UP? Read by scripts/estate-uptime.mjs every 30 minutes from estate-uptime.yml. A probe is a plain HTTPS GET, no browser, no sign-in, no form. A service is DOWN only when every attempt fails (status outside `expect`, or `must_contain` missing, or no answer inside the timeout). Add a service by adding a row; the pinned issue 'Estate uptime' shows the latest answer and a founder is messaged only when a row flips.",
   "attempts": 3,
   "gap_seconds": 20,
   "timeout_seconds": 15,
   "probes": [
-    {
-      "name": "Foundation site",
-      "url": "https://www.aigovops-foundation.com/",
-      "expect": [
-        200
-      ],
-      "must_contain": "AiGovOps Foundation"
-    },
-    {
-      "name": "Community platform (Omni)",
-      "url": "https://community.aigovops-foundation.com/landing.html",
-      "expect": [
-        200
-      ],
-      "must_contain": "AiGovOps",
-      "note": "/ answers 302 \u2192 landing.html; the landing page is the thing a visitor actually sees, so it is what is probed."
-    },
-    {
-      "name": "Community sign-in door",
-      "url": "https://community.aigovops-foundation.com/signin.html",
-      "expect": [
-        200
-      ]
-    },
-    {
-      "name": "Library (rendered, behind the rules door)",
-      "url": "https://community.aigovops-foundation.com/library/",
-      "expect": [
-        200,
-        302,
-        303,
-        307
-      ],
-      "note": "A redirect to the rules gate is UP: the door is answering. Only a 5xx or silence is DOWN."
-    },
-    {
-      "name": "Practice caf\u00e9",
-      "url": "https://practice.aigovops-foundation.com/",
-      "expect": [
-        200
-      ],
-      "must_contain": "AiGovOps"
-    },
-    {
-      "name": "Beacon lab",
-      "url": "https://beacon-lab.aigovops-foundation.com/api/status",
-      "expect": [
-        200
-      ],
-      "note": "The lab API; / has no route (404) so the probe uses /api/status (200 + labName). Runs on the Omni droplet since 2026-10-26.",
-      "must_contain": "labName"
-    },
-    {
-      "name": "Beacon (Pages)",
-      "url": "https://aigovops-foundation.github.io/aigovops-beacon/",
-      "expect": [
-        200
-      ]
-    },
-    {
-      "name": "Umbrella (Pages)",
-      "url": "https://aigovops-foundation.github.io/umbrella-govops/",
-      "expect": [
-        200
-      ]
-    },
-    {
-      "name": "Lantern (Pages)",
-      "url": "https://aigovops-foundation.github.io/aigovops-lantern/",
-      "expect": [
-        200
-      ]
-    },
-    {
-      "name": "NCW AI Camp (Pages)",
-      "url": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
-      "expect": [
-        200
-      ]
-    },
-    {
-      "name": "Open Source v4 (Pages)",
-      "url": "https://aigovops-foundation.github.io/aigovops/",
-      "expect": [
-        200
-      ]
-    }
+    { "name": "Foundation site", "url": "https://www.aigovops-foundation.com/", "expect": [200], "must_contain": "AiGovOps Foundation" },
+    { "name": "Community platform (Omni)", "url": "https://community.aigovops-foundation.com/landing.html", "expect": [200], "must_contain": "AiGovOps", "note": "/ answers 302 → landing.html; the landing page is the thing a visitor actually sees, so it is what is probed." },
+    { "name": "Community sign-in door", "url": "https://community.aigovops-foundation.com/signin.html", "expect": [200] },
+    { "name": "Library (rendered, behind the rules door)", "url": "https://community.aigovops-foundation.com/library/", "expect": [200, 302, 303, 307], "note": "A redirect to the rules gate is UP: the door is answering. Only a 5xx or silence is DOWN." },
+    { "name": "Practice café", "url": "https://practice.aigovops-foundation.com/", "expect": [200], "must_contain": "AiGovOps" },
+    { "name": "Beacon lab", "url": "https://beacon-lab.aigovops-foundation.com/api/status", "expect": [200], "must_contain": "labName", "note": "The lab API (Omni droplet since 2026-10-26). / has no route, so the probe asks /api/status for the status JSON; a 404 anywhere is DOWN." },
+    { "name": "Beacon (Pages)", "url": "https://aigovops-foundation.github.io/aigovops-beacon/", "expect": [200] },
+    { "name": "Umbrella (Pages)", "url": "https://aigovops-foundation.github.io/umbrella-govops/", "expect": [200] },
+    { "name": "Lantern (Pages)", "url": "https://aigovops-foundation.github.io/aigovops-lantern/", "expect": [200] },
+    { "name": "NCW AI Camp (Pages)", "url": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/", "expect": [200] },
+    { "name": "Open Source v4 (Pages)", "url": "https://aigovops-foundation.github.io/aigovops/", "expect": [200] }
   ]
 }
