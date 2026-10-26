@@ -9,7 +9,7 @@
     { "name": "Community sign-in door", "url": "https://community.aigovops-foundation.com/signin.html", "expect": [200] },
     { "name": "Library (rendered, behind the rules door)", "url": "https://community.aigovops-foundation.com/library/", "expect": [200, 302, 303, 307], "note": "A redirect to the rules gate is UP: the door is answering. Only a 5xx or silence is DOWN." },
     { "name": "Practice café", "url": "https://practice.aigovops-foundation.com/", "expect": [200], "must_contain": "AiGovOps" },
-    { "name": "Beacon lab", "url": "https://beacon-lab.aigovops-foundation.com/", "expect": [200, 404], "note": "The lab backend answers 404 on / (Express, no root route) — that 404 is the process alive. Silence or 5xx is DOWN." },
+    { "name": "Beacon lab", "url": "https://beacon-lab.aigovops-foundation.com/api/status", "expect": [200], "must_contain": "labName", "note": "The lab API (Omni droplet since 2026-10-26). / has no route, so the probe asks /api/status for the status JSON; a 404 anywhere is DOWN." },
     { "name": "Beacon (Pages)", "url": "https://aigovops-foundation.github.io/aigovops-beacon/", "expect": [200] },
     { "name": "Umbrella (Pages)", "url": "https://aigovops-foundation.github.io/umbrella-govops/", "expect": [200] },
     { "name": "Lantern (Pages)", "url": "https://aigovops-foundation.github.io/aigovops-lantern/", "expect": [200] },
