@@ -1,6 +1,5 @@
 # Fly.io deployment for the AiGovOps Library governed core.
-# Prepared, not deployed — per CLAUDE.md, the first deploy (creating the app,
-# auth, secrets, a public URL) is Bob's/Ken's irreversible click. See DEPLOY.md.
+# Deployed — the Library core is live at https://aigovops-library-core.fly.dev.
 #
 # Rename `app` and set `primary_region` before `fly launch`/`fly deploy`.
 
