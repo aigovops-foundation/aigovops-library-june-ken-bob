@@ -210,7 +210,7 @@ milestone slides by roughly that much — the work is not the constraint.
 | 1a | Repoint `bobrapp.github.io/…V4-10k/` before any rename | Yellow | **done** — 138 references repointed; the onboarding iframe last, by hand (it cannot use a github.com URL) |
 | 1b | Transfer V4-10k to the org; rename `aigovops` | **Red** | **done** — Bob, via the GitHub assistant, 2026-08-23. Pages green under the org |
 | 2 | Apply for GitHub for Nonprofits | **Red** | **Bob** |
-| 3 | CODEOWNERS: both founders on `policies/`, `skills/`, `.github/` | **Red** | **file merged (#65), still INERT.** Only `@bobrapp` has access — checked 2026-08-23. Needs two settings moves: give `@kenjohnston-ai` write, then require Code Owner review on `main` |
+| 3 | CODEOWNERS: both founders on `policies/`, `skills/`, `.github/` | **Red** | **file merged (#65), still INERT.** Only `@bobrapp` has access — checked 2026-08-23. Needs two settings moves: give `@kenjohnston01` write, then require Code Owner review on `main` |
 | 5 | 301 `a-i-gov-ops.com`; publish the `.org` redirect map | **Red** | **Bob** — needs D2 |
 | 7 | Migrate the skills; add `principle:`/`owner:`/`risk:` + CI check | Yellow | **done** — PR #62. 14 skills now, all four fields checked in CI |
 | 8 | Three fat skills (AI House, sponsorship, editorial voice) | Yellow | **done**. Each carries acceptance criteria and an output schema. 17 skills now. The falsification test — hand them to a volunteer for a weekend — has not been run |

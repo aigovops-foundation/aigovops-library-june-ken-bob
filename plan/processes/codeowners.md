@@ -23,12 +23,12 @@ PR 3 of [`plan/MASTER-PLAN.md`](../MASTER-PLAN.md). File: `/CODEOWNERS` · guard
 **A CODEOWNERS entry naming a user without write access to the repository is silently
 ignored by GitHub.** No warning, no error — the review requirement simply never applies. As of
 2026-08-23 the only collaborator on this repo is `@bobrapp`, so every line naming
-`@kenjohnston-ai` is currently inert.
+`@kenjohnston01` is currently inert.
 
 Two moves make it real, and both sit on the irreversible side of the boundary — they are a
 founder's, never an agent's:
 
-1. **Give `@kenjohnston-ai` write access** — org membership or repo collaborator.
+1. **Give `@kenjohnston01` write access** — org membership or repo collaborator.
 2. **Turn on branch protection for `main`** with *Require review from Code Owners*.
 
 And a third thing worth deciding rather than assuming: CODEOWNERS on its own asks for **one**
