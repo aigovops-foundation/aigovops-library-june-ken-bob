@@ -63,7 +63,7 @@ test("CODEOWNERS names only founders on record — a typo'd handle is a silently
 
 test("both founders are on record, so CODEOWNERS can name them", () => {
   const f = JSON.parse(readFileSync(new URL("../founders.json", import.meta.url), "utf8"));
-  assert.deepEqual([...f.handles].sort(), ["bobrapp", "kenjohnston-ai"]);
+  assert.deepEqual([...f.handles].sort(), ["bobrapp", "kenjohnston01"]);
   assert.equal(f.todo, undefined, "the D7 TODO was answered on 2026-08-23");
 });
 

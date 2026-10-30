@@ -568,6 +568,6 @@ people:
       - co-founder
       - steward
     email: "ken.johnston@aigovops.community"
-    github: kenjohnston-ai
+    github: kenjohnston01
     holds: "Kill switch, role administration, and the aigovops.org registration"
     note: "D7 answered 2026-08-23. The handle is on record, so CODEOWNERS can name him — but it stays INERT until he has write access to the repo, which is a founder's move (see plan/processes/codeowners.md)."
