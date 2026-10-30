@@ -105,6 +105,11 @@ jobs:
                 return;
               }
               const priorState = stateFrom(issue.body);
+              if (priorState.last_red_created &&
+                  new Date(run.created_at) < new Date(priorState.last_red_created)) {
+                core.info('An older green run cannot resolve a newer red run; skipping.');
+                return;
+              }
               if (labelNames(issue).includes('in-progress')) {
                 if (!priorState.green_noted) {
                   await github.rest.issues.createComment({
@@ -190,7 +195,7 @@ jobs:
                 }
               }
               const count = 1;
-              const state = { sig, first_seen: firstSeen, last_seen: seen, count };
+              const state = { sig, first_seen: firstSeen, last_seen: seen, count, last_red_created: run.created_at };
               const title = `bug: scheduled check red — ${run.name}`.slice(0, 120);
               const body = [
                 'Filed by red-to-ticket.yml when the scheduled check went red.',
@@ -228,7 +233,7 @@ jobs:
             const count = Number(priorState.count || 0) + 1;
             const first = priorState.first_seen || firstSeen;
             const nextState = {
-              sig, first_seen: first, last_seen: seen, count,
+              sig, first_seen: first, last_seen: seen, count, last_red_created: run.created_at,
             };
             let body = replaceState(issue.body || '', nextState);
             body = replaceOrInsertLine(body, /^Last seen:.*$/m, `Last seen: ${seen}`);

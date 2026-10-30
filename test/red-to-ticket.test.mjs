@@ -183,6 +183,19 @@ test("a green run comments and closes an open issue without in-progress", async 
   assert.match(h.comments[0].body, /Green again.*closing \(red-to-ticket\)/);
 });
 
+test("an older green run does not close a ticket for a newer failure", async () => {
+  const h = harness({ run: defaultRun({ created_at: "2026-01-02T00:00:00Z" }), ...failureDetails });
+  await h.invoke();
+  h.context.payload.workflow_run = defaultRun({
+    conclusion: "success",
+    created_at: "2026-01-01T00:00:00Z",
+    html_url: "https://github.com/org/repo/actions/runs/6",
+  });
+  await h.invoke();
+  assert.equal(h.issues[0].state, "open");
+  assert.equal(h.comments.length, 0);
+});
+
 test("a green run notes an in-progress ticket once and leaves it open", async () => {
   const created = harness(failureDetails);
   await created.invoke();
