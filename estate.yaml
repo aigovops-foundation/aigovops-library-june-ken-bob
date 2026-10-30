@@ -414,7 +414,7 @@ services:
     classification: operational
     verified: true
     source: "https://aigovops-library-core.fly.dev/readyz answered 200 \"ready\" on 2026-10-29; probed every 30 min by estate-uptime.yml"
-    risk: "RESOLVED 2026-10-29 — it is deployed and answering; fly.toml's prepared-not-deployed comment is stale. Remaining risk: scale-to-zero cold starts can exceed the probe timeout."
+    risk: "RESOLVED 2026-10-29 — it is deployed and answering; fly.toml's old prepared-not-deployed comment is corrected here. Remaining risk: scale-to-zero cold starts can exceed the probe timeout."
 
   - id: github-actions
     kind: "Automation"
