@@ -27,6 +27,6 @@
     "test": "cd core && node --test"
   },
   "dependencies": {
-    "marked": "^18.0.5"
+    "marked": "^18.1.2"
   }
 }
