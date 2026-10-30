@@ -34,6 +34,9 @@ jobs:
   ticket:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    concurrency:
+      group: red-to-ticket-${{ github.repository }}-${{ github.event.workflow_run.path }}
+      cancel-in-progress: false
     permissions:
       issues: write
       actions: read
