@@ -1,0 +1,244 @@
+name: reusable-red-to-ticket
+
+# Turn a red scheduled or manually dispatched check into one issue in the repo that ran it.
+#
+# WHY THIS EXISTS. A failed scheduled check is work for the queue, not another silent red light.
+# WHAT IT WILL NOT DO: fix the check, write contents, send mail, or use a cross-repo token.
+#
+# Adopt it from another repo with:
+#   on:
+#     workflow_run:
+#       workflows: [scheduled-check]
+#       types: [completed]
+#   permissions:
+#     contents: read
+#     issues: write
+#     actions: read
+#     checks: read
+#   jobs:
+#     ticket:
+#       uses: aigovops-foundation/aigovops-library-june-ken-bob/.github/workflows/reusable-red-to-ticket.yml@<SHA> # main YYYY-MM-DD
+#
+# The caller must declare those permissions: a called workflow's permissions can only
+# be a subset of its caller's.
+
+on:
+  workflow_call:
+
+permissions:
+  issues: write
+  actions: read
+  checks: read
+
+jobs:
+  ticket:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write
+      actions: read
+      checks: read
+    steps:
+      - uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        with:
+          script: |
+            // BEGIN red-to-ticket
+            const payload = context.payload || {};
+            const run = payload.workflow_run;
+            if (!run) {
+              core.info('No workflow_run payload; nothing to file.');
+              return;
+            }
+            if (!['schedule', 'workflow_dispatch'].includes(run.event) ||
+                run.head_branch !== payload.repository?.default_branch) {
+              core.info('Not a scheduled/manual run on the default branch; skipping.');
+              return;
+            }
+            if (!['failure', 'timed_out', 'success'].includes(run.conclusion)) {
+              core.info(`Conclusion ${run.conclusion} is not actionable; skipping.`);
+              return;
+            }
+
+            const { owner, repo } = context.repo;
+            const key = run.path;
+            const fingerprint = `<!-- red-to-ticket:${key} -->`;
+            const seen = run.completed_at || run.updated_at || run.created_at || new Date().toISOString();
+            const stateMarker = (state) => `<!-- red-to-ticket-state:${JSON.stringify(state)} -->`;
+            const stateFrom = (body) => {
+              const match = (body || '').match(/<!-- red-to-ticket-state:(\{.*?\}) -->/s);
+              if (!match) return {};
+              try { return JSON.parse(match[1]); } catch { return {}; }
+            };
+            const replaceOrInsertLine = (body, pattern, line) => {
+              if (pattern.test(body)) return body.replace(pattern, line);
+              return body.replace(/(?=<!-- red-to-ticket:)/, `${line}\n`);
+            };
+            const replaceState = (body, state) => {
+              const marker = stateMarker(state);
+              return /<!-- red-to-ticket-state:\{.*?\} -->/s.test(body)
+                ? body.replace(/<!-- red-to-ticket-state:\{.*?\} -->/s, marker)
+                : `${body.trimEnd()}\n${marker}`;
+            };
+            const labelNames = (issue) => (issue.labels || []).map((label) =>
+              typeof label === 'string' ? label : label.name);
+
+            const open = await github.paginate(github.rest.issues.listForRepo, {
+              owner, repo, state: 'open', labels: 'discovered', per_page: 100,
+            });
+            const matches = open
+              .filter((issue) => !issue.pull_request && (issue.body || '').includes(fingerprint))
+              .sort((a, b) => new Date(a.created_at || 0) - new Date(b.created_at || 0) || a.number - b.number);
+            let issue = matches[0];
+            for (const duplicate of matches.slice(1)) {
+              await github.rest.issues.createComment({
+                owner, repo, issue_number: duplicate.number,
+                body: `Duplicate of #${issue.number} — closed by red-to-ticket.`,
+              });
+              await github.rest.issues.update({
+                owner, repo, issue_number: duplicate.number, state: 'closed', state_reason: 'completed',
+              });
+            }
+
+            if (run.conclusion === 'success') {
+              if (!issue) {
+                core.info('No open ticket for this check.');
+                return;
+              }
+              const priorState = stateFrom(issue.body);
+              if (labelNames(issue).includes('in-progress')) {
+                if (!priorState.green_noted) {
+                  await github.rest.issues.createComment({
+                    owner, repo, issue_number: issue.number,
+                    body: `Green again on ${run.html_url}; a run owns this ticket, so it stays open.`,
+                  });
+                  const nextState = { ...priorState, green_noted: true };
+                  await github.rest.issues.update({
+                    owner, repo, issue_number: issue.number, body: replaceState(issue.body || '', nextState),
+                  });
+                }
+                return;
+              }
+              await github.rest.issues.createComment({
+                owner, repo, issue_number: issue.number,
+                body: `Green again on ${run.html_url} — closing (red-to-ticket).`,
+              });
+              await github.rest.issues.update({
+                owner, repo, issue_number: issue.number, state: 'closed', state_reason: 'completed',
+              });
+              return;
+            }
+
+            const failedRun = await github.rest.actions.listJobsForWorkflowRun({
+              owner, repo, run_id: run.id, filter: 'latest',
+            });
+            const failedJobs = (failedRun.data.jobs || []).filter((job) =>
+              ['failure', 'timed_out'].includes(job.conclusion));
+            const stepDetails = [];
+            for (const job of failedJobs) {
+              const failedSteps = (job.steps || []).filter((step) => step.conclusion === 'failure');
+              if (failedSteps.length) {
+                for (const step of failedSteps) stepDetails.push({ sort: `${job.name} / ${step.name}`, text: `- ${job.name} › ${step.name}` });
+              } else {
+                stepDetails.push({ sort: job.name, text: `- ${job.name}` });
+              }
+            }
+
+            const annotations = [];
+            for (const job of failedJobs.slice(0, 3)) {
+              const result = await github.rest.checks.listAnnotations({
+                owner, repo, check_run_id: job.id,
+              });
+              annotations.push(...(result.data || []));
+            }
+            const failures = annotations.filter((item) => item.annotation_level === 'failure');
+            const chosenAnnotations = (failures.length ? failures : annotations.filter((item) =>
+              item.annotation_level === 'warning')).slice(0, 10).map((item) => {
+              const message = (item.message || '').trim().slice(0, 300);
+              const line = item.start_line || item.line;
+              const location = item.path ? ` (${item.path}${line ? `:${line}` : ''})` : '';
+              return {
+                sort: message,
+                text: `- \`${item.annotation_level}\` ${message}${location}`,
+              };
+            });
+            const evidence = [...stepDetails, ...chosenAnnotations].sort((a, b) => a.sort.localeCompare(b.sort));
+            const details = evidence.length
+              ? evidence.map((item) => item.text).join('\n')
+              : 'No step or annotation detail — open the run log.';
+            const signatureParts = [
+              ...stepDetails.map((item) => item.sort),
+              ...chosenAnnotations.map((item) => item.sort),
+            ].sort();
+            const sig = require('crypto').createHash('sha256')
+              .update(signatureParts.join('\n')).digest('hex').slice(0, 12);
+            const firstSeen = run.created_at || run.run_started_at || seen;
+
+            if (!issue) {
+              for (const [name, color, description] of [
+                ['queue', '0e8a16', 'In the estate work queue'],
+                ['discovered', 'fbca04', 'Side problem filed by automation instead of fixed inline'],
+              ]) {
+                try {
+                  await github.rest.issues.getLabel({ owner, repo, name });
+                } catch (error) {
+                  if (error.status !== 404) throw error;
+                  try {
+                    await github.rest.issues.createLabel({ owner, repo, name, color, description });
+                  } catch (createError) {
+                    core.warning(`Could not create label ${name}: ${createError.message}`);
+                  }
+                }
+              }
+              const count = 1;
+              const state = { sig, first_seen: firstSeen, last_seen: seen, count };
+              const title = `bug: scheduled check red — ${run.name}`.slice(0, 120);
+              const body = [
+                'Filed by red-to-ticket.yml when the scheduled check went red.',
+                '',
+                '### Outcome',
+                `\`${run.name}\` (\`${key}\`) passes on its next scheduled run on \`${payload.repository.default_branch}\`.`,
+                '',
+                '### Where',
+                `${owner}/${repo}`,
+                '',
+                '### Proof',
+                `The next scheduled or manually dispatched run of \`${key}\` on \`${payload.repository.default_branch}\` is green. Failing run: ${run.html_url}`,
+                '',
+                '### What failed',
+                details,
+                '',
+                '### Notes',
+                'One ticket per check: a repeat failure updates this issue; it closes itself when the check is green again (unless a run owns it). Fix the cause, never weaken the check.',
+                '',
+                '### Human gate',
+                '- [x] Nothing here is irreversible without a human click (merge, DNS, secrets, deletes, payments).',
+                '',
+                `Last seen: ${seen}`,
+                `Last red run: ${run.html_url} (${count} red runs since ${firstSeen})`,
+                fingerprint,
+                stateMarker(state),
+              ].join('\n');
+              issue = (await github.rest.issues.create({
+                owner, repo, title, labels: ['queue', 'discovered'], body,
+              })).data;
+              return;
+            }
+
+            const priorState = stateFrom(issue.body);
+            const count = Number(priorState.count || 0) + 1;
+            const first = priorState.first_seen || firstSeen;
+            const nextState = {
+              sig, first_seen: first, last_seen: seen, count,
+            };
+            let body = replaceState(issue.body || '', nextState);
+            body = replaceOrInsertLine(body, /^Last seen:.*$/m, `Last seen: ${seen}`);
+            body = replaceOrInsertLine(body, /^Last red run:.*$/m,
+              `Last red run: ${run.html_url} (${count} red runs since ${first})`);
+            await github.rest.issues.update({ owner, repo, issue_number: issue.number, body });
+            if (priorState.sig !== sig) {
+              await github.rest.issues.createComment({
+                owner, repo, issue_number: issue.number,
+                body: `The failure changed — latest red run: ${run.html_url}\n\n### What failed\n${details}`,
+              });
+            }
+            // END red-to-ticket

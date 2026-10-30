@@ -77,4 +77,5 @@ jobs:
       - run: node scripts/build-plugins.mjs --check
       - run: node --test test/build-plugins.test.mjs
       - run: node --test test/founders-digest.test.mjs
+      - run: node --test test/red-to-ticket.test.mjs
       - run: node --test test/repo-move.test.mjs
