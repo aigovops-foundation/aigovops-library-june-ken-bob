@@ -409,12 +409,12 @@ services:
   - id: library-core-fly
     kind: "API / governed core"
     host: "Fly.io (iad)"
-    status: unknown
+    status: live
     runs: "aigovops-library-core — the Yes-Gate API, OAuth, and the Beacon-signed ledger"
     classification: operational
-    verified: false
-    source: "fly.toml; docs/durability-plan.html"
-    risk: "The repo disagrees with itself: fly.toml says prepared-not-deployed, the durability plan describes it as running with scale-to-zero. Exactly the kind of contradiction this manifest exists to surface."
+    verified: true
+    source: "https://aigovops-library-core.fly.dev/readyz answered 200 \"ready\" on 2026-10-29; probed every 30 min by estate-uptime.yml"
+    risk: "RESOLVED 2026-10-29 — it is deployed and answering; fly.toml's old prepared-not-deployed comment is corrected here. Remaining risk: scale-to-zero cold starts can exceed the probe timeout."
 
   - id: github-actions
     kind: "Automation"

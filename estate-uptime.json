@@ -8,6 +8,7 @@
     { "name": "Community platform (Omni)", "url": "https://community.aigovops-foundation.com/landing.html", "expect": [200], "must_contain": "AiGovOps", "note": "/ answers 302 → landing.html; the landing page is the thing a visitor actually sees, so it is what is probed." },
     { "name": "Community sign-in door", "url": "https://community.aigovops-foundation.com/signin.html", "expect": [200] },
     { "name": "Library (rendered, behind the rules door)", "url": "https://community.aigovops-foundation.com/library/", "expect": [200, 302, 303, 307], "note": "A redirect to the rules gate is UP: the door is answering. Only a 5xx or silence is DOWN." },
+    { "name": "Library core (Fly)", "url": "https://aigovops-library-core.fly.dev/readyz", "expect": [200], "must_contain": "ready", "note": "The governed core's health endpoint (Yes-Gate API, OAuth, ledger). Also probed from droplets A and B (Omni #450)." },
     { "name": "Practice café", "url": "https://practice.aigovops-foundation.com/", "expect": [200], "must_contain": "AiGovOps" },
     { "name": "Beacon lab", "url": "https://beacon-lab.aigovops-foundation.com/api/status", "expect": [200], "must_contain": "labName", "note": "The lab API (Omni droplet since 2026-10-26). / has no route, so the probe asks /api/status for the status JSON; a 404 anywhere is DOWN." },
     { "name": "Beacon (Pages)", "url": "https://aigovops-foundation.github.io/aigovops-beacon/", "expect": [200] },
