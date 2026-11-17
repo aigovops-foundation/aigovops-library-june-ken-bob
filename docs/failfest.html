@@ -231,7 +231,7 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visibl
       <button id="random" aria-label="Random">🎲 Random</button>
       <span class="spacer"></span>
       <span id="counter" class="tier"></span>
-      <a href="https://community.aigovops-foundation.com/library/data/verified-harms-2026-W24.json" target="_blank" rel="noopener">JSON</a>
+      <a href="https://community.aigovops-foundation.com/library/data/verified-harms-2026-W24.json" target="_blank" rel="noopener">JSON</a> · <a href="https://community.aigovops-foundation.com/library/data/corrections-2026-W24.json" target="_blank" rel="noopener">Corrections</a>
     </div>
     <div id="card" class="card"><div class="loading">Loading verified harms corpus…</div></div>
   </main>
@@ -311,7 +311,7 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visibl
       if (e.key === " ") { document.getElementById("random").click(); e.preventDefault(); }
     });
 
-    fetch("./data/verified-harms-2026-W24.json")
+    fetch("./data/verified-harms-current.json")
       .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
       .then(b => {
         CASES = b.cases;
@@ -322,7 +322,7 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visibl
       })
       .catch(err => {
         document.getElementById("card").innerHTML =
-          `<div class="error">Could not load corpus: ${err.message}.<br>Expected JSON at ./data/verified-harms-2026-W24.json</div>`;
+          `<div class="error">Could not load corpus: ${err.message}.<br>Expected JSON at ./data/verified-harms-current.json</div>`;
       });
   </script>
 <nav style="padding:16px 24px;font-size:13px;border-top:1px solid #2d333d;text-align:center"><a href="./index.html" style="color:#4fc3f7;text-decoration:none">&larr; AiGovOps Library</a></nav>

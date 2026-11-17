@@ -59,7 +59,17 @@
         },
         "final_state": "VERIFIED 100 of 100"
       },
-      "total_cases": 100
+      "total_cases": 100,
+      "corrections": [
+        {
+          "file": "docs/data/corrections-2026-W24.json",
+          "sha256": "36c4d7e7dd065a743a741bce3c6b0f8f556d0a7f120258c717560eadb6d612ef",
+          "issued": "2026-11-17",
+          "count": 37,
+          "cases": 22,
+          "note": "The signed batch is unchanged. Pages read docs/data/verified-harms-current.json, the batch with these corrections applied by scripts/apply-corrections.mjs."
+        }
+      ]
     }
   ],
   "running_total": 100,

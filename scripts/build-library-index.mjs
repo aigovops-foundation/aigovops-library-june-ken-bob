@@ -115,7 +115,7 @@ function toolsFromEstate() {
 }
 
 export function buildLibraryIndex() {
-  const corpus = JSON.parse(readFileSync(join(ROOT, "docs", "data", "verified-harms-2026-W24.json"), "utf8"));
+  const corpus = JSON.parse(readFileSync(join(ROOT, "docs", "data", "verified-harms-current.json"), "utf8"));
   const cases = Array.isArray(corpus) ? corpus : Object.values(corpus).find(Array.isArray);
   if (!Array.isArray(cases)) throw new Error("verified-harms corpus has no case list");
 

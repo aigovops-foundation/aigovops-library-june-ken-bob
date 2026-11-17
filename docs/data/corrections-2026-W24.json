@@ -1,0 +1,320 @@
+{
+  "name": "Corrections to the AiGovOps Verified AI Harms corpus, batch 2026-W24",
+  "schema_version": "1.0.0",
+  "applies_to": "verified-harms-2026-W24.json",
+  "applies_to_sha256": "b86e0a7e3670d623c239815536b8453c85d6d3b958e7c733a76dd4bdf47738b2",
+  "issued": "2026-11-17",
+  "prepared_by": "Claude (AI agent), at Bob Rapp's request",
+  "approved_by": null,
+  "rule": "The signed batch is never edited. Each correction names the case, the field, the exact value it replaces and the evidence. scripts/apply-corrections.mjs refuses to run if the batch's hash or any old value does not match. Every page reads the corrected copy, verified-harms-current.json.",
+  "why": "A link check on 16-17 Nov 2026 found 24 source links in this batch that did not resolve. The Wayback Machine had no copy of 21 of them, including pages at the BBC, CNN, NPR, The Verge, Wikipedia and gov.uk, which it archives heavily; so those links were most likely never real. Eleven cases had no working source left. Every replacement below was found by search and confirmed to resolve (or, for the BBC and two sites that refuse automated checks, confirmed through the Wayback Machine).",
+  "corrections": [
+    {
+      "id": "VH-049",
+      "op": "set",
+      "field": "org",
+      "from": "DPD (Yodel Group)",
+      "to": "DPD UK (DPDgroup / La Poste)",
+      "why": "DPD UK is part of DPDgroup, wholly owned by La Poste; Yodel is a separate company.",
+      "evidence": [
+        "https://dpdlocal.co.uk/content/about_dpd/press_centre/company_profile.jsp"
+      ]
+    },
+    {
+      "id": "VH-049",
+      "op": "replace_source",
+      "from": "https://www.bbc.com/news/technology-67915517",
+      "to": "https://www.bbc.co.uk/news/technology-68025677",
+      "why": "The Wayback Machine has no copy of technology-67915517, so it was most likely never a real page; technology-68025677 is the BBC's report on the DPD chatbot and is archived (24 Sep 2026). Not fetched here: our web tools decline BBC pages."
+    },
+    {
+      "id": "VH-049",
+      "op": "add_source",
+      "to": "https://www.theguardian.com/technology/2024/jan/20/dpd-ai-chatbot-swears-calls-itself-useless-and-criticises-firm",
+      "why": "A second working report of the same incident."
+    },
+    {
+      "id": "VH-022",
+      "op": "replace_source",
+      "from": "https://www.businessinsider.com/car-dealership-chatgpt-chevy-chatbot-prompt-2023-12",
+      "to": "https://www.businessinsider.com/car-dealership-chevrolet-chatbot-chatgpt-pranks-chevy-2023-12",
+      "why": "The original address returns 404 and the Wayback Machine has no copy of it, so it was most likely never a real page."
+    },
+    {
+      "id": "VH-030",
+      "op": "replace_source",
+      "from": "https://en.wikipedia.org/wiki/State_v._Loomis",
+      "to": "https://en.wikipedia.org/wiki/Loomis_v._Wisconsin",
+      "why": "Wikipedia has no article titled State v. Loomis; the case's article is Loomis v. Wisconsin."
+    },
+    {
+      "id": "VH-037",
+      "op": "replace_source",
+      "from": "https://www.npr.org/sections/health-shots/2020/12/21/948512873/stanford-apologizes-after-vaccine-allocation-leaves-out-nearly-all-medical-resid",
+      "to": "https://www.technologyreview.com/2020/12/21/1015303/stanford-vaccine-algorithm/",
+      "why": "The original address returns 404 and the Wayback Machine has no copy of it, so it was most likely never a real page."
+    },
+    {
+      "id": "VH-037",
+      "op": "add_source",
+      "to": "https://stanforddaily.com/2020/12/18/stanford-medicine-passes-over-front-line-residents-fellows-in-initial-vaccine-allocation/",
+      "why": "The case had no other source."
+    },
+    {
+      "id": "VH-042",
+      "op": "replace_source",
+      "from": "https://www.aclu.org/news/privacy-technology/family-surveillance-by-algorithm-the-rapidly-spreading-tools-few-are-watching",
+      "to": "https://www.aclu.org/news/womens-rights/family-surveillance-by-algorithm-the-rapidly-spreading-tools-few-have-heard-of",
+      "why": "The real ACLU article has a different path and title (\"...Few Have Heard Of\")."
+    },
+    {
+      "id": "VH-042",
+      "op": "add_source",
+      "to": "https://www.aclu.org/news/womens-rights/how-policy-hidden-in-an-algorithm-is-threatening-families-in-this-pennsylvania-county",
+      "why": "The ACLU's 2023 analysis of the AFST."
+    },
+    {
+      "id": "VH-042",
+      "op": "replace_text",
+      "field": "incident",
+      "from": "(including ACLU 2020 audit)",
+      "to": "(including an ACLU survey in 2021 and an ACLU analysis in 2023)",
+      "why": "The ACLU's survey was published in September 2021 and its AFST analysis in March 2023; there was no 2020 audit.",
+      "evidence": [
+        "https://www.aclu.org/news/womens-rights/family-surveillance-by-algorithm-the-rapidly-spreading-tools-few-have-heard-of",
+        "https://www.aclu.org/news/womens-rights/how-policy-hidden-in-an-algorithm-is-threatening-families-in-this-pennsylvania-county"
+      ]
+    },
+    {
+      "id": "VH-053",
+      "op": "replace_source",
+      "from": "https://futurism.com/cnet-ai-published-errors",
+      "to": "https://futurism.com/cnet-ai-errors",
+      "why": "The real Futurism article is \"CNET's Article-Writing AI Is Already Publishing Very Dumb Errors\"."
+    },
+    {
+      "id": "VH-054",
+      "op": "replace_source",
+      "from": "https://www.jdsupra.com/legalnews/italian-data-protection-supervisory-7232383/",
+      "to": "https://www.bollettinoadapt.it/wp-content/uploads/2021/01/Ordinanza-Bologna.pdf",
+      "why": "Replaced with the court's order of 31 Dec 2020 as published by ADAPT."
+    },
+    {
+      "id": "VH-059",
+      "op": "replace_source",
+      "from": "https://ico.org.uk/about-the-ico/media-centre/news-and-blogs/2024/05/ico-statement-in-response-to-snap-inc-completed-data-protection-impact-assessment-for-my-ai/",
+      "to": "https://ico.org.uk/about-the-ico/media-centre/news-and-blogs/2024/05/ico-warns-organisations-must-not-ignore-data-protection-risks-as-it-concludes-snap-my-ai-chatbot-investigation/",
+      "why": "Replaced with the ICO's real statement of 21 May 2024."
+    },
+    {
+      "id": "VH-062",
+      "op": "replace_source",
+      "from": "https://www.amnesty.ch/fr/pays/asie-pacifique/myanmar/docs/2022/systemes-meta-facebook-ont-promu-violence-contre-rohingyas/220929_myanmar_facebook_rapport.pdf",
+      "to": "https://web.archive.org/web/20250913044145/https://www.amnesty.ch/fr/pays/asie-pacifique/myanmar/docs/2022/systemes-meta-facebook-ont-promu-violence-contre-rohingyas/220929_myanmar_facebook_rapport.pdf",
+      "why": "The report was real but the page now returns 404; this is the Wayback Machine's copy (13 Sep 2025)."
+    },
+    {
+      "id": "VH-067",
+      "op": "replace_source",
+      "from": "https://www.accc.gov.au/media-release/accc-sues-meta-for-allegedly-engaging-in-conduct-liable-to-mislead-or-deceive-consumers-through-publication-of-scam-celebrity-ads",
+      "to": "https://www.accc.gov.au/media-release/accc-takes-action-over-alleged-misleading-conduct-by-meta-for-publishing-scam-celebrity-crypto-ads-on-facebook",
+      "why": "The original address returns 404 and the Wayback Machine has no copy of it, so it was most likely never a real page."
+    },
+    {
+      "id": "VH-067",
+      "op": "remove_source",
+      "from": "https://www.accc.gov.au/media-release/scamwatch-targeting-scams-report-2023",
+      "why": "The original address returns 404 and the Wayback Machine has no copy of it, so it was most likely never a real page. The case keeps its other working sources."
+    },
+    {
+      "id": "VH-067",
+      "op": "replace_text",
+      "field": "incident",
+      "from": "Meta sued by ACCC in May 2024 for failing to prevent celebrity-deepfake investment-scam ads",
+      "to": "the ACCC had sued Meta in March 2022 over scam celebrity crypto ads on Facebook",
+      "why": "The ACCC began Federal Court proceedings against Meta on 18 March 2022, not in May 2024.",
+      "evidence": [
+        "https://www.accc.gov.au/media-release/accc-takes-action-over-alleged-misleading-conduct-by-meta-for-publishing-scam-celebrity-crypto-ads-on-facebook"
+      ]
+    },
+    {
+      "id": "VH-069",
+      "op": "replace_source",
+      "from": "https://www.theverge.com/2024/1/26/24052395/taylor-swift-ai-explicit-images-x",
+      "to": "https://www.aljazeera.com/news/2024/1/29/x-blocks-taylor-swift-searches-what-to-know-about-the-viral-ai-deepfakes",
+      "why": "The original address returns 404 and the Wayback Machine has no copy of it, so it was most likely never a real page."
+    },
+    {
+      "id": "VH-074",
+      "op": "remove_source",
+      "from": "https://ico.org.uk/about-the-ico/media-centre/news-and-blogs/2023/04/uk-data-protection-watchdog-launches-investigation-into-pimeyes-facial-search/",
+      "why": "The original address returns 404 and the Wayback Machine has no copy of it, so it was most likely never a real page. The case keeps its other working sources."
+    },
+    {
+      "id": "VH-076",
+      "op": "replace_source",
+      "from": "https://www.aljazeera.com/news/2018/12/15/automating-society-as-algorithms-make-decisions-can-we-still-be-equal",
+      "to": "https://automatingsociety.algorithmwatch.org/report2020/denmark/",
+      "why": "The original address returns 404 and the Wayback Machine has no copy of it, so it was most likely never a real page."
+    },
+    {
+      "id": "VH-079",
+      "op": "remove_source",
+      "from": "https://www.epo.org/en/news-events/news/decisions-j-820-and-j-920-statement-grounds",
+      "why": "The original address returns 404 and the Wayback Machine has no copy of it, so it was most likely never a real page. The case keeps its other working sources."
+    },
+    {
+      "id": "VH-086",
+      "op": "replace_source",
+      "from": "https://casetext.com/case/houston-fedn-of-teachers-local-2415-v-houston-indep-sch-dist",
+      "to": "https://www.aft.org/sites/default/files/amendedsummaryjudgment_houston_050417.pdf",
+      "why": "Casetext has shut down (410). Replaced with the court's opinion of 4 May 2017."
+    },
+    {
+      "id": "VH-086",
+      "op": "add_source",
+      "to": "https://www.edweek.org/teaching-learning/houston-district-settles-lawsuit-with-teachers-union-over-value-added-scores/2017/10",
+      "why": "The October 2017 settlement."
+    },
+    {
+      "id": "VH-087",
+      "op": "replace_source",
+      "from": "https://www.aclu.org/cases/kw-armstrong",
+      "to": "https://www.acluidaho.org/app/uploads/2019/04/summary_judgment_decision.pdf",
+      "why": "Replaced with the court's March 2016 decision, published by the ACLU of Idaho."
+    },
+    {
+      "id": "VH-088",
+      "op": "replace_source",
+      "from": "https://www.gov.uk/government/news/post-office-horizon-system-offences-act-2024",
+      "to": "https://www.legislation.gov.uk/ukpga/2024/14/contents",
+      "why": "Replaced with the Act itself."
+    },
+    {
+      "id": "VH-093",
+      "op": "replace_source",
+      "from": "https://www.hkma.gov.hk/eng/news-and-media/insight/2024/02/20240220/",
+      "to": "https://brdr.hkma.gov.hk/chi/doc-ldg/docId/getPdf/20250825-1-EN/20250825-1-EN.pdf",
+      "why": "No HKMA 'insight' page of 20 Feb 2024 exists or was archived. Replaced with the HKMA's circular on deepfake fraud risks."
+    },
+    {
+      "id": "VH-093",
+      "op": "add_source",
+      "to": "https://chinadailyhk.com/article/379805",
+      "why": "Hong Kong police's 2024 warning after the deepfake video-call fraud."
+    },
+    {
+      "id": "VH-093",
+      "op": "replace_text",
+      "field": "outcome",
+      "from": "HKMA February 2024 statement; corporate finance procedures industry-wide tightened around video-call verification.",
+      "to": "Hong Kong police warned businesses in 2024; the HKMA later set out measures against deepfake fraud for banks (circular of 25 August 2025).",
+      "why": "No HKMA statement of February 2024 could be found, and nothing supports 'industry-wide tightened'.",
+      "evidence": [
+        "https://chinadailyhk.com/article/379805",
+        "https://brdr.hkma.gov.hk/chi/doc-ldg/docId/getPdf/20250825-1-EN/20250825-1-EN.pdf"
+      ]
+    },
+    {
+      "id": "VH-094",
+      "op": "replace_source",
+      "from": "https://www.amnesty.org/en/latest/news/2025/03/hungary-pride-ban-facial-recognition/",
+      "to": "https://www.amnestyusa.org/press-releases/hungary-pride-ban-is-full-frontal-attack-on-lgbti-people-and-must-not-be-signed-into-law/",
+      "why": "The original address returns 404 and the Wayback Machine has no copy of it, so it was most likely never a real page."
+    },
+    {
+      "id": "VH-094",
+      "op": "add_source",
+      "to": "https://www.theguardian.com/world/2025/mar/18/hungary-bans-pride-events-and-plans-to-use-facial-recognition-to-target-attenders",
+      "why": "The case had no other source."
+    },
+    {
+      "id": "VH-094",
+      "op": "set",
+      "field": "year",
+      "from": 2024,
+      "to": 2025,
+      "why": "Hungary's parliament passed the law on 18 March 2025.",
+      "evidence": [
+        "https://www.theguardian.com/world/2025/mar/18/hungary-bans-pride-events-and-plans-to-use-facial-recognition-to-target-attenders"
+      ]
+    },
+    {
+      "id": "VH-095",
+      "op": "replace_source",
+      "from": "https://www.cnn.com/2024/08/05/business/grok-ai-election-misinformation/index.html",
+      "to": "https://whyy.org/articles/ai-x-misinformation-pennsylvania-secretary-of-state-elon-musk/",
+      "why": "Replaced with the AP's report of the secretaries of state's letter."
+    },
+    {
+      "id": "VH-095",
+      "op": "add_source",
+      "to": "https://fortune.com/2024/08/26/elon-musk-x-grok-ai-chatbot-presidential-election-misinformation-joe-biden",
+      "why": "X's change to Grok after the letter (AP)."
+    },
+    {
+      "id": "VH-095",
+      "op": "set",
+      "field": "incident",
+      "from": "X's Grok assistant generated false headlines (e.g., misattributing a major news event to a politician) and surfaced them in 'For You' explanations; multiple state secretaries of state warned voters.",
+      "to": "X's Grok chatbot falsely told users that the ballot deadline had passed in nine US states, shortly after President Biden left the 2024 race.",
+      "why": "The documented harm is the false ballot-deadline answers; the sources do not describe false headlines in 'For You'.",
+      "evidence": [
+        "https://whyy.org/articles/ai-x-misinformation-pennsylvania-secretary-of-state-elon-musk/"
+      ]
+    },
+    {
+      "id": "VH-095",
+      "op": "set",
+      "field": "outcome",
+      "from": "X added clarifications; secretaries of state in five swing states sent a joint letter urging fixes (Aug 2024).",
+      "to": "The secretaries of state of Michigan, Minnesota, New Mexico, Pennsylvania and Washington sent a joint letter on 5 August 2024; X then changed Grok.",
+      "why": "Not all five are swing states; the letter's date and X's change are as the AP reported.",
+      "evidence": [
+        "https://whyy.org/articles/ai-x-misinformation-pennsylvania-secretary-of-state-elon-musk/",
+        "https://fortune.com/2024/08/26/elon-musk-x-grok-ai-chatbot-presidential-election-misinformation-joe-biden"
+      ]
+    },
+    {
+      "id": "VH-096",
+      "op": "replace_source",
+      "from": "https://www.theverge.com/2022/12/7/23498853/lensa-ai-magic-avatars-app-stability-diffusion-stable-diffusion",
+      "to": "https://www.technologyreview.com/2022/12/12/1064751/the-viral-ai-avatar-app-lensa-undressed-me-without-my-consent/",
+      "why": "The original address returns 404 and the Wayback Machine has no copy of it, so it was most likely never a real page."
+    },
+    {
+      "id": "VH-099",
+      "op": "replace_source",
+      "from": "https://www.commonsensemedia.org/press-releases/common-sense-media-finds-social-ai-companions-pose-unacceptable-risks-for-teens-and-children",
+      "to": "https://www.commonsensemedia.org/press-releases/ai-companions-decoded-common-sense-media-recommends-ai-companion-safety-standards",
+      "why": "Replaced with Common Sense Media's real release of 30 April 2025."
+    }
+  ],
+  "open_questions": [
+    {
+      "id": "VH-042",
+      "field": "outcome",
+      "note": "'County made the model public, paused ML expansions; later research (Carnegie Mellon) showed bias narrowed' was not checked against a source."
+    },
+    {
+      "id": "VH-069",
+      "field": "outcome",
+      "note": "'Spurred federal DEFIANCE Act and state laws' was not checked against a source."
+    },
+    {
+      "id": "VH-094",
+      "field": "outcome",
+      "note": "'EU Commission opened proceedings; Council of Europe rapporteur criticized' was not checked against a source."
+    },
+    {
+      "id": "VH-096",
+      "field": "incident, outcome",
+      "note": "'clear age cues', 'TikTok virality' and 'cited in EU AI Act debates' were not checked against a source."
+    },
+    {
+      "id": "*",
+      "field": "source",
+      "note": "35 source links sit on sites that refuse automated checks (Reuters, Bloomberg, SEC, FTC and others) and were not confirmed. The other 79 cases' text was not re-checked here."
+    }
+  ]
+}

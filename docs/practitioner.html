@@ -264,12 +264,12 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visibl
       if (window.plausible) window.plausible('practitioner_finish', {props: {score: correct, total: QUIZ.length}});
     }
 
-    fetch("./data/verified-harms-2026-W24.json")
+    fetch("./data/verified-harms-current.json")
       .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
       .then(b => { CORPUS = b.cases; startQuiz(); })
       .catch(err => {
         document.getElementById("main").innerHTML =
-          `<div class="error">Could not load corpus: ${err.message}.<br>Expected JSON at ./data/verified-harms-2026-W24.json</div>`;
+          `<div class="error">Could not load corpus: ${err.message}.<br>Expected JSON at ./data/verified-harms-current.json</div>`;
       });
   </script>
 <nav style="padding:16px 24px;font-size:13px;border-top:1px solid #2d333d;text-align:center"><a href="./index.html" style="color:#4fc3f7;text-decoration:none">&larr; AiGovOps Library</a></nav>
