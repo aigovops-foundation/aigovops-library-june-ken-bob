@@ -116,11 +116,42 @@ test("an alarm that could not be sent fails loudly, never quietly", { skip: !has
   assert.equal(unset.calls.length, 0, "nothing is called without secrets");
 });
 
-test("red-to-ticket watches the crawl and the uptime lane", () => {
+test("red-to-ticket watches the crawl", () => {
   const list = wf("red-to-ticket.yml").match(/workflows: \[([^\]]*)\]/)[1].split(",").map((s) => s.trim());
-  for (const name of ["estate-interaction-crawl", "estate-uptime"]) {
-    assert.ok(list.includes(name), `${name} is watched`);
-    assert.match(wf(`${name}.yml`), new RegExp(`^name: ${name}\\n`), "the watched name is the workflow's real name");
+  assert.ok(list.includes("estate-interaction-crawl"), "the crawl is watched");
+  assert.match(crawl, /^name: estate-interaction-crawl\n/, "the watched name is the workflow's real name");
+});
+
+// The ticket lane closes a ticket on the next green run. estate-uptime is green on every poll
+// of an outage after the first, so watching it would close the ticket while the service was
+// still down. If uptime ever fails on "anything down", this test should be revisited, not deleted.
+test("red-to-ticket does not watch estate-uptime while its green does not mean healthy", () => {
+  const list = wf("red-to-ticket.yml").match(/workflows: \[([^\]]*)\]/)[1].split(",").map((s) => s.trim());
+  const uptime = readFileSync(new URL("../scripts/estate-uptime.mjs", import.meta.url), "utf8");
+  const redOnlyOnNewOutage = /return prev \? \(newlyDown \? 1 : 0\)/.test(uptime);
+  assert.ok(redOnlyOnNewOutage, "estate-uptime's exit rule changed: re-decide whether the ticket lane can watch it");
+  assert.ok(!list.includes("estate-uptime"), "estate-uptime is not watched");
+});
+
+test("a failure AFTER the digest was sent does not claim the crawl did not run", { skip: !hasJq && "jq not installed" }, () => {
+  const r = runAlarm({ jobs: { jobs: [{ steps: [
+    { name: "Email the digest to the founders (05:00 Pacific, once a day)", conclusion: "success" },
+    { name: "Record the window as sent", conclusion: "failure" },
+  ] }] } });
+  assert.equal(r.status, 0, r.stdout + r.stderr);
+  assert.equal(r.payload.message.subject, "Estate crawl finished with errors");
+  assert.match(r.payload.message.body.content, /today's digest was sent/);
+  assert.match(r.payload.message.body.content, /Failed step: Record the window as sent\n/);
+  assert.match(crawl, /\n      - name: Email the digest to the founders/, "the step name the alarm looks for still exists");
+});
+
+test("a digest step that failed or was skipped is still 'did not run'", { skip: !hasJq && "jq not installed" }, () => {
+  for (const conclusion of ["failure", "skipped", null]) {
+    const r = runAlarm({ jobs: { jobs: [{ steps: [
+      { name: "Crawl the estate", conclusion: "failure" },
+      { name: "Email the digest to the founders (05:00 Pacific, once a day)", conclusion },
+    ] }] } });
+    assert.equal(r.payload.message.subject, "Estate crawl did not run", String(conclusion));
   }
 });
 
