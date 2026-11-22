@@ -179,5 +179,5 @@ test("a run off the default branch sends nothing, and says so", { skip: !hasJq &
 test("the digest mail is also default-branch only, so a manual run on a test branch mails nobody", () => {
   const at = crawl.indexOf("      - name: Email the digest to the founders");
   const step = crawl.slice(at, crawl.indexOf("\n      - name:", at + 10));
-  assert.match(step, /\n        if: \$\{\{ .*github\.ref == format\('refs\/heads\/\{0\}', github\.event\.repository\.default_branch\) \}\}\n/);
+  assert.match(step, /\n        if: \$\{\{ .*github\.ref == format\('refs\/heads\/\{0\}', github\.event\.repository\.default_branch \|\| 'main'\) \}\}\n/);
 });
