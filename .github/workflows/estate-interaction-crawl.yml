@@ -283,7 +283,9 @@ jobs:
       # pinned issue are bookkeeping, and their failure is visible in the run's own red.
       - name: Email the digest to the founders (05:00 Pacific, once a day)
         id: mail
-        if: ${{ !cancelled() && steps.digest.outcome == 'success' && steps.window.outputs.send == 'true' }}
+        # Default branch only, for the same reason as the alarm below: a manual run on a test
+        # branch "sends regardless of window", and a founder should never get a test's digest.
+        if: ${{ !cancelled() && steps.digest.outcome == 'success' && steps.window.outputs.send == 'true' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
         env:
           GRAPH_TENANT_ID: ${{ secrets.GRAPH_TENANT_ID }}
           GRAPH_CLIENT_ID: ${{ secrets.GRAPH_CLIENT_ID }}
@@ -355,6 +357,7 @@ jobs:
           JOBS_API: ${{ github.api_url }}/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/attempts/${{ github.run_attempt }}/jobs
           RUN_EVENT: ${{ github.event_name }}
           RUN_REF: ${{ github.ref_name }}
+          RUN_FULL_REF: ${{ github.ref }}
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           set -u
@@ -363,7 +366,8 @@ jobs:
           # "ALARM PROOF ... please ignore". A test that asks to be ignored should not arrive.
           # Off the default branch this step prints what it would have done and sends nothing;
           # the run is still red, which is all a test needs. Unknown default branch means main.
-          if [ "${RUN_REF:-}" != "${DEFAULT_BRANCH:-main}" ]; then
+          # The FULL ref is compared, so a tag that happens to be named like the branch is not it.
+          if [ "${RUN_FULL_REF:-}" != "refs/heads/${DEFAULT_BRANCH:-main}" ]; then
             echo "crawl alarm not sent: this run is on '${RUN_REF:-unknown}', not '${DEFAULT_BRANCH:-main}'. Only the default branch mails."
             exit 0
           fi
