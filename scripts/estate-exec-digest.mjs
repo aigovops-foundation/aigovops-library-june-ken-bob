@@ -182,6 +182,14 @@ const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;
 
 /* ── the page ────────────────────────────────────────────────────────────── */
 
+// A PROPOSED FIX IS AN OFFER TO ACT, SO ONLY RED GETS ONE. Every card carried "Suggested fix"
+// and "Say the word and it ships as a PR", including the ones headed "Worth a decision" and
+// "Probably not real" — so the page offered to ship a PR against items it had just finished
+// arguing were a checker artefact. The markdown mail has always been red-only (**Fix:** and
+// `fix Rn` are emitted for reds alone); this brings the HTML page into line with it.
+// Amber and note cards keep their title, location and plain-English description — the reader
+// still learns what was found and where. Green was already a plain list with no fix at all.
+// Locked by test/estate-exec-digest.test.mjs.
 const card = (i) => `
   <article class="issue ${i.severity}">
     <div class="issue-head">
@@ -190,13 +198,13 @@ const card = (i) => `
     </div>
     <p class="where">${esc(i.where)}</p>
     <p class="plain">${esc(i.plain)}</p>
-    <div class="fix">
+    ${i.severity === 'red' ? `<div class="fix">
       <h4>Suggested fix</h4>
       <p>${esc(i.fix)}</p>
       <p class="offer">${i.canFix
     ? '<strong>I can do this one.</strong> Say the word and it ships as a PR.'
     : '<strong>Needs a human decision first</strong> — the fix depends on what these were meant to do.'}</p>
-    </div>
+    </div>` : ''}
     ${i.pages?.length ? `<details><summary>Where it shows up</summary><ul>${i.pages.map(p => `<li><code>${esc(p)}</code></li>`).join('')}</ul></details>` : ''}
   </article>`;
 
