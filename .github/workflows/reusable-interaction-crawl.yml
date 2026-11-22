@@ -8,7 +8,7 @@ name: reusable-interaction-crawl
 # Adopt it from any property in one block:
 #   jobs:
 #     interaction-crawl:
-#       uses: aigovops-foundation/aigovops-library-june-ken-bob/.github/workflows/reusable-interaction-crawl.yml@main
+#       uses: aigovops-foundation/aigovops-library-june-ken-bob/.github/workflows/reusable-interaction-crawl.yml@d402457658f626cbdb77ec6f7de08916e829e7d9 # main 2026-10-18
 #       with:
 #         site_url: "https://aigovops-foundation.github.io/umbrella-govops/"
 #         fail_on_dead: true          # optional (default true) — a dead button fails the build
@@ -53,7 +53,14 @@ jobs:
       - name: Install Playwright + Chromium
         run: |
           npm init -y >/dev/null 2>&1
-          npm i -D playwright@1.55.0 >/dev/null 2>&1
+          # PLAYWRIGHT AND THE RUNNER IMAGE MOVE TOGETHER. This pin must support whatever
+          # `ubuntu-latest` currently is. On 2026-10-29 the runner rolled to ubuntu-26.04 and the
+          # previous pin (1.55.0, which knows 20.04/22.04/24.04) failed every run from then on with
+          # "Playwright does not support chromium on ubuntu26.04-x64" — 25 consecutive red days that
+          # nobody noticed, because a scheduled lane has no PR to turn red. Playwright added 26.04 in
+          # May 2026 (microsoft/playwright#41025). If this breaks again after a runner rollout, bump
+          # the pin before suspecting anything else, and check the Image: line in the job log.
+          npm i -D playwright@1.64.1 >/dev/null 2>&1
           npx playwright install --with-deps chromium
       - name: Self-test — prove the detector on the fixture (no false wolves)
         run: node --test test/interaction-crawl.test.mjs

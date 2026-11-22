@@ -1,0 +1,19 @@
+name: red-to-ticket
+
+# File one local work-queue issue when a scheduled check fails.
+# Not watched: estate-uptime and estate-interaction-crawl have their own pinned issue + mail;
+# founders-digest and stale-sweep do not go red; ci/pages/deploy are push lanes.
+on:
+  workflow_run:
+    workflows: [estate-audit, link-check, repo-sync-check, library-tests]
+    types: [completed]
+
+permissions:
+  contents: read
+  issues: write
+  actions: read
+  checks: read
+
+jobs:
+  ticket:
+    uses: ./.github/workflows/reusable-red-to-ticket.yml

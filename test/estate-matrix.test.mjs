@@ -7,7 +7,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { partition, buildMatrix, sitesFromManifest } from "../scripts/estate-matrix.mjs";
 import { load, deriveSites } from "../scripts/estate-manifest.mjs";
@@ -114,17 +114,27 @@ test("it still calls the shared reusable rather than a private copy", () => {
   assert.match(LINK_CHECK(), /uses: \.\/\.github\/workflows\/reusable-link-check\.yml/);
 });
 
-test("the five repo-scoped reusables are still un-matrixed, and the workflow says why", () => {
-  // This is the half of row 11 that did NOT ship. If someone later adds a `repository:` input
-  // and matrixes them, this test failing is the prompt to update the note rather than leave a
-  // stale explanation of a limit that no longer exists.
+test("the four repo-scoped reusables are still un-matrixed, and the workflow says why", () => {
+  // The half of row 11 that did NOT ship. If someone later adds a `repository:` input and
+  // matrixes one of these, this test failing is the prompt to update the note rather than leave
+  // a stale explanation of a limit that no longer exists.
   const dir = join(ROOT, ".github", "workflows");
   const repoScoped = ["reusable-secret-scan.yml", "reusable-repo-sync-check.yml",
-                      "reusable-stale-sweep.yml", "reusable-red-main-watchdog.yml",
-                      "reusable-dependency-triage.yml"];
+                      "reusable-stale-sweep.yml", "reusable-dependency-triage.yml"];
   for (const f of repoScoped) {
     const src = readFileSync(join(dir, f), "utf8");
-    assert.doesNotMatch(src, /^\s+repository:/m, `${f} gained a repository: input — row 11a may be done; update the note in link-check.yml`);
+    assert.doesNotMatch(src, /^\s+repository:/m, `${f} gained a repository: input — update the note in link-check.yml`);
   }
   assert.match(LINK_CHECK(), /row 11a/, "the workflow must name what is still not covered");
+  assert.match(LINK_CHECK(), /estate-uptime\.yml/, "the workflow must say where the watchdog went (retired 2026-10-20; uptime replaced it)");
+});
+
+test("the estate alarm is the uptime lane, not a per-repo watchdog (2026-10-20)", () => {
+  const dir = join(ROOT, ".github", "workflows");
+  assert.ok(!existsSync(join(dir, "estate-watchdog.yml")), "estate-watchdog.yml was retired with the per-repo callers");
+  assert.ok(!existsSync(join(dir, "red-main-watchdog.yml")), "no per-repo red-main watchdog here either");
+  const lane = readFileSync(join(dir, "estate-uptime.yml"), "utf8");
+  assert.match(lane, /estate-uptime\.mjs/);
+  assert.match(lane, /\*\/30 \* \* \* \*/, "every 30 minutes");
+  assert.doesNotMatch(lane, /contents: write/, "the uptime lane never commits — state lives in the pinned issue");
 });

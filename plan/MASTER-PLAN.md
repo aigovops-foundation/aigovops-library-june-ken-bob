@@ -69,7 +69,7 @@ enforced in CI, which on its first run found four workflows running on an unstat
 default.
 
 **Waiting on a founder.** The seven decisions. The 1Password cleanup left from M3. The M2
-sandbox-privilege call. `help@aigovops.org`, which still cannot receive mail.
+sandbox-privilege call. `help@aigovops-foundation.com`, which still cannot receive mail.
 
 ### The finding worth reading twice
 
@@ -133,7 +133,7 @@ document rather than rewrite an append-only chain.
 
 ---
 
-## 4 · The plan register — all twenty-six documents
+## 4 · The plan register — all twenty-seven documents
 
 Status: **in force** (being executed) · **reference** (a rule of record) · **shipped** (done,
 kept for the record) · **proposal** (waits on a founder) · **historical** (a snapshot) ·
@@ -150,6 +150,7 @@ Checked by `npm run plan:check` — a new plan document without a row here fails
 | [`END-TO-END-BUILD-PLAN.md`](./END-TO-END-BUILD-PLAN.md) | The engineering map to the production backbone | in force |
 | [`estate-review-2026-07-19.md`](./estate-review-2026-07-19.md) | ~60 findings from six sweeps; Waves 2–4 still carry open items | in force |
 | [`growth-100k-recommendations.md`](./growth-100k-recommendations.md) | The reconciled growth plan from three senior reviews | in force |
+| [`simple-front-door.md`](./simple-front-door.md) | The approved six-action front door, one Library, and default-yes design | in force |
 | [`scale-architecture.md`](./scale-architecture.md) | Running AiGovOps as a workflow system at 100k | in force |
 | [`00-overview.md`](./00-overview.md) | How we operate — agents, skills, processes, receipts | reference |
 | [`agents.md`](./agents.md) | The cast: each agent's role, dial, and named human | reference |
@@ -209,7 +210,7 @@ milestone slides by roughly that much — the work is not the constraint.
 | 1a | Repoint `bobrapp.github.io/…V4-10k/` before any rename | Yellow | **done** — 138 references repointed; the onboarding iframe last, by hand (it cannot use a github.com URL) |
 | 1b | Transfer V4-10k to the org; rename `aigovops` | **Red** | **done** — Bob, via the GitHub assistant, 2026-08-23. Pages green under the org |
 | 2 | Apply for GitHub for Nonprofits | **Red** | **Bob** |
-| 3 | CODEOWNERS: both founders on `policies/`, `skills/`, `.github/` | **Red** | **file merged (#65), still INERT.** Only `@bobrapp` has access — checked 2026-08-23. Needs two settings moves: give `@kenjohnston-ai` write, then require Code Owner review on `main` |
+| 3 | CODEOWNERS: both founders on `policies/`, `skills/`, `.github/` | **Red** | **file merged (#65), still INERT.** Only `@bobrapp` has access — checked 2026-08-23. Needs two settings moves: give `@kenjohnston01` write, then require Code Owner review on `main` |
 | 5 | 301 `a-i-gov-ops.com`; publish the `.org` redirect map | **Red** | **Bob** — needs D2 |
 | 7 | Migrate the skills; add `principle:`/`owner:`/`risk:` + CI check | Yellow | **done** — PR #62. 14 skills now, all four fields checked in CI |
 | 8 | Three fat skills (AI House, sponsorship, editorial voice) | Yellow | **done**. Each carries acceptance criteria and an output schema. 17 skills now. The falsification test — hand them to a volunteer for a weekend — has not been run |

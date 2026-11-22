@@ -130,3 +130,9 @@ irreversible, outward-facing moves** — creating accounts / changing access con
 these; it never auto-accepts a member, auto-grants access, or sends an email as Bob/Ken without
 their explicit approval and the real credentials. Auto-accept and auto-mail are **steward-shipped**,
 never autonomous — exactly as the membership wall itself is.
+
+**One exception: free registration (Bob's decision, 2026-10-09; Ken to countersign at ratification).**
+An agent may register a *free* member unattended when the registration is email-verified, abuse-screened,
+revocable, and emits a receipt. This is `register-a-free-member` (green) in `policies/autonomy.yaml`.
+That is the whole exception. Roles, paid tiers, private-room access and any other grant stay
+`accept-a-member-or-grant-access` (red), and mail in a founder's name stays red.

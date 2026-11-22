@@ -6,7 +6,7 @@ name: reusable-red-main-watchdog
 # Adopt it from another repo with:
 #   jobs:
 #     red-main:
-#       uses: aigovops-foundation/aigovops-library-june-ken-bob/.github/workflows/reusable-red-main-watchdog.yml@main
+#       uses: aigovops-foundation/aigovops-library-june-ken-bob/.github/workflows/reusable-red-main-watchdog.yml@d402457658f626cbdb77ec6f7de08916e829e7d9 # main 2026-10-18
 #       with:
 #         max_red_hours: 48          # optional (default 48)
 #         workflow_file: "ci.yml"    # optional; omit to watch every workflow on the branch
@@ -17,10 +17,13 @@ name: reusable-red-main-watchdog
 # were found by a human happening to look. A control that reports healthy while nobody is
 # watching is the most dangerous kind; this one turns "red for a while" into its own failure.
 #
-# WHY PER-REPO AND NOT ONE ESTATE-WIDE JOB. A central watchdog would have to read other repos'
-# Actions history, which GITHUB_TOKEN cannot do — it would need a long-lived cross-repo PAT, a
-# standing credential the estate would then have to hold and rotate. Each repo watching ITSELF
-# uses only its own scoped token. No new secret exists anywhere.
+# PER-REPO OR ESTATE-WIDE — BOTH, SINCE 2026-10-18. Called with no `repository`, a repo watches
+# itself with its own scoped GITHUB_TOKEN and no new secret exists anywhere. Called with
+# `repository:` plus the `token` secret, one Library lane (estate-watchdog.yml) watches every repo
+# in estate.yaml from a single daily run — Bob's cut-list decision 7, after a year in which ten
+# daily per-repo watchdogs produced one alarm email per repo per day for the same stale red. The
+# cross-repo token is a standing read-only credential a founder mints and the Library holds; a
+# repo the token cannot read is reported UNKNOWN by name, never green.
 #
 # WHY IT MEASURES DURATION, NOT JUST "IS IT RED". A single failed run is often a flake or a
 # transient upstream. What matters — and what nobody notices — is red that STAYS red. The job
@@ -61,6 +64,15 @@ on:
         required: false
         type: string
         default: ""
+      repository:
+        description: "owner/repo to watch. Omit to watch the calling repository. Another repo needs the `token` secret: GITHUB_TOKEN is scoped to the caller and reads nothing else."
+        required: false
+        type: string
+        default: ""
+    secrets:
+      token:
+        description: "Read-only token (Actions: read, Contents: read) for the watched repository. Falls back to GITHUB_TOKEN, which only sees the calling repository."
+        required: false
 
 permissions:
   contents: read
@@ -73,20 +85,29 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: Fail if the default branch has been red past the threshold
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.token || github.token }}
           MAX_RED_HOURS: ${{ inputs.max_red_hours }}
           WORKFLOW_FILE: ${{ inputs.workflow_file }}
-          REPO: ${{ github.repository }}
+          REPO: ${{ inputs.repository || github.repository }}
+          SELF_REPO: ${{ github.repository }}
           RUN_ID: ${{ github.run_id }}
         run: |
           set -uo pipefail
-          branch=$(gh api "repos/$REPO" --jq .default_branch) \
-            || { echo "could not read repo metadata"; exit 1; }
+          # Can the token see this repository at all? GITHUB_TOKEN reads only the calling repo;
+          # a private repo elsewhere 404s on metadata before any Actions call. Either way, a
+          # check that could not run reads as UNKNOWN by name — never as green, and not as a
+          # daily alarm either: the fix is a credential (the `token` secret), not a code change.
+          if ! branch=$(gh api "repos/$REPO" --jq .default_branch 2>/dev/null) \
+             || ! gh api "repos/$REPO/actions/workflows?per_page=1" --jq .total_count >/dev/null 2>&1; then
+            echo "::warning::red-main-watchdog: UNKNOWN — cannot read $REPO (metadata or Actions history) with the token provided; a cross-repo watch needs the 'token' secret with Actions: read, Contents: read."
+            exit 0
+          fi
 
-          # The calling workflow's own id, so the verdict can exclude it (see WHY IT IGNORES ITSELF).
-          # A reusable workflow shares the caller's run id, so this resolves to the ADOPTING
-          # workflow — red-main-watchdog.yml in the repo being watched, not this file.
-          self_id=$(gh api "repos/$REPO/actions/runs/$RUN_ID" --jq .workflow_id) || self_id=""
+          # The verdict excludes this workflow's own id — only meaningful when watching the repo it runs in.
+          self_id=""
+          if [ "$REPO" = "$SELF_REPO" ]; then
+            self_id=$(gh api "repos/$REPO/actions/runs/$RUN_ID" --jq .workflow_id) || self_id=""
+          fi
 
           if [ -n "$WORKFLOW_FILE" ]; then
             gh api "repos/$REPO/actions/workflows/$WORKFLOW_FILE" --jq .id > ids.txt \
@@ -180,7 +201,7 @@ jobs:
               print("")
 
           if not reds:
-              print(f"red-main-watchdog: green — every ACTIVE workflow's latest run is good "
+              print(f"red-main-watchdog: {os.environ.get('REPO', '')} green — every ACTIVE workflow's latest run is good "
                     f"({checked} workflow(s) on {branch}, {len(dormant)} dormant).")
               sys.exit(0)
 
@@ -193,9 +214,28 @@ jobs:
 
           if over:
               worst_h, worst_n, worst_fb, worst_floor = over[0]
+              summary = (f"{len(over)} workflow(s) red past {limit:.0f}h on {branch} — "
+                         f"worst: '{worst_n}' for {'>=' if worst_floor else ''}{worst_h:.1f}h "
+                         f"(since {worst_fb['created_at']}: {worst_fb.get('html_url')})")
+              # Alarm ONCE per incident, judged from the incident itself, not from this
+              # watchdog's own history. A red that crossed the threshold within the last
+              # ALARM_WINDOW hours is new and fails the run; an older one has already been
+              # alarmed and is reported as a warning. The window equals the daily cadence so
+              # each crossing is seen by exactly one run (a 36h window had two runs inside it
+              # and sent duplicate alarms). Each workflow has its own first_bad age, so a second
+              # workflow going red later still gets its own alarm, and a workflow_file-filtered
+              # watchdog behaves the same way. A crossing older than the window when the
+              # watchdog first runs is reported as a warning, with the rows above — not silent.
+              ALARM_WINDOW = 24.0
+              fresh = [x for x in over if x[0] - limit <= ALARM_WINDOW]
+              if not fresh:
+                  print(f"\n::warning::still red (alarmed when it first crossed {limit:.0f}h): {summary}")
+                  sys.exit(0)
+              new_h, new_n, new_fb, new_floor = fresh[0]
               print(f"\n::error::{len(over)} workflow(s) red past {limit:.0f}h on {branch} — "
-                    f"worst: '{worst_n}' for {'>=' if worst_floor else ''}{worst_h:.1f}h "
-                    f"(since {worst_fb['created_at']}: {worst_fb.get('html_url')})")
+                    f"newly over the threshold: '{new_n}' for {'>=' if new_floor else ''}{new_h:.1f}h "
+                    f"(since {new_fb['created_at']}: {new_fb.get('html_url')})"
+                    + (f"; longest: '{worst_n}' for {'>=' if worst_floor else ''}{worst_h:.1f}h" if worst_n != new_n else ""))
               sys.exit(1)
 
           print(f"\nred-main-watchdog: {len(reds)} red but all under {limit:.0f}h — not escalating yet "

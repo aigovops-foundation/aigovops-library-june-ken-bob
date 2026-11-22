@@ -76,7 +76,7 @@ Or with kcadm:
 KCID=$(docker ps --filter ancestor=quay.io/keycloak/keycloak:24.0 --format '{{.ID}}'|head -1)
 KC="docker exec -i $KCID /opt/keycloak/bin/kcadm.sh"
 $KC config credentials --server http://127.0.0.1:8080 --realm master --user admin --password "$KEYCLOAK_ADMIN_PASSWORD"
-$KC create users -r aigovops -s username=bob -s enabled=true -s email=bob@aigovops.org
+$KC create users -r aigovops -s username=bob -s enabled=true -s email=bob@aigovops-foundation.com
 $KC set-password -r aigovops --username bob --new-password '<bob picks this>'    # YOUR credential
 GID=$($KC get groups -r aigovops | grep -B1 '"name" : "steward"' | grep id | sed 's/.*: "//;s/".*//')
 $KC update users/$($KC get users -r aigovops -q username=bob --fields id --format csv|tr -d '"') /groups/$GID -r aigovops -n   # join steward

@@ -15,14 +15,9 @@ test('unconfigured when no provider secrets are set', () => {
   assert.match(out, /armed, not live/);
 });
 
-test('reports SMTP when ESTATE_SMTP_URL is set (no network needed)', () => {
+test('ignores a leftover ESTATE_SMTP_URL — Graph is the only provider', () => {
   const out = run({ ESTATE_SMTP_URL: 'smtps://u:p@smtp.example.com:465' });
-  assert.match(out, /mail-health: ok \(smtp\)/);
-});
-
-test('SMTP wins when both SMTP and Graph are configured (relay is explicit)', () => {
-  const out = run({ ESTATE_SMTP_URL: 'smtps://apikey:SG.k@smtp.sendgrid.net:465', GRAPH_TENANT_ID: 't', GRAPH_CLIENT_ID: 'c', GRAPH_CLIENT_SECRET: 's', GRAPH_SENDER: 'x@y.com' });
-  assert.match(out, /mail-health: ok \(smtp\)/);
+  assert.match(out, /mail-health: unconfigured \(none\)/);
 });
 
 test('never prints the client secret', () => {

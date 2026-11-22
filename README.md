@@ -4,6 +4,8 @@
 
 > *"Agents do the bureaucracy; humans hold the meaning — and humans hold the keys."*
 
+See [wiki/README.md](wiki/README.md) for the estate repository map.
+
 A shareable hub page (GitHub Pages) presents the non-secret story; the source of truth lives alongside it, private.
 
 ## The five pieces

@@ -2,7 +2,7 @@
 # Build context is the REPO ROOT so the image includes both core/ AND plan/
 # (the skill-runner reads plan/skills/*/SKILL.md at runtime). Repo layout is
 # preserved under /app so the core's relative paths resolve unchanged.
-FROM node:20-alpine
+FROM node:22-alpine
 WORKDIR /app
 
 # Dependency-free in v1 — just the source. (When deps arrive, copy

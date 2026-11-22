@@ -4,7 +4,7 @@ member-drip.md — the member onboarding drip: welcome + one email for each of t
 names Ken and Bob and gives both addresses. Placeholders: {{name}}, {{estate_score}},
 {{green_pages}}, {{red_pages}}, {{recent_changes}}, {{pending_proposals}}, {{week_no}}.
 
-STATUS: drafts. Nothing sends until ESTATE_SMTP_URL is armed and auto_accept is on
+STATUS: drafts. Nothing sends until the GRAPH_* secrets are armed and auto_accept is on
 (plan/processes/membership-onboarding.md). Every send is logged to the brain — metadata only
 (template id + recipient hash + timestamp), never the body, never PII.
 

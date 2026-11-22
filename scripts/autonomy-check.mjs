@@ -135,6 +135,24 @@ export function check(policy, files) {
     if (!classes.has(a?.class)) P(`actions/${a?.id}: unknown class "${a?.class}"`);
   }
 
+  if (policy.default_yes !== undefined) {
+    const rule = policy.default_yes;
+    if (!Number.isFinite(rule?.veto_window_hours) || rule.veto_window_hours <= 0) {
+      P("default_yes.veto_window_hours must be a positive number");
+    }
+    if (rule?.applies_to !== "yellow") P('default_yes.applies_to must be "yellow"');
+    if (!Array.isArray(rule?.actions)) {
+      P("default_yes.actions must be a list");
+    } else {
+      const actions = new Map((policy.actions ?? []).map((action) => [action?.id, action]));
+      for (const id of rule.actions) {
+        const action = actions.get(id);
+        if (!action) P(`default_yes.actions/${id}: action is not declared`);
+        else if (action.class !== "yellow") P(`default_yes.actions/${id}: action must be yellow`);
+      }
+    }
+  }
+
   for (const [file, w] of declared) {
     if (!onDisk.has(file)) continue;
     const src = files.get(file);

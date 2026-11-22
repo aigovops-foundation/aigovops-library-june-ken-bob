@@ -187,9 +187,9 @@ repos:
     note: "Different release discipline from this repo. If it joins the trunk, its PR + Cloud-Mary gate has to survive the move."
 
   - id: Omni-Rapp-June-2026
-    account: bobrapp
+    account: aigovops-foundation
     role: "Omni — the community platform and control room (51 pages + signin) on droplet A"
-    visibility: unknown
+    visibility: public
     disposition: pending-disposition
     pages_url: none
     verified: false
@@ -225,6 +225,31 @@ repos:
     verified: false
     source: "plan/MILESTONES.md M9; docs/index.html card"
     note: "Repo name and Pages path differ. Personal-account training material, not Foundation IP — keep-separate unless a founder says otherwise."
+
+  - id: practice
+    account: aigovops-foundation
+    role: "Practice — the levelled practitioner path (Level 100/200/300) at practice.aigovops-foundation.com"
+    visibility: public
+    disposition: keep-separate
+    pages_url: "https://practice.aigovops-foundation.com/"
+    verified: false
+    source: "estate-watchdog adoption, 2026-10-18 — read from the repo list, not confirmed via API"
+
+  - id: aigovops-policy-foundry
+    account: aigovops-foundation
+    role: "Policy Foundry — policy-as-code packs"
+    visibility: public
+    disposition: keep-separate
+    verified: false
+    source: "estate-watchdog adoption, 2026-10-18 — read from the repo list, not confirmed via API"
+
+  - id: openclaw-installer
+    account: aigovops-foundation
+    role: "OpenClaw installer — the governed-agent install path (default branch master)"
+    visibility: public
+    disposition: keep-separate
+    verified: false
+    source: "estate-watchdog adoption, 2026-10-18 — read from the repo list, not confirmed via API"
 
 # ── Served sites ──────────────────────────────────────────────────────────────────
 # `crawl:` is the hourly interaction audit's view. estate-sites.json is generated from it.
@@ -384,12 +409,12 @@ services:
   - id: library-core-fly
     kind: "API / governed core"
     host: "Fly.io (iad)"
-    status: unknown
+    status: live
     runs: "aigovops-library-core — the Yes-Gate API, OAuth, and the Beacon-signed ledger"
     classification: operational
-    verified: false
-    source: "fly.toml; docs/durability-plan.html"
-    risk: "The repo disagrees with itself: fly.toml says prepared-not-deployed, the durability plan describes it as running with scale-to-zero. Exactly the kind of contradiction this manifest exists to surface."
+    verified: true
+    source: "https://aigovops-library-core.fly.dev/readyz answered 200 \"ready\" on 2026-10-29; probed every 30 min by estate-uptime.yml"
+    risk: "RESOLVED 2026-10-29 — it is deployed and answering; fly.toml's old prepared-not-deployed comment is corrected here. Remaining risk: scale-to-zero cold starts can exceed the probe timeout."
 
   - id: github-actions
     kind: "Automation"
@@ -543,6 +568,6 @@ people:
       - co-founder
       - steward
     email: "ken.johnston@aigovops.community"
-    github: kenjohnston-ai
+    github: kenjohnston01
     holds: "Kill switch, role administration, and the aigovops.org registration"
     note: "D7 answered 2026-08-23. The handle is on record, so CODEOWNERS can name him — but it stays INERT until he has write access to the repo, which is a founder's move (see plan/processes/codeowners.md)."
