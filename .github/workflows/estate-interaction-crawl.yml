@@ -53,7 +53,13 @@ jobs:
       # attempted. Absent on first run, which correctly reads as "nothing sent yet".
       - name: Read the last window sent
         id: sent
-        run: echo "window=$(cat docs/.estate-last-window 2>/dev/null || echo none)" >> "$GITHUB_OUTPUT"
+        run: |
+          # The file is "<window> <state the mail reported>". A file from before 2026-11-22 holds
+          # the window alone, which reads as state "none". Same file, so the set of paths this
+          # workflow writes to main (policies/autonomy.yaml) does not grow.
+          read -r window state _ < docs/.estate-last-window 2>/dev/null || true
+          echo "window=${window:-none}" >> "$GITHUB_OUTPUT"
+          echo "state=${state:-none}" >> "$GITHUB_OUTPUT"
 
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
@@ -242,6 +248,11 @@ jobs:
         # Runs even if the board commit or the pinned-issue update failed — neither has any
         # bearing on whether a founder is owed a digest.
         if: ${{ !cancelled() }}
+        env:
+          EVENT: ${{ github.event_name }}
+          STATE: ${{ steps.digest.outputs.state }}
+          LAST_WINDOW: ${{ steps.sent.outputs.window }}
+          LAST_STATE: ${{ steps.sent.outputs.state }}
         # ASKS WHETHER THE WINDOW HAS BEEN SENT, NOT WHETHER IT IS EXACTLY 05:00. Matching the
         # hour meant the send depended on a run existing at that hour, and on 2026-08-19 five of
         # the ten preceding scheduled runs never executed a step: they queued for an hour behind
@@ -264,24 +275,29 @@ jobs:
           else window="$(TZ=America/Los_Angeles date -d yesterday +%Y-%m-%d)"
           fi
           echo "window=$window" >> "$GITHUB_OUTPUT"
-          last='${{ steps.sent.outputs.window }}'
-          if [ "${{ github.event_name }}" != "schedule" ]; then
-            echo "send=true" >> "$GITHUB_OUTPUT"
-            echo "manual run — sending regardless of window ($window)"
-          elif [ "$window" != "$last" ]; then
-            echo "send=true" >> "$GITHUB_OUTPUT"
-            echo "window $window has not been sent (last sent: $last) — sending."
+          # FAILURES ONLY (2026-11-22). A daily "all green" mail was sent so that silence could
+          # not be mistaken for a dead crawl. The alarm step at the end of this job now covers
+          # that case by itself, so a green day owes nobody a mail. Three things still send:
+          # a red digest (once a day), the FIRST green after a red one was mailed ("back to all
+          # green", so a founder is not left wondering), and any state that is neither green
+          # nor red (the digest could not say, which is worth reading).
+          if [ "$EVENT" != "schedule" ]; then
+            send=true;  echo "manual run — sending regardless of window ($window)"
+          elif [ "$window" = "$LAST_WINDOW" ]; then
+            send=false; echo "window $window already sent — nothing owed; the board still refreshed."
+          elif [ "$STATE" = "green" ] && [ "$LAST_STATE" != "red" ]; then
+            send=false; echo "all green, and the last mail was not about a red — no mail owed today."
           else
-            echo "send=false" >> "$GITHUB_OUTPUT"
-            echo "window $window already sent — nothing owed; the board still refreshed."
+            send=true;  echo "window $window has not been sent (last sent: $LAST_WINDOW); state $STATE, last mailed state $LAST_STATE — sending."
           fi
+          echo "send=$send" >> "$GITHUB_OUTPUT"
 
       # WHETHER THE FOUNDERS GET THE DIGEST MUST NOT DEPEND ON HOUSEKEEPING. This sat downstream
       # of the board-commit step with no guard, so a git push race silently cancelled the send —
       # and a missed fixed appointment reads exactly like "nothing is red". The only real
       # precondition is that the digest was actually built; committing the board and updating the
       # pinned issue are bookkeeping, and their failure is visible in the run's own red.
-      - name: Email the digest to the founders (05:00 Pacific, once a day)
+      - name: Email the digest to the founders (05:00 Pacific, once a day, only when there is something to fix)
         id: mail
         if: ${{ !cancelled() && steps.digest.outcome == 'success' && steps.window.outputs.send == 'true' }}
         env:
@@ -301,7 +317,9 @@ jobs:
         run: |
           git config user.name "aigovops-estate-bot"
           git config user.email "noreply@aigovops-foundation.com"
-          printf '%s' '${{ steps.window.outputs.window }}' > docs/.estate-last-window
+          # The window, then what the mail SAID, so tomorrow's run knows whether a green day is a
+          # recovery (owed one "back to all green") or just another quiet day (owed nothing).
+          printf '%s %s\n' '${{ steps.window.outputs.window }}' '${{ steps.digest.outputs.state }}' > docs/.estate-last-window
           # STAGE FIRST, THEN COMPARE. `git diff` does not see UNTRACKED files, so on the very
           # first run — when docs/.estate-last-window did not exist in the index yet — this guard
           # returned "no change", skipped the commit, and the record was never added. Every run
