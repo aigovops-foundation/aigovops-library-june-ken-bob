@@ -161,3 +161,15 @@ test("the crawl jobs run on a pinned runner image", () => {
     assert.deepEqual(runsOn, ["ubuntu-24.04"], name);
   }
 });
+
+// On 2026-11-22 a deliberate-failure proof run on a throwaway branch mailed the founders
+// "ALARM PROOF - deliberate failure, please ignore". A test should never reach an inbox.
+test("a run off the default branch sends nothing, and says so", { skip: !hasJq && "jq not installed" }, () => {
+  const r = runAlarm({ env: { RUN_REF: "proof/alarm-test", RUN_EVENT: "workflow_dispatch" } });
+  assert.equal(r.status, 0, r.stdout + r.stderr);
+  assert.equal(r.calls.length, 0, "no token request, no mail, no API call");
+  assert.match(r.stdout, /crawl alarm not sent: this run is on 'proof\/alarm-test', not 'main'/);
+  const renamed = runAlarm({ env: { RUN_REF: "trunk", DEFAULT_BRANCH: "trunk" } });
+  assert.equal(renamed.calls.filter((c) => c.includes("/sendMail")).length, 1, "the default branch still mails, whatever it is called");
+  assert.match(stepText, /DEFAULT_BRANCH: \$\{\{ github\.event\.repository\.default_branch \}\}/);
+});
