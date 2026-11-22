@@ -338,6 +338,8 @@ jobs:
       #      warns), so this never fires for "the crawl worked and found red".
       #   3. NAMES WHAT FAILED, read from the Actions API rather than from step outputs, so it
       #      does not depend on any earlier step having run.
+      # If the digest mail already went out and a LATER step failed, the subject says "finished
+      # with errors" instead: the run is still red and still worth a mail, but the crawl ran.
       # A job that times out or is cancelled does not reach this step; red-to-ticket.yml files
       # the ticket for those (it acts on `failure` and `timed_out`).
       - name: Alarm - the crawl did not run
@@ -358,15 +360,29 @@ jobs:
             echo "::error::crawl alarm NOT sent: the Graph secrets are not set, so nobody was told this run failed"
             exit 1
           fi
-          failed="$(curl -fsS --max-time 30 -H "authorization: Bearer $GITHUB_TOKEN" -H "accept: application/vnd.github+json" "$JOBS_API" \
-            | jq -r '[.jobs[].steps[]? | select(.conclusion == "failure") | .name] | join(", ")' 2>/dev/null || true)"
+          jobs="$(curl -fsS --max-time 30 -H "authorization: Bearer $GITHUB_TOKEN" -H "accept: application/vnd.github+json" "$JOBS_API" 2>/dev/null || true)"
+          failed="$(printf '%s' "$jobs" | jq -r '[.jobs[].steps[]? | select(.conclusion == "failure") | .name] | join(", ")' 2>/dev/null || true)"
           [ -n "$failed" ] || failed="unknown (the Actions API did not name it; open the run)"
+          # DID THE DIGEST GO OUT ANYWAY? The digest mail is built to survive a failed board push,
+          # so a run can fail AFTER the founders were told everything. Saying "did not run" then
+          # would be a false alarm about a crawl that ran. Asked of the Actions API, not of step
+          # outputs, and anything but a clear yes is treated as no.
+          sent="$(printf '%s' "$jobs" | jq -r '[.jobs[].steps[]? | select((.name | startswith("Email the digest")) and .conclusion == "success")] | length' 2>/dev/null || true)"
+          if [ "${sent:-0}" -ge 1 ] 2>/dev/null; then
+            subject="Estate crawl finished with errors"
+            lead1="The daily estate interaction crawl ran and today's digest was sent, but a step failed."
+            lead2="The digest you received is real. The board, the pinned issue or the run's records may be out of date."
+          else
+            subject="Estate crawl did not run"
+            lead1="The daily estate interaction crawl failed before it could finish, so today's digest may not have been sent."
+            lead2="This is not a finding about the estate. It means the check itself did not run to the end."
+          fi
           # Founders from the repo if the checkout got that far; otherwise the sender's own mailbox.
           to="$(jq -c '[.emails[]? | {emailAddress: {address: .}}]' founders.json 2>/dev/null || true)"
           if [ -z "$to" ] || [ "$to" = "[]" ]; then to="$(jq -nc --arg a "$GRAPH_SENDER" '[{emailAddress: {address: $a}}]')"; fi
           body="$(printf '%s\n' \
-            "The daily estate interaction crawl failed before it could finish, so today's digest may not have been sent." \
-            "This is not a finding about the estate. It means the check itself did not run to the end." \
+            "$lead1" \
+            "$lead2" \
             "" \
             "Failed step: $failed" \
             "Run: $RUN_URL" \
@@ -378,9 +394,9 @@ jobs:
             --data-urlencode "client_secret=$GRAPH_CLIENT_SECRET" --data-urlencode "scope=https://graph.microsoft.com/.default" \
             | jq -r '.access_token // empty')"
           [ -n "$token" ] || { echo "::error::crawl alarm NOT sent: no Graph token"; exit 1; }
-          payload="$(jq -nc --arg s "Estate crawl did not run" --arg b "$body" --argjson to "$to" \
+          payload="$(jq -nc --arg s "$subject" --arg b "$body" --argjson to "$to" \
             '{message: {subject: $s, body: {contentType: "Text", content: $b}, toRecipients: $to}, saveToSentItems: false}')"
           status="$(curl -sS --max-time 30 -o /dev/null -w '%{http_code}' -X POST "https://graph.microsoft.com/v1.0/users/$GRAPH_SENDER/sendMail" \
             -H "authorization: Bearer $token" -H "content-type: application/json" --data "$payload")"
           [ "$status" = "202" ] || { echo "::error::crawl alarm NOT sent: Graph sendMail returned $status"; exit 1; }
-          echo "crawl alarm sent (Graph 202). Failed step: $failed"
+          echo "crawl alarm sent (Graph 202): $subject. Failed step: $failed"
