@@ -1,11 +1,15 @@
 name: red-to-ticket
 
 # File one local work-queue issue when a scheduled check fails.
-# Not watched: estate-uptime and estate-interaction-crawl have their own pinned issue + mail;
-# founders-digest and stale-sweep do not go red; ci/pages/deploy are push lanes.
+# estate-uptime and estate-interaction-crawl ARE watched (since 2026-11-22), although each has
+# its own pinned issue + mail: those only fire once the job reaches its mail step. The crawl
+# died before that step every day from 2026-10-30 to 2026-11-21 and told no one. A ticket is
+# filed from outside the run, so it does not depend on the run getting anywhere. Still one
+# ticket per check, updated on repeats and closed on the next green.
+# Not watched: founders-digest and stale-sweep do not go red; ci/pages/deploy are push lanes.
 on:
   workflow_run:
-    workflows: [estate-audit, link-check, repo-sync-check, library-tests]
+    workflows: [estate-audit, link-check, repo-sync-check, library-tests, estate-interaction-crawl, estate-uptime]
     types: [completed]
 
 permissions:

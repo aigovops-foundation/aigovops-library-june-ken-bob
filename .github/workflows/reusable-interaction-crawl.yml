@@ -40,7 +40,9 @@ permissions:
 
 jobs:
   interaction-crawl:
-    runs-on: ubuntu-latest
+    # Pinned, not `ubuntu-latest`: a runner image rollout must not break this job unannounced
+    # (it did in estate-interaction-crawl.yml, 2026-10-29 to 2026-11-21).
+    runs-on: ubuntu-24.04
     steps:
       - name: Check out the Library (engine + fixture + test)
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -54,7 +56,7 @@ jobs:
         run: |
           npm init -y >/dev/null 2>&1
           # PLAYWRIGHT AND THE RUNNER IMAGE MOVE TOGETHER. This pin must support whatever
-          # `ubuntu-latest` currently is. On 2026-10-29 the runner rolled to ubuntu-26.04 and the
+          # the pinned `runs-on` image is. On 2026-10-29 the runner rolled to ubuntu-26.04 and the
           # previous pin (1.55.0, which knows 20.04/22.04/24.04) failed every run from then on with
           # "Playwright does not support chromium on ubuntu26.04-x64" — 25 consecutive red days that
           # nobody noticed, because a scheduled lane has no PR to turn red. Playwright added 26.04 in

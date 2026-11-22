@@ -25,7 +25,9 @@ concurrency:
 
 jobs:
   crawl:
-    runs-on: ubuntu-latest
+    # PINNED IMAGE, NOT `ubuntu-latest`. The label moved to 26.04 on 2026-10-29 and broke the
+    # Playwright install below for 23 scheduled days. A pinned image only changes in a PR.
+    runs-on: ubuntu-24.04
     # A HANG MUST NOT STOP THE HEARTBEAT. With no job timeout, GitHub's default is six
     # hours; combined with `cancel-in-progress: false` above, one wedged run holds the
     # concurrency lock and every hourly run behind it sits pending. That is not
@@ -67,7 +69,7 @@ jobs:
         run: |
           npm init -y >/dev/null 2>&1
           # PLAYWRIGHT AND THE RUNNER IMAGE MOVE TOGETHER. This pin must support whatever
-          # `ubuntu-latest` currently is. On 2026-10-29 the runner rolled to ubuntu-26.04 and the
+          # the pinned `runs-on` image is. On 2026-10-29 the runner rolled to ubuntu-26.04 and the
           # previous pin (1.55.0, which knows 20.04/22.04/24.04) failed every run from then on with
           # "Playwright does not support chromium on ubuntu26.04-x64" — 25 consecutive red days that
           # nobody noticed, because a scheduled lane has no PR to turn red. Playwright added 26.04 in
@@ -323,3 +325,62 @@ jobs:
       - name: Flag red pages (the pinned issue and the 05:00 digest carry the alarm; a failed run only adds an email)
         if: steps.crawl.outputs.estate_red == '1' || steps.digest.outputs.state == 'red'
         run: echo "::warning::Estate has red pages — see the pinned Estate Health issue and docs/estate-health.html"
+
+      # THE ALARM FOR A CRAWL THAT DIED. Everything above tells the founders what the crawl FOUND.
+      # Nothing told them when it never ran: from 2026-10-30 to 2026-11-21 the install step
+      # failed every day, before the digest existed, so no mail was owed and none was sent.
+      # 23 days of silence that read exactly like "nothing is red".
+      #
+      # Three properties, each locked by test/crawl-alarm.test.mjs:
+      #   1. SELF-CONTAINED. curl + jq from the runner image: no node_modules, no script from this
+      #      repo. It has to work when the step that failed was the checkout.
+      #   2. `failure()` MEANS A STEP BROKE. Red pages do not fail this run (the step above only
+      #      warns), so this never fires for "the crawl worked and found red".
+      #   3. NAMES WHAT FAILED, read from the Actions API rather than from step outputs, so it
+      #      does not depend on any earlier step having run.
+      # A job that times out or is cancelled does not reach this step; red-to-ticket.yml files
+      # the ticket for those (it acts on `failure` and `timed_out`).
+      - name: Alarm - the crawl did not run
+        if: ${{ failure() }}
+        env:
+          GRAPH_TENANT_ID: ${{ secrets.GRAPH_TENANT_ID }}
+          GRAPH_CLIENT_ID: ${{ secrets.GRAPH_CLIENT_ID }}
+          GRAPH_CLIENT_SECRET: ${{ secrets.GRAPH_CLIENT_SECRET }}
+          GRAPH_SENDER: ${{ secrets.GRAPH_SENDER }}
+          GITHUB_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          JOBS_API: ${{ github.api_url }}/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/attempts/${{ github.run_attempt }}/jobs
+          RUN_EVENT: ${{ github.event_name }}
+          RUN_REF: ${{ github.ref_name }}
+        run: |
+          set -u
+          if [ -z "${GRAPH_TENANT_ID:-}" ] || [ -z "${GRAPH_CLIENT_ID:-}" ] || [ -z "${GRAPH_CLIENT_SECRET:-}" ] || [ -z "${GRAPH_SENDER:-}" ]; then
+            echo "::error::crawl alarm NOT sent: the Graph secrets are not set, so nobody was told this run failed"
+            exit 1
+          fi
+          failed="$(curl -fsS --max-time 30 -H "authorization: Bearer $GITHUB_TOKEN" -H "accept: application/vnd.github+json" "$JOBS_API" \
+            | jq -r '[.jobs[].steps[]? | select(.conclusion == "failure") | .name] | join(", ")' 2>/dev/null || true)"
+          [ -n "$failed" ] || failed="unknown (the Actions API did not name it; open the run)"
+          # Founders from the repo if the checkout got that far; otherwise the sender's own mailbox.
+          to="$(jq -c '[.emails[]? | {emailAddress: {address: .}}]' founders.json 2>/dev/null || true)"
+          if [ -z "$to" ] || [ "$to" = "[]" ]; then to="$(jq -nc --arg a "$GRAPH_SENDER" '[{emailAddress: {address: $a}}]')"; fi
+          body="$(printf '%s\n' \
+            "The daily estate interaction crawl failed before it could finish, so today's digest may not have been sent." \
+            "This is not a finding about the estate. It means the check itself did not run to the end." \
+            "" \
+            "Failed step: $failed" \
+            "Run: $RUN_URL" \
+            "Trigger: $RUN_EVENT on $RUN_REF" \
+            "" \
+            "Until this is green again, no mail does not mean nothing is red.")"
+          token="$(curl -fsS --max-time 30 -X POST "https://login.microsoftonline.com/$GRAPH_TENANT_ID/oauth2/v2.0/token" \
+            --data-urlencode "grant_type=client_credentials" --data-urlencode "client_id=$GRAPH_CLIENT_ID" \
+            --data-urlencode "client_secret=$GRAPH_CLIENT_SECRET" --data-urlencode "scope=https://graph.microsoft.com/.default" \
+            | jq -r '.access_token // empty')"
+          [ -n "$token" ] || { echo "::error::crawl alarm NOT sent: no Graph token"; exit 1; }
+          payload="$(jq -nc --arg s "Estate crawl did not run" --arg b "$body" --argjson to "$to" \
+            '{message: {subject: $s, body: {contentType: "Text", content: $b}, toRecipients: $to}, saveToSentItems: false}')"
+          status="$(curl -sS --max-time 30 -o /dev/null -w '%{http_code}' -X POST "https://graph.microsoft.com/v1.0/users/$GRAPH_SENDER/sendMail" \
+            -H "authorization: Bearer $token" -H "content-type: application/json" --data "$payload")"
+          [ "$status" = "202" ] || { echo "::error::crawl alarm NOT sent: Graph sendMail returned $status"; exit 1; }
+          echo "crawl alarm sent (Graph 202). Failed step: $failed"
