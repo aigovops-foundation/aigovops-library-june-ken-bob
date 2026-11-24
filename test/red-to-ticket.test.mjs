@@ -362,3 +362,50 @@ test("when duplicate matching issues exist, the oldest wins and the newer is clo
   assert.equal(h.issues[1].state, "closed");
   assert.match(h.comments[0].body, /Duplicate of #10 — closed by red-to-ticket\./);
 });
+
+test("an in-progress ticket that went green leaves the queue on the next green run after release", async () => {
+  const created = harness(failureDetails);
+  await created.invoke();
+  created.issues[0].labels.push("in-progress");
+  const green = (id) => defaultRun({ id, conclusion: "success", html_url: `https://github.com/org/repo/actions/runs/${id}` });
+  const h = harness({ run: green(9), existingIssues: created.issues, existingLabels: ["queue", "discovered", "in-progress"] });
+  await h.invoke();
+  assert.ok(h.issues[0].labels.includes("queue"));
+  h.issues[0].labels = h.issues[0].labels.filter((label) => label !== "in-progress");
+  const bodyBefore = h.issues[0].body;
+  h.context.payload.workflow_run = green(10);
+  await h.invoke();
+  assert.deepEqual(h.issues[0].labels, ["discovered"]);
+  assert.equal(h.issues[0].body, bodyBefore);
+  assert.equal(h.comments.length, 0);
+});
+
+test("refreshed failure details keep `$` sequences literally", async () => {
+  const dollarDetails = structuredClone(failureDetails);
+  dollarDetails.annotations[41][0].message = "branch feature/$1-$&-x is behind";
+  const created = harness(failureDetails);
+  await created.invoke();
+  const h = harness({
+    run: defaultRun({ id: 8, completed_at: "2026-01-01T09:00:00Z" }),
+    ...dollarDetails,
+    existingIssues: created.issues,
+    existingLabels: ["queue", "discovered"],
+  });
+  await h.invoke();
+  assert.ok(h.issues[0].body.includes("branch feature/$1-$&-x is behind"));
+});
+
+test("a same-day red on a human-closed ticket refreshes its last red run link", async () => {
+  const created = harness(failureDetails);
+  await created.invoke();
+  created.issues[0].state = "closed";
+  const h = harness({
+    run: defaultRun({ id: 8, completed_at: "2026-01-01T09:00:00Z", html_url: "https://github.com/org/repo/actions/runs/8" }),
+    ...failureDetails,
+    existingIssues: created.issues,
+    existingLabels: ["queue", "discovered"],
+  });
+  await h.invoke();
+  assert.match(h.issues[0].body, /^Last red run: https:\/\/github\.com\/org\/repo\/actions\/runs\/8 \(2 red runs since /m);
+  assert.match(h.issues[0].body, /^Last seen: 2026-01-01T09:00:00Z$/m);
+});

@@ -81,8 +81,8 @@ jobs:
               try { return JSON.parse(match[1]); } catch { return {}; }
             };
             const replaceOrInsertLine = (body, pattern, line) => {
-              if (pattern.test(body)) return body.replace(pattern, line);
-              return body.replace(/(?=<!-- red-to-ticket:)/, `${line}\n`);
+              if (pattern.test(body)) return body.replace(pattern, () => line);
+              return body.replace(/(?=<!-- red-to-ticket:)/, () => `${line}\n`);
             };
             const replaceState = (body, state) => {
               const marker = stateMarker(state);
@@ -121,16 +121,17 @@ jobs:
                 core.info('An older green run cannot resolve a newer red run; skipping.');
                 return;
               }
-              if (priorState.green_since) {
-                core.info('Already recorded green; nothing to do.');
-                return;
-              }
               // SILENT: a green run is not a failure, so it edits the body and labels only.
-              const nextState = { ...priorState, green_since: seen, green_after_notify: true };
-              let body = replaceState(issue.body || '', nextState);
-              body = replaceOrInsertLine(body, /^Status:.*$/m,
-                `Status: green again since ${seen} (${run.html_url}). Close this ticket once you are satisfied; a new red reopens the work.`);
-              await github.rest.issues.update({ owner, repo, issue_number: issue.number, body });
+              if (priorState.green_since) {
+                core.info('Already recorded green.');
+              } else {
+                const nextState = { ...priorState, green_since: seen, green_after_notify: true };
+                let body = replaceState(issue.body || '', nextState);
+                body = replaceOrInsertLine(body, /^Status:.*$/m,
+                  `Status: green again since ${seen} (${run.html_url}). Close this ticket once you are satisfied; a new red reopens the work.`);
+                await github.rest.issues.update({ owner, repo, issue_number: issue.number, body });
+              }
+              // Also on later green runs: a ticket that was in-progress when it went green leaves the queue once released.
               if (!labelNames(issue).includes('in-progress') && labelNames(issue).includes('queue')) {
                 try {
                   await github.rest.issues.removeLabel({ owner, repo, issue_number: issue.number, name: 'queue' });
@@ -203,7 +204,7 @@ jobs:
             const statusRed = `Status: red (last red run ${run.html_url})`;
             const replaceDetails = (body) => {
               const section = /(### What failed\n)[\s\S]*?(?=\n\n### Notes)/;
-              return section.test(body) ? body.replace(section, `$1${details}`) : body;
+              return section.test(body) ? body.replace(section, (_, head) => `${head}${details}`) : body;
             };
 
             if (!issue) {
@@ -214,9 +215,17 @@ jobs:
               if (notifiedToday) {
                 // Closed by a human after today's notice: record the red silently; tomorrow's red files a new ticket.
                 const priorState = stateFrom(notifiedToday.body);
-                const nextState = { ...priorState, sig, last_seen: seen, last_red_created: run.created_at };
+                const count = Number(priorState.count || 0) + 1;
+                const first = priorState.first_seen || firstSeen;
+                const nextState = {
+                  ...priorState, sig, first_seen: first, last_seen: seen, count, last_red_created: run.created_at,
+                };
+                delete nextState.green_since;
                 let body = replaceState(replaceDetails(notifiedToday.body || ''), nextState);
                 body = replaceOrInsertLine(body, /^Status:.*$/m, `${statusRed}, after this ticket was closed`);
+                body = replaceOrInsertLine(body, /^Last seen:.*$/m, `Last seen: ${seen}`);
+                body = replaceOrInsertLine(body, /^Last red run:.*$/m,
+                  `Last red run: ${run.html_url} (${count} red runs since ${first})`);
                 await github.rest.issues.update({ owner, repo, issue_number: notifiedToday.number, body });
                 core.info(`Already notified today on #${notifiedToday.number}; recorded silently.`);
                 return;
