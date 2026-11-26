@@ -28,7 +28,7 @@ A connected set of artifacts that explain and run the AiGovOps governed core. Si
 pages plus a running Node core.
 
 ```
-docs/                 ← GitHub Pages root (public site; secret-free)
+docs/                 ← the site source (secret-free); mirrored into the member-gated Library
   index.html          ← the hub ("the six pieces"); links the others
   demo.html  design-book.html  blueprint.html  plan.html
   control-plane.html  ← security, control & deployment (+ Rev 2026.06 decisions)
@@ -40,13 +40,15 @@ core/                 ← dependency-free Node 20+ governed core
   src/core/yesgate.shared.js  ← SINGLE SOURCE of the Yes-Gate logic
   src/  test/  Dockerfile  compose.yml  .env.example
 scripts/build-docs.mjs ← inlines yesgate.shared.js into docs/index.html
-.github/workflows/    ← ci.yml (core tests) · pages.yml (deploy docs/)
+redirect-stub/        ← what GitHub Pages serves: a redirect to community…/library/
+.github/workflows/    ← ci.yml (core tests) · pages.yml (builds + tests docs/, deploys redirect-stub/)
 ```
 
 ## How to ship a change (this repo, direct-to-main)
 
-This repo ships straight to `main`; a push triggers `pages.yml`, which rebuilds and
-deploys `docs/`. (The *other* repo — the main Foundation site — uses a PR + Cloud-Mary
+This repo ships straight to `main`; a push triggers `pages.yml`, which rebuilds and tests
+`docs/` and then deploys only `redirect-stub/` (a redirect to
+`https://community.aigovops-foundation.com/library/`, where the member-gated Library is served). (The *other* repo — the main Foundation site — uses a PR + Cloud-Mary
 workflow; do not apply that here.)
 
 1. Edit files under `docs/` and/or `plan/`. Keep a doc's HTML page and its markdown
@@ -58,8 +60,9 @@ workflow; do not apply that here.)
 3. If you changed core code, run the core tests: `cd core && npm test`.
 4. Show Bob the diff and **ask before committing/pushing.** On approval: commit with a
    `type: summary` message (feat/fix/docs/chore…), push to `main`.
-5. Pages redeploys automatically (~1 min). Live at
-   `https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/`.
+5. Pages redeploys automatically (~1 min). The github.io URL
+   `https://aigovops-foundation.github.io/aigovops-library-june-ken-bob/` serves the redirect stub;
+   the rendered Library is at `https://community.aigovops-foundation.com/library/`.
 
 ## Design conventions
 
@@ -106,15 +109,16 @@ Backlog & next steps: `plan/build-tickets.md` — start with **Ticket 0** (`Secr
 - Tokens/credentials live only in the shell session, never written to a file or committed.
 - The ledger and beacons are metadata-only — no payloads, no PII, ever.
 
-## Estate interaction health — the hourly rule
+## Estate interaction health — the daily rule
 
-**Green is the goal for every page.** Every hour, the whole estate is crawled in a real
+**Green is the goal for every page.** Once a day, at 13:00 UTC (05:00 Pacific standard time,
+06:00 daylight time), the whole estate is crawled in a real
 browser and every button and link is verified to actually *do* something (not just "does the
 URL 200?"). A control that looks clickable but leads nowhere is a defect, the same as a 404.
 
 - Engine + runbook: `scripts/interaction-crawl.mjs`, `plan/processes/estate-interaction-audit.md`;
   live board `docs/estate-health.html`; skill `plan/skills/estate-health/`.
-- The hourly run scores the estate (share of pages fully green) and delivers the digest to the
+- The daily run scores the estate (share of pages fully green) and delivers the digest to the
   founders (`founders.json`) — a heartbeat, pinging on any red↔green flip. A red page is an
   action: fix the button; **never turn a `failOnDead` gate off to fake green.**
 
