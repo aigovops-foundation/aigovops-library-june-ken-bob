@@ -62,9 +62,13 @@ drill-down of each defect, colour-coded, auto-refreshing every 30s. It reads
 `docs/estate-health.json`, which the aggregator rewrites on every run. It answers, at a glance,
 *"is the whole estate 100% clickable right now?"*
 
-## The habit — crawl hourly, mail once a day
+GitHub Pages no longer publishes `docs/`: `pages.yml` builds and tests it, then deploys only
+`redirect-stub/`, which points to `https://community.aigovops-foundation.com/library/`. Read the board
+in this repo or in that member-gated mirror.
 
-Every hour, on the hour, **`estate-interaction-crawl.yml`** runs the whole estate end-to-end and
+## The habit — crawl once a day, mail once a day
+
+Once a day, at 13:00 UTC (05:00 Pacific standard time, 06:00 daylight time), **`estate-interaction-crawl.yml`** runs the whole estate end-to-end and
 scores **every page red or green — green is the goal for each one**. It then:
 
 1. rewrites `docs/estate-health.json` (the live board updates), committing data-only;
@@ -75,8 +79,10 @@ scores **every page red or green — green is the goal for each one**. It then:
 4. **mails the founders once a day, in the 05:00 America/Los_Angeles window** (`scripts/send-mail.mjs` →
    Microsoft Graph; recipients are `founders.json` `emails`).
 
-The crawl stays hourly so the board and the pinned issue still catch a regression within the hour.
-Only the **mail** is once daily. It was briefly twice (05:00 and 17:00) on 2026-08-19; a second
+The crawl was hourly until 2026-10-18 and six-hourly until 2026-10-20. Hourly meant 24 runs and 48 bot
+commits a day, and six-hourly still meant 8, so on 2026-10-20 Bob set it to daily (the reason is recorded
+in the workflow's cron comment). The board and the pinned issue therefore catch a regression within a day.
+Whether a service is *up* is a separate question, answered every 30 minutes by `estate-uptime.yml`. It was briefly twice (05:00 and 17:00) on 2026-08-19; a second
 identical mail teaches you to stop opening the first, so it went back to one the same evening.
 
 ### The mail is red and the fix, nothing else
@@ -104,15 +110,15 @@ executed a step: they queued an hour behind a runner backlog and were cancelled 
 entered the concurrency group. A cancelled run cannot check the time, so the window passed in
 silence — which reads exactly like "nothing is red".
 
-So a lost 12:00Z run is covered by 13:00Z, and a ninety-minute delay still sends. Before 05:00 the
+Under the old hourly cron, a lost 12:00Z run was covered by 13:00Z; a ninety-minute delay still sends. Before 05:00 the
 window that most recently opened is YESTERDAY's, so a night-time run finds it already sent and stays
 quiet. The window is
 recorded **only after a successful send**: a window marked sent before the send succeeds is a window
 that never gets retried. If that push loses a race, the next run sends again — a duplicate digest is
 a far cheaper mistake than a silent miss.
 
-There is **no second cron and no UTC arithmetic**: the hourly run asks the runner for the Pacific
-hour, which lands on `05` once per day and keeps doing so across both DST changes. A
+There is **no second cron**: the single daily run at 13:00 UTC is after 05:00 Pacific in both standard and
+daylight time, so the window that most recently opened when it runs is always today's. A
 UTC cron pinned at `0 12,0 * * *` is right for eight months and an hour early for four.
 
 The mail also does not depend on housekeeping: it requires only that the digest was **built**. A
@@ -121,8 +127,9 @@ failed board commit or pinned-issue update once skipped every step below it, inc
 The run **fails red** if any `failOnDead` page has a dead/broken control, so a regression is loud
 in the Actions tab as well as on the board.
 
-> Hourly crawling is deliberate: a dead button on a launch page is an hourly-cadence problem, not a
-> weekly one. The whole-estate crawl is a few minutes of CI per hour.
+> The cadence is a trade-off: a dead button on a launch page is a daily-cadence problem, not a weekly
+> one, and daily keeps the bot commits to a handful a day. To catch a regression sooner, dispatch the
+> workflow by hand (`workflow_dispatch`).
 
 ### Changing the send: verify quiet by watching, not by reading
 
@@ -162,7 +169,7 @@ reading is the one that broke.
 
 ## How it runs
 
-- **`estate-interaction-crawl.yml`** (hourly aggregator, above) — the estate-wide habit + digest.
+- **`estate-interaction-crawl.yml`** (daily aggregator, above) — the estate-wide habit + digest.
 - **`reusable-interaction-crawl.yml`** — a property gates its **own PRs** by adopting it in one
   line (the same pattern as the link checker):
 
