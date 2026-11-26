@@ -52,13 +52,21 @@ test('secretsPosture reports profile + backend, and is secret-free', async () =>
   assert.strictEqual(vault.backend, 'vault');
   assert.ok('addr' in vault && !('authConfigured' in vault));
 
-  const op = secretsPosture({ profile: '1password' });
-  assert.strictEqual(op.backend, '1password');
-  assert.strictEqual(op.vault, 'AiGovOps');
-  assert.strictEqual(typeof op.opInstalled, 'boolean');
-  assert.strictEqual(op.authConfigured, false);   // no token set in this test process
-  // the token itself must never appear in the posture
-  assert.ok(!JSON.stringify(op).includes('ops_'));
+  // Hermetic: a developer or runner may have a real token set; hide it for this check.
+  const savedToken = process.env.OP_SERVICE_ACCOUNT_TOKEN;
+  delete process.env.OP_SERVICE_ACCOUNT_TOKEN;
+  try {
+    const op = secretsPosture({ profile: '1password' });
+    assert.strictEqual(op.backend, '1password');
+    assert.strictEqual(op.vault, 'AiGovOps');
+    assert.strictEqual(typeof op.opInstalled, 'boolean');
+    assert.strictEqual(op.authConfigured, false);   // no token set in this test process
+    // the token itself must never appear in the posture
+    assert.ok(!JSON.stringify(op).includes('ops_'));
+  } finally {
+    if (savedToken === undefined) delete process.env.OP_SERVICE_ACCOUNT_TOKEN;
+    else process.env.OP_SERVICE_ACCOUNT_TOKEN = savedToken;
+  }
 });
 
 test('the gate brokers through a factory-built provider with no code change', async () => {
