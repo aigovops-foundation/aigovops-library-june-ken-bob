@@ -283,7 +283,10 @@ jobs:
       # pinned issue are bookkeeping, and their failure is visible in the run's own red.
       - name: Email the digest to the founders (05:00 Pacific, once a day)
         id: mail
-        if: ${{ !cancelled() && steps.digest.outcome == 'success' && steps.window.outputs.send == 'true' }}
+        # Default branch only, for the same reason as the alarm below: a manual run on a test
+        # branch "sends regardless of window", and a founder should never get a test's digest.
+        # `|| 'main'` because a missing default branch in the event must not silence the real digest.
+        if: ${{ !cancelled() && steps.digest.outcome == 'success' && steps.window.outputs.send == 'true' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch || 'main') }}
         env:
           GRAPH_TENANT_ID: ${{ secrets.GRAPH_TENANT_ID }}
           GRAPH_CLIENT_ID: ${{ secrets.GRAPH_CLIENT_ID }}
@@ -331,13 +334,14 @@ jobs:
       # failed every day, before the digest existed, so no mail was owed and none was sent.
       # 23 days of silence that read exactly like "nothing is red".
       #
-      # Three properties, each locked by test/crawl-alarm.test.mjs:
+      # Four properties, each locked by test/crawl-alarm.test.mjs:
       #   1. SELF-CONTAINED. curl + jq from the runner image: no node_modules, no script from this
       #      repo. It has to work when the step that failed was the checkout.
       #   2. `failure()` MEANS A STEP BROKE. Red pages do not fail this run (the step above only
       #      warns), so this never fires for "the crawl worked and found red".
       #   3. NAMES WHAT FAILED, read from the Actions API rather than from step outputs, so it
       #      does not depend on any earlier step having run.
+      #   4. ONLY THE DEFAULT BRANCH MAILS, so a test run on a branch cannot reach an inbox.
       # If the digest mail already went out and a LATER step failed, the subject says "finished
       # with errors" instead: the run is still red and still worth a mail, but the crawl ran.
       # A job that times out or is cancelled does not reach this step; red-to-ticket.yml files
@@ -354,8 +358,20 @@ jobs:
           JOBS_API: ${{ github.api_url }}/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/attempts/${{ github.run_attempt }}/jobs
           RUN_EVENT: ${{ github.event_name }}
           RUN_REF: ${{ github.ref_name }}
+          RUN_FULL_REF: ${{ github.ref }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           set -u
+          # ONLY THE DEFAULT BRANCH MAILS. A run on any other branch is somebody testing: on
+          # 2026-11-22 a deliberate-failure proof run on a throwaway branch mailed the founders
+          # "ALARM PROOF ... please ignore". A test that asks to be ignored should not arrive.
+          # Off the default branch this step prints what it would have done and sends nothing;
+          # the run is still red, which is all a test needs. Unknown default branch means main.
+          # The FULL ref is compared, so a tag that happens to be named like the branch is not it.
+          if [ "${RUN_FULL_REF:-}" != "refs/heads/${DEFAULT_BRANCH:-main}" ]; then
+            echo "crawl alarm not sent: this run is on '${RUN_REF:-unknown}', not '${DEFAULT_BRANCH:-main}'. Only the default branch mails."
+            exit 0
+          fi
           if [ -z "${GRAPH_TENANT_ID:-}" ] || [ -z "${GRAPH_CLIENT_ID:-}" ] || [ -z "${GRAPH_CLIENT_SECRET:-}" ] || [ -z "${GRAPH_SENDER:-}" ]; then
             echo "::error::crawl alarm NOT sent: the Graph secrets are not set, so nobody was told this run failed"
             exit 1
