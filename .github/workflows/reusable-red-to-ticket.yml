@@ -5,6 +5,14 @@ name: reusable-red-to-ticket
 # WHY THIS EXISTS. A failed scheduled check is work for the queue, not another silent red light.
 # WHAT IT WILL NOT DO: fix the check, write contents, send mail, or use a cross-repo token.
 #
+# FAILURES ONLY, AT MOST ONCE A DAY PER CHECK. Every new issue, comment, close or reopen is an
+# email to whoever watches the repo, and the daily "Estate health — N to fix" digest is already
+# the summary. So a check notifies when it first goes red, and after that at most once per UTC
+# day, only when the failure changed or the check went red again after a green run. Everything
+# else is a silent edit of the issue body (body and label edits send no email). A green run
+# never comments or closes: it records "green since" in the body and takes the ticket out of
+# `queue`; a human closes it, and the next red puts it back.
+#
 # Adopt it from another repo with:
 #   on:
 #     workflow_run:
@@ -73,8 +81,8 @@ jobs:
               try { return JSON.parse(match[1]); } catch { return {}; }
             };
             const replaceOrInsertLine = (body, pattern, line) => {
-              if (pattern.test(body)) return body.replace(pattern, line);
-              return body.replace(/(?=<!-- red-to-ticket:)/, `${line}\n`);
+              if (pattern.test(body)) return body.replace(pattern, () => line);
+              return body.replace(/(?=<!-- red-to-ticket:)/, () => `${line}\n`);
             };
             const replaceState = (body, state) => {
               const marker = stateMarker(state);
@@ -113,26 +121,24 @@ jobs:
                 core.info('An older green run cannot resolve a newer red run; skipping.');
                 return;
               }
-              if (labelNames(issue).includes('in-progress')) {
-                if (!priorState.green_noted) {
-                  await github.rest.issues.createComment({
-                    owner, repo, issue_number: issue.number,
-                    body: `Green again on ${run.html_url}; a run owns this ticket, so it stays open.`,
-                  });
-                  const nextState = { ...priorState, green_noted: true };
-                  await github.rest.issues.update({
-                    owner, repo, issue_number: issue.number, body: replaceState(issue.body || '', nextState),
-                  });
-                }
-                return;
+              // SILENT: a green run is not a failure, so it edits the body and labels only.
+              if (priorState.green_since) {
+                core.info('Already recorded green.');
+              } else {
+                const nextState = { ...priorState, green_since: seen, green_after_notify: true };
+                let body = replaceState(issue.body || '', nextState);
+                body = replaceOrInsertLine(body, /^Status:.*$/m,
+                  `Status: green again since ${seen} (${run.html_url}). Close this ticket once you are satisfied; a new red reopens the work.`);
+                await github.rest.issues.update({ owner, repo, issue_number: issue.number, body });
               }
-              await github.rest.issues.createComment({
-                owner, repo, issue_number: issue.number,
-                body: `Green again on ${run.html_url} — closing (red-to-ticket).`,
-              });
-              await github.rest.issues.update({
-                owner, repo, issue_number: issue.number, state: 'closed', state_reason: 'completed',
-              });
+              // Also on later green runs: a ticket that was in-progress when it went green leaves the queue once released.
+              if (!labelNames(issue).includes('in-progress') && labelNames(issue).includes('queue')) {
+                try {
+                  await github.rest.issues.removeLabel({ owner, repo, issue_number: issue.number, name: 'queue' });
+                } catch (error) {
+                  if (error.status !== 404) throw error;
+                }
+              }
               return;
             }
 
@@ -193,7 +199,37 @@ jobs:
               .update(signatureParts.join('\n')).digest('hex').slice(0, 12);
             const firstSeen = run.created_at || run.run_started_at || seen;
 
+            const utcDay = (iso) => (iso ? new Date(iso).toISOString().slice(0, 10) : '');
+            const mayNotify = (state) => utcDay(state.last_notified) !== utcDay(seen);
+            const statusRed = `Status: red (last red run ${run.html_url})`;
+            const replaceDetails = (body) => {
+              const section = /(### What failed\n)[\s\S]*?(?=\n\n### Notes)/;
+              return section.test(body) ? body.replace(section, (_, head) => `${head}${details}`) : body;
+            };
+
             if (!issue) {
+              const closed = (await github.rest.issues.listForRepo({
+                owner, repo, state: 'closed', labels: 'discovered', sort: 'updated', direction: 'desc', per_page: 30,
+              })).data.filter((item) => !item.pull_request && (item.body || '').includes(fingerprint));
+              const notifiedToday = closed.find((item) => !mayNotify(stateFrom(item.body)));
+              if (notifiedToday) {
+                // Closed by a human after today's notice: record the red silently; tomorrow's red files a new ticket.
+                const priorState = stateFrom(notifiedToday.body);
+                const count = Number(priorState.count || 0) + 1;
+                const first = priorState.first_seen || firstSeen;
+                const nextState = {
+                  ...priorState, sig, first_seen: first, last_seen: seen, count, last_red_created: run.created_at,
+                };
+                delete nextState.green_since;
+                let body = replaceState(replaceDetails(notifiedToday.body || ''), nextState);
+                body = replaceOrInsertLine(body, /^Status:.*$/m, `${statusRed}, after this ticket was closed`);
+                body = replaceOrInsertLine(body, /^Last seen:.*$/m, `Last seen: ${seen}`);
+                body = replaceOrInsertLine(body, /^Last red run:.*$/m,
+                  `Last red run: ${run.html_url} (${count} red runs since ${first})`);
+                await github.rest.issues.update({ owner, repo, issue_number: notifiedToday.number, body });
+                core.info(`Already notified today on #${notifiedToday.number}; recorded silently.`);
+                return;
+              }
               for (const [name, color, description] of [
                 ['queue', '0e8a16', 'In the estate work queue'],
                 ['discovered', 'fbca04', 'Side problem filed by automation instead of fixed inline'],
@@ -210,7 +246,10 @@ jobs:
                 }
               }
               const count = 1;
-              const state = { sig, first_seen: firstSeen, last_seen: seen, count, last_red_created: run.created_at };
+              const state = {
+                sig, notified_sig: sig, first_seen: firstSeen, last_seen: seen, count,
+                last_red_created: run.created_at, last_notified: seen,
+              };
               const title = `bug: scheduled check red — ${run.name}`.slice(0, 120);
               const body = [
                 'Filed by red-to-ticket.yml when the scheduled check went red.',
@@ -228,11 +267,12 @@ jobs:
                 details,
                 '',
                 '### Notes',
-                'One ticket per check: a repeat failure updates this issue; it closes itself when the check is green again (unless a run owns it). Fix the cause, never weaken the check.',
+                'One ticket per check, and at most one notification per day: a repeat failure edits this issue silently and comments only when the failure changed or came back after a green run. A green run never comments or closes; it records itself below and takes the ticket out of `queue`. Fix the cause, never weaken the check.',
                 '',
                 '### Human gate',
                 '- [x] Nothing here is irreversible without a human click (merge, DNS, secrets, deletes, payments).',
                 '',
+                statusRed,
                 `Last seen: ${seen}`,
                 `Last red run: ${run.html_url} (${count} red runs since ${firstSeen})`,
                 fingerprint,
@@ -247,18 +287,35 @@ jobs:
             const priorState = stateFrom(issue.body);
             const count = Number(priorState.count || 0) + 1;
             const first = priorState.first_seen || firstSeen;
+            const notifiedSig = priorState.notified_sig || priorState.sig;
+            const redAgain = Boolean(priorState.green_after_notify);
+            const changed = notifiedSig !== sig;
+            const notify = (changed || redAgain) && mayNotify(priorState);
             const nextState = {
-              sig, first_seen: first, last_seen: seen, count, last_red_created: run.created_at,
+              ...priorState, sig, first_seen: first, last_seen: seen, count, last_red_created: run.created_at,
             };
-            let body = replaceState(issue.body || '', nextState);
+            delete nextState.green_since;
+            if (notify) {
+              Object.assign(nextState, { notified_sig: sig, last_notified: seen, green_after_notify: false });
+            }
+            let body = replaceState(replaceDetails(issue.body || ''), nextState);
+            body = replaceOrInsertLine(body, /^Status:.*$/m, statusRed);
             body = replaceOrInsertLine(body, /^Last seen:.*$/m, `Last seen: ${seen}`);
             body = replaceOrInsertLine(body, /^Last red run:.*$/m,
               `Last red run: ${run.html_url} (${count} red runs since ${first})`);
             await github.rest.issues.update({ owner, repo, issue_number: issue.number, body });
-            if (priorState.sig !== sig) {
+            if (!labelNames(issue).includes('queue')) {
+              await github.rest.issues.addLabels({ owner, repo, issue_number: issue.number, labels: ['queue'] });
+            }
+            if (notify) {
+              const head = changed
+                ? `The failure changed — latest red run: ${run.html_url}`
+                : `Red again after a green run — latest red run: ${run.html_url}`;
               await github.rest.issues.createComment({
                 owner, repo, issue_number: issue.number,
-                body: `The failure changed — latest red run: ${run.html_url}\n\n### What failed\n${details}`,
+                body: `${head}\n\n### What failed\n${details}`,
               });
+            } else if (changed || redAgain) {
+              core.info('Already notified today; the issue body has the latest failure.');
             }
             // END red-to-ticket

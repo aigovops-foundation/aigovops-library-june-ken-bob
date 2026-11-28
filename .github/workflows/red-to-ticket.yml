@@ -1,6 +1,8 @@
 name: red-to-ticket
 
-# File one local work-queue issue when a scheduled check fails.
+# File one local work-queue issue when a scheduled check fails: failures only, at most one
+# notification per check per day (see reusable-red-to-ticket.yml). The daily "Estate health" digest
+# stays the summary.
 # estate-interaction-crawl IS watched (since 2026-11-22), although it has its own pinned issue +
 # mail: those only fire once the job reaches its mail step. The crawl died before that step
 # every day from 2026-10-30 to 2026-11-21 and told no one. A ticket is filed from outside the
@@ -9,8 +11,8 @@ name: red-to-ticket
 #
 # estate-uptime is NOT watched, on purpose. Its run is red only on a NEW outage and green on
 # every later poll of the same outage (one failure mail per incident, not 48 a day). This lane
-# closes a ticket on the next green run, so it would announce "Green again" thirty minutes
-# into an outage that was still going on. Watching it needs a health signal that tells "all
+# marks a ticket green again (and takes it out of `queue`) on the next green run, so it would do
+# that thirty minutes into an outage that was still going on. Watching it needs a health signal that tells "all
 # up" from "still down"; until then its own pinned issue and flip mail are the alarm.
 # Not watched either: founders-digest and stale-sweep do not go red; ci/pages/deploy are push lanes.
 on:
