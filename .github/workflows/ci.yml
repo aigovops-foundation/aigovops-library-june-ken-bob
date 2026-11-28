@@ -79,3 +79,4 @@ jobs:
       - run: node --test test/founders-digest.test.mjs
       - run: node --test test/red-to-ticket.test.mjs
       - run: node --test test/repo-move.test.mjs
+      - run: node --test test/pages-rerun.test.mjs
