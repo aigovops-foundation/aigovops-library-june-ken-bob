@@ -135,7 +135,7 @@ test("red-to-ticket does not watch estate-uptime while its green does not mean h
 
 test("a failure AFTER the digest was sent does not claim the crawl did not run", { skip: !hasJq && "jq not installed" }, () => {
   const r = runAlarm({ jobs: { jobs: [{ steps: [
-    { name: "Email the digest to the founders (05:00 Pacific, once a day)", conclusion: "success" },
+    { name: "Email the digest to the founders (05:00 Pacific, once a day, only when there is something to fix)", conclusion: "success" },
     { name: "Record the window as sent", conclusion: "failure" },
   ] }] } });
   assert.equal(r.status, 0, r.stdout + r.stderr);
@@ -149,7 +149,7 @@ test("a digest step that failed or was skipped is still 'did not run'", { skip: 
   for (const conclusion of ["failure", "skipped", null]) {
     const r = runAlarm({ jobs: { jobs: [{ steps: [
       { name: "Crawl the estate", conclusion: "failure" },
-      { name: "Email the digest to the founders (05:00 Pacific, once a day)", conclusion },
+      { name: "Email the digest to the founders (05:00 Pacific, once a day, only when there is something to fix)", conclusion },
     ] }] } });
     assert.equal(r.payload.message.subject, "Estate crawl did not run", String(conclusion));
   }
