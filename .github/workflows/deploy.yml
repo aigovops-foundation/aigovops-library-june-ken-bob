@@ -29,6 +29,36 @@ jobs:
           echo "✅ compose is valid"
       - name: Validate prometheus config present
         run: test -f deploy/prometheus.yml && test -f deploy/grafana/provisioning/datasources/prometheus.yml
+      - name: Detect whether the Dockerfile changed
+        id: df
+        run: |
+          base=""
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base="${{ github.event.pull_request.base.sha }}"
+          elif [ "${{ github.event_name }}" = "push" ] && [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
+            base="${{ github.event.before }}"
+          fi
+          changed=true   # workflow_dispatch / first push: build anyway
+          if [ -n "$base" ]; then
+            git fetch -q --depth=1 origin "$base"
+            git diff --name-only "$base" HEAD | grep -qx "Dockerfile" || changed=false
+          fi
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+      # Build only: the image is never pushed and needs no secrets. A real pass
+      # or fail on a base-image bump (aigovops-foundation/aigovops#54).
+      - name: Build the repo-root image
+        if: steps.df.outputs.changed == 'true'
+        run: docker build -t aigovops-library:ci .
+      - name: Smoke check the image (/livez, no secrets)
+        if: steps.df.outputs.changed == 'true'
+        run: |
+          docker run -d --name library-core -p 8787:8787 aigovops-library:ci
+          for i in $(seq 1 30); do
+            curl -fsS http://127.0.0.1:8787/livez && exit 0
+            sleep 1
+          done
+          docker logs library-core
+          exit 1
 
   deploy:
     # Gated: requires a configured `production` environment (host + OP token).
