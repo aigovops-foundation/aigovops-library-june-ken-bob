@@ -6,7 +6,7 @@ permissions: { contents: read, pages: write, id-token: write }
 concurrency: { group: pages, cancel-in-progress: true }
 jobs:
   deploy:
-    environment: { name: github-pages, url: "${{ steps.deploy.outputs.page_url }}" }
+    environment: { name: github-pages, url: "${{ steps.deploy.outputs.page_url || steps.deploy-retry.outputs.page_url }}" }
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -24,7 +24,20 @@ jobs:
       # (community.aigovops-foundation.com/library/). docs/ remains the SOURCE and is still
       # built + tested above; the librarian agent mirrors it into the gated mount. To restore
       # the public mirror, point path back to docs.
+      # RE-RUN SAFE (aigovops#53). Artifacts persist across attempts of the same run, so a fixed
+      # name made "Re-run failed jobs" find two `github-pages` artifacts and fail. Each attempt
+      # uploads and deploys its own `github-pages-<attempt>`. The artifact listing can also lag the
+      # upload by a moment ("No artifacts named ... were found"), so a failed deploy is retried
+      # once after a short wait; a second failure fails the job.
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
-        with: { path: redirect-stub }
+        with: { path: redirect-stub, name: "github-pages-${{ github.run_attempt }}" }
       - id: deploy
+        continue-on-error: true
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+        with: { artifact_name: "github-pages-${{ github.run_attempt }}" }
+      - if: steps.deploy.outcome == 'failure'
+        run: sleep 20
+      - id: deploy-retry
+        if: steps.deploy.outcome == 'failure'
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+        with: { artifact_name: "github-pages-${{ github.run_attempt }}" }
