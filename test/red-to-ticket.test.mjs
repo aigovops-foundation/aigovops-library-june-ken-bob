@@ -70,6 +70,21 @@ function harness({ run = defaultRun(), jobs, annotations, existingIssues = [], e
           !["owner", "repo", "issue_number"].includes(key))));
         return { data: issue };
       },
+      addLabels: async (args) => {
+        writes.push({ type: "addLabels", args });
+        const issue = issues.find((item) => item.number === args.issue_number);
+        issue.labels = [...(issue.labels || []), ...args.labels];
+        return { data: issue.labels };
+      },
+      removeLabel: async (args) => {
+        writes.push({ type: "removeLabel", args });
+        const issue = issues.find((item) => item.number === args.issue_number);
+        const before = (issue.labels || []).length;
+        issue.labels = (issue.labels || []).filter((label) =>
+          (typeof label === "string" ? label : label.name) !== args.name);
+        if (issue.labels.length === before) throw notFound();
+        return { data: issue.labels };
+      },
       createComment: async (args) => {
         writes.push({ type: "comment", args });
         comments.push(args);
@@ -174,33 +189,129 @@ test("a repeat with the same signature updates the count without a comment", asy
   assert.match(h.issues[0].body, /Last red run: https:\/\/github\.com\/org\/repo\/actions\/runs\/8 \(2 red runs since 2026-01-01T00:00:00Z\)/);
 });
 
-test("a changed failure signature gets one explanatory comment", async () => {
+const changedFailure = {
+  jobs: [{ id: 41, name: "audit", conclusion: "failure", steps: [{ name: "different step", conclusion: "failure" }] }],
+  annotations: { 41: [{ annotation_level: "failure", message: "different error", path: "src/app.js", start_line: 9 }] },
+};
+const nextDayRun = (changes = {}) => defaultRun({
+  id: 8,
+  html_url: "https://github.com/org/repo/actions/runs/8",
+  created_at: "2026-01-02T00:00:00Z",
+  completed_at: "2026-01-02T00:05:00Z",
+  ...changes,
+});
+
+test("a changed failure signature on a later day gets one explanatory comment", async () => {
   const h = harness(failureDetails);
   await h.invoke();
   const changed = harness({
-    run: defaultRun({ id: 8, html_url: "https://github.com/org/repo/actions/runs/8" }),
-    jobs: [{ id: 41, name: "audit", conclusion: "failure", steps: [{ name: "different step", conclusion: "failure" }] }],
-    annotations: { 41: [{ annotation_level: "failure", message: "different error", path: "src/app.js", start_line: 9 }] },
+    run: nextDayRun(),
+    ...changedFailure,
     existingIssues: h.issues,
     existingLabels: ["queue", "discovered"],
   });
   await changed.invoke();
   assert.equal(changed.comments.length, 1);
   assert.match(changed.comments[0].body, /^The failure changed/);
+  assert.match(changed.issues[0].body, /different step/);
 });
 
-test("a green run comments and closes an open issue without in-progress", async () => {
+test("a changed failure on the same day edits the body silently, then comments the next day", async () => {
+  const h = harness(failureDetails);
+  await h.invoke();
+  const sameDay = harness({
+    run: defaultRun({ id: 8, html_url: "https://github.com/org/repo/actions/runs/8", completed_at: "2026-01-01T06:00:00Z" }),
+    ...changedFailure,
+    existingIssues: h.issues,
+    existingLabels: ["queue", "discovered"],
+  });
+  await sameDay.invoke();
+  assert.equal(sameDay.comments.length, 0);
+  assert.deepEqual(sameDay.writes.map((write) => write.type), ["update"]);
+  assert.match(sameDay.issues[0].body, /### What failed\n- audit › different step/);
+  assert.doesNotMatch(sameDay.issues[0].body, /unit tests/);
+  sameDay.context.payload.workflow_run = nextDayRun({ id: 9 });
+  await sameDay.invoke();
+  assert.equal(sameDay.comments.length, 1);
+  assert.match(sameDay.comments[0].body, /^The failure changed/);
+  sameDay.context.payload.workflow_run = nextDayRun({ id: 10, completed_at: "2026-01-02T09:00:00Z" });
+  await sameDay.invoke();
+  assert.equal(sameDay.comments.length, 1, "same signature again the same day stays silent");
+});
+
+test("many red events in one day send one notification", async () => {
+  const h = harness(failureDetails);
+  for (let hour = 0; hour < 12; hour += 1) {
+    h.context.payload.workflow_run = defaultRun({
+      id: 100 + hour,
+      completed_at: `2026-01-01T${String(hour).padStart(2, "0")}:30:00Z`,
+    });
+    await h.invoke();
+  }
+  assert.equal(h.writes.filter((write) => write.type === "create").length, 1);
+  assert.equal(h.comments.length, 0);
+  assert.match(h.issues[0].body, /12 red runs since/);
+});
+
+test("a green run never comments or closes; it records itself silently and leaves the queue", async () => {
   const created = harness(failureDetails);
   await created.invoke();
   const h = harness({
-    run: defaultRun({ conclusion: "success", html_url: "https://github.com/org/repo/actions/runs/9" }),
+    run: defaultRun({ conclusion: "success", html_url: "https://github.com/org/repo/actions/runs/9", completed_at: "2026-01-02T00:05:00Z" }),
     existingIssues: created.issues,
     existingLabels: ["queue", "discovered"],
   });
   await h.invoke();
+  assert.equal(h.issues[0].state, "open");
+  assert.equal(h.comments.length, 0);
+  assert.deepEqual(h.writes.map((write) => write.type), ["update", "removeLabel"]);
+  assert.deepEqual(h.issues[0].labels, ["discovered"]);
+  assert.match(h.issues[0].body, /^Status: green again since 2026-01-02T00:05:00Z/m);
+  h.writes.length = 0;
+  h.context.payload.workflow_run = defaultRun({ conclusion: "success", id: 10, completed_at: "2026-01-03T00:05:00Z" });
+  await h.invoke();
+  assert.deepEqual(h.writes, [], "a second green run writes nothing");
+});
+
+test("red again after green re-queues and comments once per day", async () => {
+  const created = harness(failureDetails);
+  await created.invoke();
+  const h = harness({
+    run: defaultRun({ conclusion: "success", id: 9, created_at: "2026-01-01T03:00:00Z", completed_at: "2026-01-01T03:05:00Z" }),
+    ...failureDetails,
+    existingIssues: created.issues,
+    existingLabels: ["queue", "discovered"],
+  });
+  await h.invoke();
+  h.context.payload.workflow_run = defaultRun({ id: 10, created_at: "2026-01-01T06:00:00Z", completed_at: "2026-01-01T06:05:00Z" });
+  await h.invoke();
+  assert.equal(h.comments.length, 0, "already notified today");
+  assert.ok(h.issues[0].labels.includes("queue"));
+  assert.match(h.issues[0].body, /^Status: red/m);
+  h.context.payload.workflow_run = nextDayRun({ id: 11 });
+  await h.invoke();
+  assert.equal(h.comments.length, 1);
+  assert.match(h.comments[0].body, /^Red again after a green run/);
+});
+
+test("a ticket a human closed after today's notice is not refiled until tomorrow", async () => {
+  const created = harness(failureDetails);
+  await created.invoke();
+  created.issues[0].state = "closed";
+  const h = harness({
+    run: defaultRun({ id: 8, completed_at: "2026-01-01T09:00:00Z" }),
+    ...failureDetails,
+    existingIssues: created.issues,
+    existingLabels: ["queue", "discovered"],
+  });
+  await h.invoke();
+  assert.equal(h.issues.length, 1);
+  assert.deepEqual(h.writes.map((write) => write.type), ["update"]);
   assert.equal(h.issues[0].state, "closed");
-  assert.equal(h.issues[0].state_reason, "completed");
-  assert.match(h.comments[0].body, /Green again.*closing \(red-to-ticket\)/);
+  h.context.payload.workflow_run = nextDayRun({ id: 9 });
+  await h.invoke();
+  assert.equal(h.issues.length, 2);
+  assert.equal(h.issues[1].state, "open");
 });
 
 test("an older green run does not close a ticket for a newer failure", async () => {
@@ -216,7 +327,7 @@ test("an older green run does not close a ticket for a newer failure", async () 
   assert.equal(h.comments.length, 0);
 });
 
-test("a green run notes an in-progress ticket once and leaves it open", async () => {
+test("a green run keeps an in-progress ticket's labels and never comments", async () => {
   const created = harness(failureDetails);
   await created.invoke();
   created.issues[0].labels.push("in-progress");
@@ -226,12 +337,10 @@ test("a green run notes an in-progress ticket once and leaves it open", async ()
     existingLabels: ["queue", "discovered", "in-progress"],
   });
   await h.invoke();
-  h.context.payload.workflow_run = defaultRun({ conclusion: "success", html_url: "https://github.com/org/repo/actions/runs/10" });
-  await h.invoke();
   assert.equal(h.issues[0].state, "open");
-  assert.equal(h.comments.length, 1);
-  assert.match(h.comments[0].body, /a run owns this ticket, so it stays open/);
-  assert.match(h.issues[0].body, /"green_noted":true/);
+  assert.equal(h.comments.length, 0);
+  assert.deepEqual(h.issues[0].labels, ["queue", "discovered", "in-progress"]);
+  assert.match(h.issues[0].body, /"green_since":/);
 });
 
 test("a cancelled run makes no API writes", async () => {
@@ -252,4 +361,51 @@ test("when duplicate matching issues exist, the oldest wins and the newer is clo
   assert.equal(h.issues[0].state, "open");
   assert.equal(h.issues[1].state, "closed");
   assert.match(h.comments[0].body, /Duplicate of #10 — closed by red-to-ticket\./);
+});
+
+test("an in-progress ticket that went green leaves the queue on the next green run after release", async () => {
+  const created = harness(failureDetails);
+  await created.invoke();
+  created.issues[0].labels.push("in-progress");
+  const green = (id) => defaultRun({ id, conclusion: "success", html_url: `https://github.com/org/repo/actions/runs/${id}` });
+  const h = harness({ run: green(9), existingIssues: created.issues, existingLabels: ["queue", "discovered", "in-progress"] });
+  await h.invoke();
+  assert.ok(h.issues[0].labels.includes("queue"));
+  h.issues[0].labels = h.issues[0].labels.filter((label) => label !== "in-progress");
+  const bodyBefore = h.issues[0].body;
+  h.context.payload.workflow_run = green(10);
+  await h.invoke();
+  assert.deepEqual(h.issues[0].labels, ["discovered"]);
+  assert.equal(h.issues[0].body, bodyBefore);
+  assert.equal(h.comments.length, 0);
+});
+
+test("refreshed failure details keep `$` sequences literally", async () => {
+  const dollarDetails = structuredClone(failureDetails);
+  dollarDetails.annotations[41][0].message = "branch feature/$1-$&-x is behind";
+  const created = harness(failureDetails);
+  await created.invoke();
+  const h = harness({
+    run: defaultRun({ id: 8, completed_at: "2026-01-01T09:00:00Z" }),
+    ...dollarDetails,
+    existingIssues: created.issues,
+    existingLabels: ["queue", "discovered"],
+  });
+  await h.invoke();
+  assert.ok(h.issues[0].body.includes("branch feature/$1-$&-x is behind"));
+});
+
+test("a same-day red on a human-closed ticket refreshes its last red run link", async () => {
+  const created = harness(failureDetails);
+  await created.invoke();
+  created.issues[0].state = "closed";
+  const h = harness({
+    run: defaultRun({ id: 8, completed_at: "2026-01-01T09:00:00Z", html_url: "https://github.com/org/repo/actions/runs/8" }),
+    ...failureDetails,
+    existingIssues: created.issues,
+    existingLabels: ["queue", "discovered"],
+  });
+  await h.invoke();
+  assert.match(h.issues[0].body, /^Last red run: https:\/\/github\.com\/org\/repo\/actions\/runs\/8 \(2 red runs since /m);
+  assert.match(h.issues[0].body, /^Last seen: 2026-01-01T09:00:00Z$/m);
 });

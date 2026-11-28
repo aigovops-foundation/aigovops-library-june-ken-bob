@@ -6,9 +6,9 @@
 
 See [wiki/README.md](wiki/README.md) for the estate repository map.
 
-A shareable hub page (GitHub Pages) presents the non-secret story; the source of truth lives alongside it, private.
+A hub page presents the non-secret story; the source of truth lives alongside it. The rendered Library is served member-gated at [community.aigovops-foundation.com/library/](https://community.aigovops-foundation.com/library/) (see [`plan/processes/membership-wall.md`](plan/processes/membership-wall.md)).
 
-## The five pieces
+## The seven pieces
 
 | Piece | Where | What it is |
 |---|---|---|
@@ -19,22 +19,26 @@ A shareable hub page (GitHub Pages) presents the non-secret story; the source of
 | **Plan** — *operate* | [`docs/plan.html`](docs/plan.html) + [`plan/`](plan/) | Agents, skills, and twelve repeatable processes. |
 | **Control Plane** — *govern* | [`docs/control-plane.html`](docs/control-plane.html) + [`plan/control-and-deployment.md`](plan/control-and-deployment.md) | One artifact for lab/community/enclave, the single agent chokepoint, the secrets broker, and real-time oversight — no agents gone wild. |
 | **Build Tickets** — *do* | [`docs/build-tickets.html`](docs/build-tickets.html) + [`plan/build-tickets.md`](plan/build-tickets.md) | The backlog: Ticket 0 (SecretsProvider + FileProvider, fully specced) and the next ten big items, with sizes, deps, and milestones. |
+| **Core** — *run* | [`core/`](core/) | The running v1 governed core (Node, dependency-free). |
 
 **Operations (private, no public page):** `plan/account-registry.md` *(planned)* — pointer-only inventory of every service/account (no plaintext); `plan/credential-management.md` *(planned)* — password-manager choice + the safe dev-system credential hand-off; [`plan/skills/op-github-deploy/SKILL.md`](plan/skills/op-github-deploy/SKILL.md) — the skill that wires 1Password→GitHub Actions (one-approval, never handles the token); [`.github/workflows/op-secrets-check.yml`](.github/workflows/op-secrets-check.yml) — proof-of-connection workflow.
-| **Core** — *run* | [`core/`](core/) | The running v1 governed core (Node, dependency-free). |
 
 ## Layout
 ```
 aigovops-library/
-├── docs/                     ← GitHub Pages root (the shareable, secret-free hub + the 4 pages)
+├── docs/                     ← the site source (the secret-free hub + its pages), mirrored into the member-gated Library
 │   ├── index.html  demo.html  design-book.html  blueprint.html  plan.html  control-plane.html  build-tickets.html
 ├── core/                     ← the running v1 governed core (docker compose up)
 │   └── src · Dockerfile · compose.yml · test · README.md
 ├── plan/                     ← the private source of truth (no secrets)
 │   ├── 00-overview.md · agents.md · skills.md
-│   ├── processes/            ← 12 repeatable playbooks
-│   └── skills/               ← 11 runnable SKILL.md (auto-loadable)
-├── .github/workflows/        ← ci.yml (core tests) · pages.yml (publish docs/)
+│   ├── processes/            ← repeatable playbooks
+│   └── skills/               ← runnable SKILL.md files (auto-loadable)
+├── redirect-stub/            ← what GitHub Pages serves: a redirect to community…/library/
+├── .github/workflows/        ← every workflow lives here; see the directory for the full list
+│                               (ci.yml, pages.yml, estate-interaction-crawl.yml, estate-uptime.yml,
+│                                founders-digest.yml, red-to-ticket.yml, link-check.yml, estate-audit.yml,
+│                                stale-sweep.yml, secret-scan.yml, … and the reusable-*.yml callees)
 └── README.md
 ```
 
@@ -60,21 +64,19 @@ node -e "import('./core/src/core/policy.js').then(m=>console.log(JSON.stringify(
 
 ## Single source of truth (page + core share one logic)
 The Yes-Gate logic lives once in [`core/src/core/yesgate.shared.js`](core/src/core/yesgate.shared.js). The Node core re-exports it (`policy.js`, `lantern.js`, `router.js`); the in-page "See it run" demo is generated from it by `npm run build:docs`, which inlines it into `docs/index.html` between markers. Edit the logic **only** in the shared file, then run the build (the Pages workflow runs it automatically). The page stays one self-contained file, so it works on `file://` and on Pages with no runtime import.
-## Publish the shareable hub (GitHub Pages)
-- **Simplest:** Settings → Pages → Deploy from a branch → `main` / `/docs`.
-- **Or via Action:** enable Settings → Pages → Source: GitHub Actions (uses `.github/workflows/pages.yml`).
-- Pages on a **private** repo needs a Team/Enterprise plan; otherwise keep the repo private and serve `docs/` from a public mirror or via Cloudflare (as the main site already is).
+## What GitHub Pages serves (the membership wall)
+`.github/workflows/pages.yml` still builds and tests `docs/` on every push to `main`. It then deploys only
+[`redirect-stub/`](redirect-stub/), which points visitors to the member-gated Library at
+[community.aigovops-foundation.com/library/](https://community.aigovops-foundation.com/library/). `docs/` stays the
+source and is mirrored into that gated mount. The public github.io mirror is retired; restoring it is a
+steward-shipped move, never an autonomous one (rule of record: [`plan/processes/membership-wall.md`](plan/processes/membership-wall.md)).
 
 ## ⚠️ The irreversibility boundary (yours to hold)
-This repo is prepared and verified, ready to push. **Bob and Ken make the irreversible
-clicks** — creating the repo, the first push, switching on Pages, DNS, registrar,
-key enrollment — after the risk is flagged. It ships with **no keys and an empty ledger**.
+**Bob and Ken make the irreversible clicks**, such as Pages settings, DNS, registrar and key
+enrollment, after the risk is flagged. It ships with **no keys and an empty ledger**.
 
-```bash
-tar -xzf aigovops-library.tar.gz && cd aigovops-library
-git init && git add . && git commit -m "AiGovOps Library — the whole set (demo, design book, blueprint, plan, core)"
-gh repo create aigovops-foundation/aigovops-library-june-ken-bob --private --source=. --remote=origin --push
-# then: Settings → Pages → /docs
-```
+The repo already exists and the first push is done. GitHub Pages now serves `redirect-stub/`, which
+points to [community.aigovops-foundation.com/library/](https://community.aigovops-foundation.com/library/)
+(see above).
 
 _Apache-2.0 · no SaaS lock-in · local-first · agent-first · English-first, global-always._

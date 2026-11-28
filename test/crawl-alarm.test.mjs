@@ -72,7 +72,7 @@ esac
       GRAPH_TENANT_ID: "tenant", GRAPH_CLIENT_ID: "client", GRAPH_CLIENT_SECRET: "s3cret", GRAPH_SENDER: "sender@example.test",
       GITHUB_TOKEN: "gh-token", RUN_URL: "https://github.test/org/repo/actions/runs/42",
       JOBS_API: "https://api.github.test/repos/org/repo/actions/runs/42/attempts/1/jobs",
-      RUN_EVENT: "schedule", RUN_REF: "main", ...env,
+      RUN_EVENT: "schedule", RUN_REF: "main", RUN_FULL_REF: "refs/heads/main", ...env,
     },
   });
   const calls = existsSync(log) ? readFileSync(log, "utf8").trim().split("\n") : [];
@@ -160,4 +160,24 @@ test("the crawl jobs run on a pinned runner image", () => {
     const runsOn = [...wf(name).matchAll(/^\s+runs-on: (.+)$/gm)].map((m) => m[1]);
     assert.deepEqual(runsOn, ["ubuntu-24.04"], name);
   }
+});
+
+// On 2026-11-22 a deliberate-failure proof run on a throwaway branch mailed the founders
+// "ALARM PROOF - deliberate failure, please ignore". A test should never reach an inbox.
+test("a run off the default branch sends nothing, and says so", { skip: !hasJq && "jq not installed" }, () => {
+  const r = runAlarm({ env: { RUN_REF: "proof/alarm-test", RUN_FULL_REF: "refs/heads/proof/alarm-test", RUN_EVENT: "workflow_dispatch" } });
+  assert.equal(r.status, 0, r.stdout + r.stderr);
+  assert.equal(r.calls.length, 0, "no token request, no mail, no API call");
+  assert.match(r.stdout, /crawl alarm not sent: this run is on 'proof\/alarm-test', not 'main'/);
+  const tag = runAlarm({ env: { RUN_REF: "main", RUN_FULL_REF: "refs/tags/main" } });
+  assert.equal(tag.calls.length, 0, "a tag named like the default branch is not the default branch");
+  const renamed = runAlarm({ env: { RUN_REF: "trunk", RUN_FULL_REF: "refs/heads/trunk", DEFAULT_BRANCH: "trunk" } });
+  assert.equal(renamed.calls.filter((c) => c.includes("/sendMail")).length, 1, "the default branch still mails, whatever it is called");
+  assert.match(stepText, /DEFAULT_BRANCH: \$\{\{ github\.event\.repository\.default_branch \}\}/);
+});
+
+test("the digest mail is also default-branch only, so a manual run on a test branch mails nobody", () => {
+  const at = crawl.indexOf("      - name: Email the digest to the founders");
+  const step = crawl.slice(at, crawl.indexOf("\n      - name:", at + 10));
+  assert.match(step, /\n        if: \$\{\{ .*github\.ref == format\('refs\/heads\/\{0\}', github\.event\.repository\.default_branch \|\| 'main'\) \}\}\n/);
 });

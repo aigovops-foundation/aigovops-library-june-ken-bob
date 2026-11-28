@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-11-22T13:11:07.967Z",
+  "generatedAt": "2026-11-27T13:11:30.255Z",
   "estate": {
     "properties": 8,
     "reporting": 7,
     "healthy": 6,
     "red": 1,
-    "greenPages": 368,
-    "redPages": 29,
+    "greenPages": 370,
+    "redPages": 27,
     "dead": 7,
-    "broken": 76,
+    "broken": 38,
     "consoleErrorPages": 0,
     "score": 93
   },
@@ -18,14 +18,14 @@
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
       "status": "red",
-      "ranAt": "2026-11-22T13:04:11.049Z",
+      "ranAt": "2026-11-27T13:03:58.534Z",
       "summary": {
         "pages": 80,
-        "greenPages": 51,
-        "redPages": 29,
-        "ok": 1279,
+        "greenPages": 53,
+        "redPages": 27,
+        "ok": 1395,
         "dead": 7,
-        "broken": 76,
+        "broken": 38,
         "external": 451,
         "delegated": 7,
         "consoleErrorPages": 0,
@@ -113,25 +113,9 @@
           "loadError": null
         },
         {
-          "path": "/blog/index.html",
-          "dead": 0,
-          "broken": 13,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
           "path": "/blog/iso-42001-controls-you-can-run.html",
           "dead": 0,
           "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/library.html",
-          "dead": 0,
-          "broken": 13,
           "jsErrors": 0,
           "status": "red",
           "loadError": null
@@ -169,14 +153,6 @@
           "loadError": null
         },
         {
-          "path": "/blog/open-source.html",
-          "dead": 0,
-          "broken": 13,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
           "path": "/blog/seconds-each.html",
           "dead": 0,
           "broken": 1,
@@ -186,6 +162,14 @@
         },
         {
           "path": "/blog/stop-writing-for-humans.html",
+          "dead": 0,
+          "broken": 1,
+          "jsErrors": 0,
+          "status": "red",
+          "loadError": null
+        },
+        {
+          "path": "/blog/the-algorithm-that-took-a-cabinet.html",
           "dead": 0,
           "broken": 1,
           "jsErrors": 0,
@@ -449,6 +433,14 @@
           "loadError": null
         },
         {
+          "path": "/f-ai-friday.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/for-contributors.html",
           "dead": 0,
           "broken": 0,
@@ -546,6 +538,14 @@
         },
         {
           "path": "/learning/ai-policy-10-questions/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/learning/beta-tests/get-to-yes/",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -786,6 +786,12 @@
           "reason": "internal link → HTTP 404"
         },
         {
+          "page": "https://www.aigovops-foundation.com/blog/the-algorithm-that-took-a-cabinet.html",
+          "text": "Meet the founders",
+          "href": "https://www.aigovops-foundation.com/blog/meet.html",
+          "reason": "internal link → HTTP 404"
+        },
+        {
           "page": "https://www.aigovops-foundation.com/blog/how-ai-works-levels-100-to-500.html",
           "text": "Meet the founders",
           "href": "https://www.aigovops-foundation.com/blog/meet.html",
@@ -946,240 +952,6 @@
           "text": "Terms",
           "href": "https://www.aigovops-foundation.com/blog/terms.html",
           "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/index.html",
-          "text": "",
-          "href": "https://www.aigovops-foundation.com/blog/index.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/index.html",
-          "text": "Home",
-          "href": "https://www.aigovops-foundation.com/blog/index.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/index.html",
-          "text": "Library",
-          "href": "https://www.aigovops-foundation.com/blog/library.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/index.html",
-          "text": "Open source",
-          "href": "https://www.aigovops-foundation.com/blog/open-source.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/index.html",
-          "text": "Blog",
-          "href": "https://www.aigovops-foundation.com/blog/blog.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/index.html",
-          "text": "← Back to homepage",
-          "href": "https://www.aigovops-foundation.com/blog/index.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/index.html",
-          "text": "Browse frameworks",
-          "href": "https://www.aigovops-foundation.com/blog/frameworks.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/index.html",
-          "text": "Blog",
-          "href": "https://www.aigovops-foundation.com/blog/blog.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/index.html",
-          "text": "Ken Johnston",
-          "href": "https://www.aigovops-foundation.com/blog/founders.html#ken",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/index.html",
-          "text": "Bob Rapp",
-          "href": "https://www.aigovops-foundation.com/blog/founders.html#bob",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/index.html",
-          "text": "Support us",
-          "href": "https://www.aigovops-foundation.com/blog/support.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/index.html",
-          "text": "Privacy",
-          "href": "https://www.aigovops-foundation.com/blog/privacy.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/index.html",
-          "text": "Terms",
-          "href": "https://www.aigovops-foundation.com/blog/terms.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/library.html",
-          "text": "",
-          "href": "https://www.aigovops-foundation.com/blog/index.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/library.html",
-          "text": "Home",
-          "href": "https://www.aigovops-foundation.com/blog/index.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/library.html",
-          "text": "Library",
-          "href": "https://www.aigovops-foundation.com/blog/library.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/library.html",
-          "text": "Open source",
-          "href": "https://www.aigovops-foundation.com/blog/open-source.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/library.html",
-          "text": "Blog",
-          "href": "https://www.aigovops-foundation.com/blog/blog.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/library.html",
-          "text": "← Back to homepage",
-          "href": "https://www.aigovops-foundation.com/blog/index.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/library.html",
-          "text": "Browse frameworks",
-          "href": "https://www.aigovops-foundation.com/blog/frameworks.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/library.html",
-          "text": "Blog",
-          "href": "https://www.aigovops-foundation.com/blog/blog.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/library.html",
-          "text": "Ken Johnston",
-          "href": "https://www.aigovops-foundation.com/blog/founders.html#ken",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/library.html",
-          "text": "Bob Rapp",
-          "href": "https://www.aigovops-foundation.com/blog/founders.html#bob",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/library.html",
-          "text": "Support us",
-          "href": "https://www.aigovops-foundation.com/blog/support.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/library.html",
-          "text": "Privacy",
-          "href": "https://www.aigovops-foundation.com/blog/privacy.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/library.html",
-          "text": "Terms",
-          "href": "https://www.aigovops-foundation.com/blog/terms.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/open-source.html",
-          "text": "",
-          "href": "https://www.aigovops-foundation.com/blog/index.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/open-source.html",
-          "text": "Home",
-          "href": "https://www.aigovops-foundation.com/blog/index.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/open-source.html",
-          "text": "Library",
-          "href": "https://www.aigovops-foundation.com/blog/library.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/open-source.html",
-          "text": "Open source",
-          "href": "https://www.aigovops-foundation.com/blog/open-source.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/open-source.html",
-          "text": "Blog",
-          "href": "https://www.aigovops-foundation.com/blog/blog.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/open-source.html",
-          "text": "← Back to homepage",
-          "href": "https://www.aigovops-foundation.com/blog/index.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/open-source.html",
-          "text": "Browse frameworks",
-          "href": "https://www.aigovops-foundation.com/blog/frameworks.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/open-source.html",
-          "text": "Blog",
-          "href": "https://www.aigovops-foundation.com/blog/blog.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/open-source.html",
-          "text": "Ken Johnston",
-          "href": "https://www.aigovops-foundation.com/blog/founders.html#ken",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/open-source.html",
-          "text": "Bob Rapp",
-          "href": "https://www.aigovops-foundation.com/blog/founders.html#bob",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/open-source.html",
-          "text": "Support us",
-          "href": "https://www.aigovops-foundation.com/blog/support.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/open-source.html",
-          "text": "Privacy",
-          "href": "https://www.aigovops-foundation.com/blog/privacy.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/open-source.html",
-          "text": "Terms",
-          "href": "https://www.aigovops-foundation.com/blog/terms.html",
-          "reason": "internal link → HTTP 404"
         }
       ],
       "consoleErrors": []
@@ -1197,12 +969,12 @@
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-11-22T13:05:47.536Z",
+      "ranAt": "2026-11-27T13:05:42.294Z",
       "summary": {
         "pages": 70,
         "greenPages": 70,
         "redPages": 0,
-        "ok": 1305,
+        "ok": 1306,
         "dead": 0,
         "broken": 0,
         "external": 888,
@@ -1781,7 +1553,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-11-22T13:07:32.022Z",
+      "ranAt": "2026-11-27T13:07:36.111Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2429,7 +2201,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-11-22T13:09:11.499Z",
+      "ranAt": "2026-11-27T13:09:27.049Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -3077,7 +2849,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-11-22T13:09:26.316Z",
+      "ranAt": "2026-11-27T13:09:42.975Z",
       "summary": {
         "pages": 11,
         "greenPages": 11,
@@ -3189,7 +2961,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-11-22T13:11:04.867Z",
+      "ranAt": "2026-11-27T13:11:26.801Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -3837,7 +3609,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-11-22T13:11:07.959Z",
+      "ranAt": "2026-11-27T13:11:30.244Z",
       "summary": {
         "pages": 2,
         "greenPages": 2,
@@ -3877,6 +3649,6 @@
     "provider": "graph",
     "status": "ok",
     "detail": "app authenticates; sends as bob.rapp@aigovops.community",
-    "checkedAt": "2026-11-22T13:11:08.140Z"
+    "checkedAt": "2026-11-27T13:11:30.412Z"
   }
 }
