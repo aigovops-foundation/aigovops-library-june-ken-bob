@@ -1,253 +1,37 @@
 {
-  "generatedAt": "2026-11-27T13:11:30.255Z",
+  "generatedAt": "2026-11-28T13:10:42.287Z",
   "estate": {
     "properties": 8,
     "reporting": 7,
-    "healthy": 6,
-    "red": 1,
-    "greenPages": 370,
-    "redPages": 27,
-    "dead": 7,
-    "broken": 38,
+    "healthy": 7,
+    "red": 0,
+    "greenPages": 396,
+    "redPages": 0,
+    "dead": 0,
+    "broken": 0,
     "consoleErrorPages": 0,
-    "score": 93
+    "score": 100
   },
   "sites": [
     {
       "name": "Foundation site",
       "base": "https://www.aigovops-foundation.com",
       "gated": false,
-      "status": "red",
-      "ranAt": "2026-11-27T13:03:58.534Z",
+      "status": "green",
+      "ranAt": "2026-11-28T13:03:40.777Z",
       "summary": {
-        "pages": 80,
-        "greenPages": 53,
-        "redPages": 27,
-        "ok": 1395,
-        "dead": 7,
-        "broken": 38,
-        "external": 451,
+        "pages": 79,
+        "greenPages": 79,
+        "redPages": 0,
+        "ok": 1423,
+        "dead": 0,
+        "broken": 0,
+        "external": 448,
         "delegated": 7,
         "consoleErrorPages": 0,
-        "healthy": false
+        "healthy": true
       },
       "pageHealth": [
-        {
-          "path": "/blog/a-face-is-not-a-signature.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/agentic-frontiers-retrospective.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/agentic-hell.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/asking-the-bot-to-check-the-bot.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/eu-ai-act-90-day-roadmap.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/flow-to-trust-loop.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/forty-five-minutes-at-knight.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/healthcare-ai-governance-spring-2026.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/how-ai-works-level-100.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/how-ai-works-levels-100-to-500.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/iso-42001-controls-you-can-run.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/meet.html",
-          "dead": 0,
-          "broken": 13,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/nist-ai-rmf-vs-real-world.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/no-more-anonymous-ghosts.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/not-evidence-on-its-own.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/seconds-each.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/stop-writing-for-humans.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/the-algorithm-that-took-a-cabinet.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/the-cafe-is-open.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/the-chatbot-is-the-company.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/the-fall-2026-release.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/the-one-dollar-tahoe.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/the-premise.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/the-ten-minute-gate-check.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/the-word-womens.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/blog/what-is-aigovops.html",
-          "dead": 0,
-          "broken": 1,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
-        {
-          "path": "/learning/ai-for-rotarians/",
-          "dead": 7,
-          "broken": 0,
-          "jsErrors": 0,
-          "status": "red",
-          "loadError": null
-        },
         {
           "path": "/",
           "dead": 0,
@@ -330,6 +114,206 @@
         },
         {
           "path": "/blog.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/a-face-is-not-a-signature.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/agentic-frontiers-retrospective.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/agentic-hell.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/asking-the-bot-to-check-the-bot.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/eu-ai-act-90-day-roadmap.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/flow-to-trust-loop.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/forty-five-minutes-at-knight.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/healthcare-ai-governance-spring-2026.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/how-ai-works-level-100.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/how-ai-works-levels-100-to-500.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/iso-42001-controls-you-can-run.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/nist-ai-rmf-vs-real-world.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/no-more-anonymous-ghosts.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/not-evidence-on-its-own.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/seconds-each.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/stop-writing-for-humans.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/the-algorithm-that-took-a-cabinet.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/the-cafe-is-open.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/the-chatbot-is-the-company.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/the-fall-2026-release.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/the-one-dollar-tahoe.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/the-premise.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/the-ten-minute-gate-check.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/the-word-womens.html",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
+          "path": "/blog/what-is-aigovops.html",
           "dead": 0,
           "broken": 0,
           "jsErrors": 0,
@@ -529,6 +513,14 @@
           "loadError": null
         },
         {
+          "path": "/learning/ai-for-rotarians/",
+          "dead": 0,
+          "broken": 0,
+          "jsErrors": 0,
+          "status": "green",
+          "loadError": null
+        },
+        {
           "path": "/learning/ai-guide/",
           "dead": 0,
           "broken": 0,
@@ -673,287 +665,8 @@
           "loadError": null
         }
       ],
-      "dead": [
-        {
-          "page": "https://www.aigovops-foundation.com/learning/ai-for-rotarians/",
-          "tag": "a",
-          "text": "Talk with us",
-          "cls": "",
-          "reason": "anchor \"#connect\" has no matching target"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/learning/ai-for-rotarians/",
-          "tag": "a",
-          "text": "Check",
-          "cls": "rr-tab",
-          "reason": "anchor \"#check\" has no matching target"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/learning/ai-for-rotarians/",
-          "tag": "a",
-          "text": "Share",
-          "cls": "rr-tab",
-          "reason": "anchor \"#share\" has no matching target"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/learning/ai-for-rotarians/",
-          "tag": "a",
-          "text": "Rules",
-          "cls": "rr-tab",
-          "reason": "anchor \"#rules\" has no matching target"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/learning/ai-for-rotarians/",
-          "tag": "a",
-          "text": "Quiz",
-          "cls": "rr-tab",
-          "reason": "anchor \"#quiz\" has no matching target"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/learning/ai-for-rotarians/",
-          "tag": "a",
-          "text": "Connect",
-          "cls": "rr-tab",
-          "reason": "anchor \"#connect\" has no matching target"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/learning/ai-for-rotarians/",
-          "tag": "a",
-          "text": "Get a label",
-          "cls": "",
-          "reason": "anchor \"#share\" has no matching target"
-        }
-      ],
-      "broken": [
-        {
-          "page": "https://www.aigovops-foundation.com/blog/what-is-aigovops.html",
-          "text": "Meet the founders",
-          "href": "https://www.aigovops-foundation.com/blog/meet.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/nist-ai-rmf-vs-real-world.html",
-          "text": "Meet the founders",
-          "href": "https://www.aigovops-foundation.com/blog/meet.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/eu-ai-act-90-day-roadmap.html",
-          "text": "Meet the founders",
-          "href": "https://www.aigovops-foundation.com/blog/meet.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/healthcare-ai-governance-spring-2026.html",
-          "text": "Meet the founders",
-          "href": "https://www.aigovops-foundation.com/blog/meet.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/agentic-frontiers-retrospective.html",
-          "text": "Meet the founders",
-          "href": "https://www.aigovops-foundation.com/blog/meet.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/agentic-hell.html",
-          "text": "Meet the founders",
-          "href": "https://www.aigovops-foundation.com/blog/meet.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/flow-to-trust-loop.html",
-          "text": "Meet the founders",
-          "href": "https://www.aigovops-foundation.com/blog/meet.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/stop-writing-for-humans.html",
-          "text": "Meet the founders",
-          "href": "https://www.aigovops-foundation.com/blog/meet.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/no-more-anonymous-ghosts.html",
-          "text": "Meet the founders",
-          "href": "https://www.aigovops-foundation.com/blog/meet.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/iso-42001-controls-you-can-run.html",
-          "text": "Meet the founders",
-          "href": "https://www.aigovops-foundation.com/blog/meet.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/the-algorithm-that-took-a-cabinet.html",
-          "text": "Meet the founders",
-          "href": "https://www.aigovops-foundation.com/blog/meet.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/how-ai-works-levels-100-to-500.html",
-          "text": "Meet the founders",
-          "href": "https://www.aigovops-foundation.com/blog/meet.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/how-ai-works-level-100.html",
-          "text": "Meet the founders",
-          "href": "https://www.aigovops-foundation.com/blog/meet.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/the-word-womens.html",
-          "text": "Meet the founders",
-          "href": "https://www.aigovops-foundation.com/blog/meet.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/asking-the-bot-to-check-the-bot.html",
-          "text": "Meet the founders",
-          "href": "https://www.aigovops-foundation.com/blog/meet.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/the-chatbot-is-the-company.html",
-          "text": "Meet the founders",
-          "href": "https://www.aigovops-foundation.com/blog/meet.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/a-face-is-not-a-signature.html",
-          "text": "Meet the founders",
-          "href": "https://www.aigovops-foundation.com/blog/meet.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/not-evidence-on-its-own.html",
-          "text": "Meet the founders",
-          "href": "https://www.aigovops-foundation.com/blog/meet.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/the-premise.html",
-          "text": "Meet the founders",
-          "href": "https://www.aigovops-foundation.com/blog/meet.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/seconds-each.html",
-          "text": "Meet the founders",
-          "href": "https://www.aigovops-foundation.com/blog/meet.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/forty-five-minutes-at-knight.html",
-          "text": "Meet the founders",
-          "href": "https://www.aigovops-foundation.com/blog/meet.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/the-one-dollar-tahoe.html",
-          "text": "Meet the founders",
-          "href": "https://www.aigovops-foundation.com/blog/meet.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/the-cafe-is-open.html",
-          "text": "Meet the founders",
-          "href": "https://www.aigovops-foundation.com/blog/meet.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/the-fall-2026-release.html",
-          "text": "Meet the founders",
-          "href": "https://www.aigovops-foundation.com/blog/meet.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/the-ten-minute-gate-check.html",
-          "text": "Meet the founders",
-          "href": "https://www.aigovops-foundation.com/blog/meet.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/meet.html",
-          "text": "",
-          "href": "https://www.aigovops-foundation.com/blog/index.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/meet.html",
-          "text": "Home",
-          "href": "https://www.aigovops-foundation.com/blog/index.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/meet.html",
-          "text": "Library",
-          "href": "https://www.aigovops-foundation.com/blog/library.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/meet.html",
-          "text": "Open source",
-          "href": "https://www.aigovops-foundation.com/blog/open-source.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/meet.html",
-          "text": "Blog",
-          "href": "https://www.aigovops-foundation.com/blog/blog.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/meet.html",
-          "text": "← Back to homepage",
-          "href": "https://www.aigovops-foundation.com/blog/index.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/meet.html",
-          "text": "Browse frameworks",
-          "href": "https://www.aigovops-foundation.com/blog/frameworks.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/meet.html",
-          "text": "Blog",
-          "href": "https://www.aigovops-foundation.com/blog/blog.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/meet.html",
-          "text": "Ken Johnston",
-          "href": "https://www.aigovops-foundation.com/blog/founders.html#ken",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/meet.html",
-          "text": "Bob Rapp",
-          "href": "https://www.aigovops-foundation.com/blog/founders.html#bob",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/meet.html",
-          "text": "Support us",
-          "href": "https://www.aigovops-foundation.com/blog/support.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/meet.html",
-          "text": "Privacy",
-          "href": "https://www.aigovops-foundation.com/blog/privacy.html",
-          "reason": "internal link → HTTP 404"
-        },
-        {
-          "page": "https://www.aigovops-foundation.com/blog/meet.html",
-          "text": "Terms",
-          "href": "https://www.aigovops-foundation.com/blog/terms.html",
-          "reason": "internal link → HTTP 404"
-        }
-      ],
+      "dead": [],
+      "broken": [],
       "consoleErrors": []
     },
     {
@@ -969,7 +682,7 @@
       "base": "https://community.aigovops-foundation.com/library/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-11-27T13:05:42.294Z",
+      "ranAt": "2026-11-28T13:05:17.726Z",
       "summary": {
         "pages": 70,
         "greenPages": 70,
@@ -1553,7 +1266,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-beacon/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-11-27T13:07:36.111Z",
+      "ranAt": "2026-11-28T13:07:03.548Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2201,7 +1914,7 @@
       "base": "https://aigovops-foundation.github.io/umbrella-govops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-11-27T13:09:27.049Z",
+      "ranAt": "2026-11-28T13:08:44.211Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -2849,7 +2562,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-lantern/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-11-27T13:09:42.975Z",
+      "ranAt": "2026-11-28T13:08:59.243Z",
       "summary": {
         "pages": 11,
         "greenPages": 11,
@@ -2961,7 +2674,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops-ncw-ai-camp/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-11-27T13:11:26.801Z",
+      "ranAt": "2026-11-28T13:10:39.013Z",
       "summary": {
         "pages": 78,
         "greenPages": 78,
@@ -3609,7 +3322,7 @@
       "base": "https://aigovops-foundation.github.io/aigovops/",
       "gated": false,
       "status": "green",
-      "ranAt": "2026-11-27T13:11:30.244Z",
+      "ranAt": "2026-11-28T13:10:42.275Z",
       "summary": {
         "pages": 2,
         "greenPages": 2,
@@ -3649,6 +3362,6 @@
     "provider": "graph",
     "status": "ok",
     "detail": "app authenticates; sends as bob.rapp@aigovops.community",
-    "checkedAt": "2026-11-27T13:11:30.412Z"
+    "checkedAt": "2026-11-28T13:10:42.652Z"
   }
 }
